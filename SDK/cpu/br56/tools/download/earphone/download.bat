@@ -34,7 +34,7 @@ if not %RCSP_EN%A==A (
 
 
 @echo on
-..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br56 -boot 0x112000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin  -tone %TONE_FILES% -res cfg_tool.bin ..\..\p11_code.bin stream.bin %CONFIG_DATA% %KEY_FILE% %FORMAT%
+..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br56 -boot 0x100000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin  -tone %TONE_FILES% -res cfg_tool.bin ..\..\p11_code.bin stream.bin %CONFIG_DATA% %KEY_FILE% %FORMAT%
 @echo off
 :: -format all
 ::-reboot 2500
