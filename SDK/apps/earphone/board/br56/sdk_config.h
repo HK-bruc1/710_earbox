@@ -250,7 +250,7 @@
 
 // ------------音频配置.json------------
 #define TCFG_AUDIO_DAC_CONNECT_MODE DAC_OUTPUT_MONO_L // 声道配置
-#define TCFG_AUDIO_DAC_MODE DAC_MODE_L_SINGLE // 输出方式
+#define TCFG_AUDIO_DAC_MODE DAC_MODE_DIFF // 输出方式
 #define TCFG_AUDIO_DAC_LIGHT_CLOSE_ENABLE 0X0 // 轻量关闭
 #define TCFG_DAC_PERFORMANCE_MODE DAC_MODE_HIGH_PERFORMANCE // 性能模式
 #define TCFG_DAC_POWER_MODE 0 //输出功率

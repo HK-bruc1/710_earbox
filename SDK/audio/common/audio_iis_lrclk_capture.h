@@ -30,5 +30,7 @@ void audio_iis_lrclk_capture_uninit(struct iis_lrclk_capture *hdl);
  * */
 u32 audio_iis_get_lrclk_sample_rate(u8 module_idx);
 
+#define AUDIO_IIS_LRCLK_CAPTURE_EN 0
+
 #endif
 

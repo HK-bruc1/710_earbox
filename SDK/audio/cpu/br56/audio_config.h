@@ -187,6 +187,8 @@ u8 app_audio_bt_volume_update(u8 *btaddr, u8 state);
 
 void app_audio_bt_volume_save(u8 state);
 
+void audio_fade_in_fade_out(u8 left_vol, u8 right_vol);
+
 int audio_digital_vol_default_init(void);
 
 void volume_up_down_direct(s16 value);

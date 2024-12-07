@@ -507,7 +507,7 @@ struct jlstream {
     u8 incr_sys_clk;
     u8 thread_run;
     u8 thread_num;
-    u8 output_time;
+    u16 output_time;
     u8 thread_policy_step;
     enum stream_state state;
     enum stream_state pp_state;

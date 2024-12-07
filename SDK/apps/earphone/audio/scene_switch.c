@@ -44,6 +44,11 @@ static char *drc_adv_name[] = {"CDrcAdv", "LRSDrcAdv", "HPDRC"};
 static char *multiband_drc_adv_name[] = {"MDrcAdv"};
 static char *noise_gate_name[] = {"LRSNsGate"};
 static char *upmix_name[] = {"UpMix2to5"};
+static char *effect_dev0_name[] = {"effdevx"};
+static char *effect_dev1_name[] = {"effdevx"};
+static char *effect_dev2_name[] = {"effdevx"};
+static char *effect_dev3_name[] = {"effdevx"};
+static char *effect_dev4_name[] = {"effdevx"};
 
 /* 获取场景序号 */
 u8 get_current_scene()
@@ -237,6 +242,61 @@ void effect_scene_set(u8 scene)
         if (ret < 0) {
 #if MEDIA_MODULE_NODE_UPDATE_EN
             module_node_update_parm(virtual_surround_pro_update_parm, scene, upmix_name[i], 0);
+#endif
+        }
+    }
+#endif
+#if TCFG_EFFECT_DEV0_NODE_ENABLE
+    for (int i = 0; i < ARRAY_SIZE(effect_dev0_name); i++) {
+        effects_name_sprintf(tar_name, effect_dev0_name[i], music_mode[cur_mode]);
+        ret = effect_dev0_update_parm(scene, tar_name, 0);
+        if (ret < 0) {
+#if MEDIA_MODULE_NODE_UPDATE_EN
+            module_node_update_parm(effect_dev0_update_parm, scene, effect_dev0_name[i], 0);
+#endif
+        }
+    }
+#endif
+#if TCFG_EFFECT_DEV1_NODE_ENABLE
+    for (int i = 0; i < ARRAY_SIZE(effect_dev1_name); i++) {
+        effects_name_sprintf(tar_name, effect_dev1_name[i], music_mode[cur_mode]);
+        ret = effect_dev1_update_parm(scene, tar_name, 0);
+        if (ret < 0) {
+#if MEDIA_MODULE_NODE_UPDATE_EN
+            module_node_update_parm(effect_dev1_update_parm, scene, effect_dev1_name[i], 0);
+#endif
+        }
+    }
+#endif
+#if TCFG_EFFECT_DEV2_NODE_ENABLE
+    for (int i = 0; i < ARRAY_SIZE(effect_dev2_name); i++) {
+        effects_name_sprintf(tar_name, effect_dev2_name[i], music_mode[cur_mode]);
+        ret = effect_dev2_update_parm(scene, tar_name, 0);
+        if (ret < 0) {
+#if MEDIA_MODULE_NODE_UPDATE_EN
+            module_node_update_parm(effect_dev2_update_parm, scene, effect_dev2_name[i], 0);
+#endif
+        }
+    }
+#endif
+#if TCFG_EFFECT_DEV3_NODE_ENABLE
+    for (int i = 0; i < ARRAY_SIZE(effect_dev3_name); i++) {
+        effects_name_sprintf(tar_name, effect_dev3_name[i], music_mode[cur_mode]);
+        ret = effect_dev3_update_parm(scene, tar_name, 0);
+        if (ret < 0) {
+#if MEDIA_MODULE_NODE_UPDATE_EN
+            module_node_update_parm(effect_dev3_update_parm, scene, effect_dev3_name[i], 0);
+#endif
+        }
+    }
+#endif
+#if TCFG_EFFECT_DEV4_NODE_ENABLE
+    for (int i = 0; i < ARRAY_SIZE(effect_dev4_name); i++) {
+        effects_name_sprintf(tar_name, effect_dev4_name[i], music_mode[cur_mode]);
+        ret = effect_dev4_update_parm(scene, tar_name, 0);
+        if (ret < 0) {
+#if MEDIA_MODULE_NODE_UPDATE_EN
+            module_node_update_parm(effect_dev4_update_parm, scene, effect_dev4_name[i], 0);
 #endif
         }
     }

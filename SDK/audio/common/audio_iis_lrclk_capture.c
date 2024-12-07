@@ -15,6 +15,7 @@
 #define log_debug(fmt, ...)
 #endif
 
+#if defined(AUDIO_IIS_LRCLK_CAPTURE_EN) && AUDIO_IIS_LRCLK_CAPTURE_EN
 
 static const u16 iomap_uuid_table[][2] = {
 #ifdef PA0_IN
@@ -429,4 +430,4 @@ void test_iis_lrclk()
     thdl.close            = linein_player_close;      //关闭对应的播放器
     audio_iis_lrclk_capture_init(&thdl);
 }
-
+#endif

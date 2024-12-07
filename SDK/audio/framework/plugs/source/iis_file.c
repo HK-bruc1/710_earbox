@@ -251,8 +251,11 @@ void iis_rx_init(struct iis_file_hdl *hdl)
     struct audio_general_params *general_params = audio_general_get_param();
     // 初始化iis rx
     // IIS采样率有所差距，配置
-
+#if defined(AUDIO_IIS_LRCLK_CAPTURE_EN) && AUDIO_IIS_LRCLK_CAPTURE_EN
     hdl->sample_rate = audio_iis_get_lrclk_sample_rate(hdl->module_idx) ? audio_iis_get_lrclk_sample_rate(hdl->module_idx) : general_params->sample_rate;	//默认采样率值
+#else
+    hdl->sample_rate = general_params->sample_rate;	//默认采样率值
+#endif
 
     jlstream_read_node_data_by_cfg_index(hdl->plug_uuid, hdl->node->subid, 0, (void *)&hdl->ch_idx, NULL);
     if (!iis_hdl[hdl->module_idx]) {

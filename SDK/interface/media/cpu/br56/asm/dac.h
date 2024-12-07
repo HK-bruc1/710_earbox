@@ -41,12 +41,10 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 /************************************
  *              DAC模式
  *************************************/
-#define DAC_MODE_L_DIFF          (0)  // 低压差分模式   , 适用于低功率差分耳机  , 输出幅度 0~2Vpp
-#define DAC_MODE_L_SINGLE        (1)  // 低压单端模式   , 主要用于左右差分模式, 差分输出幅度 0~2Vpp
-#define DAC_MODE_H1_DIFF         (2)  // 高压1档差分模式, 适用于高功率差分耳机  , 输出幅度 0~3Vpp
-#define DAC_MODE_H1_SINGLE       (3)  // 高压1档单端模式, 适用于高功率单端PA音箱, 输出幅度 0~1.5Vpp
-#define DAC_MODE_H2_DIFF         (4)  // 高压2档差分模式, 适用于高功率差分PA音箱, 输出幅度 0~5Vpp
-#define DAC_MODE_H2_SINGLE       (5)  // 高压2档单端模式, 适用于高功率单端PA音箱, 输出幅度 0~2.5Vpp
+// TCFG_AUDIO_DAC_MODE
+#define DAC_MODE_SINGLE                    (0)
+#define DAC_MODE_DIFF                      (1)
+#define DAC_MODE_VCMO                      (2)
 
 #define DA_SOUND_NORMAL                 0x0
 #define DA_SOUND_RESET                  0x1
@@ -94,20 +92,11 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 
 struct audio_dac_hdl;
 struct dac_platform_data {
-    void (*analog_open_cb)(struct audio_dac_hdl *);
-    void (*analog_close_cb)(struct audio_dac_hdl *);
-    void (*analog_light_open_cb)(struct audio_dac_hdl *);
-    void (*analog_light_close_cb)(struct audio_dac_hdl *);
-    u8 mode;    // AUDIO_DAC_MODE_XX
-    u8 output;
-    u16 dma_buf_time_ms;    // DAC dma buf 大小
-    s16 *dig_vol_tab;
-    u32 digital_gain_limit;
-    u32 max_sample_rate;    	// 支持的最大采样率
     u8 vcm_cap_en;      //配1代表走外部通路,vcm上有电容时,可以提升电路抑制电源噪声能力，提高ADC的性能，配0相当于vcm上无电容，抑制电源噪声能力下降,ADC性能下降
     u8 power_on_mode;
     u8 performance_mode;
     u8 power_mode;          // DAC 功率模式， 0:20mw  1:30mw  2:50mw  3:80mw
+    u8 dacldo_vsel;
     u8 hpvdd_sel;
     u8 l_ana_gain;
     u8 r_ana_gain;
@@ -117,6 +106,10 @@ struct dac_platform_data {
     u8 fade_points;
     u8 fade_volume;
     u8 classh_mode;         // CLASSH 模式  0：蓝牙最低电压1.2v  1:蓝牙最低电压1.15v
+    u16 dma_buf_time_ms;    // DAC dma buf 大小
+    s16 *dig_vol_tab;
+    u32 digital_gain_limit;
+    u32 max_sample_rate;    	// 支持的最大采样率
     u32 classh_down_step;   // DAC classh 电压下降步进，1us/setp，配置范围[0.1s, 8s]，建议配置3s
 };
 
@@ -248,6 +241,8 @@ struct audio_dac_hdl {
     struct audio_cfifo fifo;        /*DAC cfifo结构管理*/
     struct audio_dac_channel main_ch;
 
+    u16 mute_timer;           //DAC PA Mute Timer
+    u8 mute_ch;               //DAC PA Mute Channel
 	u8 dvol_mute;             //DAC数字音量是否mute
 #if 0
     struct audio_dac_sync sync;
@@ -256,8 +251,6 @@ struct audio_dac_hdl {
 #endif
 
 	u8 active;
-    void *feedback_priv;
-    void (*underrun_feedback)(void *priv);
     /*******************************************/
     /**sniff退出时，dac模拟提前初始化，避免模拟初始化延时,影响起始同步********/
     u8 power_on;

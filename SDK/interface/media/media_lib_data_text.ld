@@ -111,7 +111,7 @@
     *(.sur_TYPE0_cal_code)
     *(.sur_TYPE1_cal_code)
     *(.sur_TYPE0_cal_const)
-*(.sur_TYPE1_cal_const)
+    *(.sur_TYPE1_cal_const)
     /* *(.sur_LRDRIFT2_cal_code) */
     /* *(.sur_LRDRIFT2_cal_const) */
     /* *(.sur_ROTATE_cal_code) */
@@ -119,6 +119,42 @@
     /* *(.sur_LRDRIFT_cal_code) */
     /* *(.sur_LRDRIFT_cal_const) */
 #endif
+
+#if AFX_LIMITER_AT_RAM
+	*(.limiter.text)
+    *(.limiter.text.const)
+	*(.limiter.text.cache.L2.code)
+	*(.limiter.text.cache.L2.const)
+#endif
+#if AFX_MULTIBAND_LIMITER_AT_RAM
+	*(.multiband_limiter.text)
+	*(.multiband_limiter.text.const)
+#endif
+#if AFX_MULTIBAND_CROSSOVER_AT_RAM
+    *(.multiband_crossover.text)
+	*(.multiband_crossover.text.const)
+#endif
+#if AFX_MULTIBAND_DRC_AT_RAM
+    *(.multiband_drc.text)
+	*(.multiband_drc.text.const)
+#endif
+#if AFX_VIRTUAL_SURRUOUND_PRO_AT_RAM
+	*(.virtual_surround_pro.text)
+	*(.virtual_surround_pro.text.const)
+	*(.sas.text.cache.L2.code)
+	*(.sas.text.cache.L2.const)
+    *(.sas.text)
+    *(.sas.text.code)
+#endif
+#if AFX_SW_EQ_AT_RAM 
+    *(.iir_filter.text.cache.L2.code)
+    *(.iir_filter.text.cache.L2.const)
+    *(.iir_filter.text)
+    *(.iir_filter.text.const)
+	*(.sof_eq.text)
+	*(.sof_eq.text.const)
+#endif
+
 
 #if AUDIO_LDAC_AT_RAM
     *(.ldac_dec.text)

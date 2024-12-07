@@ -23,6 +23,7 @@
 #include "gpadc.h"
 #include "update.h"
 #include "media/audio_general.h"
+#include "media/audio_event_manager.h"
 
 #if (SYS_VOL_TYPE == VOL_TYPE_DIGITAL)
 #include "audio_dvol.h"
@@ -57,9 +58,7 @@ u8 mic_ldo_vsel_use_save = 0;
 u8 save_mic_ldo_vsel     = 0;
 #endif // #if TCFG_MC_BIAS_AUTO_ADJUST
 
-void audio_fade_in_fade_out(u8 left_vol, u8 right_vol);
-extern u32 read_capless_DTB(void);
-extern struct dac_platform_data dac_data;
+struct dac_platform_data dac_data;
 
 int get_dac_channel_num(void)
 {
@@ -68,9 +67,7 @@ int get_dac_channel_num(void)
 
 static u8 audio_dac_hpvdd_check()
 {
-#ifdef CONFIG_FPGA_ENABLE
-    return 0;
-#endif
+#if 0
     u8 res;
     u16 hpvdd = adc_get_voltage_blocking(AD_CH_AUDIO_HPVDD);
     /* printf("HPVDD: %d\n", hpvdd); */
@@ -85,6 +82,8 @@ static u8 audio_dac_hpvdd_check()
     SFR(JL_ADDA->ADDA_CON0,  3,  1,  0);					// DAC测试通道总使能
     SFR(JL_ADDA->ADDA_CON0,  4,  3,  0);					// DAC待测试信号选择位
     return res;
+#endif
+    return 0;
 }
 
 /*
@@ -132,18 +131,9 @@ static void audio_common_initcall()
     common_param.drc.attack_time = 3;
     common_param.drc.release_time = 10;
 
-#if 0 //TODO
-    //audio vbg trim配置
-    common_param.vbg_trim_value = efuse_get_audio_vbg_trim();
-    if (common_param.vbg_trim_value == 0x1F) {
-        common_param.vbg_trim_value = 20;
-        printf("[Warning]audio vbg trim value invalid,default=%d\n", common_param.vbg_trim_value);
-    }
-#else
     common_param.vcm0d5_mode = 1;
     common_param.pmu_vbg_value = 4;
     common_param.audio_vbg_value = 4;
-#endif
 
     /* common_param.clock_mode = AUDIO_COMMON_CLK_DIG_SINGLE; */
     common_param.clock_mode = AUDIO_COMMON_CLK_DIF_XOSC;
@@ -153,6 +143,31 @@ static void audio_common_initcall()
 
     //音频时钟初始化
     audio_dac_clock_init();
+
+    // common power trim
+    audio_common_param_t *common = audio_common_get_param();
+    int len;
+    audio_vbg_trim_t vbg_trim = {0};
+    len = audio_event_notify(AUDIO_LIB_EVENT_VBG_TRIM_READ, (void *)&vbg_trim, sizeof(audio_vbg_trim_t));
+    if (len != sizeof(audio_vbg_trim_t)) {
+        u8 ret = audio_common_power_trim(&vbg_trim, 0);
+        if (ret == 0) {
+            audio_event_notify(AUDIO_LIB_EVENT_VBG_TRIM_WRITE, (void *)&vbg_trim, sizeof(audio_vbg_trim_t));
+        }
+    }
+    common->audio_vbg_value = vbg_trim.aud_vbg_value;
+    common->pmu_vbg_value = vbg_trim.pmu_vbg_value;
+    printf(">>VBG_TRIM: %d, %d\n", common->audio_vbg_value, common->pmu_vbg_value);
+
+    // dacldo trim
+    len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
+    if (len != sizeof(dac_data.dacldo_vsel)) {
+        u8 ret = audio_dac_ldo_trim(&dac_data.dacldo_vsel);
+        if (ret == 0) {
+            audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
+        }
+    }
+    printf(">>DACLDO_TRIM: %d\n", dac_data.dacldo_vsel);
 }
 
 void audio_dac_initcall(void)
@@ -176,19 +191,6 @@ void audio_dac_initcall(void)
     */
     audio_anc_common_param_init();
 #endif/*TCFG_AUDIO_ANC_ENABLE*/
-
-    /* u8 mode = TCFG_AUDIO_DAC_DEFAULT_VOL_MODE; */
-    /* if (1 != syscfg_read(CFG_VOLUME_ENHANCEMENT_MODE, &mode, 1)) { */
-    /* printf("vm no CFG_VOLUME_ENHANCEMENT_MODE !\n"); */
-    /* } */
-    /* printf("enter audio_init.c %d,%d\n",mode,__LINE__); */
-    //app_audio_dac_vol_mode_set(mode);
-
-#if TCFG_SUPPORT_MIC_CAPLESS
-    u32 dacr32 = read_capless_DTB();
-    audio_dac_set_capless_DTB(&dac_hdl, dacr32);
-    mic_capless_trim_run();
-#endif
 
     audio_dac_set_analog_vol(&dac_hdl, 0);
 
@@ -299,13 +301,7 @@ void audio_input_initcall(void)
 #endif/*TCFG_AUDIO_LINEIN_ENABLE*/
 }
 
-#ifndef TCFG_AUDIO_DAC_LDO_VOLT_HIGH
-#define TCFG_AUDIO_DAC_LDO_VOLT_HIGH 0
-#endif
-
 struct dac_platform_data dac_data = {//临时处理
-    .output         = TCFG_AUDIO_DAC_CONNECT_MODE,               //DAC输出配置，和具体硬件连接有关，需根据硬件来设置
-    .mode           = 1,
     /* .power_on_mode  = TCFG_AUDIO_DAC_POWER_ON_MODE, */
     .dma_buf_time_ms = TCFG_AUDIO_DAC_BUFFER_TIME_MS,
     .performance_mode = TCFG_DAC_PERFORMANCE_MODE,
@@ -315,6 +311,7 @@ struct dac_platform_data dac_data = {//临时处理
     .dcc_level      = 14,
     .bit_width      = DAC_BIT_WIDTH_16,
     // TODO
+    .dacldo_vsel    = 3,
     .classh_mode    = 0,
     .classh_down_step = 3000000,
 };
@@ -397,31 +394,6 @@ void dac_power_off(void)
     audio_dac_close(&dac_hdl);
 }
 
-/*
- *dac快速校准
- */
-//#define DAC_TRIM_FAST_EN
-#ifdef DAC_TRIM_FAST_EN
-u8 dac_trim_fast_en()
-{
-    return 1;
-}
-#endif/*DAC_TRIM_FAST_EN*/
-
-/*
- *自定义dac上电延时时间，具体延时多久应通过示波器测量
- */
-#if 1
-void dac_power_on_delay()
-{
-    /* #if TCFG_MC_BIAS_AUTO_ADJUST */
-    /* void mic_capless_auto_adjust_init(); */
-    /* mic_capless_auto_adjust_init(); */
-    /* #endif */
-    os_time_dly(50);
-}
-#endif
-
 #define TRIM_VALUE_LR_ERR_MAX           (600)   // 距离参考值的差值限制
 #define abs(x) ((x)>0?(x):-(x))
 int audio_dac_trim_value_check(struct audio_dac_trim *dac_trim)
@@ -446,17 +418,6 @@ int audio_dac_trim_value_check(struct audio_dac_trim *dac_trim)
 
     return 0;
 }
-
-/*
- *capless模式一开始不要的数据包数量
- */
-u16 get_ladc_capless_dump_num(void)
-{
-    return 10;
-}
-
-
-
 
 REGISTER_UPDATE_TARGET(audio_update_target) = {
     .name = "audio",

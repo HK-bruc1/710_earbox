@@ -24,7 +24,7 @@
  * 0   : 等长输入输出，输入数据算法需要全部处理完
  * 非0 : 按照帧长输入数据到算法处理接口
  */
-#define EFFECT_DEV3_FRAME_POINTS  (256)
+#define EFFECT_DEV3_FRAME_POINTS  0 //(256)
 
 
 /*
@@ -34,7 +34,7 @@
 #define CHANNEL_ADAPTER_AUTO   0 //自动协商,通常用于无声道数转换的场景,结果随数据流配置自动适配
 #define CHANNEL_ADAPTER_2TO4   1 //立体声转4声道协商使能,支持2to4,结果随数据流配置自动适配
 #define CHANNEL_ADAPTER_1TO2   2 //单声道转立体声协商使能,支持1to2,结果随数据流配置自动适配
-#define CHANNEL_ADAPTER_TYPE   CHANNEL_ADAPTER_2TO4  //默认选配支持2to4协商
+#define CHANNEL_ADAPTER_TYPE   CHANNEL_ADAPTER_AUTO //默认无声道转换
 
 struct effect_dev3_node_hdl {
     char name[16];

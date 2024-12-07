@@ -1268,7 +1268,11 @@ void app_audio_state_switch(u8 state, s16 max_volume, dvol_handle *dvol_hdl)
 #if ((TCFG_AUDIO_ANC_ENABLE) && (defined ANC_MODE_DIG_VOL_LIMIT))
     dB_value = (dB_value > ANC_MODE_DIG_VOL_LIMIT) ? ANC_MODE_DIG_VOL_LIMIT : dB_value;
 #endif/*TCFG_AUDIO_ANC_ENABLE*/
+#ifdef CONFIG_CPU_BR56
+    u16 dvol_max = (u16)(16100.0f * dB_Convert_Mag(dB_value));
+#else
     u16 dvol_max = (u16)(16384.0f * dB_Convert_Mag(dB_value));
+#endif
 
     /*记录当前状态对应的最大音量*/
     __this->max_volume[state] = max_volume;

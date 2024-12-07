@@ -141,6 +141,11 @@ void clk_vdc_mode_init(u32 mode, u32 vdc_level);
 void clk_set_dcvdd_audio_ctl(u32 max_level, u32 min_level);
 
 
+void clock_enter_sleep_prepare();
+void clock_exit_sleep_post();
+
+
+
 #define BT_CLOCK_IN(x)          //SFR(JL_CLOCK->CLK_CON1,  14,  2,  x)
 //for MACRO - BT_CLOCK_IN
 enum {
