@@ -52,8 +52,6 @@ static struct pwm_led_platform_data pled_pdata;
 
 static u8 pwm_led_data_init = 0;
 static u8 pwm_led_ctl_cnt;
-static u32 soft_alternate_ref;
-static u32 soft_alternate_timer;
 static u32 pwm_led_ctl_unit;
 extern u32 __get_lrc_hz();
 #define PWM_LED_CLK (__get_lrc_hz() / 10)
@@ -70,22 +68,13 @@ void pwm_led_wkup_to_switch_io(void *priv)
 ___interrupt
 static void pwm_led_isr(void)
 {
-    JL_PLED->CON3 |= BIT(6);
+    JL_PLED->CON1 |= BIT(2);
     pwm_led_ctl_cnt ++;
     if ((__this->ctl_cycle_num) && (pwm_led_ctl_cnt >= __this->ctl_cycle_num))  {
         pwm_led_hw_close();
         if (__this->cbfunc) {
             __this->cbfunc(__this->cbpriv);
         }
-    } else if (soft_alternate_ref) {
-        if ((pwm_led_ctl_cnt % 2)) {
-            gpio_set_mode(IO_PORT_SPILT(__this->port0), PORT_HIGHZ);
-            gpio_set_function(IO_PORT_SPILT(__this->port1), PORT_FUNC_PWM_LED);
-        } else {
-            gpio_set_mode(IO_PORT_SPILT(__this->port1), PORT_HIGHZ);
-            gpio_set_function(IO_PORT_SPILT(__this->port0), PORT_FUNC_PWM_LED);
-        }
-        sys_timer_modify(soft_alternate_timer, ((__this->ctl_cycle * soft_alternate_ref) / PWM_LED_CLK) - 5);
     }
 }
 
@@ -96,8 +85,7 @@ static void pwm_led_set_h_pwm_duty(u32 pwm_prd, u32 pwm_duty)
         h_pwm_duty_prd += 1;
         h_pwm_duty_prd = h_pwm_duty_prd > pwm_prd ? pwm_prd : h_pwm_duty_prd;
     }
-    JL_PLED->BRI_DUTY0H = ((h_pwm_duty_prd >> 8) & 0xff);
-    JL_PLED->BRI_DUTY0L = ((h_pwm_duty_prd >> 0) & 0xff);
+    JL_PLED->BRI_DUTY1 = h_pwm_duty_prd & 0x3ff;
 }
 
 static void pwm_led_set_l_pwm_duty(u32 pwm_prd, u32 pwm_duty)
@@ -107,8 +95,7 @@ static void pwm_led_set_l_pwm_duty(u32 pwm_prd, u32 pwm_duty)
         l_pwm_duty_prd += 1;
         l_pwm_duty_prd = l_pwm_duty_prd > pwm_prd ? pwm_prd : l_pwm_duty_prd;
     }
-    JL_PLED->BRI_DUTY1H = ((l_pwm_duty_prd >> 8) & 0xff);
-    JL_PLED->BRI_DUTY1L = ((l_pwm_duty_prd >> 0) & 0xff);
+    JL_PLED->BRI_DUTY0 = l_pwm_duty_prd & 0x3ff;
 }
 
 static void pwm_led_set_pwm_out_once_time(u32 t_cnt3)
@@ -139,11 +126,11 @@ static void pwm_led_set_pwm_out_once_time(u32 t_cnt3)
     JL_PLED->DUTY1 = t_cnt1;
     JL_PLED->DUTY2 = t_cnt2;
     JL_PLED->DUTY3 = t_cnt3;
-    JL_PLED->CON1 |= (!!t_cnt0) * BIT(4);//PWM_DUTY0_EN
-    JL_PLED->CON1 |= (!!t_cnt1) * BIT(5);//PWM_DUTY1_EN
-    JL_PLED->CON1 |= (!!t_cnt2) * BIT(6);//PWM_DUTY2_EN
-    JL_PLED->CON1 |= (!!t_cnt3) * BIT(7);//PWM_DUTY3_EN
-    /* JL_PLED->CON1 |= BIT(3); */
+    JL_PLED->CON0 |= (!!t_cnt0) * BIT(12);//PWM_DUTY0_EN
+    JL_PLED->CON0 |= (!!t_cnt1) * BIT(13);//PWM_DUTY1_EN
+    JL_PLED->CON0 |= (!!t_cnt2) * BIT(14);//PWM_DUTY2_EN
+    JL_PLED->CON0 |= (!!t_cnt3) * BIT(15);//PWM_DUTY3_EN
+    JL_PLED->CON0 |= BIT(11);
 }
 
 static void pwm_led_set_pwm_out_twice_time(u32 t_cnt3)
@@ -173,37 +160,36 @@ static void pwm_led_set_pwm_out_twice_time(u32 t_cnt3)
     JL_PLED->DUTY1 = t_cnt1;
     JL_PLED->DUTY2 = t_cnt2;
     JL_PLED->DUTY3 = t_cnt3;
-    JL_PLED->CON1 |= (!!t_cnt0) * BIT(4);//PWM_DUTY3_EN
-    JL_PLED->CON1 |= (!!t_cnt1) * BIT(5);//PWM_DUTY2_EN
-    JL_PLED->CON1 |= (!!t_cnt2) * BIT(6);//PWM_DUTY1_EN
-    JL_PLED->CON1 |= (!!t_cnt3) * BIT(7);//PWM_DUTY0_EN
-    /* JL_PLED->CON1 |= BIT(3); */
+    JL_PLED->CON0 |= (!!t_cnt0) * BIT(12);//PWM_DUTY0_EN
+    JL_PLED->CON0 |= (!!t_cnt1) * BIT(13);//PWM_DUTY1_EN
+    JL_PLED->CON0 |= (!!t_cnt2) * BIT(14);//PWM_DUTY2_EN
+    JL_PLED->CON0 |= (!!t_cnt3) * BIT(15);//PWM_DUTY3_EN
+    JL_PLED->CON0 |= BIT(11);
 }
 
 static void pwm_led_fixed_output_mode(void)
 {
-    JL_PLED->CON2 &= ~(0b1111 << 4);
-    JL_PLED->CON2 |= ((__this->alternate_out & 0b111) << 4);
+    JL_PLED->CON0 &= ~(0b1111 << 24);
+    JL_PLED->CON0 |= ((__this->alternate_out & 0b111) << 24);
 
     u32 factor = 1000;
     u32 ctl_cycle = __this->ctl_cycle * factor;
-    u32 ctl_num = 255;
+    u32 ctl_num = 250;
     u32 ctl_unit = ctl_cycle / ctl_num;
     u32 div_idx = 0;
     u32 ctl_prd_div, div;
 __get_ctl_div:
     div = 1 << div_idx;
     ctl_prd_div = PWM_LED_CLK * ctl_unit / (100000 * div);
-    if (ctl_prd_div > 4096) {
+    if (ctl_prd_div > BIT(25)) {
         div_idx ++;
         goto __get_ctl_div;
     }
     log_debug("ctl_prd_div = %d\n", ctl_prd_div);
     if (ctl_prd_div) {
-        JL_PLED->PRD_DIVL = (ctl_prd_div - 1) & 0xff;
-        JL_PLED->CON3 |= ((ctl_prd_div - 1) >> 8) & 0xf;
+        JL_PLED->PRD_DIV = (ctl_prd_div - 1) & (BIT(25) - 1);
     } else {
-        JL_PLED->PRD_DIVL = 0;
+        JL_PLED->PRD_DIV = 0;
     }
 
     log_debug("clk_div = %d\n", div);
@@ -213,8 +199,7 @@ __get_ctl_div:
     u32 pwm_cycle = __this->pwm_cycle * 10;
     u32 pwm_prd = PWM_LED_CLK * pwm_cycle / (100000 * div);
     log_debug("pwm_prd = %d\n", pwm_prd);
-    JL_PLED->BRI_PRDH = (pwm_prd >> 8) & 0b11;
-    JL_PLED->BRI_PRDL = (pwm_prd >> 0) & 0xff;
+    JL_PLED->BRI_PRD = pwm_prd & 0x3ff;
 
     if ((__this->first_logic == 0) || (__this->alternate_out)) {
         pwm_led_set_h_pwm_duty(pwm_prd, __this->h_pwm_duty);
@@ -233,8 +218,8 @@ __get_ctl_div:
 static void pwm_led_breathe_output_mode(void)
 {
     JL_PLED->CON0 |= BIT(1);    //呼吸变化模式
-    JL_PLED->CON2 &= ~(0b1111 << 4);
-    JL_PLED->CON2 |= ((__this->alternate_out & 0b111) << 5);
+    JL_PLED->CON0 &= ~(0b1111 << 24);
+    JL_PLED->CON0 |= ((__this->alternate_out & 0b111) << 25);
 
     u32 factor = 1000;
     u32 ctl_cycle = __this->ctl_cycle * factor;
@@ -276,7 +261,7 @@ __get_ctl_div:
     }
     div = 1 << div_idx;
     ctl_prd_div = PWM_LED_CLK * ctl_unit / (100000 * div);
-    if (ctl_prd_div > 4096) {
+    if (ctl_prd_div > BIT(25)) {
         div_idx ++;
         goto __get_ctl_div;
     }
@@ -284,17 +269,15 @@ __get_ctl_div:
     log_debug("ctl_unit = %d\n", ctl_unit);
     log_debug("ctl_prd_div = %d\n", ctl_prd_div);
     if (ctl_prd_div) {
-        JL_PLED->PRD_DIVL = (ctl_prd_div - 1) & 0xff;
-        JL_PLED->CON3 |= ((ctl_prd_div - 1) >> 8) & 0xf;
+        JL_PLED->PRD_DIV = (ctl_prd_div - 1) & (BIT(25) - 1);
     } else {
-        JL_PLED->PRD_DIVL = 0;
+        JL_PLED->PRD_DIV = 0;
     }
 
     log_debug("clk_div = %d\n", div);
     u32 div_reg_value = led_clk_div_table[div_idx];
     SFR(JL_PLED->CON0, 4, 4, div_reg_value);//时钟源分频
-    JL_PLED->BRI_PRDH = (pwm_prd >> 8) & 0b11;
-    JL_PLED->BRI_PRDL = (pwm_prd >> 0) & 0xff;
+    JL_PLED->BRI_PRD = pwm_prd & 0x3ff;
 
     if ((__this->first_logic == 0) || (__this->alternate_out)) {
         pwm_led_set_h_pwm_duty(pwm_prd, __this->h_pwm_duty);
@@ -329,10 +312,10 @@ __get_ctl_div:
     JL_PLED->DUTY3 = ((pwm_duty_0_keep_prd >> 8) & 0xff);
     JL_PLED->DUTY2 = ((pwm_duty_0_keep_prd >> 0) & 0xff);
 
-    JL_PLED->CON1 |=  BIT(7);//PWM_DUTY3_EN
-    JL_PLED->CON1 |=  BIT(6);//PWM_DUTY2_EN
-    JL_PLED->CON1 |=  BIT(5);//PWM_DUTY1_EN
-    JL_PLED->CON1 |=  BIT(4);//PWM_DUTY0_EN
+    JL_PLED->CON0 |=  BIT(15);//PWM_DUTY3_EN
+    JL_PLED->CON0 |=  BIT(14);//PWM_DUTY2_EN
+    JL_PLED->CON0 |=  BIT(13);//PWM_DUTY1_EN
+    JL_PLED->CON0 |=  BIT(12);//PWM_DUTY0_EN
 
     pwm_led_ctl_unit = ctl_unit;
 }
@@ -346,15 +329,17 @@ void pwm_led_io_mount(void)
     if ((__this->port0 < IO_PORT_MAX) && \
         (__this->port1 < IO_PORT_MAX) && \
         (__this->port0 != __this->port1) && \
-        (__this->h_pwm_duty == __this->l_pwm_duty) && \
         (__this->alternate_out)) {
-        __this->alternate_out = 0;
-        JL_PLED->CON3 |= BIT(5);
-        request_irq(IRQ_LED_IDX, 1, pwm_led_isr, 0);
-        gpio_set_function(IO_PORT_SPILT(__this->port0), PORT_FUNC_PWM_LED);
+        gpio_set_mode(IO_PORT_SPILT(__this->port0), PORT_HIGHZ);
         gpio_set_mode(IO_PORT_SPILT(__this->port1), PORT_HIGHZ);
-        soft_alternate_timer = sys_timer_add(NULL, pwm_led_wkup_to_switch_io, __this->ctl_cycle - 5);
-        soft_alternate_ref = PWM_LED_CLK;
+        gpio_set_function(IO_PORT_SPILT(__this->port0), PORT_FUNC_PWM_LED_OE0);
+        gpio_set_function(IO_PORT_SPILT(__this->port1), PORT_FUNC_PWM_LED_OE1);
+        SFR(JL_PLED->SCON1, 0, 1, 1);
+        if (__this->first_logic == 0) {
+            SFR(JL_PLED->SCON1, 1, 2, 0b11);
+        } else {
+            SFR(JL_PLED->SCON1, 1, 2, 0b00);
+        }
     } else {
         if (__this->port0 < IO_PORT_MAX) {
             gpio_set_function(IO_PORT_SPILT(__this->port0), PORT_FUNC_PWM_LED);
@@ -370,18 +355,19 @@ void pwm_led_io_unmount(void)
     if (pwm_led_data_init == 0) {
         return ;
     }
-
-    soft_alternate_ref = 0;
-    if (soft_alternate_timer) {
-        sys_timer_del(soft_alternate_timer);
-        soft_alternate_timer = 0;
-    }
-
     if (__this->port0 < IO_PORT_MAX) {
         gpio_set_mode(IO_PORT_SPILT(__this->port0), PORT_HIGHZ);
     }
     if (__this->port1 < IO_PORT_MAX) {
         gpio_set_mode(IO_PORT_SPILT(__this->port1), PORT_HIGHZ);
+    }
+    if ((__this->port0 < IO_PORT_MAX) && \
+        (__this->port1 < IO_PORT_MAX) && \
+        (__this->port0 != __this->port1) && \
+        (__this->alternate_out)) {
+        SFR(JL_PLED->SCON1, 0, 1, 0);
+        gpio_disable_function(IO_PORT_SPILT(__this->port0), PORT_FUNC_PWM_LED_OE0);
+        gpio_disable_function(IO_PORT_SPILT(__this->port1), PORT_FUNC_PWM_LED_OE1);
     }
 }
 
@@ -416,22 +402,25 @@ void pwm_led_dump(void)
 #endif
 
 #if 1
-    printf("JL_PLED->CON0 = 0x%x\n", JL_PLED->CON0);
-    printf("JL_PLED->CON1 = 0x%x\n", JL_PLED->CON1);
-    printf("JL_PLED->CON2 = 0x%x\n", JL_PLED->CON2);
-    printf("JL_PLED->CON3 = 0x%x\n", JL_PLED->CON3);
-    printf("JL_PLED->CON4 = 0x%x\n", JL_PLED->CON4);
-    printf("JL_PLED->BRI_PRDL = 0x%x\n", JL_PLED->BRI_PRDL);
-    printf("JL_PLED->BRI_PRDH = 0x%x\n", JL_PLED->BRI_PRDH);
-    printf("JL_PLED->BRI_DUTY0L = 0x%x\n", JL_PLED->BRI_DUTY0L);
-    printf("JL_PLED->BRI_DUTY0L = 0x%x\n", JL_PLED->BRI_DUTY0H);
-    printf("JL_PLED->BRI_DUTY1L = 0x%x\n", JL_PLED->BRI_DUTY1L);
-    printf("JL_PLED->BRI_DUTY1H = 0x%x\n", JL_PLED->BRI_DUTY1H);
-    printf("JL_PLED->PRD_DIV = 0x%x\n", JL_PLED->PRD_DIVL);
-    printf("JL_PLED->DUTY0 = %d\n", JL_PLED->DUTY0);
-    printf("JL_PLED->DUTY1 = %d\n", JL_PLED->DUTY1);
-    printf("JL_PLED->DUTY2 = %d\n", JL_PLED->DUTY2);
-    printf("JL_PLED->DUTY3 = %d\n", JL_PLED->DUTY3);
+    printf("JL_PLED->CON0       = 0x%x\n", JL_PLED->CON0);
+    printf("JL_PLED->CON1       = 0x%x\n", JL_PLED->CON1);
+    printf("JL_PLED->BRI_PRD    = 0x%x\n", JL_PLED->BRI_PRD);
+    printf("JL_PLED->BRI_DUTY0  = 0x%x\n", JL_PLED->BRI_DUTY0);
+    printf("JL_PLED->BRI_DUTY1  = 0x%x\n", JL_PLED->BRI_DUTY1);
+    printf("JL_PLED->PRD_DIV    = 0x%x\n", JL_PLED->PRD_DIV);
+    printf("JL_PLED->DUTY0      = %d\n", JL_PLED->DUTY0);
+    printf("JL_PLED->DUTY1      = %d\n", JL_PLED->DUTY1);
+    printf("JL_PLED->DUTY2      = %d\n", JL_PLED->DUTY2);
+    printf("JL_PLED->DUTY3      = %d\n", JL_PLED->DUTY3);
+    printf("JL_PLED->CNT_CON    = 0x%x\n", JL_PLED->CNT_CON);
+    printf("JL_PLED->CNT_DATA   = 0x%x\n", JL_PLED->CNT_DATA);
+    printf("JL_PLED->CNT_DEC    = %d\n", JL_PLED->CNT_DEC);
+    printf("JL_PLED->CNT_SYNC   = %d\n", JL_PLED->CNT_SYNC);
+    printf("JL_PLED->SCON0      = 0x%x\n", JL_PLED->SCON0);
+    printf("JL_PLED->SCON1      = 0x%x\n", JL_PLED->SCON1);
+    printf("JL_PLED->OUT0_DIV   = %d\n", JL_PLED->OUT0_DIV);
+    printf("JL_PLED->OUT1_DIV   = %d\n", JL_PLED->OUT1_DIV);
+    printf("JL_PLED->ANA_CON0   = 0x%x\n", JL_PLED->ANA_CON0);
 #endif
 }
 
@@ -459,12 +448,12 @@ void pwm_led_hw_init(void *pdata)
     JL_PLED->CON0 &= ~(0b1111 << 4);    //时钟源不分频
 
     if (__this->first_logic == 0) {
-        JL_PLED->CON1 &= ~BIT(2);
+        JL_PLED->CON0 |=  BIT(23);
     } else {
-        JL_PLED->CON1 |=  BIT(2);
+        JL_PLED->CON0 &= ~BIT(23);
     }
-    JL_PLED->CON3 |= BIT(4);
-    JL_PLED->CON3 |= BIT(6);
+    JL_PLED->CON0 |= BIT(10);
+    JL_PLED->CON1 |= BIT(2);
 
     if (__this->out_mode < 2) {
         pwm_led_fixed_output_mode();
@@ -472,13 +461,13 @@ void pwm_led_hw_init(void *pdata)
         pwm_led_breathe_output_mode();
     }
     if (__this->cbfunc || __this->ctl_cycle_num) {
-        JL_PLED->CON3 |= BIT(5);
+        JL_PLED->CON1 |= BIT(1);
         request_irq(IRQ_LED_IDX, 1, pwm_led_isr, 0);
     }
 
     JL_PLED->CON0 |= BIT(0);
 
-    /* pwm_led_dump(); */
+    pwm_led_dump();
 }
 
 /*
@@ -525,22 +514,22 @@ static u32 pwm_led_get_cur_status_cnt_max(u32 cur_dir, u32 cur_level)
     u32 keep_prd;
     u32 cnt_max;
     if (JL_PLED->CON0 & BIT(1)) {//呼吸变化模式
-        u32 h_pwm_duty_prd = (JL_PLED->BRI_DUTY0H >> 8) | JL_PLED->BRI_DUTY0L;
-        u32 l_pwm_duty_prd = (JL_PLED->BRI_DUTY1H >> 8) | JL_PLED->BRI_DUTY1L;
+        u32 h_pwm_duty_prd = JL_PLED->BRI_DUTY1;
+        u32 l_pwm_duty_prd = JL_PLED->BRI_DUTY0;
         if (cur_dir) {
             keep_prd = (JL_PLED->DUTY3 << 8) | JL_PLED->DUTY2;
             if (cur_level) {
-                cnt_max = keep_prd + l_pwm_duty_prd;
-            } else {
                 cnt_max = keep_prd + h_pwm_duty_prd;
+            } else {
+                cnt_max = keep_prd + l_pwm_duty_prd;
             }
         } else {
             if (cur_level) {
-                keep_prd = JL_PLED->DUTY0;
-                cnt_max = keep_prd + l_pwm_duty_prd;
-            } else {
                 keep_prd = JL_PLED->DUTY1;
                 cnt_max = keep_prd + h_pwm_duty_prd;
+            } else {
+                keep_prd = JL_PLED->DUTY0;
+                cnt_max = keep_prd + l_pwm_duty_prd;
             }
         }
     } else {
@@ -561,15 +550,18 @@ void pwm_led_get_sync_status(struct pwm_led_status_t *status)
     if ((JL_PLED->CON0 & BIT(0)) == 0) {
         return;
     }
-    JL_PLED->CON4 |= BIT(4);
-    while (!(JL_PLED->CON4 & BIT(5)));
-    u32 cnt_rd = JL_PLED->CNT_RD;
+    JL_PLED->CNT_CON |= BIT(4);
+    while (!(JL_PLED->CNT_CON & BIT(5)));
+    u32 cnt_rd = JL_PLED->CNT_DATA;
 
     u32 next_dir = 0;
     u32 next_level = 0;
     status->dir   = !!(cnt_rd & BIT(17));
     status->level = !!(cnt_rd & BIT(16));
     status->cur_cnt  = cnt_rd & 0xffff;
+    if ((JL_PLED->CON0 & BIT(1)) == 0) {//不是呼吸变化模式
+        status->cur_cnt  = cnt_rd & 0xff;
+    }
     status->cnt_max = pwm_led_get_cur_status_cnt_max(status->dir, status->level);
     pwm_led_get_next_dir_level(status->dir, status->level, (u32 *)&next_dir, (u32 *)&next_level);
     status->next_cnt_max = pwm_led_get_cur_status_cnt_max(next_dir, next_level);
@@ -625,9 +617,9 @@ u32 pwm_led_set_sync(struct pwm_led_status_t *status, u32 how_long_ago, u32 *syn
     }
     u32 progress = 1000 * cnt / cnt_max;
 
-    JL_PLED->CON4 |= BIT(4);
-    while (!(JL_PLED->CON4 & BIT(5)));
-    u32 cnt_rd = JL_PLED->CNT_RD;
+    JL_PLED->CNT_CON |= BIT(4);
+    while (!(JL_PLED->CNT_CON & BIT(5)));
+    u32 cnt_rd = JL_PLED->CNT_DATA;
 
     u32 cur_dir   = !!(cnt_rd & BIT(17));
     u32 cur_level = !!(cnt_rd & BIT(16));

@@ -1,6 +1,7 @@
 #include "asm/includes.h"
 #include "system/includes.h"
 #include "app_config.h"
+#include "audio_config_def.h"
 
 #define LOG_TAG             "[SETUP]"
 #define LOG_ERROR_ENABLE
@@ -178,7 +179,11 @@ void setup_arch()
 #elif (TCFG_DAC_POWER_MODE == 1)    // power_mode: 30mW
     clk_set_vdc_lowest_voltage(DCVDD_VOL_135V);
 #elif (TCFG_DAC_POWER_MODE == 2)    // power_mode: 50mW
+#if ((defined TCFG_AUDIO_DAC_CLASSH_EN) && (TCFG_AUDIO_DAC_CLASSH_EN == 1))
+    clk_set_dcvdd_audio_ctl(DCVDD_VOL_155V, DCVDD_VOL_115V);
+#else
     clk_set_vdc_lowest_voltage(DCVDD_VOL_155V);
+#endif
 #endif
 
 #if (TCFG_MAX_LIMIT_SYS_CLOCK==MAX_LIMIT_SYS_CLOCK_160M)

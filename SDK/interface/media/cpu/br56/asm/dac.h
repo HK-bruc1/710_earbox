@@ -96,7 +96,8 @@ struct dac_platform_data {
     u8 power_on_mode;
     u8 performance_mode;
     u8 power_mode;          // DAC 功率模式， 0:20mw  1:30mw  2:50mw  3:80mw
-    u8 dacldo_vsel;
+    u8 dacldo_vsel;         // DACLDO电压档位:0~15
+    u8 pa_isel0;            // 电流档位:2~6
     u8 hpvdd_sel;
     u8 l_ana_gain;
     u8 r_ana_gain;
@@ -105,6 +106,7 @@ struct dac_platform_data {
     u8 fade_en;
     u8 fade_points;
     u8 fade_volume;
+    u8 classh_en;           // CLASSH使能(当输出功率为50mW时可用)
     u8 classh_mode;         // CLASSH 模式  0：蓝牙最低电压1.2v  1:蓝牙最低电压1.15v
     u16 dma_buf_time_ms;    // DAC dma buf 大小
     s16 *dig_vol_tab;
@@ -198,19 +200,14 @@ struct audio_dac_hdl {
     struct digital_module digital;
     const struct dac_platform_data *pd;
     OS_SEM sem;
-    struct audio_dac_trim trim;
     void (*fade_handler)(u8 left_gain, u8 right_gain);
     u8 avdd_level;
     u8 lpf_i_level;
-    volatile u8 mute;
     volatile u8 state;
     volatile u8 agree_on;
     u8 ng_threshold;
     u8 gain;
-    u8 vol_l;
-    u8 vol_r;
     u8 channel;
-    u16 max_d_volume;
     u16 d_volume[2];
     u32 sample_rate;
     u32 digital_gain_limit;

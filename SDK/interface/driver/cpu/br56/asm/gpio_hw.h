@@ -493,6 +493,9 @@ enum gpio_function {
     PORT_FUNC_LEDC1_OUT,
     PORT_FUNC_RDEC0_PORT0,
     PORT_FUNC_RDEC0_PORT1,
+
+    PORT_FUNC_PWM_LED_OE0,
+    PORT_FUNC_PWM_LED_OE1,
 };
 /**************************************************/
 #define __struct(x) (struct x##_reg *)

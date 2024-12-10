@@ -146,6 +146,7 @@ extern struct dac_platform_data dac_data;
  *************************************************************
  */
 
+#if (SYS_VOL_TYPE == VOL_TYPE_ANALOG)
 static void audio_fade_timer(void *priv)
 {
     u8 gain_l = dac_hdl.vol_l;
@@ -197,6 +198,7 @@ static int audio_fade_timer_add(u8 gain_l, u8 gain_r)
 
     return 0;
 }
+#endif
 
 
 #if (SYS_VOL_TYPE == VOL_TYPE_AD)
@@ -899,12 +901,11 @@ void audio_app_volume_set(u8 state, s16 volume, u8 fade)
             if (fade) {
                 audio_fade_in_fade_out(volume, volume);
             } else {
-                /* audio_dac_set_analog_vol(&dac_hdl, volume); */
-                audio_dac_ch_analog_gain_set(&dac_hdl, DAC_CH_FL, dac_hdl.pd->l_ana_gain);
-                audio_dac_ch_analog_gain_set(&dac_hdl, DAC_CH_FR, dac_hdl.pd->r_ana_gain);
+                audio_dac_ch_analog_gain_set(DAC_CH_FL, dac_hdl.pd->l_ana_gain);
+                audio_dac_ch_analog_gain_set(DAC_CH_FR, dac_hdl.pd->r_ana_gain);
 #ifdef VOL_HW_RL_RR_EN
-                audio_dac_ch_analog_gain_set(&dac_hdl, DAC_CH_RL, dac_hdl.pd->rl_ana_gain);
-                audio_dac_ch_analog_gain_set(&dac_hdl, DAC_CH_RR, dac_hdl.pd->rr_ana_gain);
+                audio_dac_ch_analog_gain_set(DAC_CH_RL, dac_hdl.pd->rl_ana_gain);
+                audio_dac_ch_analog_gain_set(DAC_CH_RR, dac_hdl.pd->rr_ana_gain);
 #endif
             }
         }
@@ -1198,7 +1199,7 @@ static const u16 phone_call_dig_vol_tab[] = {
 * Note(s)    : None.
 *********************************************************************
 */
-void app_audio_init_dig_vol(u8 state, s16 volume, u8 fade, dvol_handle *dvol_hdl)
+static void app_audio_init_dig_vol(u8 state, s16 volume, u8 fade, dvol_handle *dvol_hdl)
 {
     switch (state) {
     case APP_AUDIO_STATE_IDLE:
@@ -1401,8 +1402,8 @@ int esco_dec_dac_gain_get(void)
 {
     /* if (esco_player_runing()) { */
 #if (SYS_VOL_TYPE == VOL_TYPE_ANALOG)
-    int l_gain = audio_dac_ch_analog_gain_get(&dac_hdl, DAC_CH(0));
-    int r_gain = audio_dac_ch_analog_gain_get(&dac_hdl, DAC_CH(1));
+    int l_gain = audio_dac_ch_analog_gain_get(DAC_CH_FL);
+    int r_gain = audio_dac_ch_analog_gain_get(DAC_CH_FR);
     return l_gain > r_gain ? l_gain : r_gain;
 #else
     return app_audio_get_volume(APP_AUDIO_STATE_CALL);

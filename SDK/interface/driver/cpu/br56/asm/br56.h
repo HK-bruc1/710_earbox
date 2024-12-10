@@ -597,32 +597,6 @@ typedef struct {
 
 
 //............. 0x1a00 - 0x1aff............ for led
-#ifdef BR56_FPGA_CODE_VERIFY
-typedef struct {
-    __RW __u32 CON0;
-    __RW __u32 CON1;
-    __RW __u32 CON2;
-    __RW __u32 CON3;
-    __RW __u32 BRI_PRDL;
-    __RW __u32 BRI_PRDH;
-    __RW __u32 BRI_DUTY0L;
-    __RW __u32 BRI_DUTY0H;
-    __RW __u32 BRI_DUTY1L;
-    __RW __u32 BRI_DUTY1H;
-    __RW __u32 PRD_DIVL;
-    __RW __u32 DUTY0;
-    __RW __u32 DUTY1;
-    __RW __u32 DUTY2;
-    __RW __u32 DUTY3;
-    __RO __u32 CNT_RD;
-    __RW __u32 CON4;
-    __WO __u32 CNT_SYNC;
-    __RW __u32 CNT_DEC;
-} JL_PLED_TypeDef;
-
-#define JL_PLED_BASE                    (ls_base + map_adr(0x1a, 0x00))
-#define JL_PLED                         ((JL_PLED_TypeDef      *)JL_PLED_BASE)
-#else
 typedef struct {
     __RW __u32 CON0;
     __RW __u32 CON1;
@@ -647,7 +621,6 @@ typedef struct {
 
 #define JL_PLED_BASE                    (ls_base + map_adr(0x1a, 0x00))
 #define JL_PLED                         ((JL_PLED_TypeDef      *)JL_PLED_BASE)
-#endif //BR56_FPGA_CODE_VERIFY
 
 //............. 0x1b00 - 0x1bff............ for lcd
 //typedef struct {

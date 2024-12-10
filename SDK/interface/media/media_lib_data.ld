@@ -16,9 +16,9 @@
     *(.jlsp_far_front_data)
 
 	*(.lhdc.data)
-	*(.lhdcv4decode.data)
+	*(.lhdcv4_dec.data)
 	*(.lhdc_v5.data)
-	*(.lhdcv5decode.data)
+	*(.lhdcv5_dec.data)
     *(.ldac.data)
     *(.ldac_enc.data)
     *(.ldac_dec.data)

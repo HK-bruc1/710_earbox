@@ -10,7 +10,26 @@
 #ifndef _AUDIO_DEF_H_
 #define _AUDIO_DEF_H_
 
+/*
+ *******************************************************************
+ *						Audio Common Definitions
+ *******************************************************************
+ */
+//Audio I/O Mode
+#define AUDIO_IO_SINGLE_ENDED			0	//单端:Single-Ended
+#define AUDIO_IO_DIFFERENTIAL			1	//差分:Differential
 
+//Volume Mode
+#define  VOL_TYPE_DIGITAL				0	//软件数字音量
+#define  VOL_TYPE_ANALOG				1	//硬件模拟音量
+#define  VOL_TYPE_AD					2	//联合音量(模拟数字混合调节)
+#define  VOL_TYPE_DIGITAL_HW			3  	//硬件数字音量
+
+//数据位宽定义
+#define  DATA_BIT_WIDE_16BIT  			0
+#define  DATA_BIT_WIDE_24BIT  			1
+#define  DATA_BIT_WIDE_32BIT  			2
+#define  DATA_BIT_WIDE_32BIT_FLOAT  	3
 
 /*
  *******************************************************************
@@ -205,22 +224,6 @@
 /*TWS通话，从机是否出声*/
 #define TWS_ESCO_MASTER_AND_SLAVE      1    //TWS通话主从机同时出声
 #define TWS_ESCO_ONLY_MASTER           2    //TWS通话只有主机出声
-
-/*
- *******************************************************************
- *						Common Definitions
- *******************************************************************
- */
-#define  VOL_TYPE_DIGITAL			0	//软件数字音量
-#define  VOL_TYPE_ANALOG			1	//硬件模拟音量
-#define  VOL_TYPE_AD				2	//联合音量(模拟数字混合调节)
-#define  VOL_TYPE_DIGITAL_HW		3  	//硬件数字音量
-
-//数据位宽定义
-#define  DATA_BIT_WIDE_16BIT  			0
-#define  DATA_BIT_WIDE_24BIT  			1
-#define  DATA_BIT_WIDE_32BIT  			2
-#define  DATA_BIT_WIDE_32BIT_FLOAT  	3
 
 /*
  *******************************************************************

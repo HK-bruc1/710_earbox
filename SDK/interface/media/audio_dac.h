@@ -60,6 +60,9 @@ struct audio_dac_io_param {
     u8 clk_sel;
 };
 
+
+extern struct audio_dac_hdl dac_hdl;
+
 void audio_dac_clock_init();
 
 int audio_dac_clk_switch(u8 clk);
@@ -215,9 +218,9 @@ int audio_dac_set_digital_vol(struct audio_dac_hdl *dac, u16 vol);
 */
 int audio_dac_set_analog_vol(struct audio_dac_hdl *dac, u16 vol);
 
-int audio_dac_ch_analog_gain_set(struct audio_dac_hdl *dac, u32 ch, u32 again);
+int audio_dac_ch_analog_gain_set(u32 ch, u32 again);
 
-int audio_dac_ch_analog_gain_get(struct audio_dac_hdl *dac, u32 ch);
+int audio_dac_ch_analog_gain_get(u32 ch);
 
 int audio_dac_ch_digital_gain_set(struct audio_dac_hdl *dac, u32 ch, u32 dgain);
 
@@ -501,6 +504,7 @@ void audio_dac_limiter_open();
 void audio_dac_limiter_close();
 void audio_dac_fifo_start(struct audio_dac_hdl *dac);
 
+int audio_dac_syncts_enter_update_frame(struct audio_dac_channel *ch);
 
 int dac_analog_open_cb(struct audio_dac_hdl *);
 int dac_analog_close_cb(struct audio_dac_hdl *);
@@ -510,6 +514,8 @@ int dac_analog_light_close_cb(struct audio_dac_hdl *);
 int audio_dac_buf_frames_fade_out(struct audio_dac_hdl *dac, int frames);
 int dac_set_fifo_start_and_delay(struct audio_dac_hdl *dac);
 void audio_dac_delay_off(u8 flag);
+int __audio_dac_try_power_on(struct audio_dac_hdl *dac, u8 from_anc);
+void dac_platform_power_on();
 
 #endif
 

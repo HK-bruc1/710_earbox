@@ -15,9 +15,9 @@
     *(.jlsp_far_front_bss)
 
 	*(.lhdc.data.bss)
-	*(.lhdcv4decode.bss)
+	*(.lhdcv4dec_data.bss)
 	*(.lhdc_v5.data.bss)
-	*(.lhdcv5decode.bss)
+	*(.lhdcv5_dec.data.bss)
     *(.ldac_dec.data.bss)
     *(.ldac.data.bss)
     *(.ldac_enc.data.bss)

@@ -20,7 +20,7 @@
 #define AUD_DAC_TRIM_ENABLE					0
 #define TCFG_AUDIO_DAC_NOISEGATE_ENABLE     1
 #define AUDIO_DAC_MAX_SAMPLE_RATE           48000
-
+#define TCFG_AUDIO_DAC_CLASSH_EN            0
 /*
  * Hi-Res Audio使能LHDC/LDAC要求：
  * <1>DAC最高采样率调整到96K
@@ -83,6 +83,8 @@
 /*编解码编译链接配置*/
 #define AUD_AAC_DEC_AT_RAM		            1   //AAC解码
 #define AUDIO_LDAC_AT_RAM			        1	//LDAC解码
+#define AUDIO_LHDC_AT_RAM			        0	//LHDCv3/v4解码 :78K左右,如果ram不够可以只放L2的段，40K左右
+#define AUDIO_LHDC_V5_AT_RAM			    0	//LHDCV5解码 : 18K左右
 #define AUDIO_MSBC_CODEC_AT_RAM		        1	//MSBC 编解码
 #define AUDIO_CVSD_CODEC_AT_RAM		        1	//CVSD 编解码
 #define AUDIO_JLA_CODEC_AT_RAM		        1	//JLA 编解码

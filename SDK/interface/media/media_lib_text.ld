@@ -97,15 +97,25 @@
     *(.pcm_code)
     *(.pcm_const)
 
+#if AUDIO_LHDC_AT_RAM == 0
     *(.lhdc.text.const)
     *(.lhdc.text)
-    *(.lhdcv4decode.text)
-    *(.lhdcv4decode.const)
+    *(.lhdc_dec.text.cache.L2.run)
+    *(.lhdcv4_dec.text)
+    *(.lhdcv4_dec.const)
+	*(.lhdcv4_dec_text.cashe.L2.run)
+    . = ALIGN(4);
+#endif
 
+#if AUDIO_LHDC_V5_AT_RAM == 0
     *(.lhdc_v5.text.const)
     *(.lhdc_v5.text)
-    *(.lhdcv5decode.text)
-    *(.lhdcv5decode.const)
+    *(.lhdc_v5_dec.text.cache.L2.run)
+
+    *(.lhdcv5_dec.text)
+    *(.lhdcv5_dec.const)
+	*(.lhdcv5_dec_text.cashe.L2.run)
+#endif
 
 #if AUDIO_LDAC_AT_RAM == 0
     *(.ldac_dec.text)

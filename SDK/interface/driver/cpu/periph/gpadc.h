@@ -45,6 +45,14 @@ u32 adc_get_value_blocking(enum AD_CH ch);
   */
 u32 adc_get_value_blocking_filter(enum AD_CH ch, u32 sample_times);
 
+/**@brief 阻塞式dma模式采集指定通道原始值,采集 sample_times次,
+  * @param[in]  ch              指定通道
+  * @param[in]  buffer          dma缓冲区域
+  * @param[in]  sample_times    采样次数
+  * @return     value           sample_times次采样，去掉最大，最小值之后的ad值累加
+  */
+u32 adc_get_value_blocking_filter_dma(enum AD_CH ch, u32 *buffer, u32 sample_times);
+
 /**@brief 阻塞式采集指定通道电压值,采集一次
   * @param[in]  ch      指定通道
   * @return     voltage 电压值, 单位:mv

@@ -77,6 +77,9 @@ void audio_common_clock_close(void);
 void audio_common_power_open(void);
 void audio_common_power_close(void);
 
+void audio_common_classh_clock_open(u8 classh_div);
+void audio_common_classh_clock_close();
+
 void audio_common_dac_cic_set(audio_dac_cic_t *cic);
 void audio_common_dac_cic_update(void);
 void audio_common_dac_drc_set(audio_dac_drc_t *drc);

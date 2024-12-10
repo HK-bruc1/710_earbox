@@ -113,6 +113,7 @@ int bt_key_power_msg_remap(int *msg)
     void *outgoing_device = NULL;
     void *siri_device = NULL;
 
+    int tws_state = tws_api_get_tws_state();
     int num = btstack_get_conn_devices(devices, 2);
     for (int i = 0; i < num; i++) {
         int state = bt_get_phone_state(devices[i]);
@@ -126,18 +127,11 @@ int bt_key_power_msg_remap(int *msg)
             siri_device = devices[i];
         }
     }
-
+    /* 通话相关场景下按键流程 */
     if (active_device) {
         switch (key_action) {
         case KEY_ACTION_CLICK:
-#if TCFG_IOKEY_ENABLE || TCFG_ADKEY_ENABLE
             app_msg = APP_MSG_CALL_HANGUP;
-#endif
-            break;
-        case KEY_ACTION_DOUBLE_CLICK:
-#if TCFG_LP_TOUCH_KEY_ENABLE
-            app_msg = APP_MSG_CALL_HANGUP;
-#endif
             break;
         default:
             break;
@@ -145,16 +139,9 @@ int bt_key_power_msg_remap(int *msg)
     } else if (incoming_device) {
         switch (key_action) {
         case KEY_ACTION_CLICK:
-#if TCFG_IOKEY_ENABLE || TCFG_ADKEY_ENABLE
             app_msg = APP_MSG_CALL_ANSWER;
-#endif
             break;
         case KEY_ACTION_DOUBLE_CLICK:
-#if TCFG_LP_TOUCH_KEY_ENABLE
-            app_msg = APP_MSG_CALL_ANSWER;
-#endif
-            break;
-        case KEY_ACTION_HOLD_1SEC:
             app_msg = APP_MSG_CALL_HANGUP;
             break;
         default:
@@ -163,14 +150,7 @@ int bt_key_power_msg_remap(int *msg)
     } else if (outgoing_device) {
         switch (key_action) {
         case KEY_ACTION_CLICK:
-#if TCFG_IOKEY_ENABLE || TCFG_ADKEY_ENABLE
             app_msg = APP_MSG_CALL_HANGUP;
-#endif
-            break;
-        case KEY_ACTION_HOLD_1SEC:
-#if TCFG_LP_TOUCH_KEY_ENABLE
-            app_msg = APP_MSG_CALL_HANGUP;
-#endif
             break;
         default:
             break;
@@ -183,10 +163,8 @@ int bt_key_power_msg_remap(int *msg)
         default:
             break;
         }
-
     } else {
-        /* 非通话相关状态 */
-        int tws_state = tws_api_get_tws_state();
+        /* 非通话相关场景下按键流程 */
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
         int tws_cig_state = is_cig_phone_conn();
         if (tws_state & TWS_STA_PHONE_CONNECTED || tws_cig_state) { //已连接手机经典蓝牙或者cig
@@ -196,15 +174,10 @@ int bt_key_power_msg_remap(int *msg)
             char channel = tws_api_get_local_channel();
             switch (key_action) {
             case KEY_ACTION_CLICK:
-#if TCFG_IOKEY_ENABLE || TCFG_ADKEY_ENABLE
                 app_msg = APP_MSG_MUSIC_PP;
-#endif
                 break;
             case KEY_ACTION_DOUBLE_CLICK:
-#if TCFG_LP_TOUCH_KEY_ENABLE
-                app_msg = APP_MSG_MUSIC_PP;
-#else
-                // TWS连上情况下, 左耳双击上一曲, 右耳双击下一曲
+                // TWS连上情况下, 双击右耳上一曲
                 if (tws_state & TWS_STA_SIBLING_CONNECTED) {
                     if ((channel == 'L' && msg[1] != APP_KEY_MSG_FROM_TWS) ||
                         (channel == 'R' && msg[1] == APP_KEY_MSG_FROM_TWS)) {
@@ -212,37 +185,11 @@ int bt_key_power_msg_remap(int *msg)
                         break;
                     }
                 }
+                // 双击左耳下一曲
                 app_msg = APP_MSG_MUSIC_NEXT;
-#endif
-                break;
-            case KEY_ACTION_LONG:
-            case KEY_ACTION_HOLD:
-#if TCFG_IOKEY_ENABLE
-                // TWS连上情况下, 按住左耳上一曲
-                if (tws_state & TWS_STA_SIBLING_CONNECTED) {
-                    if ((channel == 'L' && msg[1] != APP_KEY_MSG_FROM_TWS) ||
-                        (channel == 'R' && msg[1] == APP_KEY_MSG_FROM_TWS)) {
-                        app_msg = APP_MSG_VOL_DOWN;
-                        break;
-                    }
-                }
-                app_msg = APP_MSG_VOL_UP;
-#endif
-                break;
-            case KEY_ACTION_HOLD_1SEC:
-#if TCFG_LP_TOUCH_KEY_ENABLE
-                // TWS连上情况下, 按住左耳上一曲
-                if (tws_state & TWS_STA_SIBLING_CONNECTED) {
-                    if ((channel == 'L' && msg[1] != APP_KEY_MSG_FROM_TWS) ||
-                        (channel == 'R' && msg[1] == APP_KEY_MSG_FROM_TWS)) {
-                        app_msg = APP_MSG_MUSIC_PREV;
-                        break;
-                    }
-                }
-                app_msg = APP_MSG_MUSIC_NEXT;
-#endif
                 break;
             case KEY_ACTION_TRIPLE_CLICK:
+                // TWS连上情况下, 三击左耳进入低延迟
                 if (tws_state & TWS_STA_SIBLING_CONNECTED) {
                     if ((channel == 'L' && msg[1] != APP_KEY_MSG_FROM_TWS) ||
                         (channel == 'R' && msg[1] == APP_KEY_MSG_FROM_TWS)) {
@@ -250,30 +197,34 @@ int bt_key_power_msg_remap(int *msg)
                         break;
                     }
                 }
+                // 三击右耳进入SIRI
                 app_msg = APP_MSG_OPEN_SIRI;
-                break;
-            default:
-                break;
-            }
-        } else {
-            switch (key_action) {
-            case KEY_ACTION_DOUBLE_CLICK:
-#if CONFIG_TWS_PAIR_MODE == CONFIG_TWS_PAIR_BY_CLICK
-                if (tws_state & TWS_STA_TWS_UNPAIRED) { // TWS未配对
-                    app_msg = APP_MSG_TWS_START_PAIR;
-                }
-#endif
                 break;
             default:
                 break;
             }
         }
     }
-
+    /* 所有场景下按键流程 */
     switch (key_action) {
-    case KEY_ACTION_TWS_HOLD_5SEC:
-        //app_msg = APP_MSG_TWS_POWER_OFF;
+    case KEY_ACTION_HOLD_1SEC:
+        //长按切换ANC模式
+        app_msg = APP_MSG_ANC_SWITCH;
         break;
+    case KEY_ACTION_HOLD_5SEC:
+#if TCFG_USER_TWS_ENABLE
+        app_msg = APP_MSG_TWS_POWER_OFF;
+#else
+        app_msg = APP_MSG_KEY_POWER_OFF;
+#endif
+        break;
+#if (TCFG_USER_TWS_ENABLE && (CONFIG_TWS_PAIR_MODE == CONFIG_TWS_PAIR_BY_CLICK))
+    case KEY_ACTION_FOURTH_CLICK:
+        if (tws_state & TWS_STA_TWS_UNPAIRED) { // TWS未配对，按键配对
+            app_msg = APP_MSG_TWS_START_PAIR;
+            break;
+        }
+#endif
     default:
         break;
     }

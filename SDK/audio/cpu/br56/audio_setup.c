@@ -312,6 +312,12 @@ struct dac_platform_data dac_data = {//临时处理
     .bit_width      = DAC_BIT_WIDTH_16,
     // TODO
     .dacldo_vsel    = 3,
+#if (TCFG_DAC_PERFORMANCE_MODE == DAC_MODE_HIGH_PERFORMANCE)
+    .pa_isel0           = TCFG_AUDIO_DAC_HP_PA_ISEL0,
+#else
+    .pa_isel0           = TCFG_AUDIO_DAC_LP_PA_ISEL0,
+#endif
+    .classh_en      = TCFG_AUDIO_DAC_CLASSH_EN,
     .classh_mode    = 0,
     .classh_down_step = 3000000,
 };
