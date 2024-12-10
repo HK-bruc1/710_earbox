@@ -106,10 +106,11 @@
 #define MIC_LDO_STA_CLOSE                   (0)   //MICLDO电源关闭
 #define MIC_LDO_STA_OPEN                    (1)   //MICLDO电源开启
 
-#define MIC_CAPLESS_VER0					(0)
-#define MIC_CAPLESS_VER1					(1)
-#define MIC_CAPLESS_VER2					(2)
-#define MIC_CAPLESS_VER3					(3)
+/*省电容MIC版本定义*/
+#define MIC_CAPLESS_VER0					(0)	//693N 695N 696N
+#define MIC_CAPLESS_VER1					(1)	//697N 897N 698N
+#define MIC_CAPLESS_VER2					(2)	//700N 701N
+#define MIC_CAPLESS_VER3					(3)	//703N 706N AW32N
 /*
  *******************************************************************
  *						FFT Definitions
