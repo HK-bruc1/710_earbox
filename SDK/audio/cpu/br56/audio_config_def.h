@@ -85,8 +85,8 @@
 #define AUDIO_LDAC_AT_RAM			        1	//LDAC解码
 #define AUDIO_LHDC_AT_RAM			        0	//LHDCv3/v4解码 :78K左右,如果ram不够可以只放L2的段，40K左右
 #define AUDIO_LHDC_V5_AT_RAM			    0	//LHDCV5解码 : 18K左右
-#define AUDIO_MSBC_CODEC_AT_RAM		        1	//MSBC 编解码
-#define AUDIO_CVSD_CODEC_AT_RAM		        1	//CVSD 编解码
+#define AUDIO_MSBC_CODEC_AT_RAM		        0	//MSBC 编解码
+#define AUDIO_CVSD_CODEC_AT_RAM		        0	//CVSD 编解码
 #define AUDIO_JLA_CODEC_AT_RAM		        1	//JLA 编解码
 #define AUDIO_LC3_CODEC_AT_RAM		        0	//LC3 编解码
 
