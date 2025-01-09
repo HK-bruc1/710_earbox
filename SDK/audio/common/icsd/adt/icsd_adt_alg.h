@@ -1,7 +1,50 @@
 #ifndef _ICSD_ADT_ALG_H
 #define _ICSD_ADT_ALG_H
 
+//==========AVC=========================
+typedef struct {
+    s16 *refmic;
+    s16 *dac_data;
+} __adt_avc_run_parm;
 
+typedef struct {
+    int ctl_lvl;
+} __adt_avc_output;
+
+int icsd_adt_avc_get_libfmt();
+int icsd_adt_avc_set_infmt(int _ram_addr);
+void icsd_adt_avc_run(__adt_avc_run_parm *_run_parm, __adt_avc_output *_output);
+//==========RTANC========================
+typedef struct {
+    u8  dma_ch;
+    s16 *inptr_h;
+    s16 *inptr_l;
+    float *out0_sum;
+    float *out1_sum;
+    float *out2_sum;
+    int   *fft_ram;
+    float *hpest_temp;
+} __adt_anc_part1_parm;
+
+typedef struct {
+    u8  dma_ch;
+    float *out0_sum;
+    float *out1_sum;
+    float *out2_sum;
+    float *sz_out0_sum;
+    float *sz_out1_sum;
+    float *sz_out2_sum;
+    float *szpz_out;
+} __adt_rtanc_part2_parm;
+
+int  icsd_adt_rtanc_get_libfmt();
+int  icsd_adt_rtanc_set_infmt(int _ram_addr);
+void icsd_adt_alg_rtanc_run_part1(__adt_anc_part1_parm *_part1_parm);
+void icsd_adt_alg_rtanc_part2_parm_init();
+void icsd_adt_alg_rtanc_run_part2(__adt_rtanc_part2_parm *_part2_parm);
+u8 	 icsd_adt_alg_rtanc_get_wind_lvl();
+void icsd_adt_alg_rtanc_part1_reset();
+void icsd_adt_rtanc_alg_output(void *rt_param_l, void *rt_param_r);
 //==========EIN========================
 typedef struct {
     s16 *adc_ref_buf;
@@ -16,11 +59,14 @@ typedef struct {
 
 typedef struct {
     u8 ein_output;
+    void *ein_alg_bt_inf;
+    u16 ein_alg_bt_len;
 } __adt_ein_output;
 
 int  icsd_adt_ein_get_libfmt();
-int  icsd_adt_ein_set_infmt(int _ram_addr);
+int  icsd_adt_ein_set_infmt(int _ram_addr, u8 ein_state);
 void icsd_adt_alg_ein_run(__adt_ein_run_parm *_run_parm, __adt_ein_output *_output);
+void icsd_EIN_output(u8 ein_state);
 //==========WAT========================
 typedef struct {
     s16 *data_1_ptr;
@@ -97,6 +143,7 @@ u8   icsd_adt_wind_data_sync_en();
 void icsd_wind_run_part2_cmd();
 void icsd_wind_data_sync_master_cmd();
 void *icsd_adt_wind_part1_rx();
+u8 	 icsd_adt_win_get_tlkmic_en();
 //==========VDT========================
 typedef struct {
     s16 *refmic;

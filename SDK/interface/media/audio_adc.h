@@ -241,6 +241,9 @@ void audio_anc_mic_open(audio_adc_mic_mana_t *mic_param, u8 trans_en, u8 adc_ch)
 
 void audio_anc_mic_close(audio_adc_mic_mana_t *mic_param);
 
+#if SUPPORT_MIC_CAPLESS
+int audio_mic_bias_adjust(struct mic_capless_trim_result *capless_trim, struct mic_capless_trim_param *capless_param);
+#endif
 
 #endif/*AUDIO_ADC_H*/
 

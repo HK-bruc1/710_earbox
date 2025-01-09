@@ -50,6 +50,13 @@
 #define CONFIG_VERSION  "V2.1.1"
 #endif
 
+#if ((ANC_CHIP_VERSION == ANC_VERSION_BR30) || (ANC_CHIP_VERSION == ANC_VERSION_BR30C) || \
+	(ANC_CHIP_VERSION == ANC_VERSION_BR36))
+#define ANCTOOL_MIC_DATA_EXPORT_EN			0
+#else
+#define ANCTOOL_MIC_DATA_EXPORT_EN			1	//MIC 数据导出使能
+#endif
+
 #ifndef ANC_EAR_ADAPTIVE_EN
 #define ANC_EAR_ADAPTIVE_EN		0
 #endif/*ANC_EAR_ADAPTIVE_EN*/
@@ -468,7 +475,7 @@ void app_anctool_ack_mute_train_get_pow(void)
     anctool_api_write(cmd, 7);
 }
 
-#if ANC_CHIP_VERSION == ANC_VERSION_BR28
+#if ANCTOOL_MIC_DATA_EXPORT_EN
 void app_anctool_ack_mic_power(void)
 {
     u8 *cmd;
@@ -1042,7 +1049,7 @@ static void app_anctool_module_deal(u8 *data, u16 len)
         anctool_printf("CMD_GET_ANC_HEARAID_EN\n");
         app_anctool_ack_get_anc_hearaid_en();
         break;
-#if ANC_CHIP_VERSION == ANC_VERSION_BR28
+#if ANCTOOL_MIC_DATA_EXPORT_EN
     case CMD_MIC_DATA_EXPORT_EN://开启/关闭mic数据采集
         anctool_printf("CMD_MIC_DATA_EXPORT_EN: %d, mic_type: %d\n", data[1], data[2]);
         __this->mic_pow_type = data[2] - ANC_POW_SEL_R_DAC_REF;	//数组下标对齐

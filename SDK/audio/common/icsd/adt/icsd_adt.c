@@ -19,46 +19,18 @@
 #include "audio_anc_debug_tool.h"
 #include "effects/convert_data.h"
 
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+#include "rt_anc_app.h"
+#endif
+
 #define ICSD_ANC_TASK_NAME  "icsd_anc"
 #define ICSD_ADT_TASK_NAME  "icsd_adt"
 #define ICSD_SRC_TASK_NAME  "icsd_src"
 #define ICSD_RTANC_TASK_NAME "rt_anc"
 
-int (*adt_printf)(const char *format, ...);
-//int (*wat_printf)(const char *format, ...);
-//int (*ein_printf)(const char *format, ...);
-int (*wind_printf)(const char *format, ...);
 struct adt_function	*ADT_FUNC;
-const u32 ICSD_TWS_STA_SIBLING_CONNECTED = TWS_STA_SIBLING_CONNECTED;
-
-static u8 icsd_wind_lvl = 0;
-void icsd_wind_output(u8 wind_lvl)
-{
-    wind_printf("%s:%d", __func__, wind_lvl);
-    icsd_wind_lvl = wind_lvl;
-    /*独立风噪模式时，通过这里输出响应*/
-    if (ICSD_WIND_EN && ICSD_WIND_MODE) {
-        audio_acoustic_detector_output_hdl(0, icsd_wind_lvl, 0);
-    }
-}
-
-void icsd_envnl_output(int result)
-{
-    printf("icsd_envnl_output:>>>>>>>>>>>>>>>>>>%d\n", result);
-}
-
-void icsd_adt_run_output(__adt_result *_adt_result)
-{
-    u8 voice_state = _adt_result->voice_state;
-    /* u8 wind_lvl    = _adt_result->wind_lvl; */
-    u8 wind_lvl    = icsd_wind_lvl;
-    u8 wat_result  = _adt_result->wat_result;//使用风噪检测回调的风噪信息
-    adt_printf("%s: voice %d, wind %d, wat %d", __func__, voice_state, wind_lvl, wat_result);
-    /*关闭独立风噪模式时，通过这里输出响应*/
-    if (ICSD_WIND_MODE == 0) {
-        audio_acoustic_detector_output_hdl(voice_state, wind_lvl, wat_result);
-    }
-}
+__adt_anc46k_ctl *ANC46K_CTL = NULL;
+int (*adt_printf)(const char *format, ...) = _adt_printf;
 
 #define TWS_FUNC_ID_SDADT_M2S    TWS_FUNC_ID('A', 'D', 'T', 'M')
 REGISTER_TWS_FUNC_STUB(icsd_adt_m2s) = {
@@ -70,6 +42,15 @@ REGISTER_TWS_FUNC_STUB(icsd_adt_s2m) = {
     .func_id = TWS_FUNC_ID_SDADT_S2M,
     .func    = icsd_adt_s2m_cb,
 };
+
+u8 icsd_adt_tws_state()
+{
+    u32 tws_state = ADT_FUNC->tws_api_get_tws_state();
+    if (tws_state & TWS_STA_SIBLING_CONNECTED) {
+        return 1;
+    }
+    return 0;
+}
 
 void icsd_adt_tws_m2s(u8 cmd)
 {
@@ -91,11 +72,10 @@ void icsd_adt_tws_s2m(u8 cmd)
 
 int icsd_adt_tws_msync(u8 *data, s16 len)
 {
-    u32 tws_state = ADT_FUNC->tws_api_get_tws_state();
-    u32 role = ADT_FUNC->tws_api_get_role();
     int err = 0;
-    if (tws_state & ICSD_TWS_STA_SIBLING_CONNECTED) {
+    if (ADT_FUNC->icsd_adt_tws_state()) {
         icsd_adt_tx_unsniff_req();
+        u32 role = ADT_FUNC->tws_api_get_role();
         if (role == 0) { //master
             int ret = tws_api_send_data_to_sibling(data, len, TWS_FUNC_ID_SDADT_S2M);
             if (ret) {
@@ -112,11 +92,10 @@ int icsd_adt_tws_msync(u8 *data, s16 len)
 
 int icsd_adt_tws_ssync(u8 *data, s16 len)
 {
-    u32 tws_state = ADT_FUNC->tws_api_get_tws_state();
-    u32 role = ADT_FUNC->tws_api_get_role();
     int err = 0;
-    if (tws_state & ICSD_TWS_STA_SIBLING_CONNECTED) {
+    if (ADT_FUNC->icsd_adt_tws_state()) {
         icsd_adt_tx_unsniff_req();
+        u32 role = ADT_FUNC->tws_api_get_role();
         if (role == 0) { //master
             err = 1;
         } else {
@@ -131,6 +110,7 @@ int icsd_adt_tws_ssync(u8 *data, s16 len)
     return err;
 }
 
+//gali lib inside malloc
 void icsd_adt_dac_loopbuf_malloc(u16 points)
 {
     if (adt_dac_loopbuf) {
@@ -138,6 +118,7 @@ void icsd_adt_dac_loopbuf_malloc(u16 points)
         adt_dac_loopbuf = NULL;
     }
     adt_dac_loopbuf = zalloc(points * 2);
+    printf("dac loopbuf ram size:%d\n", points * 2);
 }
 
 void icsd_adt_dac_loopbuf_free()
@@ -283,36 +264,28 @@ void icsd_task_kill()
     }
 }
 
-void icsd_adt_init_pre()
+void icsd_adt_anc46k_out_reset()
 {
-    adt_printf = _adt_printf;
-    //wat_printf = _wat_printf;
-    wind_printf = _wind_printf;
-
-    int clk1 = clk_get("sys");
-    printf("sys clk:%d>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n", clk1);
-    if ((ICSD_WIND_EN && (ICSD_WIND_MODE)) || ICSD_ENVNL_EN) {
-        if (ICSD_WIND_3MIC) {
-            ADT_PATH_CONFIG |= ADT_PATH_3M_EN;
-        } else {
-            ADT_PATH_CONFIG &= ~ADT_PATH_3M_EN;
-        }
-    }
+    ANC46K_CTL->rptr = 0;
 }
 
-void icsd_anc_dma_4ch_on(u8 out_sel_ch01, u8 out_sel_ch23, int *buf, int len)
+void icsd_adt_anc46k_out_isr()
 {
-    printf("dma 4ch on:%d %d %x %d\n", out_sel_ch01, out_sel_ch23, (int)buf, len);
-    anc_dma_on_double_4ch(out_sel_ch01, out_sel_ch23, buf, len);
+    //该函数为中断内部函数只能做简单的流程处理，不能占用太多时间
+    if (ANC46K_CTL->loop_remain >= 512) {
+        os_taskq_post_msg("anc", 1, ANC_MSG_46KOUT_DEMO);
+    }
 }
 
 //////临时添加
 u8 audio_adt_talk_mic_analog_close()
 {
+    printf("talk_mic_analog_close\n");
     return 0;
 }
 u8 audio_adt_talk_mic_analog_open()
 {
+    printf("talk_mic_analog_open\n");
     return 0;
 }
 
@@ -345,11 +318,17 @@ void adt_function_init()
     //tws
     ADT_FUNC->tws_api_get_role = tws_api_get_role;
     ADT_FUNC->tws_api_get_tws_state = tws_api_get_tws_state;
+    ADT_FUNC->icsd_adt_tws_state = icsd_adt_tws_state;
     //anc
     ADT_FUNC->anc_dma_done_ppflag = anc_dma_done_ppflag;
     ADT_FUNC->anc_dma_on_double = anc_dma_on_double;
+#if ANC_CHIP_VERSION != ANC_VERSION_BR28
+    ADT_FUNC->anc_dma_on_double_4ch = anc_dma_on_double_4ch;
+#endif
     ADT_FUNC->icsd_adt_hw_suspend = icsd_adt_hw_suspend;
     ADT_FUNC->icsd_adt_hw_resume = icsd_adt_hw_resume;
+    ADT_FUNC->icsd_adt_anc46k_out_reset = icsd_adt_anc46k_out_reset;
+    ADT_FUNC->icsd_adt_anc46k_out_isr = icsd_adt_anc46k_out_isr;
     //dac
     ADT_FUNC->audio_dac_read_anc_reset = audio_dac_read_anc_reset;
     ADT_FUNC->audio_dac_read_anc = audio_dac_read_anc;
@@ -358,24 +337,17 @@ void adt_function_init()
     ADT_FUNC->icsd_adt_src_push = icsd_adt_src_push;
     ADT_FUNC->icsd_adt_src_close = icsd_adt_src_close;
     ADT_FUNC->icsd_adt_src_init = icsd_adt_src_init;
-}
+    //OUTPUT
+    ADT_FUNC->icsd_VDT_output = icsd_VDT_output_demo;
+    ADT_FUNC->icsd_WAT_output = icsd_WAT_output_demo;
+    ADT_FUNC->icsd_WDT_output = icsd_WDT_output_demo;
+    ADT_FUNC->icsd_EIN_output = icsd_EIN_output_demo;
+    ADT_FUNC->icsd_AVC_output = icsd_AVC_output_demo;
 
-void icsd_adt_rtanc_demo(void *param)
-{
-    printf("icsd_rtanc_demo>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-    icsd_task_create();
-    struct icsd_acoustic_detector_libfmt libfmt;
-    icsd_acoustic_detector_get_libfmt(&libfmt, 0);
-    struct icsd_acoustic_detector_infmt fmt;
-    fmt.alloc_ptr = zalloc(libfmt.lib_alloc_size);
-    fmt.param = param;
-    icsd_acoustic_detector_set_infmt(&fmt);
-    icsd_acoustic_detector_open();
-    extern void icsd_adt_rtanc_part1_start();
-    extern void rt_anc_function_init();
-    rt_anc_function_init();
-    icsd_adt_rtanc_part1_start();
-    icsd_acoustic_detector_resume(RESUME_ANCMODE, ADT_ANC_ON);
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+    ADT_FUNC->icsd_RTANC_output = audio_adt_rtanc_output_handle;
+#endif
+
 }
 
 void icsd_adt_tone_play_handler(u8 idx)

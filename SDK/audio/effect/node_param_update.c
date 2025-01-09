@@ -120,6 +120,16 @@ int chorus_udpate_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
     }
     return jlstream_set_node_param(NODE_UUID_CHORUS, node_name, &cfg, sizeof(cfg));
 }
+int dynamic_eq_pro_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    dynamic_eq_pro_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_DYNAMIC_EQ_PRO, node_name, &cfg, sizeof(cfg));
+}
 int dynamic_eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
 {
     dynamic_eq_param_tool_set cfg = {0};
@@ -130,6 +140,7 @@ int dynamic_eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
     }
     return jlstream_set_node_param(NODE_UUID_DYNAMIC_EQ, node_name, &cfg, sizeof(cfg));
 }
+
 int echo_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
 {
 
@@ -300,6 +311,9 @@ int eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
 
         //运行时，直接设置更新
         struct eq_adj eff = {0};
+        eff.type = EQ_IS_BYPASS_CMD;
+        eff.param.is_bypass = tab->is_bypass;
+        ret = jlstream_set_node_param(NODE_UUID_EQ, node_name, &eff, sizeof(eff)); //更新bypass 标志
         eff.type = EQ_GLOBAL_GAIN_CMD;
         eff.param.global_gain =  tab->global_gain;
         eff.fade_parm.fade_time = 1;        //en
@@ -318,10 +332,6 @@ int eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
             memcpy(&eff.param.seg, &tab->seg[i], sizeof(struct eq_seg_info));
             jlstream_set_node_param(NODE_UUID_EQ, node_name, &eff, sizeof(eff));//更新滤波器系数
         }
-
-        eff.type = EQ_IS_BYPASS_CMD;
-        eff.param.is_bypass = tab->is_bypass;
-        ret = jlstream_set_node_param(NODE_UUID_EQ, node_name, &eff, sizeof(eff));//更新bypass标志
 
         free(tab);
         return ret;
@@ -374,6 +384,9 @@ int sw_eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
 
         //运行时，直接设置更新
         struct eq_adj eff = {0};
+        eff.type = EQ_IS_BYPASS_CMD;
+        eff.param.is_bypass = tab->is_bypass;
+        ret = jlstream_set_node_param(NODE_UUID_SOF_EQ, node_name, &eff, sizeof(eff));//更新bypass标志
         eff.type = EQ_GLOBAL_GAIN_CMD;
         eff.param.global_gain =  tab->global_gain;
         eff.fade_parm.fade_time = 1;        //en
@@ -392,10 +405,6 @@ int sw_eq_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
             memcpy(&eff.param.seg, &tab->seg[i], sizeof(struct eq_seg_info));
             jlstream_set_node_param(NODE_UUID_SOF_EQ, node_name, &eff, sizeof(eff));//更新滤波器系数
         }
-
-        eff.type = EQ_IS_BYPASS_CMD;
-        eff.param.is_bypass = tab->is_bypass;
-        ret = jlstream_set_node_param(NODE_UUID_SOF_EQ, node_name, &eff, sizeof(eff));//更新bypass标志
 
         free(tab);
         return ret;
@@ -423,6 +432,17 @@ int multiband_drc_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
     free(data_buf);
     multiband_drc_param_debug(mdrc_parm);
 
+
+    //common_parm 更新
+    struct mdrc_common_param_update {
+        int type;
+        struct mdrc_common_param data;
+    };
+    struct mdrc_common_param_update *common_parm = zalloc(sizeof(struct mdrc_common_param_update));
+    common_parm->type = COMMON_PARM;
+    memcpy(&common_parm->data, &mdrc_parm->common_param, sizeof(struct mdrc_common_param));
+    ret = jlstream_set_node_param(NODE_UUID_MDRC, node_name, common_parm, sizeof(struct mdrc_common_param_update));
+
     //drc更新
     struct mdrc_drc_param_update {
         int type;
@@ -438,15 +458,6 @@ int multiband_drc_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
         jlstream_set_node_param(NODE_UUID_MDRC, node_name, drc_parm, drc_parm->len + sizeof(int) * 2);
     }
 
-    //common_parm 更新
-    struct mdrc_common_param_update {
-        int type;
-        struct mdrc_common_param data;
-    };
-    struct mdrc_common_param_update *common_parm = zalloc(sizeof(struct mdrc_common_param_update));
-    common_parm->type = COMMON_PARM;
-    memcpy(&common_parm->data, &mdrc_parm->common_param, sizeof(struct mdrc_common_param));
-    ret = jlstream_set_node_param(NODE_UUID_MDRC, node_name, common_parm, sizeof(struct mdrc_common_param_update));
 
     multiband_drc_param_free(mdrc_parm);
     free(mdrc_parm);
@@ -617,3 +628,87 @@ int noisegate_pro_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
     }
     return jlstream_set_node_param(NODE_UUID_NOISEGATE_PRO, node_name, &cfg, sizeof(cfg));
 }
+
+int phaser_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct phaser_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_PHASER, node_name, &cfg, sizeof(cfg));
+}
+
+int flanger_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct flanger_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_FLANGER, node_name, &cfg, sizeof(cfg));
+}
+
+int chorus_advance_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct chorus_advance_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_CHORUS_ADVANCE, node_name, &cfg, sizeof(cfg));
+}
+
+int pingpong_echo_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct pingpong_echo_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_PINGPONG_ECHO, node_name, &cfg, sizeof(cfg));
+}
+
+int stereo_spatial_wider_update_parm(u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct stereo_spatial_wider_param_tool_set cfg = {0};
+    int ret = jlstream_read_form_data(mode_index, node_name, cfg_index, &cfg);
+    if (!ret) {
+        printf("read parm err, %s, %s\n", __func__, node_name);
+        return -1;
+    }
+    return jlstream_set_node_param(NODE_UUID_STEREO_SPATIAL_WIDER, node_name, &cfg, sizeof(cfg));
+}
+
+/*
+ *通用音效模块更新
+ * */
+int node_param_update_parm(u16 uuid, u8 mode_index, char *node_name, u8 cfg_index)
+{
+    struct cfg_info info = {0};
+    int ret = jlstream_read_form_node_info_base(mode_index, node_name, cfg_index, &info);
+    if (ret) {
+        printf("read info err, %s, %s, uuid:0x%x\n", __func__, node_name, uuid);
+        return -1;
+    }
+    u8 *cfg = zalloc(info.size);
+    if (!cfg) {
+        printf("read alloc err, %s, %s, uuid:0x%x\n", __func__, node_name, uuid);
+        return -1;
+    }
+    ret = jlstream_read_form_cfg_data(&info, cfg);
+    if (!ret) {
+        printf("read data err, %s, %s, uuid:0x%x\n", __func__, node_name, uuid);
+        free(cfg);
+        return -1;
+    }
+    ret = jlstream_set_node_param(uuid, node_name, cfg, ret);
+    free(cfg);
+    return ret;
+}
+
+

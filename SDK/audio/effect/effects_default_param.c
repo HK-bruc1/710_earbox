@@ -220,8 +220,9 @@ int get_eff_default_param(int arg)
 #endif
 
     char *vspro_name[] = {"PreLimiter", "LRLimiter", "CLimiter", "LRSLimiter",
-                          "CDrcAdv", "LRSDrcAdv", "LRCross", "LRBand", "LSCBand", "RSCBand",
-                          "LRPcmDly", "LRSNsGate", "UpMix2to5", "RLSCBand", "RRSCBand"
+                          "CDrcAdv", "LRSDrcAdv", "LRCross", "LRBand", "LR3Band", "LSCBand", "RSCBand",
+                          "LRPcmDly", "LRSNsGate", "UpMix2to5", "RLSCBand", "RRSCBand",
+                          "SPWider"
                          };//子节点名
 
     for (int i = 0; i < ARRAY_SIZE(vspro_name); i++) {

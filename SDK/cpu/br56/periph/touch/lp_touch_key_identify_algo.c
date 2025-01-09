@@ -465,7 +465,7 @@ void lp_touch_key_identify_algorithm_set_tia_addr(u32 ch_idx, void *addr)
 
 void *lp_touch_key_identify_algorithm_get_tia_addr(u32 ch_idx)
 {
-    return (void *)&tia_ch[ch_idx];
+    return (void *)tia_ch[ch_idx];
 }
 
 void lp_touch_key_identify_algorithm_init(u32 ch_idx, u32 temp_th, u32 edge_down_th)

@@ -11,71 +11,14 @@
 #include "icsd_wind.h"
 #include "icsd_adt.h"
 
-
-
 //====================风噪检测配置=====================
-const u8 ICSD_WIND_PHONE_TYPE = SDK_WIND_PHONE_TYPE;
-const u8 ICSD_WIND_MIC_TYPE   = SDK_WIND_MIC_TYPE;
-const u8 ICSD_WIND_ALG_BT_INF = 0;
+const u8 ICSD_WIND_PHONE_TYPE  = SDK_WIND_PHONE_TYPE;
+const u8 ICSD_WIND_MIC_TYPE    = SDK_WIND_MIC_TYPE;
+const u8 ICSD_WIND_ALG_BT_INF  = 1;
+const u8 ICSD_WIND_DATA_BT_INF = 0;
 
 struct wind_function *WIND_FUNC;
-
-//==============================================//
-//    风噪检测参数配置
-//==============================================//
-const u8  ICSD_WIND_3MIC = 0; //当前不支持3mic
-const u16 correrr_thr = 300;
-const int wind_sat_thr = 10000;
-const u8 wind_lowfreq_point = 10;
-const u8 wind_pwr_cnt_thr = 0;
-const float wind_margin_dB = -20;
-const float wind_pwr_ref_thr = 15;
-const float wind_pwr_err_thr = 20;
-const float wind_iir_alpha = 16;
-const float wind_lpf_alpha = 0.0625;
-const float wind_hpf_alpha = 0.001;
-const float wind_max_min_diff_thr = 32;
-const float wind_timepwr_diff_thr0 = 50;
-const float wind_timepwr_diff_thr1 = 400;
-const float wind_ref2err_diff_thr = 50;//50;
-const float wind_ref2err_diffmin_thr = 15;
-const u8 wind_num_thr = 4;
-const float wind_tlk_corr = 0.35;//0.3 ~ 1
-const u8 wind_tlk_corr_num = 6;//7
-const float wind_tlk_corr_avr = 0.35;//0.3;
-const u8 wind_corr_select = 0;
-const u8 wind_fcorr_fpoint = 10;
-const float wind_fcorr_min_thr = 0.6;
-const int wind_ref2err_cnt = 13;
-const u8 wind_stable_cnt_thr = 1;
-const u8 wind_lvl_scale = 4;
-const u8 icsd_wind_num_thr2 = 4;
-const u8 icsd_wind_num_thr1 = 2;
-const u8 wind_out_mode = 1;//1:滤波输出(滤波模式) 0:连续3包无风输出0(快速模式)
-const float wind_ref_cali_table[25] = {0};
-const float wind_pwr_bw_thr0 = -4;
-const float wind_pwr_bw_thr1 = -40;
-const float wind_tppwr_bw_thr0 = -4;
-const float wind_tppwr_bw_thr1 = 1;
-const u8 wind_mic_sel = 0;
-const float wind_errpwr_100hz_thr = 0;
-const float wind_refpwr_100hz_thr = 20;
-const u8 wind_cxy_cnt_thr1 = 18;
-const u8 wind_cxy_cnt_thr2 = 1;
-const float pwr_div_thr = 1.6;
-const u8 cepst_en = 1;
-const u8 cepst_debug = 0;
-const float icsd_cepst_thr = -15;
-const float cepst_1p_thr = 8;
-
-
-int win_printf_off(const char *format, ...)
-{
-    return 0;
-}
-
 int (*win_printf)(const char *format, ...) = _win_printf;
-
 
 void wind_config_init(__wind_config *_wind_config)
 {

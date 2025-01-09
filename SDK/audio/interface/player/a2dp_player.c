@@ -391,6 +391,33 @@ void a2dp_player_reset(void)
     }
 }
 
+#if ((defined TCFG_AUDIO_SPATIAL_EFFECT_ENABLE) && TCFG_AUDIO_SPATIAL_EFFECT_ENABLE)
+extern void set_a2dp_spatial_audio_mode(enum SPATIAL_EFX_MODE mode);
+//此函数用于开空间音频时将全局采样率降低到48k
+//关空间音频且开着ldac的时候将采样率还原到96k
+void a2dp_player_reset_spatial(void)
+{
+    u8 bt_addr[6];
+    if (g_a2dp_player) {
+        memcpy(bt_addr, g_a2dp_player->bt_addr, 6);
+        a2dp_player_close(bt_addr);
+        u8 mode = get_a2dp_spatial_audio_mode();
+        if (mode == SPATIAL_EFX_OFF) { //开空间音频,设置采样率为48k
+            mode = SPATIAL_EFX_TRACKED;
+            extern int audio_general_set_global_sample_rate(int sample_rate);
+            audio_general_set_global_sample_rate(48000);
+            set_a2dp_spatial_audio_mode(mode);
+        } else { //关空间音频,设置采样率为96k
+            mode = SPATIAL_EFX_OFF;
+            extern int audio_general_set_global_sample_rate(int sample_rate);
+            audio_general_set_global_sample_rate(96000);
+            set_a2dp_spatial_audio_mode(mode);
+        }
+        a2dp_player_open(bt_addr);
+    }
+}
+#endif
+
 //变调接口
 int a2dp_file_pitch_up()
 {

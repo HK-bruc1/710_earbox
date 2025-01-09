@@ -33,6 +33,7 @@
 #include "btstack_rcsp_user.h"
 #include "rcsp_ch_loader_download.h"
 #include "clock_manager/clock_manager.h"
+#include "update.h"
 
 #if RCSP_MODE == RCSP_MODE_EARPHONE
 #include "earphone.h"
@@ -527,7 +528,6 @@ int rcsp_user_spp_state_specific(u8 packet_type, u8 *spp_remote_addr)
             return 0;
         } else {
 #if TCFG_RCSP_DUAL_CONN_ENABLE
-            extern u32 classic_update_task_exist_flag_get(void);
             if (classic_update_task_exist_flag_get()) {
                 return 0;
             }

@@ -2,16 +2,10 @@
 #include "media_config.h"
 #include "power/power_manage.h"
 
-extern struct audio_dac_hdl dac_hdl;
 
 static u8 audio_dac_idle_query()
 {
-    if (((dac_hdl.state == DAC_STATE_STOP) && (dac_hdl.anc_dac_open == 1)) ||
-        (dac_hdl.state == DAC_STATE_INIT)	||
-        (dac_hdl.state == DAC_STATE_POWER_OFF)) {
-        return 1;
-    }
-    return 0;
+    return audio_dac_is_idle();
 }
 
 static enum LOW_POWER_LEVEL audio_dac_level_query(void)

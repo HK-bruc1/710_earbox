@@ -161,6 +161,13 @@ u32 update_get_machine_num(u8 *buf, u32 len);
 void uart_update_set_retry_time(u32 time);
 int update_interactive_task_start(void *p, void (*update_set_addr_hdl)(u32), u8 task_en);
 
+/**
+ * @brief 判断是否在升级
+ *
+ * @result 0:不在升级 1:在升级
+ */
+u32 classic_update_task_exist_flag_get(void);
+
 typedef enum _UPDATE_STATE_T {
     UPDATE_TASK_INIT,
     UPDATE_CH_INIT,

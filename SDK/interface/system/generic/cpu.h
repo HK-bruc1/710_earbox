@@ -74,10 +74,9 @@ extern void cpu_assert_debug();
 			}else {\
 				if(!(a)){ \
                     cpu_assert(NULL, __LINE__, a ? true : false, #a); \
-                    // cpu_assert(__FILE__, __LINE__, a ? true : false, #a); \
-}\
-}\
-} while (0);
+                }\
+            }\
+        } while (0);
 
 
 #if defined(CONFIG_256K_FLASH) && defined(CONFIG_RELEASE_ENABLE)

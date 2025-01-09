@@ -68,3 +68,6 @@ const bool control_poff = 1;
 #else
 const bool control_poff = 0;
 #endif
+
+const bool control_rtc_enable = 1;
+

@@ -21,12 +21,41 @@ struct icsd_ein_libfmt {
 };
 
 struct icsd_ein_infmt {
+    u8 ein_state;
     void *alloc_ptr;     //外部申请的ram地址
     int lib_alloc_size;  //算法ram需求大小
 };
 
 typedef struct {
-    int test;
+    u8 tot_checkin_cnt_thr;
+
+    float thr1_trn2in_pz;
+    float thr1_anc2in_pz;
+    float thr1_pnc2in_pz;
+
+    float thr1_trn2out_pz;
+    float thr1_anc2out_pz;
+    float thr1_pnc2out_pz;
+
+    float thr2_trn2out_pz;
+    float thr2_anc2out_pz;
+    float thr2_pnc2out_pz;
+
+    float thr1_trn2out_pz_spk;
+    float thr1_anc2out_pz_spk;
+    float thr1_pnc2out_pz_spk;
+
+    float thr1_trn2out_sz;
+    float thr1_anc2out_sz;
+    float thr1_pnc2out_sz;
+
+    float thr2_trn2out_sz;
+    float thr2_anc2out_sz;
+    float thr2_pnc2out_sz;
+
+    float pzcorr_thr_anc;
+    float pzcorr_thr_pnc;
+    float pzcorr_thr_trans;
 } __ein_config;
 
 struct ein_function {
@@ -53,6 +82,8 @@ typedef struct {
 
 typedef struct {
     u8 ein_output;
+    void *ein_alg_bt_inf;
+    u16 ein_alg_bt_len;
 } __icsd_ein_output;
 
 void icsd_ein_get_libfmt(struct icsd_ein_libfmt *libfmt);
@@ -61,5 +92,14 @@ void icsd_alg_ein_run(__icsd_ein_run_parm *run_parm, __icsd_ein_output *output);
 void ein_function_init();
 
 
-
+extern const u8 ein_train;
+extern const u8 EIN_BT_INF_EN;
+extern const float pz_in_anc[28];
+extern const float pz_out_anc[28];
+extern const float pz_in_off[28];
+extern const float pz_out_off[28];
+extern const float pz_in_trans[28];
+extern const float pz_out_trans[28];
+extern const float sz_in[14];
+extern const float sz_out[14];
 #endif

@@ -22,6 +22,7 @@
 #include "jiffies.h"
 #include "a2dp_streamctrl.h"
 #include "app_config.h"
+#include "audio_time.h"
 
 extern const int CONFIG_A2DP_DELAY_TIME_AAC;
 extern const int CONFIG_A2DP_DELAY_TIME_SBC;
@@ -39,7 +40,6 @@ _WEAK_ const int CONFIG_A2DP_DELAY_TIME_LDAC_LO = 300;
 _WEAK_ const int CONFIG_A2DP_DELAY_TIME_LHDC = 300;
 _WEAK_ const int CONFIG_A2DP_DELAY_TIME_LHDC_LO = 300;
 #endif
-extern u32 bt_audio_reference_clock_time(u8 network);
 
 #define A2DP_FLUENT_DETECT_INTERVAL         90000//ms 流畅播放延时检测时长
 #define JL_DONGLE_FLUENT_DETECT_INTERVAL    30000//ms
@@ -301,8 +301,8 @@ static int a2dp_audio_is_underrun(struct a2dp_stream_control *ctrl)
         }
         distance_time = distance_time / 1000 / TIMESTAMP_US_DENOMINATOR;
         /*printf("distance_time %d %u %u\n", distance_time, ctrl->next_timestamp, reference_time);*/
-        if (distance_time < underrun_time) {
-            return true;
+        if (distance_time <= underrun_time) { //判断是否已经超时，如果已经超时，返回欠载(临界时，也返回欠载)，
+            return true;                      //如果没有欠载，下面设置自检timer,
         }
 
         local_irq_disable();

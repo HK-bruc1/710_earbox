@@ -6,15 +6,24 @@
 #endif
 
 #include "app_config.h"
+#include "audio_anc.h"
 #if ((defined TCFG_AUDIO_ANC_ACOUSTIC_DETECTOR_EN) && TCFG_AUDIO_ANC_ACOUSTIC_DETECTOR_EN && \
 	 TCFG_AUDIO_ANC_ENABLE)
+
+//用于管理与ADT_LIB 相关函数编译控制
+#define ICSD_VDT_LIB          TCFG_AUDIO_SPEAK_TO_CHAT_ENABLE
+#define ICSD_WAT_LIB          TCFG_AUDIO_WIDE_AREA_TAP_ENABLE
+#define ICSD_EIN_LIB          0	//入耳检测
+#define ICSD_WIND_LIB         TCFG_AUDIO_ANC_WIND_NOISE_DET_ENABLE
+#define ICSD_RTANC_LIB        TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+#define ICSD_AVC_LIB		  0	//自适应音量
+// #define ICSD_RTAEQ_LIB        1
+
 #include "icsd_adt.h"
+#include "icsd_adt_app.h"
 
 #if ICSD_VDT_LIB
 #include "icsd_vdt.h"
-#else
-const u16 ADT_DEBUG_INF = 0;
-u8    ADT_PATH_CONFIG = 0;
 #endif
 
 #if ICSD_WAT_LIB
@@ -24,6 +33,165 @@ u8    ADT_PATH_CONFIG = 0;
 #if ICSD_EIN_LIB
 #include "icsd_ein.h"
 #endif
+
+#if ICSD_RTANC_LIB
+#include "rt_anc.h"
+#include "rt_anc_app.h"
+#endif
+
+#if ICSD_AVC_LIB
+#include "icsd_avc.h"
+#endif
+
+#if ICSD_WIND_LIB
+#include "icsd_wind.h"
+#endif
+
+//===========AVC============================================
+int icsd_adt_avc_get_libfmt()
+{
+    int add_size = 0;
+#if ICSD_AVC_LIB
+    struct icsd_avc_libfmt libfmt;
+    icsd_avc_get_libfmt(&libfmt);
+    add_size = libfmt.lib_alloc_size;
+#else
+    printf("ADT need to include AVC LIB ! ! !\n");
+    while (1);
+#endif
+    return add_size;
+}
+
+int icsd_adt_avc_set_infmt(int _ram_addr)
+{
+    int set_size = 0;
+#if ICSD_AVC_LIB
+    struct icsd_avc_infmt  fmt;
+    fmt.alloc_ptr = (void *)_ram_addr;
+    icsd_avc_set_infmt(&fmt);
+    set_size = fmt.lib_alloc_size;
+#endif
+    return set_size;
+}
+
+void icsd_adt_avc_run(__adt_avc_run_parm *_run_parm, __adt_avc_output *_output)
+{
+#if ICSD_AVC_LIB
+    __icsd_avc_run_parm run_parm;
+    __icsd_avc_output output;
+    run_parm.dac_data = _run_parm->dac_data;
+    run_parm.refmic = _run_parm->refmic;
+    /*
+    for(int i=0;i<10;i++){
+    	printf("avc DAC/REF:%d                 %d\n",run_parm.dac_data[20+i],run_parm.refmic[20+i]);
+    }
+    */
+    icsd_avc_run(&run_parm, &output);
+    _output->ctl_lvl = output.ctl_lvl;
+    ADT_FUNC->icsd_AVC_output(_output);
+#endif
+}
+
+
+
+//===========RTANC============================================
+
+/* rtanc 参数更新输出:可用于挂载AEQ/CMP */
+void icsd_adt_rtanc_alg_output(void *rt_param_l, void *rt_param_r)
+{
+#if ICSD_RTANC_LIB
+    ADT_FUNC->icsd_RTANC_output(rt_param_l, rt_param_r);
+#endif
+}
+
+int icsd_adt_rtanc_get_libfmt()
+{
+    int add_size = 0;
+#if ICSD_RTANC_LIB
+    struct icsd_rtanc_libfmt rtanc_libfmt;
+    rtanc_libfmt.ch_num = rt_anc_dma_ch_num;
+    icsd_rtanc_get_libfmt(&rtanc_libfmt);
+    add_size = rtanc_libfmt.lib_alloc_size;
+#else
+    printf("ADT need to include RTANC LIB ! ! !\n");
+    while (1);
+#endif
+
+    return add_size;
+}
+
+int icsd_adt_rtanc_set_infmt(int _ram_addr)
+{
+    int set_size = 0;
+#if ICSD_RTANC_LIB
+    struct icsd_rtanc_infmt rtanc_fmt;
+    rtanc_fmt.ep_type = ICSD_ADT_EP_TYPE;
+    rtanc_fmt.ch_num = rt_anc_dma_ch_num;
+    rtanc_fmt.alloc_ptr = (void *)_ram_addr;
+    icsd_rtanc_set_infmt(&rtanc_fmt);
+    set_size = rtanc_fmt.lib_alloc_size;
+    extern void icsd_adt_rtanc_set_ch_num(u8 ch_num);
+    icsd_adt_rtanc_set_ch_num(rt_anc_dma_ch_num);
+
+    audio_adt_rtanc_set_infmt();
+#endif
+    return set_size;
+}
+
+void icsd_adt_alg_rtanc_run_part1(__adt_anc_part1_parm *_part1_parm)
+{
+#if ICSD_RTANC_LIB
+    __icsd_rtanc_part1_parm part1_parm;
+    part1_parm.dma_ch   = _part1_parm->dma_ch;
+    part1_parm.inptr_h  = _part1_parm->inptr_h;
+    part1_parm.inptr_l  = _part1_parm->inptr_l;
+    part1_parm.out0_sum = _part1_parm->out0_sum;
+    part1_parm.out1_sum = _part1_parm->out1_sum;
+    part1_parm.out2_sum = _part1_parm->out2_sum;
+    part1_parm.fft_ram  = _part1_parm->fft_ram;
+    part1_parm.hpest_temp = _part1_parm->hpest_temp;
+    icsd_alg_rtanc_run_part1(&part1_parm);
+#endif
+}
+
+void icsd_adt_alg_rtanc_run_part2(__adt_rtanc_part2_parm *_part2_parm)
+{
+#if ICSD_RTANC_LIB
+    __icsd_rtanc_part2_parm part2_parm;
+    part2_parm.dma_ch   = _part2_parm->dma_ch;
+    part2_parm.out0_sum = _part2_parm->out0_sum;
+    part2_parm.out1_sum = _part2_parm->out1_sum;
+    part2_parm.out2_sum = _part2_parm->out2_sum;
+    part2_parm.sz_out0_sum = _part2_parm->sz_out0_sum;
+    part2_parm.sz_out1_sum = _part2_parm->sz_out1_sum;
+    part2_parm.sz_out2_sum = _part2_parm->sz_out2_sum;
+    part2_parm.szpz_out = _part2_parm->szpz_out;
+    icsd_alg_rtanc_run_part2(&part2_parm);
+#endif
+}
+
+void icsd_adt_alg_rtanc_part2_parm_init()
+{
+#if ICSD_RTANC_LIB
+    icsd_alg_rtanc_part2_parm_init();
+#endif
+}
+
+void icsd_adt_alg_rtanc_part1_reset()
+{
+#if ICSD_RTANC_LIB
+    rt_anc_part1_reset();
+#endif
+}
+
+u8 icsd_adt_alg_rtanc_get_wind_lvl()
+{
+#if ICSD_RTANC_LIB
+    return icsd_adt_get_wind_lvl();
+#else
+    return 0;
+#endif
+}
 
 //===========EIN============================================
 int icsd_adt_ein_get_libfmt()
@@ -40,11 +208,12 @@ int icsd_adt_ein_get_libfmt()
     return add_size;
 }
 
-int icsd_adt_ein_set_infmt(int _ram_addr)
+int icsd_adt_ein_set_infmt(int _ram_addr, u8 ein_state)
 {
     int set_size = 0;
 #if ICSD_EIN_LIB
     struct icsd_ein_infmt  fmt;
+    fmt.ein_state = ein_state;
     fmt.alloc_ptr = (void *)_ram_addr;
     icsd_ein_set_infmt(&fmt);
     set_size = fmt.lib_alloc_size;
@@ -69,6 +238,8 @@ void icsd_adt_alg_ein_run(__adt_ein_run_parm *_run_parm, __adt_ein_output *_outp
     extern void icsd_alg_ein_run(__icsd_ein_run_parm * run_parm, __icsd_ein_output * output);
     icsd_alg_ein_run(&run_parm, &output);
     _output->ein_output = output.ein_output;
+    _output->ein_alg_bt_inf = output.ein_alg_bt_inf;
+    _output->ein_alg_bt_len = output.ein_alg_bt_len;
 #endif
 }
 //===========WAT============================================
@@ -130,6 +301,21 @@ const u8 ICSD_ADT_WIND_PHONE_TYPE = SDK_WIND_PHONE_TYPE;
 const u8 ICSD_ADT_WIND_MIC_TYPE   = 0;
 const u8 ICSD_ADT_WIND_PHONE_TYPE = 0;
 #endif
+
+u8 icsd_adt_win_get_tlkmic_en()
+{
+    u8 need_tlk_mic = 0;
+    switch (ICSD_ADT_WIND_MIC_TYPE) {
+    case ICSD_WIND_LFF_TALK:
+    case ICSD_WIND_RFF_TALK:
+    case ICSD_WIND_LFF_LFB_TALK:
+        need_tlk_mic = 1;
+        break;
+    default:
+        break;
+    }
+    return need_tlk_mic;
+}
 
 int icsd_adt_wind_get_libfmt()
 {

@@ -151,8 +151,7 @@
 
 /*省电容mic模块使能*/
 #if ((TCFG_ADC0_ENABLE && (TCFG_ADC0_MODE == 2)) || \
-        (TCFG_ADC1_ENABLE && (TCFG_ADC1_MODE == 2)) || \
-        (TCFG_ADC2_ENABLE && (TCFG_ADC2_MODE == 2)))
+        (TCFG_ADC1_ENABLE && (TCFG_ADC1_MODE == 2)))
 #define TCFG_SUPPORT_MIC_CAPLESS        1
 #else
 #define TCFG_SUPPORT_MIC_CAPLESS        0
@@ -169,7 +168,7 @@
  *2、上电复位的时候都校准,即断电重新上电就会校准是否有偏差(默认)
  *3、每次开机都校准，不管有没有断过电，即校准流程每次都跑
  */
-#define TCFG_MC_BIAS_AUTO_ADJUST	 	MC_BIAS_ADJUST_POWER_ON
+#define TCFG_MC_BIAS_AUTO_ADJUST	 	MC_BIAS_ADJUST_ONE
 #define TCFG_MC_CONVERGE_PRE			0  //省电容mic预收敛
 #define TCFG_MC_CONVERGE_TRACE			0  //省电容mic收敛值跟踪
 /*

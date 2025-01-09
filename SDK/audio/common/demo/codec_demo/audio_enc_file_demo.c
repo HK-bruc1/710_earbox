@@ -10,6 +10,9 @@
 #include "system/timer.h"
 #include "clock.h"
 
+#if 0  //这里打开代码模块使能
+
+
 static int audio_enc_demo_read_data(void *priv, u8 *buf, int len);
 static int audio_enc_demo_output(void *priv, u8 *data, int len);
 
@@ -391,6 +394,6 @@ void audio_enc_demo_test_close(void *priv)
 }
 
 
-
+#endif
 
 

@@ -14,7 +14,7 @@
 struct vdt_function *VDT_FUNC;
 
 
-const u8 ICSD_VDT_ALG_BT_INF = 1;
+const u8 ICSD_VDT_ALG_BT_INF = 0;
 //调试信息使能
 const u16 ADT_DEBUG_INF = 0;//ADT_INF_5 | ADT_INF_1 ;//| ADT_INF_12 ;//| ADT_INF_9; //state
 const u8 VDT_TRAIN_EN = 0;
@@ -35,9 +35,9 @@ const u8 ana_len_start = 2;//ana_len_start * 92hz
 const u8 icsd_ana_len = 8;//max:16
 const float wdac_senc = 0.7; //越小播音乐时灵敏度越高
 const float ang_thr[10] = {0, 15, 16, 13, 13, 13, 12, 10, 10, 10};
-const float wref[8]   = {1.07, 0.72, 0.67, 0.63, 0.57, 0.49, 0.45, 0.43};//播放外部噪声 PNC
-const float wref_tran[8]   = {2.36, 2.29, 2.72, 2.98, 3.06, 2.93, 2.70, 2.51};//播放外部噪声 TRANS
-const float wref_ancs[8]   = {0.58, 0.10, 0.03, 0.03, 0.04, 0.05, 0.04, 0.03};//播放外部噪声 ANC ON
+const float wref[8]   = {0.886847, 0.516234, 0.456076, 0.378177, 0.312354, 0.277951, 0.253154, 0.244882}; //播放外部噪声 PNC
+const float wref_tran[8]   = {1.016303, 0.714220, 0.742538, 0.827135, 0.875243, 0.871669, 0.843512, 0.832892}; //播放外部噪声 TRANS
+const float wref_ancs[8]   = {0.541736, 0.101034, 0.064317, 0.071613, 0.066163, 0.057105, 0.051868, 0.054195}; //播放外部噪声 ANC ON
 const float wdac[8] = { 0.13, 0.21, 0.37, 0.76, 0.84, 0.79, 0.72, 0.65}; //播放音乐/100
 const float fdac[8] = { 0.18, 0.051, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05}; //播放音乐/1000 手动修改
 //const u8 pnc_ref_pwr_thr = 60;
@@ -53,7 +53,7 @@ const u8 angle_talk_even_flag0_thr = 5; //angle_tlk
 const u8 pwr_inside_even_flag0_thr_T = 4; //pwr
 const u8 angle_talk_even_flag0_thr_T = 5; //angle_tlk
 const u8 angle_err_even_flag0_thr = 3;//4;  //angle_err
-const u16 f1f2_angsum_thr = 401;
+const float f1f2_angsum_thr = -200;//401;
 const float target_mscohere1_thr = 0.5;
 const float target_out_thr = 0;
 const u8 msco_start = 3;

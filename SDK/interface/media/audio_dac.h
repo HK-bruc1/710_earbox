@@ -1,23 +1,35 @@
 #ifndef __AUDIO_DAC_H__
 #define __AUDIO_DAC_H__
 
-
+#include "audio_cfifo.h"
 #include "asm/dac.h"
 
-#define DAC_STATE_INIT        0
-#define DAC_STATE_OPEN        1
-#define DAC_STATE_START       2
-#define DAC_STATE_PREPARE     3
-#define DAC_STATE_STOP        4
-#define DAC_STATE_PAUSE       5
-#define DAC_STATE_POWER_OFF   6
+
+struct audio_dac_channel_attr {
+    u8  write_mode;         /*DAC写入模式*/
+    u16 delay_time;         /*DAC通道延时*/
+    u16 protect_time;       /*DAC延时保护时间*/
+};
+
+struct audio_dac_channel {
+    u8  state;              /*DAC状态*/
+    u8  pause;
+    u8  samp_sync_step;     /*数据流驱动的采样同步步骤*/
+    struct audio_dac_channel_attr attr;     /*DAC通道属性*/
+    struct audio_cfifo_channel fifo;        /*DAC cfifo通道管理*/
+};
 
 
 
-#define AUDIO_CFIFO_IDLE      0
-#define AUDIO_CFIFO_INITED    1
-#define AUDIO_CFIFO_START     2
-#define AUDIO_CFIFO_CLOSE     3
+struct audio_dac_sync_node {
+    u8 triggered;
+    u8 network;
+    u32 timestamp;
+    void *hdl;
+    struct list_head entry;
+    void *ch;
+};
+
 
 // DAC IO
 struct audio_dac_io_param {
@@ -92,7 +104,6 @@ void *audio_dac_get_pd_data(void);
 */
 struct audio_dac_hdl *audio_dac_get_hdl(void);
 
-int audio_dac_trim_value_check(struct audio_dac_trim *dac_trim);
 
 /*
 *********************************************************************
@@ -120,10 +131,10 @@ int audio_dac_do_trim(struct audio_dac_hdl *dac, struct audio_dac_trim *dac_trim
 */
 int audio_dac_set_trim_value(struct audio_dac_hdl *dac, struct audio_dac_trim *dac_trim);
 
-void audio_dac_trim_reg_init();
 
-/*
-*********************************************************************
+int audio_dac_trim_value_check(struct audio_dac_trim *dac_trim);
+
+/*********************************************************************
 *              audio_dac_irq_handler
 * Description: DAC 中断回调函数
 * Arguments  : dac      	dac 句柄
@@ -132,6 +143,8 @@ void audio_dac_trim_reg_init();
 *********************************************************************
 */
 void audio_dac_irq_handler(struct audio_dac_hdl *dac);
+
+
 
 /*
 *********************************************************************
@@ -159,9 +172,7 @@ int audio_dac_set_buff(struct audio_dac_hdl *dac, s16 *buf, int len);
 */
 int audio_dac_write(struct audio_dac_hdl *dac, void *buf, int len);
 
-int audio_dac_get_write_ptr(struct audio_dac_hdl *dac, s16 **ptr);
 
-int audio_dac_update_write_ptr(struct audio_dac_hdl *dac, int len);
 
 /*
 *********************************************************************
@@ -185,15 +196,18 @@ int audio_dac_set_sample_rate(struct audio_dac_hdl *dac, int sample_rate);
 *********************************************************************
 */
 int audio_dac_get_sample_rate(struct audio_dac_hdl *dac);
+
 int audio_dac_get_sample_rate_base_reg();
-u32 audio_dac_select_sample_rate(u32 sample_rate);
 
+u32 audio_dac_sample_rate_match(u32 sr, u8 *reg_value);
 
-int audio_dac_set_channel(struct audio_dac_hdl *dac, u8 channel);
+void audio_dac_set_sample_rate_callback(struct audio_dac_hdl *dac, void (*cb)(int));
+
+void audio_dac_del_sample_rate_callback(struct audio_dac_hdl *dac, void (*cb)(int));
+
 
 int audio_dac_get_channel(struct audio_dac_hdl *dac);
 
-int audio_dac_vol_set(u8 type, u32 ch, u16 gain, u8 fade_en);
 /*
 *********************************************************************
 *              audio_dac_set_digital_vol
@@ -222,19 +236,20 @@ int audio_dac_ch_analog_gain_set(u32 ch, u32 again);
 
 int audio_dac_ch_analog_gain_get(u32 ch);
 
-int audio_dac_ch_digital_gain_set(struct audio_dac_hdl *dac, u32 ch, u32 dgain);
-
 int audio_dac_ch_digital_gain_get(struct audio_dac_hdl *dac, u32 ch);
 
+/*
+*********************************************************************
+*              audio_dac_set_volume
+* Description: 设置音量等级记录变量，但是不会直接修改音量。只有当 DAC 关闭状态时，第一次调用 audio_dac_channel_start 打开 dac fifo 后，会根据 audio_dac_set_fade_handler 设置的回调函数来设置系统音量，回调函数的传参就是 audio_dac_set_volume 设置的音量值。
+* Arguments  : dac      	dac 句柄
+			   gain			记录的音量等级
+* Return	 : 0：成功  -1：失败
+* Note(s)    :
+*********************************************************************
+*/
 int audio_dac_set_volume(struct audio_dac_hdl *dac, u8 gain);
 
-int audio_dac_set_L_digital_vol(struct audio_dac_hdl *dac, u16 vol);
-
-int audio_dac_set_R_digital_vol(struct audio_dac_hdl *dac, u16 vol);
-
-int audio_dac_set_RL_digital_vol(struct audio_dac_hdl *dac, u16 vol);
-
-int audio_dac_set_RR_digital_vol(struct audio_dac_hdl *dac, u16 vol);
 
 /*
 *********************************************************************
@@ -250,11 +265,34 @@ int audio_dac_set_RR_digital_vol(struct audio_dac_hdl *dac, u16 vol);
 void audio_dac_ch_mute(struct audio_dac_hdl *dac, u8 ch, u8 mute);
 
 
-void audio_dac_mute(struct audio_dac_hdl *hdl, u8 ch, u8 mute);
-
 u8 audio_dac_digital_mute_state(struct audio_dac_hdl *hdl);
 
 void audio_dac_digital_mute(struct audio_dac_hdl *dac, u8 mute);
+
+
+/*
+*********************************************************************
+*          audio_dac_volume_enhancement_mode_set
+* Description: DAC 音量增强模式切换
+*			   mode		1：音量增强模式  0：普通模式
+* Return	 : 0：成功  -1：失败
+* Note(s)    : 不能在中断调用
+*********************************************************************
+*/
+int audio_dac_volume_enhancement_mode_set(struct audio_dac_hdl *dac, u8 mode);
+
+/*
+*********************************************************************
+*          audio_dac_volume_enhancement_mode_get
+* Description: DAC 音量增强模式切换
+* Arguments  : dac      dac 句柄
+* Return	 : 1：音量增强模式  0：普通模式
+* Note(s)    : None.
+*********************************************************************
+*/
+u8 audio_dac_volume_enhancement_mode_get(struct audio_dac_hdl *dac);
+
+
 
 /*
 *********************************************************************
@@ -289,17 +327,6 @@ int audio_dac_start(struct audio_dac_hdl *dac);
 */
 int audio_dac_stop(struct audio_dac_hdl *dac);
 
-/*
-*********************************************************************
-*              audio_dac_idle
-* Description: 获取 DAC 空闲状态
-* Arguments  : dac      	dac 句柄
-* Return	 : 0：非空闲  1：空闲
-* Note(s)    :
-*********************************************************************
-*/
-int audio_dac_idle(struct audio_dac_hdl *dac);
-
 
 
 int audio_dac_open(struct audio_dac_hdl *dac);
@@ -315,16 +342,6 @@ int audio_dac_open(struct audio_dac_hdl *dac);
 */
 int audio_dac_close(struct audio_dac_hdl *dac);
 
-/*
-*********************************************************************
-*              audio_dac_set_volume
-* Description: 设置音量等级记录变量，但是不会直接修改音量。只有当 DAC 关闭状态时，第一次调用 audio_dac_channel_start 打开 dac fifo 后，会根据 audio_dac_set_fade_handler 设置的回调函数来设置系统音量，回调函数的传参就是 audio_dac_set_volume 设置的音量值。
-* Arguments  : dac      	dac 句柄
-			   gain			记录的音量等级
-* Return	 : 0：成功  -1：失败
-* Note(s)    :
-*********************************************************************
-*/
 
 void audio_dac_ch_high_resistance(struct audio_dac_hdl *dac, u8 ch, u8 en);
 
@@ -342,147 +359,74 @@ void audio_dac_ch_high_resistance(struct audio_dac_hdl *dac, u8 ch, u8 en);
 */
 void audio_dac_set_fade_handler(struct audio_dac_hdl *dac, void *priv, void (*fade_handler)(u8, u8));
 
-int audio_dac_get_max_channel(void);
-
 int audio_dac_get_status(struct audio_dac_hdl *dac);
 
 u8 audio_dac_is_working(struct audio_dac_hdl *dac);
 
-int audio_dac_set_irq_time(struct audio_dac_hdl *dac, int time_ms);
+u8 audio_dac_is_idle();
 
-void audio_dac_anc_set(struct audio_dac_hdl *dac, u8 toggle);
+/*AEC参考数据软回采接口*/
+int audio_dac_read_reset(void);
+int audio_dac_read(s16 points_offset, void *data, int len, u8 read_channel);
+
+
 
 int audio_dac_set_protect_time(struct audio_dac_hdl *dac, int time);
 
 int audio_dac_buffered_frames(struct audio_dac_hdl *dac);
 
-void audio_dac_add_syncts_handle(struct audio_dac_hdl *dac, void *syncts);
-
 void audio_dac_remove_syncts_handle(struct audio_dac_channel *ch, void *syncts);
 
 int audio_dac_add_syncts_with_timestamp(struct audio_dac_channel *ch, void *syncts, u32 timestamp);
 void audio_dac_syncts_trigger_with_timestamp(struct audio_dac_channel *ch, u32 timestamp);
-/*
- * 音频同步
- */
-void *audio_dac_resample_channel(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_resample_enable(struct audio_dac_hdl *dac, void *resample);
-
-int audio_dac_sync_resample_disable(struct audio_dac_hdl *dac, void *resample);
-
-void audio_dac_set_input_correct_callback(struct audio_dac_hdl *dac,
-        void *priv,
-        void (*callback)(void *priv, int diff));
-
-int audio_dac_set_sync_buff(struct audio_dac_hdl *dac, void *buf, int len);
-
-int audio_dac_set_sync_filt_buff(struct audio_dac_hdl *dac, void *buf, int len);
-
-int audio_dac_sync_open(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_set_channel(struct audio_dac_hdl *dac, u8 channel);
-
-int audio_dac_sync_set_rate(struct audio_dac_hdl *dac, int in_rate, int out_rate);
-
-int audio_dac_sync_auto_update_rate(struct audio_dac_hdl *dac, u8 on_off);
-
-int audio_dac_sync_flush_data(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_fast_align(struct audio_dac_hdl *dac, int in_rate, int out_rate, int fast_output_points, float phase_diff);
-
-#if SYNC_LOCATION_FLOAT
-float audio_dac_sync_pcm_position(struct audio_dac_hdl *dac);
-#else
-u32 audio_dac_sync_pcm_position(struct audio_dac_hdl *dac);
-#endif
-
-int audio_dac_sync_keep_rate(struct audio_dac_hdl *dac, int points);
-
-int audio_dac_sync_pcm_input_num(struct audio_dac_hdl *dac);
-
-void audio_dac_sync_input_num_correct(struct audio_dac_hdl *dac, int num);
-
-void audio_dac_set_sync_handler(struct audio_dac_hdl *dac, void *priv, int (*handler)(void *priv, u8 state));
-
-int audio_dac_sync_start(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_stop(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_reset(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_data_lock(struct audio_dac_hdl *dac);
-
-int audio_dac_sync_data_unlock(struct audio_dac_hdl *dac);
-
-void audio_dac_sync_close(struct audio_dac_hdl *dac);
+void audio_dac_force_use_syncts_frames(struct audio_dac_channel *ch, int frames, u32 timestamp);
 
 
 
 
-u32 local_audio_us_time_set(u16 time);
 
-int local_audio_us_time(void);
 
-int audio_dac_start_time_set(void *_dac, u32 us_timeout, u32 cur_time, u8 on_off);
-
-u32 audio_dac_sync_pcm_total_number(void *_dac);
-
-void audio_dac_sync_set_pcm_number(void *_dac, u32 output_points);
-
-u32 audio_dac_pcm_total_number(void *_dac, int *pcm_r);
-
-u8 audio_dac_sync_empty_state(void *_dac);
-
-void audio_dac_sync_empty_reset(void *_dac, u8 state);
-
-void audio_dac_set_empty_handler(void *_dac, void *empty_priv, void (*handler)(void *priv, u8 empty));
-
-void audio_dac_set_dcc(u8 dcc);
-
-u8 audio_dac_ana_gain_mapping(u8 level);
-/*
-*********************************************************************
-*          audio_dac_volume_enhancement_mode_set
-* Description: DAC 音量增强模式切换
-* Arguments  : dac      dac 句柄
-*			   mode		1：音量增强模式  0：普通模式
-* Return	 : 0：成功  -1：失败
-* Note(s)    : 不能在中断调用
-*********************************************************************
-*/
-int audio_dac_volume_enhancement_mode_set(struct audio_dac_hdl *dac, u8 mode);
-
-/*
-*********************************************************************
-*          audio_dac_volume_enhancement_mode_get
-* Description: DAC 音量增强模式切换
-* Arguments  : dac      dac 句柄
-* Return	 : 1：音量增强模式  0：普通模式
-* Note(s)    : None.
-*********************************************************************
-*/
-u8 audio_dac_volume_enhancement_mode_get(struct audio_dac_hdl *dac);
-
-void audio_dac_channel_start(struct audio_dac_channel *ch);
-void audio_dac_channel_close(struct audio_dac_channel *ch);
-int audio_dac_channel_write(struct audio_dac_channel *ch, void *buf, int len);
-int audio_dac_channel_set_attr(struct audio_dac_channel *ch, struct audio_dac_channel_attr *attr);
 int audio_dac_new_channel(struct audio_dac_hdl *dac, struct audio_dac_channel *ch);
 
-void audio_dac_add_update_frame_handler(struct audio_dac_hdl *dac, void (*update_frame_handler)(u8, void *, u32));
+int audio_dac_channel_write(struct audio_dac_channel *ch, void *buf, int len);
+
+int audio_dac_channel_fill_slience_frames(struct audio_dac_channel *ch, int frames);
+
+int audio_dac_channel_set_attr(struct audio_dac_channel *ch, struct audio_dac_channel_attr *attr);
+
+int audio_dac_channel_data_len(struct audio_dac_channel *ch);
+
+void audio_dac_channel_start(struct audio_dac_channel *ch);
+
+void audio_dac_channel_close(struct audio_dac_channel *ch);
+
+
+void audio_dac_add_update_frame_handler(struct audio_dac_hdl *dac,
+                                        void (*update_frame_handler)(u8, void *, u32));
 void audio_dac_del_update_frame_handler(struct audio_dac_hdl *dac);
-int audio_dac_adapter_link_to_syncts_check(struct audio_dac_hdl *dac, void *syncts);
-/*AEC参考数据软回采接口*/
-int audio_dac_read_reset(void);
-int audio_dac_read(s16 points_offset, void *data, int len, u8 read_channel);
+
+
+
 
 int audio_dac_noisefloor_optimize_onoff(u8 onoff);
 
+
+
+void audio_dac_anc_set(struct audio_dac_hdl *dac, u8 toggle);
 void audio_anc_dac_gain(u8 gain_l, u8 gain_r);
 void audio_anc_dac_dsm_sel(u8 sel);
 void audio_anc_dac_open(u8 gain_l, u8 gain_r);
 void audio_anc_dac_close(void);
+
+
+
+// weak函数
+int dac_analog_open_cb(struct audio_dac_hdl *);
+int dac_analog_close_cb(struct audio_dac_hdl *);
+int dac_analog_light_open_cb(struct audio_dac_hdl *);
+int dac_analog_light_close_cb(struct audio_dac_hdl *);
+
+
 
 void audio_dac_io_init(struct audio_dac_io_param *param);
 void audio_dac_io_uninit(struct audio_dac_io_param *param);
@@ -496,26 +440,9 @@ void audio_dac_io_uninit(struct audio_dac_io_param *param);
  *    低电平 val = 0
  */
 void audio_dac_io_set(u8 ch, u8 val);
-int audio_dac_channel_fifo_write(struct audio_dac_channel *ch, void *data, int len, u8 is_fixed_data);
-int dac_channel_private_fifo_write(struct audio_dac_channel *ch, void *data, int len,
-                                   u8 is_fixed_data, int *fifo_frames);
-int audio_dac_fill_slience_frames(struct audio_dac_channel *ch, struct audio_dac_hdl *dac, int frames);
-void audio_dac_limiter_open();
-void audio_dac_limiter_close();
-void audio_dac_fifo_start(struct audio_dac_hdl *dac);
 
-int audio_dac_syncts_enter_update_frame(struct audio_dac_channel *ch);
-
-int dac_analog_open_cb(struct audio_dac_hdl *);
-int dac_analog_close_cb(struct audio_dac_hdl *);
-int dac_analog_light_open_cb(struct audio_dac_hdl *);
-int dac_analog_light_close_cb(struct audio_dac_hdl *);
-
-int audio_dac_buf_frames_fade_out(struct audio_dac_hdl *dac, int frames);
-int dac_set_fifo_start_and_delay(struct audio_dac_hdl *dac);
-void audio_dac_delay_off(u8 flag);
-int __audio_dac_try_power_on(struct audio_dac_hdl *dac, u8 from_anc);
-void dac_platform_power_on();
+/*MIC Capless API*/
+void audio_dac_set_capless_DTB(struct audio_dac_hdl *dac, u32 dacr32);
 
 #endif
 

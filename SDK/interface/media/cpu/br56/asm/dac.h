@@ -6,10 +6,8 @@
 #include "generic/atomic.h"
 #include "os/os_api.h"
 #include "audio_src.h"
-#include "media/audio_cfifo.h"
 #include "system/spinlock.h"
 #include "audio_def.h"
-#include "audio_output_dac.h"
 
 /***************************************************************************
   							Audio DAC Features
@@ -46,9 +44,6 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_MODE_DIFF                      (1)
 #define DAC_MODE_VCMO                      (2)
 
-#define DA_SOUND_NORMAL                 0x0
-#define DA_SOUND_RESET                  0x1
-#define DA_SOUND_WAIT_RESUME            0x2
 
 #define DACR32_DEFAULT		8192
 
@@ -115,17 +110,6 @@ struct dac_platform_data {
     u32 classh_down_step;   // DAC classh 电压下降步进，1us/setp，配置范围[0.1s, 8s]，建议配置3s
 };
 
-/*DAC数字相关的变量*/
-struct digital_module {
-    u8 inited;
-};
-
-/*DAC模拟相关的变量*/
-struct analog_module {
-    u8 inited;
-    u16 dac_test_volt;
-};
-
 struct trim_init_param_t {
     u8 clock_mode;
     u8 power_level;
@@ -168,50 +152,24 @@ struct audio_dac_sync {
     void (*handler)(void *priv, u8 state);
 };
 
-struct audio_dac_sync_node {
-    u8 triggered;
-    u8 network;
-    u32 timestamp;
-    void *hdl;
-    struct list_head entry;
-    void *ch;
-};
-
-struct audio_dac_channel_attr {
-    u8  write_mode;         /*DAC写入模式*/
-    u16 delay_time;         /*DAC通道延时*/
-    u16 protect_time;       /*DAC延时保护时间*/
-};
-
-struct audio_dac_channel {
-    u8  state;              /*DAC状态*/
-    u8  pause;
-    u8  samp_sync_step;     /*数据流驱动的采样同步步骤*/
-    struct audio_dac_channel_attr attr;     /*DAC通道属性*/
-    struct audio_sample_sync *samp_sync;    /*样点同步句柄*/
-    struct audio_cfifo_channel fifo;        /*DAC cfifo通道管理*/
-
-    //struct audio_dac_sync sync;
-    //struct list_head sync_list;
-};
 
 struct audio_dac_hdl {
-    struct analog_module analog;
-    struct digital_module digital;
-    const struct dac_platform_data *pd;
-    OS_SEM sem;
-    void (*fade_handler)(u8 left_gain, u8 right_gain);
-    u8 avdd_level;
-    u8 lpf_i_level;
+    u8 analog_inited;
+    u8 digital_inited;
     volatile u8 state;
-    volatile u8 agree_on;
     u8 ng_threshold;
     u8 gain;
     u8 channel;
+    u8 power_on;
+    u8 need_close;
+    u8 mute_ch;               //DAC PA Mute Channel
+	u8 dvol_mute;             //DAC数字音量是否mute
+    u8 dac_read_flag;	//AEC可读取DAC参考数据的标志
+    u8 anc_dac_open;
+    u8 protect_fadein;
+    u8 vol_set_en;
+    u8 dec_channel_num;
     u16 d_volume[2];
-    u32 sample_rate;
-    u32 digital_gain_limit;
-    u32 output_buf_len;
     u16 start_ms;
     u16 delay_ms;
     u16 start_points;
@@ -222,41 +180,17 @@ struct audio_dac_hdl {
     s16 protect_pns;
     s16 fadein_frames;
     s16 fade_vol;
-    u8 protect_fadein;
-    u8 vol_set_en;
-    u8 dec_channel_num;
-    u8 sound_state;
-    s16 *output_buf;
-    u8 *mono_lr_diff_tmp_buf;
-
-    u8 anc_dac_open;
-
-    u8 dac_read_flag;	//AEC可读取DAC参考数据的标志
-
-    u8 fifo_state;
     u16 unread_samples;             /*未读样点个数*/
-    struct audio_cfifo fifo;        /*DAC cfifo结构管理*/
-    struct audio_dac_channel main_ch;
-
     u16 mute_timer;           //DAC PA Mute Timer
-    u8 mute_ch;               //DAC PA Mute Channel
-	u8 dvol_mute;             //DAC数字音量是否mute
-#if 0
-    struct audio_dac_sync sync;
-    struct list_head sync_list;
-    u8 sync_step;
-#endif
-
-	u8 active;
-    /*******************************************/
-    /**sniff退出时，dac模拟提前初始化，避免模拟初始化延时,影响起始同步********/
-    u8 power_on;
-    u8 need_close;
+    s16 *output_buf;
+    u32 sample_rate;
+    u32 digital_gain_limit;
+    u32 output_buf_len;
+    OS_SEM *sem;
     OS_MUTEX mutex;
-    /*******************************************/
     spinlock_t lock;
-/*******************************************/
-	struct list_head sync_list;
+    const struct dac_platform_data *pd;
+    void (*fade_handler)(u8 left_gain, u8 right_gain);
 };
 
 

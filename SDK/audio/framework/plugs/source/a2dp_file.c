@@ -75,15 +75,10 @@ extern const int CONFIG_A2DP_SBC_DELAY_TIME_LO;
 extern const int CONFIG_BTCTLER_TWS_ENABLE;
 extern const int CONFIG_DONGLE_SPEAK_ENABLE;
 
-extern void bt_audio_reference_clock_select(void *addr, u8 network);
-extern u32 bt_audio_reference_clock_time(u8 network);
 extern int a2dp_get_packet_pcm_frames(struct a2dp_file_hdl *hdl, u8 *data, int len);
 static int a2dp_stream_ts_enable_detect(struct a2dp_file_hdl *hdl, u8 *packet, int *drop);
 static void a2dp_frame_pack_timestamp(struct a2dp_file_hdl *hdl, struct stream_frame *frame, u8 *data, int pcm_frames);
 static void a2dp_file_timestamp_setup(struct a2dp_file_hdl *hdl);
-
-extern void bt_edr_conn_system_clock_init(void *addr, u8 factor);
-extern u32 bt_edr_conn_master_to_local_time(void *addr, u32 usec);
 
 static u8 a2dp_low_latency = 0;
 
@@ -727,6 +722,9 @@ static void a2dp_frame_pack_timestamp(struct a2dp_file_hdl *hdl, struct stream_f
     int frame_delay = (timestamp - (frame->timestamp * 625 * TIME_US_FACTOR)) / 1000 / TIME_US_FACTOR;
     /*int distance_time = (int)(timestamp - (frame->timestamp * 625 * TIME_US_FACTOR)) / 1000 / TIME_US_FACTOR - delay_time;*/
     int distance_time = frame_delay - delay_time;
+    if (frame->flags & FRAME_FLAG_FILL_PACKET) { /*补包数据不进行延时调整*/
+        distance_time = 0;
+    }
     a2dp_audio_delay_offset_update(hdl->ts_handle, distance_time);
     frame->flags |= (FRAME_FLAG_TIMESTAMP_ENABLE | FRAME_FLAG_UPDATE_TIMESTAMP | FRAME_FLAG_UPDATE_DRIFT_SAMPLE_RATE);
     a2dp_stream_mark_next_timestamp(hdl->stream_ctrl, timestamp + PCM_SAMPLE_TO_TIMESTAMP(pcm_frames, hdl->sample_rate));

@@ -17,6 +17,7 @@ extern const int CONFIG_MAX_ENC_DATA_CACHE_SIZE;
 extern const int CONFIG_LOG_OUTPUT_ENABLE;
 extern const int config_audio_cfg_online_enable;
 extern const int config_audio_dac_dma_buf_realloc_enable;
+extern const int config_audio_dac_delay_off_ms;
 
 
 /*
@@ -39,6 +40,8 @@ extern const char config_audio_dac_trim_enable;
  *						ADC Configs
  *******************************************************************
  */
+extern const u8 const_mic_capless_open_delay_debug;
+extern const u8 const_mic_capless_trim_delay_debug;
 
 /*
  *******************************************************************
@@ -74,6 +77,11 @@ extern const int mb_limiter_3band_run_en;
 extern const int limiter_run_mode;
 extern const int drc_advance_run_mode;
 extern const int drc_run_mode;
+extern const int  stereo_phaser_run_mode;
+extern const int  stereo_flanger_run_mode;
+extern const int  stereo_chorus_run_mode;
+extern const int dynamic_eq_run_mode;
+extern const  int drc_detect_run_mode;
 
 /*
  *******************************************************************

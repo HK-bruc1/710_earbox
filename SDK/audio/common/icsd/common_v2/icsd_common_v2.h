@@ -7,6 +7,15 @@
 #include "timer.h"
 #include "asm/math_fast_function.h"
 
+#define ICSD_WIND_HEADSET           1
+#define ICSD_WIND_TWS		        2
+
+#define ICSD_WIND_LFF_TALK          1
+#define ICSD_WIND_LFF_RFF           2
+#define ICSD_WIND_LFF_LFB           3
+#define ICSD_WIND_LFF_LFB_TALK      4
+#define ICSD_WIND_RFF_TALK      	5
+
 
 unsigned long jiffies_usec(void);
 
@@ -14,6 +23,7 @@ enum {
     DEBUG_FUNCTION_PRINTF = 0,
     DEBUG_FUNCTION_ADT,
     DEBUG_FUNCTION_WIND,
+    DEBUG_FUNCTION_EIN,
 };
 
 enum {
@@ -30,6 +40,17 @@ enum {
     ANC_PZ = 0,
     ANC_SZ,
 };
+
+enum {
+    RT_ANC_CH01 = 0,
+    RT_ANC_CH23,
+};
+
+enum {
+    ADT_TWS = 0,
+    ADT_HEADSET,
+};
+extern const u8  ICSD_ADT_EP_TYPE;
 
 enum {
     DEBUG_ADT_STATE = 0,
@@ -78,8 +99,6 @@ typedef struct {
     __afq_data *sz_r;
 } __afq_output;
 
-
-
 typedef struct {
     float spl_db;
     float spl_db_err;
@@ -102,12 +121,26 @@ struct icsd_target_param {
     float *target_cmp_dat;
 };
 
+
+// self talk dector
+typedef struct {
+    s16   dsf_buf[256];
+    u32   win_sum_buf[16];
+    u8    dir;
+    u16   dov;
+    s16   *data;
+    float *hz_angle;
+    float *angle_thr;
+} __self_talk_ram;
+
+
 #define ADT_DMA_BUF_LEN     	512
 #define ADT_FFT_LENS   			256
 
 #define TARLEN2   					120
 #define TARLEN2_L					0 //40
 #define DRPPNT2  					0 //10
+#define MEMLEN                  50
 
 #define FS 375000
 
@@ -189,6 +222,7 @@ float hz_diff_db(float *_src1, float *_src2, int sp, int ep);
 void fre_resp_resample_v3(float *_src, float *_dest);
 void icsd_anc_h_freq_init(float *freq, u8 mode);
 void icsd_hz2pxdB(float *hz, float *px, int len);
+void icsd_pwr2pxdB(float *pwr, float *px, int len);
 void icsd_HanningWin_pwr2(s16 *input, int *output, int len);
 void icsd_HanningWin_pwr_float(float *input, int *output, int len);
 void icsd_HanningWin_pwr_s1(s16 *input, int *output, int len);
@@ -233,7 +267,34 @@ void target_preprocess_v2(float *target, float *target_flt, int len);
 int icsd_printf_off(const char *format, ...);
 void DeAlorithm_enable();
 void DeAlorithm_disable();
+float db_diff_v2(float *in1, int in1_idx, float *in2, int in2_idx);
+void target_cmp_out(void *_tar_param, float *target, float *freqz, float *sz, int *tight_degree, int ear_mem_en, float *alg_buf);
 
 extern const u8 ICSD_ANC_CPU;
 
+
+
+void icsd_anc_HpEst_part1_v2(s16 *input0, s16 *input1, float *out0_sum, float *out1_sum, float *out2_sum, int *in_cur, float *in_cur0);
+float db_diff(float *in1, int in1_idx, float *in2, int in2_idx);
+
+void data_dsf_4to1(s16 *in, s16 *out, s16 olen, u8 iir_en);
+u8 self_talk_dector(void *__hdl);
+
+
+
+
+struct icsd_de_libfmt {
+    int lib_alloc_size;  //算法ram需求大小
+};
+struct icsd_de_infmt {
+    void *alloc_ptr;     //外部申请的ram地址
+    int lib_alloc_size;  //算法ram需求大小
+};
+void icsd_de_get_libfmt(struct icsd_de_libfmt *libfmt);
+void icsd_de_set_infmt(struct icsd_de_infmt *fmt);
+void icsd_de_malloc();
+void icsd_de_free();
+
+
+void icsd_common_ancdma_4ch_cic8(int *r_ptr, s16 *__wptr_dma1_h, s16 *__wptr_dma1_l, s16 *__wptr_dma2_h, s16 *__wptr_dma2_l, u16 inpoints);
 #endif

@@ -21,6 +21,7 @@
 #include "audio_config.h"
 #include "volume_node.h"
 #include "audio_anc_debug_tool.h"
+#include "icsd_aeq.h"
 
 #if TCFG_USER_TWS_ENABLE
 #include "bt_tws.h"
@@ -34,6 +35,10 @@
 #include "icsd_anc_v2_interactive.h"
 #endif
 
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+#include "rt_anc_app.h"
+#endif
+
 #if 1
 #define aeq_printf printf
 #else
@@ -42,6 +47,7 @@
 
 struct audio_aeq_t {
     u8 eff_mode;							//AEQ效果模式
+    u8 real_time_eq_en;						//实时自适应EQ使能
     enum audio_adaptive_fre_sel fre_sel;	//AEQ数据来源
     volatile u8 state;						//状态
     s16 now_volume;							//当前EQ参数的音量
@@ -205,6 +211,16 @@ int audio_adaptive_eq_open(enum audio_adaptive_fre_sel fre_sel, void (*result_cb
     return 0;
 }
 
+
+int audio_real_time_adaptive_eq_open(enum audio_adaptive_fre_sel fre_sel, void (*result_cb)(int result))
+{
+    int ret = audio_adaptive_eq_open(fre_sel, result_cb);
+    if (!ret) {
+        aeq_hdl->real_time_eq_en = 1;
+    }
+    return ret;
+}
+
 int audio_adaptive_eq_close()
 {
     aeq_printf("%s\n", __func__);
@@ -243,6 +259,7 @@ int audio_adaptive_eq_close()
             s16 volume = app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
             aeq_hdl->now_volume = volume;
             audio_icsd_eq_eff_update(audio_adaptive_eq_cur_list_query(volume));
+            aeq_hdl->real_time_eq_en = 0;
 
             aeq_hdl->state = ADAPTIVE_EQ_STATE_CLOSE;
 
@@ -668,6 +685,12 @@ static void audio_adaptive_eq_afq_output_hdl(struct audio_afq_output *p)
     aeq_printf("AEQ RUN \n");
     aeq_hdl->state = ADAPTIVE_EQ_STATE_RUN;
 
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+    if (aeq_hdl->fre_sel == AUDIO_ADAPTIVE_FRE_SEL_ANC) {
+        audio_anc_real_time_adaptive_suspend();
+    }
+#endif
+
     //释放上一次AEQ存储空间
     audio_adaptive_eq_cur_list_del();
 
@@ -703,10 +726,24 @@ static void audio_adaptive_eq_afq_output_hdl(struct audio_afq_output *p)
 #endif
 
 __aeq_close:
-    //关闭AEQ
-    audio_adaptive_eq_close();
+    if (aeq_hdl->real_time_eq_en) {
+        //实时AEQ 在线更新EQ效果
+        aeq_printf("aeq updata \n");
+        aeq_hdl->eff_mode = AEQ_EFF_MODE_ADAPTIVE;
+        s16 volume = app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
+        aeq_hdl->now_volume = volume;
+        audio_icsd_eq_eff_update(audio_adaptive_eq_cur_list_query(volume));
 
-    aeq_printf("AEQ END\n");
+        aeq_printf("AEQ END\n");
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+        if (aeq_hdl->fre_sel == AUDIO_ADAPTIVE_FRE_SEL_ANC) {
+            audio_anc_real_time_adaptive_resume();
+        }
+#endif
+    } else {
+        //单次AEQ 执行关闭
+        audio_adaptive_eq_close();
+    }
 }
 
 int audio_adaptive_eq_eff_set(enum ADAPTIVE_EFF_MODE mode)

@@ -96,13 +96,13 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
  ********************************************************************************/
 // TCFG_AUDIO_MICx_BIAS_SEL
 #define AUDIO_MIC_BIAS_NULL           (0)       // no bias
-#define AUDIO_MIC_BIAS_CH0            BIT(0)    // PA4
-#define AUDIO_MIC_BIAS_CH1            BIT(1)    // PA3
-#define AUDIO_MIC_BIAS_CH2            BIT(2)    // PD9
-#define AUDIO_MIC_BIAS_CH3            BIT(3)    // PD2
-#define AUDIO_MIC_BIAS_CH4            BIT(4)    // PD1
-#define AUDIO_MIC_LDO_PWR             BIT(5)    // PD9
-#define AUDIO_MIC_BIAS_LP             BIT(6)    // PA0
+#define AUDIO_MIC_BIAS_CH0            BIT(0)    // PA2
+#define AUDIO_MIC_BIAS_CH1            BIT(1)    // PB11
+#define AUDIO_MIC_BIAS_CH2            BIT(2)    // unused
+#define AUDIO_MIC_BIAS_CH3            BIT(3)    // unused
+#define AUDIO_MIC_BIAS_CH4            BIT(4)    // unused
+#define AUDIO_MIC_LDO_PWR             BIT(5)    // PA2/PB11
+#define AUDIO_MIC_BIAS_LP             BIT(6)    // unused
 
 /********************************************************************************
                          LINEINx  输入IO配置
@@ -135,12 +135,17 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define AUDIO_ADC_SEL_DMIC0			2
 #define AUDIO_ADC_SEL_DMIC1			3
 
-struct capless_low_pass {
-    u16 bud; //快调边界
-    u16 count;
-    u16 pass_num;
-    u16 tbidx;
-    u32 bud_factor;
+
+struct mic_capless_trim_result {
+    u8 bias_rsel0;      // MIC_BIASA_RSEL
+    u8 bias_rsel1;      // MIC_BIASB_RSEL
+};
+
+struct mic_capless_trim_param {
+    u8 mic_trim_ch;
+    u16 trigger_threshold;
+    u16 open_delay_ms; //adc上电等待稳定延时
+    u16 trim_delay_ms; //偏置调整等待稳定延时
 };
 
 struct audio_adc_output_hdl {
@@ -180,6 +185,8 @@ struct audio_adc_hdl {
     //const struct adc_platform_data *pd;
     struct audio_adc_private_param *private;
     spinlock_t lock;
+    struct mic_capless_trim_result capless_trim;
+    struct mic_capless_trim_param  capless_param;
     u8 adc_sel[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc_en[AUDIO_ADC_MAX_NUM];
@@ -197,6 +204,8 @@ struct audio_adc_hdl {
     u8 bit_width;
     u8 lpadc_en;
     u8 plnk_en;
+    u8 analog_common_inited;
+    u8 micbias_en_port[AUDIO_ADC_MAX_NUM]; //记录各个MIC使用的供电来源
     u32 timestamp;
 };
 

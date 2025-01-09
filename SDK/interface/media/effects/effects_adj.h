@@ -10,6 +10,7 @@
 #include "media/framework/include/jlstream.h"
 #include "media_memory.h"
 #include "media/audio_general.h"
+#include "audio_drc_common.h"
 
 #define TOOL_CTRL_BYPASS  	(0 << 4)
 #define USER_CTRL_BYPASS  	(1 << 4)
@@ -18,17 +19,23 @@
 #define TOOL_CTRL_BYPASS  	(0 << 4)
 #define USER_CTRL_BYPASS  	(1 << 4)
 #define BYPASS_CTRL_MODE(x) (x >> 4)
+
+
+#define TOOL_PARAM_SET    0
+#define PRIVATE_PARAM_SET 1
 
 struct node_param {//单节点名称
     char name[16];
 };
 
-
 struct eff_default_parm {
     char name[16];
     char cfg_index;//使用配置项的序号，指定默认配置项
     char mode_index;//节点与多模式关联时，该变量用于获取相应模式下的节点参数,模式序号（如，蓝牙模式下，无多子模式，mode_index 是0）
+    void *private_param;//用于指定特定的默认配置
 };
+
+
 
 struct cfg_info {
     u16 offset;

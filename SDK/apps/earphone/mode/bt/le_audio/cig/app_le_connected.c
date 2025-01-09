@@ -32,11 +32,14 @@
 #include "earphone.h"
 #if TCFG_USER_TWS_ENABLE
 #include "classic/tws_api.h"
-extern void tws_dual_conn_state_handler();
+#include "tws_dual_conn.h"
+#else
+#include "dual_conn.h"
 #endif
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)
 #include "ble_rcsp_server.h"
 #endif
+#include "vol_sync.h"
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 struct le_audio_var {
@@ -91,7 +94,6 @@ static struct app_cig_conn_info app_cig_conn_info[CIG_MAX_NUMS];
 /**************************************************************************************************
   Function Declarations
 **************************************************************************************************/
-extern void clr_device_in_page_list();    //清除回连列表地址
 
 /* --------------------------------------------------------------------------*/
 /**
@@ -1054,7 +1056,6 @@ APP_MSG_HANDLER(conn_stack_msg_entry) = {
 /*conn_handle(2),mute_state(1)*/
 #define LEA_MICS_SERVER_MUTE_STATE    0x02
 
-extern void set_music_device_volume(int volume);
 /**
  * 实现le_audio_profile.a里面的weak函数，获取到了手机配置的音量消息，音量值更新
  */

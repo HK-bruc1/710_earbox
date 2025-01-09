@@ -567,6 +567,39 @@
 	*(.sof_eq.text)
 	*(.sof_eq.text.const)
 #endif
+
+#if (AFx_PHASER_AT_RAM == 0)
+	*(.Phaser.text.cache.L2.code)	
+	/* *(.Phaser.text)	 */
+	/* *(.Phaser.text.const)	 */
+#endif
+
+
+#if (AFx_FLANGER_AT_RAM == 0)
+	*(.flanger.text.cache.L2.code)	
+	/* *(.flanger.text)	 */
+	/* *(.flanger.text.const)	 */
+#endif
+
+#if (AFx_CHORUS_ADVANCE_AT_RAM == 0)
+	*(.chorus_adv.text.cache.L2.code)	
+	/* *(.chorus_adv.text)	 */
+	/* *(.chorus_adv.text.const)	 */
+#endif
+
+#if (AFx_PINGPONG_ECHO_AT_RAM == 0)
+	*(.pingpong_echo.text.cache.L2.code)	
+	/* *(.pingpong_echo.text)	 */
+	/* *(.pingpong_echo.text.const)	 */
+#endif
+
+#if AFx_DISTORTION_CLIPPING_AT_RAM == 0
+	*(.distortion.text.cache.L2.code)	
+	*(.distortion.text.cache.L2.const)	
+	/* *(.distortion.text)	 */
+	/* *(.distortion.text.const)	 */
+#endif
+
     . = ALIGN(4);
     media_code_begin = .;
     *(.media.*.text)

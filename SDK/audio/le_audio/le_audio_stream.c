@@ -14,6 +14,7 @@
 #include "circular_buf.h"
 #include "system/timer.h"
 #include "app_config.h"
+#include "audio_time.h"
 
 #if LE_AUDIO_STREAM_ENABLE
 
@@ -65,7 +66,6 @@ struct le_audio_stream_context {
     u32(*time_handler)(void *conn, u8 cmd, void *arg);
 };
 
-extern int bt_audio_reference_clock_select(void *addr, u8 network);
 void *le_audio_stream_create(void *conn, struct le_audio_stream_format *fmt, u32(*reference_time)(void *, u8, void *))
 {
     struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)zalloc(sizeof(struct le_audio_stream_context));

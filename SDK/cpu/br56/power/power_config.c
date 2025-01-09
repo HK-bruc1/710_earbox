@@ -33,12 +33,6 @@ void board_power_init()
     /*power_control(PCONTROL_SF_KEEP_PVDD, 1);*/
     /*power_set_dcdc_type(TCFG_DCDC_TYPE);*/
 
-#if TCFG_LP_TOUCH_KEY_ENABLE
-    power_control(PCONTROL_PD_KEEP_LPCTMU, 1);
-#else
-    power_control(PCONTROL_PD_KEEP_LPCTMU, 0);
-#endif
-
     power_init(&power_pdata);
 
 #if (!TCFG_CHARGE_ENABLE)

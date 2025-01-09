@@ -22,6 +22,8 @@
 #include "battery_manager.h"
 #include "app_charge.h"
 #include "gpadc.h"
+#include "update.h"
+#include "dual_bank_updata_api.h"
 
 #define LOG_TAG_CONST       APP_CHARGE
 #define LOG_TAG             "[APP_CHARGE]"
@@ -32,8 +34,6 @@
 #define LOG_CLI_ENABLE
 #include "debug.h"
 
-extern u32 dual_bank_update_exist_flag_get(void);
-extern u32 classic_update_task_exist_flag_get(void);
 
 #if TCFG_CHARGE_ENABLE
 

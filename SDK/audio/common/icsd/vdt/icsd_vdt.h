@@ -17,7 +17,12 @@
 extern int (*vdt_printf)(const char *format, ...);
 
 
-#define VDT_USE_ANCDMAL_DATA  1
+#define VDT_USE_ANCDMAL_DATA  0
+
+#define	VDT_EXT_NOISE_PWR               BIT(0)
+#define	VDT_EXT_DIT              		BIT(1)
+#define	VDT_EXT_COR              		BIT(2)
+#define VDT_EXT_FCXY                    BIT(3)
 
 struct icsd_vdt_libfmt {
     int lib_alloc_size;  //算法ram需求大小

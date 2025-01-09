@@ -144,6 +144,9 @@ static void audio_common_initcall()
     //音频时钟初始化
     audio_dac_clock_init();
 
+#if ((defined TCFG_AUDIO_DAC_CLASSH_EN) && (TCFG_AUDIO_DAC_CLASSH_EN == 1))
+    audio_common_classh_clock_open(2);
+#endif
     // common power trim
     audio_common_param_t *common = audio_common_get_param();
     int len;
@@ -250,7 +253,7 @@ struct audio_adc_private_param adc_private_param = {
 };
 
 #if TCFG_AUDIO_ADC_ENABLE
-const struct adc_platform_cfg adc_platform_cfg_table[AUDIO_ADC_MAX_NUM] = {
+struct adc_platform_cfg adc_platform_cfg_table[AUDIO_ADC_MAX_NUM] = {
 #if TCFG_ADC0_ENABLE
     [0] = {
         .mic_mode           = TCFG_ADC0_MODE,
@@ -290,6 +293,41 @@ void audio_input_initcall(void)
     audio_adc_init(&adc_hdl, &adc_private_param);
     /* adc_hdl.bit_width = audio_general_in_dev_bit_width(); */
 
+#if TCFG_SUPPORT_MIC_CAPLESS
+    adc_hdl.capless_trim.bias_rsel0 = TCFG_ADC0_BIAS_RSEL;
+    adc_hdl.capless_trim.bias_rsel1 = TCFG_ADC1_BIAS_RSEL;
+    adc_hdl.capless_param.trigger_threshold = 50; //电压差校准触发阈值(单位:mV)
+    /*
+     * 以下两个delay需要根据
+     * const_mic_capless_open_delay_debug、const_mic_capless_trim_delay_debug 的结果配置
+     */
+    adc_hdl.capless_param.open_delay_ms = 150; //adc上电等待稳定延时
+    adc_hdl.capless_param.trim_delay_ms = 50; //偏置调整等待稳定延时
+    int ret = 0;
+#if (TCFG_ADC0_ENABLE && (TCFG_ADC0_MODE == AUDIO_MIC_CAPLESS_MODE))
+    adc_hdl.capless_param.mic_trim_ch |= AUDIO_ADC_MIC_0;
+#endif
+#if (TCFG_ADC1_ENABLE && (TCFG_ADC1_MODE == AUDIO_MIC_CAPLESS_MODE))
+    adc_hdl.capless_param.mic_trim_ch |= AUDIO_ADC_MIC_1;
+#endif
+#if (TCFG_MC_BIAS_AUTO_ADJUST == MC_BIAS_ADJUST_ONE)
+    int len = syscfg_read(CFG_MC_BIAS, &adc_hdl.capless_trim, sizeof(struct mic_capless_trim_result));
+    if (len != sizeof(struct mic_capless_trim_result)) {
+        ret = audio_mic_bias_adjust(&adc_hdl.capless_trim, &adc_hdl.capless_param);
+        if (ret == 0) {
+            syscfg_write(CFG_MC_BIAS, &adc_hdl.capless_trim, sizeof(struct mic_capless_trim_result));
+        }
+    }
+#elif (TCFG_MC_BIAS_AUTO_ADJUST == MC_BIAS_ADJUST_ALWAYS)
+    ret = audio_mic_bias_adjust(&adc_hdl.capless_trim, &adc_hdl.capless_param);
+    if (ret == 0) {
+        syscfg_write(CFG_MC_BIAS, &adc_hdl.capless_trim, sizeof(struct mic_capless_trim_result));
+    }
+#endif
+    adc_platform_cfg_table[0].mic_bias_rsel = adc_hdl.capless_trim.bias_rsel0;
+    adc_platform_cfg_table[1].mic_bias_rsel = adc_hdl.capless_trim.bias_rsel1;
+    printf("BIAS_RSEL: %d, %d\n", adc_hdl.capless_trim.bias_rsel0, adc_hdl.capless_trim.bias_rsel1);
+#endif
     audio_adc_file_init();
 
 #if TCFG_AUDIO_DUT_ENABLE
@@ -375,7 +413,7 @@ static void audio_disable_all(void)
     //JL_FFT->CON = BIT(1);//置1强制关闭模块，不管是否已经运算完成
     //SRC:
     JL_SRC0->CON1 |= BIT(22);
-    JL_SRC1->CON0 |= BIT(10);
+    /* JL_SRC1->CON0 |= BIT(10); */
 
     //ANC:anc_en anc_start
 #if 0//build

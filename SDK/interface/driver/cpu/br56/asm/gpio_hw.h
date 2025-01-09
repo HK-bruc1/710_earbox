@@ -206,7 +206,8 @@ struct port_reg {
 #define usb_reg port_reg
 #define GPIO_USB_PU_REG_NUM 2
 #define GPIO_USB_PD_REG_NUM 2
-#define GPIO_USB_HD_REG_NUM 2
+#define GPIO_USB_HD_REG_NUM 0
+#define GPIO_USB_NEW_HD_EN  1 //new hd
 #define GPIO_USB_DIEH_REG_NUM 1
 #define GPIO_USB_SPL_REG_NUM  1
 #define GPIO_USB_BSR_REG_NUM  1
@@ -326,90 +327,90 @@ enum PFI_TABLE {
 #define  OUTPUT_GP_OCH_SIGNAL_NUM (32/OUTPUT_GP_OCH_BIT_WIDTH)
 
 enum OUTPUT_CH_SIGNAL {
-    OUTPUT_CH_SIGNAL_TIMER0_PWM,//8
-    OUTPUT_CH_SIGNAL_TIMER1_PWM,
-    OUTPUT_CH_SIGNAL_TIMER2_PWM,
-    OUTPUT_CH_SIGNAL_TIMER3_PWM,
-    // OUTPUT_CH_SIGNAL_TIMER4_PWM,
-    // OUTPUT_CH_SIGNAL_TIMER5_PWM,
-    OUTPUT_CH_SIGNAL_GP_ICH0,
-    OUTPUT_CH_SIGNAL_GP_ICH1,
-    OUTPUT_CH_SIGNAL_UART1_RTS,
-    OUTPUT_CH_SIGNAL_PLNK_CLK,
-    OUTPUT_CH_SIGNAL_WL_AMPE,
-    OUTPUT_CH_SIGNAL_WL_LNAE,
-    OUTPUT_CH_SIGNAL_WLC_INT_ACTIVE,
-    OUTPUT_CH_SIGNAL_WLC_INT_STATUS,
-    OUTPUT_CH_SIGNAL_WLC_INT_FREQ,
-    OUTPUT_CH_SIGNAL_AUD_DBG_CLKO,
-    OUTPUT_CH_SIGNAL_AUD_DBG_DATO0,
-    OUTPUT_CH_SIGNAL_AUD_DBG_DATO1,
-    OUTPUT_CH_SIGNAL_AUD_DBG_DATO2,
-    OUTPUT_CH_SIGNAL_AUD_DBG_DATO3,
-    OUTPUT_CH_SIGNAL_AUD_DBG_DATO4,
-    OUTPUT_CH_SIGNAL_CLOCK_OUT0,
-    OUTPUT_CH_SIGNAL_CLOCK_OUT1,//br52无clk out1
-    OUTPUT_CH_SIGNAL_CLOCK_OUT2,
-    OUTPUT_CH_SIGNAL_P33_CLK_DBG,
-    OUTPUT_CH_SIGNAL_P33_SIG_DBG0,
-    OUTPUT_CH_SIGNAL_P33_SIG_DBG1,
-    OUTPUT_CH_SIGNAL_USB_DBG_OUT,
-    OUTPUT_CH_SIGNAL_P11_DBG_OUT,
-    OUTPUT_CH_SIGNAL_WL_DBG_PORTx,
+    OCH_TIMER0_PWM,//8
+    OCH_TIMER1_PWM,
+    OCH_TIMER2_PWM,
+    OCH_TIMER3_PWM,
+    // OCH_TIMER4_PWM,
+    // OCH_TIMER5_PWM,
+    OCH_GP_ICH0,
+    OCH_GP_ICH1,
+    OCH_UART1_RTS,
+    OCH_PLNK_CLK,
+    OCH_WL_AMPE,
+    OCH_WL_LNAE,
+    OCH_WLC_INT_ACTIVE,
+    OCH_WLC_INT_STATUS,
+    OCH_WLC_INT_FREQ,
+    OCH_AUD_DBG_CLKO,
+    OCH_AUD_DBG_DATO0,
+    OCH_AUD_DBG_DATO1,
+    OCH_AUD_DBG_DATO2,
+    OCH_AUD_DBG_DATO3,
+    OCH_AUD_DBG_DATO4,
+    OCH_CLOCK_OUT0,
+    OCH_CLOCK_OUT1,//br52无clk out1
+    OCH_CLOCK_OUT2,
+    OCH_P33_CLK_DBG,
+    OCH_P33_SIG_DBG0,
+    OCH_P33_SIG_DBG1,
+    OCH_USB_DBG_OUT,
+    OCH_P11_DBG_OUT,
+    OCH_WL_DBG_PORTx,
 
-    // OUTPUT_CH_SIGNAL_MCPWM0_H,
-    // OUTPUT_CH_SIGNAL_MCPWM0_L,
-    // OUTPUT_CH_SIGNAL_MCPWM1_H,
-    // OUTPUT_CH_SIGNAL_MCPWM1_L,
-    // OUTPUT_CH_SIGNAL_LEDC0_OUT = 32,
-    // OUTPUT_CH_SIGNAL_LEDC1_OUT = 33,
+    // OCH_MCPWM0_H,
+    // OCH_MCPWM0_L,
+    // OCH_MCPWM1_H,
+    // OCH_MCPWM1_L,
+    // OCH_LEDC0_OUT = 32,
+    // OCH_LEDC1_OUT = 33,
 };
 
 enum INPUT_CH_TYPE {
-    INPUT_CH_TYPE_GP_ICH = 0,
-    INPUT_CH_TYPE_TIME2_PWM = 6,
-    INPUT_CH_TYPE_TIME3_PWM,
-    INPUT_CH_TYPE_WL_AMPE,
-    INPUT_CH_TYPE_WL_LNAE,
-    INPUT_CH_TYPE_MAX,
+    ICH_TYPE_GP_ICH = 0,
+    ICH_TYPE_TIME2_PWM = 6,
+    ICH_TYPE_TIME3_PWM,
+    ICH_TYPE_WL_AMPE,
+    ICH_TYPE_WL_LNAE,
+    ICH_TYPE_MAX,
 };
 
 enum INPUT_CH_SIGNAL {
     //ICH_CON0
-    INPUT_CH_SIGNAL_TIMER0_CIN = 0,//5
-    INPUT_CH_SIGNAL_TIMER1_CIN,
-    INPUT_CH_SIGNAL_TIMER2_CIN,
-    INPUT_CH_SIGNAL_TIMER3_CIN,
-    // INPUT_CH_SIGNAL_TIMER4_CIN,
-    // INPUT_CH_SIGNAL_TIMER5_CIN,
-    INPUT_CH_SIGNAL_TIMER0_CAPTURE,
-    INPUT_CH_SIGNAL_TIMER1_CAPTURE,
+    ICH_TIMER0_CIN = 0,//5
+    ICH_TIMER1_CIN,
+    ICH_TIMER2_CIN,
+    ICH_TIMER3_CIN,
+    // ICH_TIMER4_CIN,
+    // ICH_TIMER5_CIN,
+    ICH_TIMER0_CAPTURE,
+    ICH_TIMER1_CAPTURE,
     //ICH_CON1
-    INPUT_CH_SIGNAL_TIMER2_CAPTURE,
-    INPUT_CH_SIGNAL_TIMER3_CAPTURE,
-    // INPUT_CH_SIGNAL_TIMER4_CAPTURE,
-    // INPUT_CH_SIGNAL_TIMER5_CAPTURE,
-    INPUT_CH_SIGNAL_MCPWM0_CK,
-    INPUT_CH_SIGNAL_MCPWM1_CK,
-    INPUT_CH_SIGNAL_MCPWM0_FP,
-    INPUT_CH_SIGNAL_MCPWM1_FP,
+    ICH_TIMER2_CAPTURE,
+    ICH_TIMER3_CAPTURE,
+    // ICH_TIMER4_CAPTURE,
+    // ICH_TIMER5_CAPTURE,
+    ICH_MCPWM0_CK,
+    ICH_MCPWM1_CK,
+    ICH_MCPWM0_FP,
+    ICH_MCPWM1_FP,
     //ICH_CON2
-    // INPUT_CH_SIGNAL_IRFLT,
-    INPUT_CH_SIGNAL_UART1_CTS,
-    INPUT_CH_SIGNAL_PLNK_IDAT0,
-    INPUT_CH_SIGNAL_PLNK_IDAT1,
-    INPUT_CH_SIGNAL_CAP,
-    INPUT_CH_SIGNAL_CLK_PIN,
-    INPUT_CH_SIGNAL_EXT_CLK,
+    // ICH_IRFLT,
+    ICH_UART1_CTS,
+    ICH_PLNK_IDAT0,
+    ICH_PLNK_IDAT1,
+    ICH_CAP,
+    ICH_CLK_PIN,
+    ICH_EXT_CLK,
     //ICH_CON3
-    // INPUT_CH_SIGNAL_QDEC_SIN0,
-    // INPUT_CH_SIGNAL_QDEC_SIN1,
-    INPUT_CH_SIGNAL_SPI1_CS,
-    INPUT_CH_SIGNAL_WLC_EXT_ACT,
-    INPUT_CH_SIGNAL_AUD_DBG_DATI,
-    INPUT_CH_SIGNAL_RESERVE0,
-    INPUT_CH_SIGNAL_RESERVE1,
-    INPUT_CH_SIGNAL_RESERVE2,
+    // ICH_QDEC_SIN0,
+    // ICH_QDEC_SIN1,
+    ICH_SPI1_CS,
+    ICH_WLC_EXT_ACT,
+    ICH_AUD_DBG_DATI,
+    ICH_RESERVE0,
+    ICH_RESERVE1,
+    ICH_RESERVE2,
     //ICH_CON4
 };
 enum gpio_function {
@@ -752,9 +753,9 @@ int gpio_disable_fun_input_port(enum PFI_TABLE pfun);
 // 		signal: 将enum OUTPUT_CH_SIGNAL列表中需要输出到指定IO口的外设信号, 可以输出的外设信号列表请查看gpio.h文件的enum OUTPUT_CH_SIGNAL枚举项;
 //@return:  默认为0, 出错内部触发ASSERT;
 //@note: 所映射的IO需要在设置IO状态为输出配置;
-//@example: 将OUTPUT_CH_SIGNAL_MC_PWM0_H的Tx信号输出到IO_PORTA_05口:
+//@example: 将OCH_MC_PWM0_H的Tx信号输出到IO_PORTA_05口:
 // 			gpio_direction_output(IO_PORTA_05, 1); //设置IO为输出状态
-//			gpio_och_sel_output_signal(IO_PORTA_05, OUTPUT_CH_SIGNAL_MC_PWM0_H); //将OUTPUT_CH_SIGNAL_MC_PWM0_H信号输出到IO_PORTA_05口
+//			gpio_och_sel_output_signal(IO_PORTA_05, OCH_MC_PWM0_H); //将OCH_MC_PWM0_H信号输出到IO_PORTA_05口
 //=================================================================================//
 int gpio_och_sel_output_signal(u32 gpio, enum OUTPUT_CH_SIGNAL signal);
 
@@ -765,8 +766,8 @@ int gpio_och_sel_output_signal(u32 gpio, enum OUTPUT_CH_SIGNAL signal);
 // 		signal: 将enum OUTPUT_CH_SIGNAL列表中需要取消输出的外设信号, 外设信号列表请查看gpio.h文件的enum OUTPUT_CH_SIGNAL枚举项;;
 //@return:  默认为0, 无出错处理;
 //@note:
-//@example: 将OUTPUT_CH_SIGNAL_MC_PWM0_H取消输出IO_PORTA_05:
-// 			gpio_och_disable_output_signal(IO_PORTA_05, OUTPUT_CH_SIGNAL_MC_PWM0_H);
+//@example: 将OCH_MC_PWM0_H取消输出IO_PORTA_05:
+// 			gpio_och_disable_output_signal(IO_PORTA_05, OCH_MC_PWM0_H);
 //=================================================================================//
 int gpio_och_disable_output_signal(u32 gpio, enum OUTPUT_CH_SIGNAL signal);
 
@@ -778,11 +779,11 @@ int gpio_och_disable_output_signal(u32 gpio, enum OUTPUT_CH_SIGNAL signal);
 //      type: INPUT_CH 类型, 常设为INPUT_CH_TYPE_GP_ICH;
 //@return:  默认为0, 出错内部触发ASSERT;
 //@note: 所映射的IO需要在设置IO状态为输入配置;
-//@example: 将INPUT_CH_SIGNAL_TIMER0_CIN信号设置为IO_PORTA_05口输入:
+//@example: 将ICH_TIMER0_CIN信号设置为IO_PORTA_05口输入:
 //			gpio_set_die(IO_PORTA_05, 1); 		//数字输入使能
 //			gpio_set_pull_up(IO_PORTA_05, 1);  //上拉输入使能
 //			gpio_direction_input(IO_PORTA_05);  //设置IO为输入状态
-//			gpio_ich_sel_input_signal(IO_PORTA_05, INPUT_CH_SIGNAL_TIMER0_CIN, INPUT_CH_TYPE_GP_ICH); //将INPUT_CH_SIGNAL_TIMER0_CIN信号设置为IO_PORTA_05口输入
+//			gpio_ich_sel_input_signal(IO_PORTA_05, ICH_TIMER0_CIN, INPUT_CH_TYPE_GP_ICH); //将ICH_TIMER0_CIN信号设置为IO_PORTA_05口输入
 //=================================================================================//
 int gpio_ich_sel_input_signal(u32 gpio, enum INPUT_CH_SIGNAL signal, enum INPUT_CH_TYPE type);
 
@@ -794,8 +795,8 @@ int gpio_ich_sel_input_signal(u32 gpio, enum INPUT_CH_SIGNAL signal, enum INPUT_
 //      type: INPUT_CH 类型, 常设为INPUT_CH_TYPE_GP_ICH;
 //@return:  默认为0, 无出错处理;
 //@note:
-//@example: 将外设信号INPUT_CH_SIGNAL_TIMER0_CIN释放由某个IO输入:
-// 			gpio_ich_disable_input_signal(IO_PORTA_05, INPUT_CH_SIGNAL_TIMER0_CIN, INPUT_CH_TYPE_GP_ICH);
+//@example: 将外设信号ICH_TIMER0_CIN释放由某个IO输入:
+// 			gpio_ich_disable_input_signal(IO_PORTA_05, ICH_TIMER0_CIN, INPUT_CH_TYPE_GP_ICH);
 //=================================================================================//
 int gpio_ich_disable_input_signal(u32 gpio, enum INPUT_CH_SIGNAL signal, enum INPUT_CH_TYPE type);
 

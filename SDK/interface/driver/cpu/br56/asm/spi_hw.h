@@ -13,7 +13,7 @@
 typedef enum spi_index {
     HW_SPI0, //SPI0系统已使用
     HW_SPI1,
-    HW_SPI2,
+    // HW_SPI2,
     HW_SPI_MAX_NUM,
 } hw_spi_dev;
 

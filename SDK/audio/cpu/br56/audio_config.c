@@ -26,6 +26,10 @@ const int config_audio_dac_mix_enable = 1;
 const int AAC_DEC_MP4A_LATM_ANALYSIS = 1;
 const int AAC_DEC_LIB_SUPPORT_24BIT_OUTPUT = 0;
 const int WTS_DEC_LIB_SUPPORT_24BIT_OUTPUT = 1;
+//***********************
+//*		MP3 Codec       *
+//***********************
+const int MP3_DEC_LIB_SUPPORT_24BIT_OUTPUT = 0;
 
 //***********************
 //*		Audio Params    *

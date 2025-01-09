@@ -268,7 +268,7 @@ static u32 alink_isr_get_len(void *hw_alink, u8 ch, u32 *remain)
     if (hw_alink_parm->buf_mode == ALINK_BUF_CIRCLE) {
         s32 shn = alink_get_shn(&hw_alink_parm->ch_cfg[ch]);
         s32 swptr = alink_get_swptr(&hw_alink_parm->ch_cfg[ch]);
-        s32 dma_len = alink_get_len(&hw_alink_parm->ch_cfg[ch]);
+        u32 dma_len = alink_get_len(&hw_alink_parm->ch_cfg[ch]);
         if ((swptr + shn) >= dma_len) {					//处理边界情况
             len = dma_len - swptr;
             *remain = (shn - len) * 4; //

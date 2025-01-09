@@ -596,16 +596,15 @@ void audio_fade_in_fade_out(u8 left_vol, u8 right_vol)
     /* __this->digital_volume = __this->sys_hw_dvol_max; */
     /* } */
     printf("[SW_DVOL]Gain:%d,AVOL:%d,DVOL:%d\n", left_gain, __this->analog_volume_l, __this->digital_volume);
-    audio_dac_vol_set(TYPE_DAC_AGAIN, 0x1, __this->analog_volume_l, 1);
-    audio_dac_vol_set(TYPE_DAC_AGAIN, 0x2, __this->analog_volume_r, 1);
+    audio_dac_set_analog_vol(&dac_hdl, __this->analog_volume_r);
 #if defined(VOL_NOISE_OPTIMIZE) &&( VOL_NOISE_OPTIMIZE)
     if (__this->dac_dB) { //设置回目标数字音量
-        audio_dac_vol_set(TYPE_DAC_DGAIN, 0x3, __this->target_dig_vol, 1);
+        audio_dac_set_digital_vol(&dac_hdl, __this->target_dig_vol);
     } else {
 #else
     if (1) {
 #endif
-        audio_dac_vol_set(TYPE_DAC_DGAIN, 0x3, __this->digital_volume, 1);
+        audio_dac_set_digital_vol(&dac_hdl, __this->digital_volume);
     }
 #endif/*SYS_VOL_TYPE == VOL_TYPE_DIGITAL*/
     /*模拟音量*/

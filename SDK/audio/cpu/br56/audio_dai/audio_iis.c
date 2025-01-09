@@ -238,7 +238,7 @@ void *audio_iis_init(struct alink_param params)
     struct _iis_hdl *hdl = zalloc(sizeof(struct _iis_hdl));
     u8 module_idx = params.module_idx;
     u8 bit_width  = params.bit_width;
-    int dma_size  = params.dma_size;
+    u32 dma_size  = params.dma_size;
     u32 sr        = params.sr;
     if (hdl) {
         hdl->fixed_pns = params.fixed_pns;
@@ -364,12 +364,9 @@ static int audio_iis_channel_fifo_write_dma(struct audio_iis_channel *ch, void *
 
 
     os_mutex_pend(&hdl->mutex[ch->attr.ch_idx], 0);
-    int w_len = 0;
-    if (is_fixed_data) {
-        w_len = audio_cfifo_channel_write_fixed_data(&ch->fifo, (s16)data, len);
-    } else {
-        w_len = audio_cfifo_channel_write(&ch->fifo, data, len);
-    }
+
+    int w_len = audio_cfifo_channel_write(&ch->fifo, data, len, is_fixed_data);
+
     os_mutex_post(&hdl->mutex[ch->attr.ch_idx]);
     return w_len;
 }
@@ -1026,7 +1023,7 @@ void audio_iis_channel_start(void *iis_ch)
             hdl->cfifo[ch->attr.ch_idx].bit_wide = DATA_BIT_WIDE_24BIT;
         }
         s16 *buf;
-        s16  buf_len;
+        u32  buf_len;
 #if IIS_USE_DOUBLE_BUF_MODE_EN
         buf = hdl->fifo_buf[ch->attr.ch_idx];
         buf_len = audio_iis_cfifo_len;
@@ -1121,7 +1118,7 @@ void audio_iis_multi_channel_start(struct multi_ch *mch)
                     hdl->cfifo[ch->attr.ch_idx].bit_wide = DATA_BIT_WIDE_24BIT;
                 }
                 s16 *buf;
-                s16  buf_len;
+                u32  buf_len;
 #if IIS_USE_DOUBLE_BUF_MODE_EN
                 buf = hdl->fifo_buf[ch->attr.ch_idx];
                 buf_len = audio_iis_cfifo_len;
@@ -1583,11 +1580,8 @@ static int audio_iis_channel_fifo_write(struct audio_iis_channel *ch, void *data
 
     hdl->unread_samples[ch->attr.ch_idx] = unread_samples;
 
-    if (is_fixed_data) {
-        w_len = audio_cfifo_channel_write_fixed_data(&ch->fifo, (s16)data, len);
-    } else {
-        w_len = audio_cfifo_channel_write(&ch->fifo, data, len);
-    }
+    w_len = audio_cfifo_channel_write(&ch->fifo, data, len, is_fixed_data);
+
     int fifo_frames = (w_len >> point_offset) / hdl->channel;
     int samples = audio_cfifo_get_unread_samples(&hdl->cfifo[ch->attr.ch_idx]) - hdl->unread_samples[ch->attr.ch_idx];
 
@@ -1641,11 +1635,8 @@ static int audio_iis_multi_channel_fifo_write_base(struct audio_iis_channel *ch,
     audio_cfifo_read_update(&hdl->cfifo[ch->attr.ch_idx], hdl->unread_samples[ch->attr.ch_idx] - unread_samples);
 
     hdl->unread_samples[ch->attr.ch_idx] = unread_samples;
-    if (is_fixed_data) {
-        w_len = audio_cfifo_channel_write_fixed_data(&ch->fifo, (s16)data, len);
-    } else {
-        w_len = audio_cfifo_channel_write(&ch->fifo, data, len);
-    }
+
+    w_len = audio_cfifo_channel_write(&ch->fifo, data, len, is_fixed_data);
 
     *fifo_frames = (w_len >> point_offset) / hdl->channel;
     int samples = audio_cfifo_get_unread_samples(&hdl->cfifo[ch->attr.ch_idx]) - hdl->unread_samples[ch->attr.ch_idx];
@@ -1971,7 +1962,7 @@ void audio_iis_syncts_trigger_with_timestamp(void *iis_ch, u32 timestamp)
 int audio_iis_fix_dma_len(u32 module_idx, u32 tx_dma_buf_time_ms, u16 rx_irq_points, u8 bit_width, u8 ch_num)
 {
     u32 point_size = bit_width ? 4 : 2;
-    int dma_len = IIS_RX_DMA_LEN;
+    u32 dma_len = IIS_RX_DMA_LEN;
     if (audio_iis_check_hw_rx_and_tx_status(module_idx)) { //tx与rx共同使能，或者只有tx，buf长度使用tx的长度
         dma_len = tx_dma_buf_time_ms * ((AUDIO_DAC_MAX_SAMPLE_RATE + 999) / 1000) * ch_num  * point_size;
     }

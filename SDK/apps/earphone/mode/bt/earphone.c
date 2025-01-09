@@ -454,6 +454,11 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
          */
         g_bt_hdl.init_ok = 1;
         log_info("BT_STATUS_INIT_OK\n");
+
+#if TCFG_TEST_BOX_ENABLE
+        testbox_set_bt_init_ok(1);
+#endif
+
 #if TCFG_NORMAL_SET_DUT_MODE
         log_info("edr set dut mode\n");
         bredr_set_dut_enble(1, 1);
@@ -510,10 +515,6 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
 
 #if TCFG_CHARGESTORE_ENABLE
         chargestore_set_bt_init_ok(1);
-#endif
-
-#if TCFG_TEST_BOX_ENABLE
-        testbox_set_bt_init_ok(1);
 #endif
 
 #if ((CONFIG_BT_MODE == BT_BQB)||(CONFIG_BT_MODE == BT_PER))

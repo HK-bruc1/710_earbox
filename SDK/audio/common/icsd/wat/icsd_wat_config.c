@@ -11,6 +11,8 @@
 #include "icsd_wat.h"
 #include "icsd_adt.h"
 
+const u8 wat_data_en = 1;
+
 struct wat_function *WAT_FUNC;
 int (*wat_printf)(const char *format, ...) = _wat_printf;
 

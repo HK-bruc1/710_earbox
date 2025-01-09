@@ -207,9 +207,9 @@ void setup_arch()
     log_i("         setup_arch");
     log_i("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-    clock_dump();
-
     power_early_flowing();
+
+    clock_dump();
 
     void mvbg_current_trim();        //pmu used
     mvbg_current_trim();

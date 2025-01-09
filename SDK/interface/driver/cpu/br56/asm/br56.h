@@ -171,10 +171,6 @@ typedef struct {
 #define JL_SRC0                          ((JL_SRC_TypeDef			*)JL_SRC0_BASE)
 
 //............. 0x0e00 - 0x0eff............ for src1(src_v2)
-#ifdef BR56_FPGA_CODE_VERIFY
-#define JL_SRC1_BASE                     (hs_base + map_adr(0x0e, 0x00))
-#define JL_SRC1                          ((JL_SRC_TypeDef			*)JL_SRC1_BASE)
-#endif
 
 //............. 0x0f00 - 0x0fff............
 #define JL_PORTF_BASE                   (hs_base + map_adr(0x10, 0x00))
@@ -399,10 +395,6 @@ typedef struct {
 #define JL_UART0                        ((JL_UART_TypeDef       *)JL_UART0_BASE)
 #define JL_UART1_BASE                   (ls_base + map_adr(0x09, 0x00))
 #define JL_UART1                        ((JL_UART_TypeDef       *)JL_UART1_BASE)
-#ifdef BR56_FPGA_CODE_VERIFY
-#define JL_UART2_BASE                   (ls_base + map_adr(0x04, 0x00))
-#define JL_UART2                        ((JL_UART_TypeDef       *)JL_UART2_BASE)
-#endif
 //............. 0x0a00 - 0x0bff............
 typedef struct {
     __RW __u32 CON;
@@ -498,11 +490,6 @@ typedef struct {
 #define JL_GPCNT0                        ((JL_GPCNT_TypeDef     *)JL_GPCNT0_BASE)
 
 //............. 0x1300 - 0x13ff............
-
-#ifdef BR56_FPGA_CODE_VERIFY
-#define JL_GPCNT1_BASE                   (ls_base + map_adr(0x13, 0x00))
-#define JL_GPCNT1                        ((JL_GPCNT_TypeDef     *)JL_GPCNT1_BASE)
-#endif
 
 
 //............. 0x1200 - 0x12ff............

@@ -56,6 +56,7 @@
 #include "rcsp_manage.h"
 #include "rcsp.h"
 #include "rcsp_ch_loader_download.h"
+#include "update.h"
 
 #if ASSISTED_HEARING_CUSTOM_TRASNDATA
 #include "adv_hearing_aid_setting.h"
@@ -485,7 +486,6 @@ static void cbk_packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *p
             }
 #if TCFG_RCSP_DUAL_CONN_ENABLE
             else {
-                extern u32 classic_update_task_exist_flag_get(void);
                 if (classic_update_task_exist_flag_get()) {
                     break;
                 }

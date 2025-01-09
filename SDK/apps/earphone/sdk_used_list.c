@@ -496,4 +496,19 @@ virtual_bass_classic_node_adapter
 upmix_node_adapter
 #endif
 
+#if TCFG_PHASER_NODE_ENABLE
+phaser_node_adapter
+#endif
+
+#if TCFG_FLANGER_NODE_ENABLE
+flanger_node_adapter
+#endif
+
+#if TCFG_CHORUS_ADVANCE_NODE_ENABLE
+chorus_advance_node_adapter
+#endif
+
+#if TCFG_PINGPONG_ECHO_NODE_ENABLE
+pingpong_echo_node_adapter
+#endif
 

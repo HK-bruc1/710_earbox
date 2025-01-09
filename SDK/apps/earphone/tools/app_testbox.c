@@ -51,6 +51,7 @@
 #define CMD_BOX_ENTER_STORAGE_MODE  0x0a //进入仓储模式
 #define CMD_BOX_GLOBLE_CFG			0x0b //测试盒配置命令(测试盒收到CMD_BOX_TWS_CHANNEL_SEL命令后发送,需使能测试盒某些配置)
 #define CMD_BOX_GET_TWS_PAIR_INFO   0x0c //测试盒获取配对信息
+#define CMD_BOX_GET_AUDIO_CHANNEL	0x0e //左右声道信息
 #define CMD_BOX_CUSTOM_CODE			0xf0 //客户自定义命令处理
 
 #define WRITE_LIT_U16(a,src)   {*((u8*)(a)+1) = (u8)(src>>8); *((u8*)(a)+0) = (u8)(src&0xff); }
@@ -234,6 +235,13 @@ static int chargestore_get_tws_paired_info(u8 *buf, u8 *len)
     //put_buf(buf, data_len);
 
     return 0;
+}
+
+static u8 chargestore_get_tws_channel_info(void)
+{
+    u8 channel = 'U';
+    syscfg_read(CFG_CHARGESTORE_TWS_CHANNEL, &channel, 1);
+    return channel;
 }
 
 static void app_testbox_sub_event_handle(u8 *data, u16 size)
@@ -487,6 +495,18 @@ static void app_testbox_sub_cmd_handle(u8 *send_buf, u8 buf_len, u8 *buf, u8 len
         log_info("CMD_BOX_GET_TWS_PAIR_INFO");
         chargestore_get_tws_paired_info(send_buf + 2, &send_len);
         chargestore_api_write(send_buf, send_len + 2);
+        break;
+
+    case CMD_BOX_GET_AUDIO_CHANNEL:
+        log_info("CMD_BOX_GET_AUDIO_CHANNEL");
+        u8 channel = chargestore_get_tws_channel_info();
+        if (channel == 'L') {
+            send_buf[2] = 0;
+        } else if (channel == 'R') {
+            send_buf[2] = 1;
+        }
+        __this->channel = send_buf[2];
+        chargestore_api_write(send_buf, 3);
         break;
 
     default:

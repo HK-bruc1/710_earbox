@@ -315,6 +315,38 @@
 	*(.noisegate.text.cache.L2.code)
 #endif
 
+#if AFx_PHASER_AT_RAM
+	*(.Phaser.text.cache.L2.code)	
+	/* *(.Phaser.text)	 */
+	/* *(.Phaser.text.const)	 */
+#endif
+
+#if AFx_FLANGER_AT_RAM
+	*(.flanger.text.cache.L2.code)	
+	/* *(.flanger.text)	 */
+	/* *(.flanger.text.const)	 */
+#endif
+
+#if AFx_CHORUS_ADVANCE_AT_RAM
+	*(.chorus_adv.text.cache.L2.code)	
+	/* *(.chorus_adv.text)	 */
+	/* *(.chorus_adv.text.const)	 */
+#endif
+
+#if AFx_PINGPONG_ECHO_AT_RAM 
+	*(.pingpong_echo.text.cache.L2.code)	
+	/* *(.pingpong_echo.text)	 */
+	/* *(.pingpong_echo.text.const)	 */
+#endif
+
+#if AFx_DISTORTION_CLIPPING_AT_RAM
+	*(.distortion.text.cache.L2.code)	
+	*(.distortion.text.cache.L2.const)	
+	/* *(.distortion.text)	 */
+	/* *(.distortion.text.const)	 */
+#endif
+
+
 	*(.mixer.text.cache.L2)
 	*(.dac.text.cache.L2)
 	*(.convert.text.cache.L2.code)

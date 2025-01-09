@@ -48,6 +48,7 @@
 #include "JL_rcsp_api.h"
 #include "rcsp_config.h"
 #include "btstack_rcsp_user.h"
+#include "update.h"
 
 #if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
 #include "app_le_connected.h"
@@ -614,7 +615,6 @@ static void bt_ble_rcsp_adv_enable_do(void *priv)
 #endif
 
 #if RCSP_UPDATE_EN
-    extern u32 classic_update_task_exist_flag_get(void);
     if (classic_update_task_exist_flag_get()) {
         return;
     }

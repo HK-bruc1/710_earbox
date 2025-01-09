@@ -94,6 +94,10 @@ int adda_loop_player_open()
     jlstream_node_ioctl(player->stream, NODE_UUID_SOURCE, NODE_IOC_NODE_CONFIG, adda_loop_get_adc_num());
 
 
+    //产测模式需要预填静音包以兼容无播放同步的流程，静音包长度为输出节点的"延时保护时间(ms)"
+    jlstream_node_ioctl(player->stream, NODE_UUID_IIS0_TX, NODE_IOC_SET_PRIV_FMT, 1);
+    jlstream_node_ioctl(player->stream, NODE_UUID_DAC, NODE_IOC_SET_PRIV_FMT, 1);
+
     player->channel = AUDIO_CH_L;
     jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, player->channel);
     jlstream_set_callback(player->stream, player->stream, adda_loop_player_callback);

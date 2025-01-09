@@ -82,17 +82,23 @@ typedef struct {
 
 //JL_PORTUSB->CON register
 #define RCVEN           0
-// #define RESERVED        1
+#define DP_ADCEN        1
 #define SR0             2
-// #define RESERVED        3
+#define DM_ADCEN        3
 #define PDCHKDP         4
-// #define RESERVED        5
+#define HDEN            5
 #define DIDF            6
 #define CHKDPO          7
 #define IO_MODE         8
-// #define RESERVED        9~10
-#define DBG_SEL         11  //2bit
-// #define RESERVED        13~31
+#define USB_DF_MODE     9
+#define USB_CP_MODE     10
+#define DBG_SEL         11//2bit
+#define DBG_SEL_        2
+// #define RESERVED        13~15
+#define DP_FUSB_PU      16
+#define DM_FUSB_PU      17
+#define DP_FUSB_PD      18
+#define DM_FUSB_PD      19
 
 
 

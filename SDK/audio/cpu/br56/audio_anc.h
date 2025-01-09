@@ -402,7 +402,6 @@ u8 get_anc_l_transyorder();
 void *get_anc_ltrans_fb_coeff();
 float get_anc_gains_lfb_transgain();
 u8 get_anc_lfb_transyorder();
-void set_anc_adt_state(u8 state);
 int anc_mode_change_tool(u8 dat);
 
 /*获取ANC alogm参数，type 滤波器类型 */

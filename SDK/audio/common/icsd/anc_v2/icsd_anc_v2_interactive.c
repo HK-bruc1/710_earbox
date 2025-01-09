@@ -30,6 +30,7 @@
 #include "bt_tws.h"
 #endif/*TCFG_USER_TWS_ENABLE*/
 #include "anc_ext_tool.h"
+#include "adc_file.h"
 
 #if ANC_MULT_ORDER_ENABLE
 #include "audio_anc_mult_scene.h"
@@ -121,7 +122,9 @@ void anc_ear_adaptive_init(audio_anc_t *param)
     hdl->train_cfg.ff_coeff = malloc(ANC_ADAPTIVE_FF_ORDER * sizeof(double) * 5);
     param->adaptive->ff_yorder = ANC_ADAPTIVE_FF_ORDER;
     param->adaptive->fb_yorder = ANC_ADAPTIVE_FB_ORDER;
+#if ANC_EAR_ADAPTIVE_CMP_EN
     param->adaptive->cmp_yorder = ANC_ADAPTIVE_CMP_ORDER;
+#endif
     param->adaptive->dma_done_cb = icsd_anc_v2_dma_done;
 }
 
@@ -799,11 +802,15 @@ void audio_anc_adaptive_data_packet(struct icsd_anc_v2_tool_data *TOOL_DATA)
     int len = TOOL_DATA->h_len;
     int fb_yorder = TOOL_DATA->yorderb;
     int ff_yorder = TOOL_DATA->yorderf;
-    int cmp_yorder = ANC_ADAPTIVE_CMP_ORDER;
 
     int ff_dat_len =  sizeof(anc_fr_t) * ff_yorder + 4;
     int fb_dat_len =  sizeof(anc_fr_t) * fb_yorder + 4;
+
+#if ANC_EAR_ADAPTIVE_CMP_EN
+    int cmp_yorder = ANC_ADAPTIVE_CMP_ORDER;
     int cmp_dat_len =  sizeof(anc_fr_t) * cmp_yorder + 4;
+#endif
+
     anc_adaptive_iir_t *iir = &hdl->adaptive_iir;
     u8 *ff_dat, *fb_dat, *cmp_dat, *rff_dat, *rfb_dat, *rcmp_dat;
     u8 result = icsd_anc_v2_train_result_get(TOOL_DATA);
@@ -885,7 +892,9 @@ void audio_anc_adaptive_data_packet(struct icsd_anc_v2_tool_data *TOOL_DATA)
         printf("-- len = %d\n", len);
         printf("-- ff_yorder = %d\n", ff_yorder);
         printf("-- fb_yorder = %d\n", fb_yorder);
+#if ANC_EAR_ADAPTIVE_CMP_EN
         printf("-- cmp_yorder = %d\n", cmp_yorder);
+#endif
         /* 先统一申请空间，因为下面不知道什么情况下调用函数 anc_data_catch 时令参数 init_flag 为1 */
         anc_adaptive_data = anc_data_catch(anc_adaptive_data, NULL, 0, 0, 1);
 
@@ -966,7 +975,9 @@ static void audio_anc_adaptive_poweron_catch_data(anc_adaptive_iir_t *iir)
         int i;
         int ff_dat_len =  sizeof(anc_fr_t) * ANC_ADAPTIVE_FF_ORDER + 4;
         int fb_dat_len =  sizeof(anc_fr_t) * ANC_ADAPTIVE_FB_ORDER + 4;
+#if ANC_EAR_ADAPTIVE_CMP_EN
         int cmp_dat_len =  sizeof(anc_fr_t) * ANC_ADAPTIVE_CMP_ORDER + 4;
+#endif
         u8 *ff_dat, *fb_dat, *cmp_dat, *rff_dat, *rfb_dat, *rcmp_dat;
         audio_anc_t *param = hdl->param;
 #if ANC_CONFIG_LFF_EN

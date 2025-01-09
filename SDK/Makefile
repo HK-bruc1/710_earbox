@@ -81,10 +81,8 @@ CFLAGS := \
 	-fallow-pointer-null \
 	-fprefer-gnu-section \
 	-Wno-shift-negative-value \
-	-Werror \
 	-fms-extensions \
 	-fdiscrete-bitfield-abi \
-	-w \
 
 
 # C++额外的编译参数
@@ -99,7 +97,6 @@ DEFINES := \
 	-DCONFIG_CPU_BR56 \
 	-DCONFIG_USB_SUPPORT_MRX_TX \
 	-DCONFIG_IIC_VERSION2 \
-	-DBR56_FPGA_CODE_VERIFY \
 	-DCONFIG_SUPPORT_AES_CCM_FOR_EDR \
 	-DCONFIG_AES_CCM_RXMAXBUF_EXT_MICLEN \
 	-DCONFIG_NEW_BREDR_ENABLE \
@@ -271,6 +268,7 @@ INCLUDES := \
 	-Iaudio/common/icsd/dot \
 	-Iaudio/common/icsd/common_v2 \
 	-Iaudio/common/icsd/anc_v2 \
+	-Iaudio/common/icsd/avc \
 	-Iaudio/common/icsd/config \
 	-Iaudio/common/icsd/rt_anc \
 	-Iaudio/common/icsd/tool \
@@ -689,15 +687,22 @@ c_SRC_FILES := \
 	audio/common/audio_volume_mixer.c \
 	audio/common/bt_audio_energy_detection.c \
 	audio/common/debug/audio_debug.c \
+	audio/common/demo/audio_alink_demo.c \
 	audio/common/demo/audio_eq_demo.c \
 	audio/common/demo/codec_demo/audio_enc_file_demo.c \
 	audio/common/demo/codec_demo/audio_file_dec_demo.c \
 	audio/common/demo/codec_demo/audio_frame_codec_demo.c \
+	audio/common/demo/codec_demo/audio_msbc_hw_codec_demo.c \
+	audio/common/demo/codec_demo/audio_msbc_sw_codec_demo.c \
+	audio/common/demo/codec_demo/audio_opus_codec_demo.c \
+	audio/common/demo/codec_demo/audio_sbc_codec_demo.c \
+	audio/common/demo/codec_demo/audio_speex_codec_demo.c \
 	audio/common/frame_length_adaptive.c \
 	audio/common/icsd/adt/icsd_adt.c \
 	audio/common/icsd/adt/icsd_adt_alg.c \
 	audio/common/icsd/adt/icsd_adt_app.c \
 	audio/common/icsd/adt/icsd_adt_config.c \
+	audio/common/icsd/adt/icsd_adt_demo.c \
 	audio/common/icsd/aeq/icsd_aeq.c \
 	audio/common/icsd/aeq/icsd_aeq_app.c \
 	audio/common/icsd/aeq/icsd_aeq_config.c \
@@ -711,6 +716,7 @@ c_SRC_FILES := \
 	audio/common/icsd/anc_v2/icsd_anc_v2.c \
 	audio/common/icsd/anc_v2/icsd_anc_v2_app.c \
 	audio/common/icsd/anc_v2/icsd_anc_v2_interactive.c \
+	audio/common/icsd/avc/icsd_avc_config.c \
 	audio/common/icsd/cmp/icsd_cmp_app.c \
 	audio/common/icsd/cmp/icsd_cmp_config.c \
 	audio/common/icsd/common/icsd_common.c \
@@ -722,6 +728,7 @@ c_SRC_FILES := \
 	audio/common/icsd/dot/icsd_dot_app.c \
 	audio/common/icsd/ein/icsd_ein_config.c \
 	audio/common/icsd/rt_anc/rt_anc.c \
+	audio/common/icsd/rt_anc/rt_anc_app.c \
 	audio/common/icsd/rt_anc/rt_anc_config.c \
 	audio/common/icsd/tool/anc_ext_tool.c \
 	audio/common/icsd/tool/anc_ext_tool_file.c \
@@ -736,11 +743,9 @@ c_SRC_FILES := \
 	audio/common/power/mic_power_manager.c \
 	audio/common/uartPcmSender.c \
 	audio/cpu/br56/audio_accelerator/hw_fft.c \
-	audio/cpu/br56/audio_anc.c \
 	audio/cpu/br56/audio_config.c \
 	audio/cpu/br56/audio_dai/audio_iis.c \
 	audio/cpu/br56/audio_dai/audio_link.c \
-	audio/cpu/br56/audio_dai/audio_pdm.c \
 	audio/cpu/br56/audio_demo/audio_adc_demo.c \
 	audio/cpu/br56/audio_demo/audio_dac_demo.c \
 	audio/cpu/br56/audio_demo/audio_fft_demo.c \
@@ -846,7 +851,6 @@ c_SRC_FILES := \
 	audio/interface/player/linein_player.c \
 	audio/interface/player/local_tws_player.c \
 	audio/interface/player/pc_spk_player.c \
-	audio/interface/player/reference_time.c \
 	audio/interface/player/ring_player.c \
 	audio/interface/player/tone_player.c \
 	audio/interface/player/tws_tone_player.c \
@@ -959,14 +963,14 @@ LFLAGS := \
 	--gc-sections \
 	--plugin-opt=-pi32v2-csync-before-rti=true \
 	--start-group \
-	cpu/br56/liba/cpu.a \
-	cpu/br56/liba/system.a \
-	cpu/br56/liba/btstack.a \
+	cpu/br56/liba/earphone/release/cpu.a \
+	cpu/br56/liba/earphone/release/system.a \
+	cpu/br56/liba/earphone/release/btstack.a \
 	cpu/br56/liba/bt_hash_enc.a \
-	cpu/br56/liba/rcsp_stack.a \
-	cpu/br56/liba/btctrler.a \
-	cpu/br56/liba/aec.a \
-	cpu/br56/liba/media.a \
+	cpu/br56/liba/earphone/release/rcsp_stack.a \
+	cpu/br56/liba/earphone/release/btctrler.a \
+	cpu/br56/liba/earphone/release/aec.a \
+	cpu/br56/liba/earphone/release/media.a \
 	cpu/br56/liba/libepmotion.a \
 	cpu/br56/liba/libAptFilt_pi32v2_OnChip.a \
 	cpu/br56/liba/libEchoSuppress_pi32v2_OnChip.a \
@@ -983,6 +987,7 @@ LFLAGS := \
 	cpu/br56/liba/lib_resample_cal.a \
 	cpu/br56/liba/lib_resample_fast_cal.a \
 	cpu/br56/liba/sbc_eng_lib.a \
+	cpu/br56/liba/lib_sbc_msbc.a \
 	cpu/br56/liba/lib_mp3_dec.a \
 	cpu/br56/liba/lib_f2a_dec.a \
 	cpu/br56/liba/libLHDCv4DecodeLib.a \
@@ -993,7 +998,6 @@ LFLAGS := \
 	cpu/br56/liba/lib_wav_dec.a \
 	cpu/br56/liba/agreement.a \
 	cpu/br56/liba/lc3_codec_lib.a \
-	cpu/br56/liba/msbc_codec_lib.a \
 	cpu/br56/liba/opus_enc_lib.a \
 	cpu/br56/liba/libjlsp.a \
 	cpu/br56/liba/libjlsp_kws.a \
@@ -1027,28 +1031,33 @@ LFLAGS := \
 	cpu/br56/liba/lib_noisegate_pro.a \
 	cpu/br56/liba/le_audio_profile.a \
 	cpu/br56/liba/lib_limiter.a \
+	cpu/br56/liba/lib_iir_filter.a \
 	cpu/br56/liba/lib_PcmDelay.a \
 	cpu/br56/liba/lib_SurroundEffect.a \
 	cpu/br56/liba/lib_StereoWidener.a \
 	cpu/br56/liba/lib_ThreeD_effect.a \
 	cpu/br56/liba/lib_eq_design_coeff.a \
 	cpu/br56/liba/libSAS_pi32v2_OnChip.a \
+	cpu/br56/liba/lib_phaser.a \
+	cpu/br56/liba/lib_flanger.a \
+	cpu/br56/liba/lib_chorus_adv.a \
+	cpu/br56/liba/lib_pingpong_echo.a \
 	cpu/br56/liba/libFFT_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_dns.a \
-	cpu/br56/liba/update.a \
-	cpu/br56/liba/lbuf.a \
-	cpu/br56/liba/device.a \
-	cpu/br56/liba/ascii.a \
-	cpu/br56/liba/debug_record.a \
-	cpu/br56/liba/lzma_dec.a \
-	cpu/br56/liba/chargestore.a \
-	cpu/br56/liba/printf.a \
-	cpu/br56/liba/cbuf.a \
-	cpu/br56/liba/vm.a \
-	cpu/br56/liba/fs.a \
-	cpu/br56/liba/cfg_tool.a \
+	cpu/br56/liba/earphone/release/update.a \
+	cpu/br56/liba/earphone/release/lbuf.a \
+	cpu/br56/liba/earphone/release/device.a \
+	cpu/br56/liba/earphone/release/ascii.a \
+	cpu/br56/liba/earphone/release/debug_record.a \
+	cpu/br56/liba/earphone/release/lzma_dec.a \
+	cpu/br56/liba/earphone/release/chargestore.a \
+	cpu/br56/liba/earphone/release/printf.a \
+	cpu/br56/liba/earphone/release/cbuf.a \
+	cpu/br56/liba/earphone/release/vm.a \
+	cpu/br56/liba/earphone/release/fs.a \
+	cpu/br56/liba/earphone/release/cfg_tool.a \
 	--end-group \
 	-Tcpu/br56/sdk.ld \
 	-M=cpu/br56/tools/sdk.map \

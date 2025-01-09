@@ -11,6 +11,7 @@
 #include "user_cfg.h"
 #include "bt_background.h"
 #include "dual_conn.h"
+#include "update.h"
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 #include "app_le_connected.h"
 #endif
@@ -84,6 +85,12 @@ static void write_scan_conn_enable(bool scan_enable, bool conn_enable)
         conn_enable = 0;
     }
 #endif
+    if (classic_update_task_exist_flag_get()) {
+        g_printf("bt dual close for update\n");
+        scan_enable = 0;
+        conn_enable = 0;
+    }
+    r_printf("write_scan_conn_enable=%d,%d\n", scan_enable, conn_enable);
 
     lmp_hci_write_scan_enable((conn_enable << 1) | scan_enable);
 

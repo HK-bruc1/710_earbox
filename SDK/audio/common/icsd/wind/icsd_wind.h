@@ -24,10 +24,6 @@
 #include "icsd_common.h"
 #include "icsd_common_v2.h"
 
-//以下SDK的宏定义放到sdk外面
-#define SDK_WIND_PHONE_TYPE  ICSD_WIND_TWS
-#define SDK_WIND_MIC_TYPE    ICSD_WIND_LFF_TALK//ICSD_WIND_LFF_RFF
-
 #if 0
 #define _win_printf printf                  //打开智能免摘库打印信息
 #else
@@ -35,18 +31,18 @@
 #endif
 extern int (*win_printf)(const char *format, ...);
 
-#define ICSD_WIND_HEADSET           1
-#define ICSD_WIND_TWS		        2
 
-#define ICSD_WIND_LFF_TALK          1
-#define ICSD_WIND_LFF_RFF           2
-#define ICSD_WIND_LFF_LFB           3
-#define ICSD_WIND_LFF_LFB_TALK      4
-#define ICSD_WIND_RFF_TALK      	5
+
+
+
+//以下SDK的宏定义放到sdk外面
+#define SDK_WIND_PHONE_TYPE  ICSD_WIND_TWS
+#define SDK_WIND_MIC_TYPE    ICSD_WIND_LFF_TALK//ICSD_WIND_LFF_RFF
 
 extern const u8 ICSD_WIND_PHONE_TYPE;
 extern const u8 ICSD_WIND_MIC_TYPE;
 extern const u8 ICSD_WIND_ALG_BT_INF;
+extern const u8 ICSD_WIND_DATA_BT_INF;
 
 struct icsd_win_libfmt {
     int lib_alloc_size;  //算法ram需求大小
