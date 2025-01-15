@@ -230,11 +230,21 @@
 
 ////////////CDC Class
 #ifndef CDC_DATA_EP_IN
+#if (USB_MAX_HW_EPNUM <= 4)
 #define CDC_DATA_EP_IN              1
+#else
+#define CDC_DATA_EP_IN              4
 #endif
+#endif
+
 #ifndef CDC_DATA_EP_OUT
+#if (USB_MAX_HW_EPNUM <= 4)
 #define CDC_DATA_EP_OUT             1
+#else
+#define CDC_DATA_EP_OUT             4
 #endif
+#endif
+
 #ifndef CDC_INTR_EP_IN
 #define CDC_INTR_EP_IN              5
 #endif

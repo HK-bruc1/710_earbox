@@ -797,6 +797,14 @@
 #error "整个SDK数据流里面只能使用一种模式的CVP通话节点"
 #endif
 
+#if TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_JL_UNICAST_SINK_EN
+
+// dongle项目的DAC缓冲长度至少需要最少80ms
+#undef TCFG_AUDIO_DAC_BUFFER_TIME_MS
+#define TCFG_AUDIO_DAC_BUFFER_TIME_MS 80 // 缓冲长度（ms）
+
+#endif
+
 //*********************************************************************************//
 //                    充电中按键清除手机配对信息配置                               //
 //*********************************************************************************//

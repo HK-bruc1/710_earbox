@@ -1959,7 +1959,7 @@ void audio_iis_syncts_trigger_with_timestamp(void *iis_ch, u32 timestamp)
  *rx irq点数:rx_irq_points
  *return :使用该长度
  * */
-int audio_iis_fix_dma_len(u32 module_idx, u32 tx_dma_buf_time_ms, u16 rx_irq_points, u8 bit_width, u8 ch_num)
+u32 audio_iis_fix_dma_len(u32 module_idx, u32 tx_dma_buf_time_ms, u16 rx_irq_points, u8 bit_width, u8 ch_num)
 {
     u32 point_size = bit_width ? 4 : 2;
     u32 dma_len = IIS_RX_DMA_LEN;

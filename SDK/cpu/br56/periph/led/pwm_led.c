@@ -467,7 +467,7 @@ void pwm_led_hw_init(void *pdata)
 
     JL_PLED->CON0 |= BIT(0);
 
-    pwm_led_dump();
+    /* pwm_led_dump(); */
 }
 
 /*

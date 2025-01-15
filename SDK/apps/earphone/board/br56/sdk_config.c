@@ -76,7 +76,7 @@ const struct gpio_cfg_item g_io_cfg_at_poweroff [] =  {
 const struct iokey_info g_iokey_info [] =  {
     {
         .key_value = KEY_POWER,
-        .key_io = IO_PORTB_01,
+        .key_io = IO_PORTB_04,
         .detect = 0,
         .long_press_reset_enable = 1,
         .long_press_reset_time = 8
@@ -105,7 +105,7 @@ const struct adkey_res_value adkey_res_table [] =  {
 };
 
 const struct adkey_info g_adkey_data =  {
-    .key_io = IO_PORTB_01,
+    .key_io = IO_PORTB_04,
     .pull_up_type = 1,
     .pull_up_value = 220,
     .max_ad_value = 1023,
@@ -117,9 +117,9 @@ const struct adkey_info g_adkey_data =  {
 
 const struct touch_key_cfg lp_touch_key_table [] =  {
     {
-        .key_ch = LPCTMU_CH1_PB1,
+        .key_ch = LPCTMU_CH4_PB4,
         .key_value = KEY_POWER,
-        .wakeup_enable = 1,
+        .wakeup_enable = 0,
         .index = 0,
         .algo_cfg = {
             {

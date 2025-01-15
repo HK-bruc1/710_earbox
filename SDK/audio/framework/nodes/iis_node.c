@@ -573,11 +573,9 @@ static void iis_ioc_start(struct iis_node_hdl *hdl)
         }
 
         if (!iis_hdl[hdl->module_idx]) {
-            int dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
-
             struct alink_param params = {0};
             params.module_idx = hdl->module_idx;
-            params.dma_size   = dma_len;
+            params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
             params.sr         = hdl->sample_rate;
             params.bit_width  = hdl->bit_width;
             params.fixed_pns  = const_out_dev_pns_time_ms;

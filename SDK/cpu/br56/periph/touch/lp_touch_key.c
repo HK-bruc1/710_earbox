@@ -558,7 +558,7 @@ void lp_touch_key_task(void *p)
     u16 ref_lim_h;
     u32 algo_valid;
 
-    if (is_wakeup_source(PWR_WK_REASON_P11)) {
+    if ((is_wakeup_source(PWR_WK_REASON_P11)) && (is_wakeup_source(PWR_WK_REASON_LPCTMU))) {
         touch_abandon_short_click_once = 1;
     } else {
         touch_abandon_short_click_once = 0;

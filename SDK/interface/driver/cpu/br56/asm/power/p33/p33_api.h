@@ -202,6 +202,8 @@ enum PVDD_VOL {
 
 void dvdd_vol_sel(enum DVDD_VOL vol);
 enum DVDD_VOL get_dvdd_vol_sel();
+u8 dvdd_lev_to_wvdd_lev(u8 dvdd_lev);
+
 //void dvdd2_vol_sel(enum DVDD2_VOL vol);
 //enum DVDD2_VOL get_dvdd2_vol_sel();
 

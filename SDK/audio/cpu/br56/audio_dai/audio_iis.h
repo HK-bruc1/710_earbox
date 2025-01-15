@@ -172,7 +172,7 @@ int audio_iis_channel_latch_time(struct audio_iis_channel *ch, u32 *latch_time, 
 int audio_iis_get_buffered_frames(void *hdl, u8 ch_idx);
 int audio_iis_get_hwptr(void *_hdl, u8 ch_idx);
 int audio_iis_get_swptr(void *_hdl, u8 ch_idx);
-int audio_iis_fix_dma_len(u32 module_idx, u32 tx_dma_buf_time_ms, u16 rx_irq_points, u8 bit_width, u8 ch_num);
+u32 audio_iis_fix_dma_len(u32 module_idx, u32 tx_dma_buf_time_ms, u16 rx_irq_points, u8 bit_width, u8 ch_num);
 void audio_iis_add_rx_output_handler(struct _iis_hdl *hdl, struct audio_iis_rx_output_hdl *output);
 void audio_iis_del_rx_output_handler(struct _iis_hdl *hdl, struct audio_iis_rx_output_hdl *output);
 void audio_iis_add_multi_channel_rx_output_handler(struct _iis_hdl *hdl, struct audio_iis_rx_output_hdl *_output);

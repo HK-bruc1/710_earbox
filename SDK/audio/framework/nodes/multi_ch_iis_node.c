@@ -203,7 +203,7 @@ static int iis_adpater_detect_multi_timestamp(struct iis_node_hdl *hdl, struct s
     }
     int slience_frames = (u64)diff * hdl->sample_rate / 1000000;
 
-    int dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
+    u32 dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
     int point_offset = hdl->bit_width ? 2 : 1;
     int max_frames = (dma_len >> point_offset) / hdl->nch - 4;
     if (slience_frames > max_frames) {
@@ -643,10 +643,9 @@ static void iis_ioc_start(struct iis_node_hdl *hdl, struct stream_iport *iport)
     }
 
     if (!iis_hdl[hdl->module_idx]) {
-        int dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
         struct alink_param params = {0};
         params.module_idx = hdl->module_idx;
-        params.dma_size   = dma_len;
+        params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
         params.sr         = hdl->sample_rate;
         params.bit_width  = hdl->bit_width;
         params.fixed_pns  = const_out_dev_pns_time_ms;

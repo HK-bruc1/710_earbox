@@ -39,6 +39,7 @@ enum {
 
 static u8 g_play_addr[6];
 static u8 g_slience_addr[6];
+static u8 g_closing_addr[6];
 static u8 a2dp_preempted_addr[6];
 static u8 a2dp_energy_detect_addr[6];
 static u8 a2dp_drop_packet_detect_addr[6];
@@ -200,6 +201,9 @@ static void tws_a2dp_play_in_task(u8 *data)
             a2dp_media_unmute(btaddr);
             a2dp_media_close(btaddr);
         }
+        if (memcmp(bt_addr, g_closing_addr, 6) == 0) {
+            memset(g_closing_addr, 0xff, 6);
+        }
 #if TCFG_TWS_AUDIO_SHARE_ENABLE
         share_a2dp_preempted_resume(bt_addr);
 #endif
@@ -274,6 +278,8 @@ void tws_a2dp_play_send_cmd(u8 cmd, u8 *_data, u8 len, u8 tx_do_action)
             memcpy(g_play_addr, _data, 6);
         } else if (cmd == CMD_A2DP_SLIENCE_DETECT || cmd == CMD_A2DP_MUTE) {
             memcpy(g_slience_addr, _data, 6);
+        } else if (cmd == CMD_A2DP_CLOSE) {
+            memcpy(g_closing_addr, _data, 6);
         }
     }
 }
@@ -410,7 +416,11 @@ static int a2dp_bt_status_event_handler(int *event)
 #if TCFG_A2DP_PREEMPTED_ENABLE
                 tws_a2dp_slience_detect(bt->args, 1);
 #else
-                tws_a2dp_play_send_cmd(CMD_A2DP_MUTE, bt->args, 6, 1);
+                if (memcmp(btaddr, g_closing_addr, 6) == 0) {
+                    a2dp_media_close(bt->args);
+                } else {
+                    tws_a2dp_play_send_cmd(CMD_A2DP_MUTE, bt->args, 6, 1);
+                }
 #endif
             }
         } else {

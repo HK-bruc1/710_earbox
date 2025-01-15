@@ -963,14 +963,14 @@ LFLAGS := \
 	--gc-sections \
 	--plugin-opt=-pi32v2-csync-before-rti=true \
 	--start-group \
-	cpu/br56/liba/earphone/release/cpu.a \
-	cpu/br56/liba/earphone/release/system.a \
-	cpu/br56/liba/earphone/release/btstack.a \
+	cpu/br56/liba/cpu.a \
+	cpu/br56/liba/system.a \
+	cpu/br56/liba/btstack.a \
 	cpu/br56/liba/bt_hash_enc.a \
-	cpu/br56/liba/earphone/release/rcsp_stack.a \
-	cpu/br56/liba/earphone/release/btctrler.a \
-	cpu/br56/liba/earphone/release/aec.a \
-	cpu/br56/liba/earphone/release/media.a \
+	cpu/br56/liba/rcsp_stack.a \
+	cpu/br56/liba/btctrler.a \
+	cpu/br56/liba/aec.a \
+	cpu/br56/liba/media.a \
 	cpu/br56/liba/libepmotion.a \
 	cpu/br56/liba/libAptFilt_pi32v2_OnChip.a \
 	cpu/br56/liba/libEchoSuppress_pi32v2_OnChip.a \
@@ -1046,18 +1046,18 @@ LFLAGS := \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_dns.a \
-	cpu/br56/liba/earphone/release/update.a \
-	cpu/br56/liba/earphone/release/lbuf.a \
-	cpu/br56/liba/earphone/release/device.a \
-	cpu/br56/liba/earphone/release/ascii.a \
-	cpu/br56/liba/earphone/release/debug_record.a \
-	cpu/br56/liba/earphone/release/lzma_dec.a \
-	cpu/br56/liba/earphone/release/chargestore.a \
-	cpu/br56/liba/earphone/release/printf.a \
-	cpu/br56/liba/earphone/release/cbuf.a \
-	cpu/br56/liba/earphone/release/vm.a \
-	cpu/br56/liba/earphone/release/fs.a \
-	cpu/br56/liba/earphone/release/cfg_tool.a \
+	cpu/br56/liba/update.a \
+	cpu/br56/liba/lbuf.a \
+	cpu/br56/liba/device.a \
+	cpu/br56/liba/ascii.a \
+	cpu/br56/liba/debug_record.a \
+	cpu/br56/liba/lzma_dec.a \
+	cpu/br56/liba/chargestore.a \
+	cpu/br56/liba/printf.a \
+	cpu/br56/liba/cbuf.a \
+	cpu/br56/liba/vm.a \
+	cpu/br56/liba/fs.a \
+	cpu/br56/liba/cfg_tool.a \
 	--end-group \
 	-Tcpu/br56/sdk.ld \
 	-M=cpu/br56/tools/sdk.map \
