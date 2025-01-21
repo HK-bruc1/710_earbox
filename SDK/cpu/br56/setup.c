@@ -177,7 +177,7 @@ void setup_arch()
 #if (TCFG_DAC_POWER_MODE == 0)      // power_mode: 20mW
     clk_set_vdc_lowest_voltage(DCVDD_VOL_115V);
 #elif (TCFG_DAC_POWER_MODE == 1)    // power_mode: 30mW
-    clk_set_vdc_lowest_voltage(DCVDD_VOL_135V);
+    clk_vdc_mode_init(CLOCK_MODE_USR, DCVDD_VOL_125V);  //固定DCVDD为1.25V
 #elif (TCFG_DAC_POWER_MODE == 2)    // power_mode: 50mW
 #if ((defined TCFG_AUDIO_DAC_CLASSH_EN) && (TCFG_AUDIO_DAC_CLASSH_EN == 1))
     clk_set_dcvdd_audio_ctl(DCVDD_VOL_155V, DCVDD_VOL_115V);

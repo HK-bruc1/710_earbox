@@ -41,6 +41,7 @@ struct lpctmu_dma_kfifo res_kfifo;
 struct lpctmu_dma_kfifo *dma_kfifo = NULL;
 static struct lpctmu_config_data *__this = NULL;
 static u32 lpctmu_scan_prd;
+static u16 lpctmu_res_oft_min[LPCTMU_CHANNEL_SIZE];
 
 extern u32 __get_lrc_hz();
 
@@ -151,7 +152,53 @@ u32 lpctmu_get_ana_cur_level(u32 ch)
     return level;
 }
 
-void lpctmu_isel_trim(u8 ch)
+void lpctmu_cur_trim_by_res(u32 ch, u32 ch_res)
+{
+    if (!__this) {
+        return;
+    }
+    if (__this->pdata->aim_charge_khz < 8) {
+        return;
+    }
+    if ((!ch_res) || (lpctmu_res_oft_min[ch] == 0)) {
+        lpctmu_res_oft_min[ch] = 0xfff0;
+        return;
+    }
+    if (lpctmu_res_oft_min[ch] > 0xfff0) {
+        return;
+    }
+    u32 net_level, tmp_min;
+    u32 cur_level = lpctmu_get_ana_cur_level(ch);
+    u32 trim_aim_res = __this->pdata->aim_charge_khz * __this->pdata->sample_window_time;
+    if (ch_res < trim_aim_res) {
+        if (cur_level >= 7) {
+            lpctmu_res_oft_min[ch] = -1;
+            return;
+        }
+        net_level = cur_level + 1;
+        tmp_min = trim_aim_res - ch_res;
+    } else {
+        if (cur_level == 0) {
+            lpctmu_res_oft_min[ch] = -1;
+            return;
+        }
+        net_level = cur_level - 1;
+        tmp_min = ch_res - trim_aim_res;
+    }
+    if (tmp_min == 0) {
+        lpctmu_res_oft_min[ch] = -1;
+        return;
+    }
+    if (tmp_min < lpctmu_res_oft_min[ch]) {
+        lpctmu_res_oft_min[ch] = tmp_min;
+    } else {
+        lpctmu_res_oft_min[ch] = -1;
+    }
+    lpctmu_set_ana_cur_level(ch, net_level);
+    log_debug("ch:%d res:%d cur:%d net:%d\n", ch, ch_res, cur_level, net_level);
+}
+
+void lpctmu_isel_trim(u32 ch)
 {
     SFR(P11_LPCTM0->ANA1, 4, 4, ch + 1);//使能对应通道
 
@@ -580,7 +627,20 @@ void lpctmu_init(struct lpctmu_config_data *cfg_data)
 
     dma_kfifo = (struct lpctmu_dma_kfifo *)(__this->pdata->dma_nvram_addr + __this->pdata->dma_nvram_size);
 
+    u32 hw_init = 0;
     if (!is_wakeup_source(PWR_WK_REASON_P11)) {
+        hw_init = 1;
+    } else {
+        if (__this->ch_num > 1) {
+            u32 dma_base_offset = __this->ch_num * 4;
+            u32 cur_buf_in = (P11_LPCTM0->DMA_WADR / 2) - (dma_base_offset / 2);
+            if (lpctmu_addr_to_ch_idx(cur_buf_in)) {
+                hw_init = 1;
+            }
+        }
+    }
+
+    if (hw_init) {
 
         /* lpctmu_lptimer_disable(); */
 
@@ -670,6 +730,20 @@ void lpctmu_disable(void)
         return;
     }
     if (lpctmu_is_working()) {
+        if (__this->ch_num > 1) {
+            u32 cnt = 0;
+            u32 dma_base_offset = __this->ch_num * 4;
+            u32 cur_buf_in = (P11_LPCTM0->DMA_WADR / 2) - (dma_base_offset / 2);
+            while (lpctmu_addr_to_ch_idx(cur_buf_in)) {
+                log_debug("wadr:%d, buf_in:%d, cnt:%d", P11_LPCTM0->DMA_WADR, cur_buf_in, cnt);
+                mdelay(3);
+                cur_buf_in = (P11_LPCTM0->DMA_WADR / 2) - (dma_base_offset / 2);
+                cnt ++;
+                if (cnt > 10) {
+                    break;
+                }
+            }
+        }
         lpctmu_lptimer_disable();
         SFR(P11_LPCTM0->CON0, 0, 1, 0);     //模块总开关
     }

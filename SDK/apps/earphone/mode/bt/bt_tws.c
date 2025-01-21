@@ -1110,7 +1110,7 @@ static void bt_tws_enter_sniff(void *parm)
     if (state & TWS_STA_PHONE_DISCONNECTED) {
         interval = 400;
     } else if (state & TWS_STA_PHONE_SNIFF) {
-        interval = 400;
+        interval = 800;
     } else {
         goto __exit;
     }

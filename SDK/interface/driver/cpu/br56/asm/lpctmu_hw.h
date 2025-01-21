@@ -135,6 +135,8 @@ void lpctmu_set_ana_cur_level(u32 ch, u32 cur_level);
 
 u32 lpctmu_get_ana_cur_level(u32 ch);
 
+void lpctmu_cur_trim_by_res(u32 ch, u32 ch_res);
+
 u32 lpctmu_get_ch_idx_by_res_kfifo_out(void);
 
 u32 lpctmu_get_res_kfifo_length(void);

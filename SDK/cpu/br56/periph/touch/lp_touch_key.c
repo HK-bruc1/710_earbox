@@ -489,9 +489,13 @@ void lp_touch_key_ctmu_res_deal(u32 pnd_type)
         if (algo_valid) {
             __this->identify_algo_invalid &= ~BIT(ch_idx);
             lpctmu_cache_ch_res_key_msg_lim(ch, ref_lim_l, ref_lim_h);
+            lpctmu_cur_trim_by_res(ch, 0);
         } else {
             __this->last_touch_state &= ~BIT(ch_idx);
             __this->identify_algo_invalid |=  BIT(ch_idx);
+            if (data_len <= __this->pdata->key_num) {
+                lpctmu_cur_trim_by_res(ch, ch_res);
+            }
         }
 
         touch_state = lp_touch_key_identify_algorithm_analyze(ch_idx, ch_res);

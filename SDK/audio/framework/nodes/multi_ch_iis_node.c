@@ -129,7 +129,7 @@ static int iis_adpater_detect_multi_timestamp(struct iis_node_hdl *hdl, struct s
         return 0;
     }
 
-    if (!(frame->flags & FRAME_FLAG_TIMESTAMP_ENABLE) || hdl->force_write_slience_data_en) {
+    if (!(frame->flags & FRAME_FLAG_TIMESTAMP_ENABLE) || iis->force_write_slience_data_en) {
         if (!iis->force_write_slience_data) { //无播放同步时，强制填一段静音包
             iis->force_write_slience_data = 1;
             int slience_time_us = (hdl->attr.protect_time ? hdl->attr.protect_time : 8) * 1000;
@@ -785,7 +785,7 @@ static int iis_adapter_ioctl(struct stream_iport *iport, int cmd, int arg)
         hdl->sample_rate = fmt->sample_rate;
         break;
     case NODE_IOC_SET_PRIV_FMT: //手动控制是否预填静音包
-        hdl->force_write_slience_data_en = arg;
+        iis->force_write_slience_data_en = arg;
         break;
     default:
         break;

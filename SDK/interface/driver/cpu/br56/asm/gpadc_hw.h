@@ -184,6 +184,7 @@ enum AD_CH {
 #define AD_CH_PMU_VPWR  AD_CH_PMU_VPWR_4
 #define AD_CH_PMU_VBAT  AD_CH_PMU_VBAT_4
 #define AD_CH_PMU_VBAT_DIV  4
+#define AD_CH_IO_PB4    AD_CH_PADC0
 
 #define ADC_PMU_PMUTS_POR_SEL(x)    SFR(P3_PMU_ADC0, 7, 1, x)
 #define ADC_PMU_PMUTS_OE(x)         SFR(P3_PMU_ADC0, 6, 1, x)
@@ -193,6 +194,7 @@ enum AD_CH {
 #define ADC_PMU_VBG_TEST_OE(x)      SFR(P3_PMU_ADC0, 1, 1, x)
 #define ADC_PMU_TOADC_EN(x)         SFR(P3_PMU_ADC0, 0, 1, x)
 #define ADC_PMU_CHANNEL_ADC(x)      SFR(P3_PMU_ADC1, 0, 4, x) //CHANNEL_ADC_S
+#define ADC_PADC0_TOADC_EN(x)       SFR(P3_PMU_ADC2, 0, 1, x)
 #define ADC_PMU_CH_CLOSE()  {   ADC_PMU_TOADC_EN(0);\
                                 ADC_PMU_VBG_TEST_OE(0);\
                                 ADC_PMU_VBG_TEST_EN(0);\

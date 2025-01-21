@@ -4,7 +4,7 @@
 //#include "generic/ioctl.h"
 
 
-#define USB_MAX_HW_EPNUM    5
+#define USB_MAX_HW_EPNUM    4
 
 /* #define ep_regs JL_USB_EP_TypeDef */
 typedef struct {

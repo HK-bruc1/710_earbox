@@ -499,13 +499,21 @@ static void app_testbox_sub_cmd_handle(u8 *send_buf, u8 buf_len, u8 *buf, u8 len
 
     case CMD_BOX_GET_AUDIO_CHANNEL:
         log_info("CMD_BOX_GET_AUDIO_CHANNEL");
-        u8 channel = chargestore_get_tws_channel_info();
+        __this->testbox_status = 1;
+#if TCFG_USER_TWS_ENABLE
+        u8 channel = bt_tws_get_local_channel();
         if (channel == 'L') {
             send_buf[2] = 0;
         } else if (channel == 'R') {
             send_buf[2] = 1;
+        } else {
+            send_buf[2] = 2;
         }
+#else
+        send_buf[2] = 2;
+#endif
         __this->channel = send_buf[2];
+        printf("channel = %d\n", send_buf[2]);
         chargestore_api_write(send_buf, 3);
         break;
 
