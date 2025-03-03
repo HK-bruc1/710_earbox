@@ -237,6 +237,7 @@
 <Add option="--sort-common" />
 <Add option="--dont-complain-call-overflow" />
 <Add option="--plugin-opt=-used-symbol-file=apps/earphone/sdk_used_list.used" />
+<Add option="--plugin-opt=-floating-point-may-trap=true" />
 <Add option="--gc-sections" />
 <Add option="--plugin-opt=-pi32v2-csync-before-rti=true" />
 <Add option="--start-group" />
