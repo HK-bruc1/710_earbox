@@ -6,7 +6,7 @@
 #include "asm/power_interface.h"
 #include "gpio.h"
 
-#if (CONFIG_CPU_BR56) && (TCFG_COMM_TYPE == TCFG_UART_COMM) && (TCFG_CFG_TOOL_ENABLE == 1)  //br56只有两路串口，开串口在线调试的时候不初始化电源仓的串口，防止占用
+#if (CONFIG_CPU_BR56) && ((TCFG_COMM_TYPE == TCFG_UART_COMM) && (TCFG_CFG_TOOL_ENABLE == 1) || (TCFG_AUDIO_DATA_EXPORT_DEFINE == AUDIO_DATA_EXPORT_VIA_UART))  //br56只有两路串口，开串口在线调试或者音频串口写卡的时候不初始化电源仓的串口，防止占用
 
 #elif (TCFG_CHARGESTORE_ENABLE || TCFG_TEST_BOX_ENABLE || TCFG_ANC_BOX_ENABLE)
 

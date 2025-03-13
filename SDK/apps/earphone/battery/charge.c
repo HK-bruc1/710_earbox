@@ -242,7 +242,7 @@ void charge_ldo5v_off_deal(void)
     is_idle_mode = app_in_mode(APP_MODE_IDLE);
 
     if ((get_charge_poweron_en() == 0)) {
-        wdt_init(WDT_4S);
+        wdt_init(WDT_16S);
         log_info("set wdt to 4s!\n");
 #if TCFG_CHARGESTORE_ENABLE
         if (chargestore_get_power_status()) {

@@ -272,7 +272,7 @@
 #define TCFG_ADC0_BIAS_RSEL 3 // MIC BIAS上拉电阻挡位
 #define TCFG_ADC0_POWER_IO 0 // IO供电选择
 #define TCFG_ADC0_DCC_EN 1 // DCC使能
-#define TCFG_ADC0_DCC_LEVEL 14 // DCC 截止频率
+#define TCFG_ADC0_DCC_LEVEL 1 // DCC 截止频率
 #define TCFG_ADC1_ENABLE 1 // 使能
 #define TCFG_ADC1_MODE 0 // 模式
 #define TCFG_ADC1_AIN_SEL 1 // 输入端口
@@ -280,7 +280,7 @@
 #define TCFG_ADC1_BIAS_RSEL 3 // MIC BIAS上拉电阻挡位
 #define TCFG_ADC1_POWER_IO 0 // IO供电选择
 #define TCFG_ADC1_DCC_EN 1 // DCC使能
-#define TCFG_ADC1_DCC_LEVEL 14 // DCC 截止频率
+#define TCFG_ADC1_DCC_LEVEL 1 // DCC 截止频率
 #endif // TCFG_AUDIO_ADC_ENABLE
 
 #define CONFIG_ANC_ENABLE 0 // ANC 配置

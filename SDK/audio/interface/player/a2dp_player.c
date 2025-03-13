@@ -140,7 +140,7 @@ static void a2dp_player_callback(void *private_data, int event)
 
 static void a2dp_player_set_audio_channel(struct a2dp_player *player)
 {
-    int channel = AUDIO_CH_MIX;
+    int channel = (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) ? AUDIO_CH_LR : AUDIO_CH_MIX;
     if (tws_api_get_tws_state() & TWS_STA_SIBLING_CONNECTED) {
         channel = tws_api_get_local_channel() == 'L' ? AUDIO_CH_L : AUDIO_CH_R;
     }
@@ -257,10 +257,15 @@ int a2dp_player_open(u8 *btaddr)
 
     if (CONFIG_BTCTLER_TWS_ENABLE) {
         if (tws_api_get_tws_state() & TWS_STA_SIBLING_CONNECTED) {
-            player->channel = tws_api_get_local_channel() == 'L' ? AUDIO_CH_L : AUDIO_CH_R;
+            if (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) {	//如果dac配置的立体声，tws 连接上时解码也要配置输出立体声，由channel_adapter节点做tws 声道适配;
+                player->channel = AUDIO_CH_LR; 					// 避免断开tws 连接时，立体声输出无法声道分离
+            } else {
+                player->channel = tws_api_get_local_channel() == 'L' ? AUDIO_CH_L : AUDIO_CH_R;
+            }
             jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, player->channel);
         } else {
-            jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, AUDIO_CH_MIX);
+            int channel = (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) ? AUDIO_CH_LR : AUDIO_CH_MIX;
+            jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, channel);
         }
     }
     err = jlstream_node_ioctl(player->stream, NODE_UUID_SOURCE,
