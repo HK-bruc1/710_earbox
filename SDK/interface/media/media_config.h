@@ -12,6 +12,8 @@ extern const int config_mixer_32bit_enable;
 extern const int config_jlstream_fade_32bit_enable;
 extern const int config_audio_eq_xfade_enable;
 extern const int config_out_dev_limiter_enable;
+extern const int config_peak_rms_32bit_enable;
+extern const int config_audio_vocal_track_synthesis_32bit_enable;
 
 extern const int CONFIG_MAX_ENC_DATA_CACHE_SIZE;
 extern const int CONFIG_LOG_OUTPUT_ENABLE;
@@ -34,6 +36,7 @@ extern const int config_audio_dac_power_off_lite;
 extern const int config_audio_dac_mix_enable;
 extern const int config_audio_dac_noisefloor_optimize_enable;
 extern const char config_audio_dac_trim_enable;
+extern const int config_audio_dac_mute_timeout;
 
 /*
  *******************************************************************
@@ -63,6 +66,7 @@ extern const int config_audio_eq_lp_adv_enable;	//Low Pass Advance
  *						SRC Configs
  *******************************************************************
  */
+extern const int SRC_HW_VERSION_SEL;//0:srv_v2 1:src_v3
 
 /*
  *******************************************************************

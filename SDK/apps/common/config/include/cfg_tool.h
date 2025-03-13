@@ -216,8 +216,10 @@ typedef struct {
  *
  *	@param buf 数据
  *	@param rlen 接收数据长度
+ *
+ *	@result 0:success 非0:fail
  */
-void cfg_tool_combine_rx_data(u8 *buf, u32 rlen);
+u8 cfg_tool_combine_rx_data(u8 *buf, u32 rlen);
 
 /* --------------------------------------------------------------------------*/
 /**

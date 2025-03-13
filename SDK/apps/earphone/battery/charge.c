@@ -307,6 +307,7 @@ void charge_ldo5v_off_deal(void)
         break;
     case LDO5V_OFF_TYPE_NORMAL_ON:
         app_var.play_poweron_tone = 0;
+        app_var.goto_poweroff_flag = 0;
         app_send_message(APP_MSG_GOTO_MODE, APP_MODE_BT);
         break;
     }

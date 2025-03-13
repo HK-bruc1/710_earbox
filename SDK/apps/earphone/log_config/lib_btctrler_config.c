@@ -21,10 +21,12 @@
  * @brief Bluetooth Module
  */
 #if TCFG_BT_DONGLE_ENABLE
-	const int CONFIG_DONGLE_SPEAK_ENABLE  = 1;
+	const int CONFIG_DONGLE_SPEAK_ENABLE  = 1;//dongle_slave
 #else
-	const int CONFIG_DONGLE_SPEAK_ENABLE  = 0;
+	const int CONFIG_DONGLE_SPEAK_ENABLE  = 0;//dongle slave
 #endif
+const int CONFIG_BTCTLER_JL_DONGLE_SOURCE_ENABLE=0;//dongle master
+const int config_master_qos_poll=0;
 #if TCFG_BT_DUAL_CONN_ENABLE
 const int CONFIG_LMP_CONNECTION_NUM = 2;
 const int CONFIG_LMP_CONNECTION_LIMIT_NUM = 2;
@@ -71,6 +73,13 @@ const int CONFIG_JL_DONGLE_PLAYBACK_LATENCY = 0; // dongle下行播放延时(mse
 const int config_force_bt_pwr_tab_using_normal_level  = 0;
 //配置BLE广播发射功率的等级:0-最大功率等级;1~10-固定发射功率等级
 const int config_ble_adv_tx_pwr_level  = 0;
+
+//only for br52
+#ifdef CONFIG_CPU_BR52
+const u8 config_fre_offset_trim_mode = 1; //0:trim pll 1:trim osc 2:trim pll&osc
+#else
+const u8 config_fre_offset_trim_mode = 0; //0:trim pll 1:trim osc 2:trim pll&osc
+#endif
 
 const int CONFIG_BLE_SYNC_WORD_BIT = 30;
 const int CONFIG_LNA_CHECK_VAL = -80;
@@ -124,11 +133,7 @@ const int CONFIG_LNA_CHECK_VAL = -80;
     const int CONFIG_TWS_DATA_TRANS_ENABLE = 0;
 #else //TCFG_USER_TWS_ENABLE
 	#if (TCFG_USER_BLE_ENABLE)
-        #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN)))
-		const int config_btctler_modules        = BT_MODULE_LE;
-        #else
 		const int config_btctler_modules        = BT_MODULE_CLASSIC | BT_MODULE_LE;
-        #endif
 	#else
 		const int config_btctler_modules        = BT_MODULE_CLASSIC;
 	#endif
@@ -201,6 +206,18 @@ const int CONFIG_A2DP_DELAY_TIME_SBC = TCFG_A2DP_DELAY_TIME_SBC;
 const int CONFIG_A2DP_DELAY_TIME_SBC_LO = TCFG_A2DP_DELAY_TIME_SBC_LO;
 const int CONFIG_A2DP_DELAY_TIME_AAC_LO = TCFG_A2DP_DELAY_TIME_AAC_LO;
 const int CONFIG_A2DP_ADAPTIVE_MAX_LATENCY = TCFG_A2DP_ADAPTIVE_MAX_LATENCY;
+#ifdef TCFG_A2DP_DELAY_TIME_LDAC
+const int CONFIG_A2DP_DELAY_TIME_LDAC = TCFG_A2DP_DELAY_TIME_LDAC;
+#endif
+#ifdef TCFG_A2DP_DELAY_TIME_LDAC_LO
+const int CONFIG_A2DP_DELAY_TIME_LDAC_LO = TCFG_A2DP_DELAY_TIME_LDAC_LO;
+#endif
+#ifdef TCFG_A2DP_DELAY_TIME_LHDC
+const int CONFIG_A2DP_DELAY_TIME_LHDC = TCFG_A2DP_DELAY_TIME_LHDC;
+#endif
+#ifdef TCFG_A2DP_DELAY_TIME_LHDC_LO
+const int CONFIG_A2DP_DELAY_TIME_LHDC_LO = TCFG_A2DP_DELAY_TIME_LHDC_LO;
+#endif
 const int CONFIG_JL_DONGLE_PLAYBACK_DYNAMIC_LATENCY_ENABLE  = 1;    //jl_dongle 动态延时
 
 const int CONFIG_PAGE_POWER                 = 9;
@@ -375,6 +392,8 @@ const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;//BIT(7);//|BIT(8
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
     #define TWS_LE_AUDIO_LE_ROLE_SW_EN (0)
+#elif (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+    #define TWS_LE_AUDIO_LE_ROLE_SW_EN (1)
 #else
     #define TWS_LE_AUDIO_LE_ROLE_SW_EN (0)
 #endif
@@ -385,9 +404,14 @@ const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;//BIT(7);//|BIT(8
     #define TWS_RCSP_LE_ROLE_SW_EN (0)
 #endif
 
+#ifdef TCFG_BLE_HIGH_PRIORITY_ENABLE
+    const bool config_le_high_priority = TCFG_BLE_HIGH_PRIORITY_ENABLE;  //开启后ble优先级更高，esco下想保证ble一直建立连接和主从切换正常，必须置为1
+#else
+    const bool config_le_high_priority = 0;
+#endif
+
 const int config_btctler_le_afh_en = 0;
 const u32 config_vendor_le_bb = 0;
-const bool config_le_high_priority = 0;  //ecso下 想保证ble 建立连接 和 主从切换正常 必须置为1
 const bool config_tws_le_role_sw =(TWS_LE_AUDIO_LE_ROLE_SW_EN|TWS_RCSP_LE_ROLE_SW_EN);
 const int config_btctler_le_rx_nums = 20;
 const int config_btctler_le_acl_packet_length = 255;
@@ -398,11 +422,7 @@ const int config_btctler_le_acl_total_nums = 15;
  * @brief Bluetooth Analog setting
  */
 /*-----------------------------------------------------------*/
-#if ((!TCFG_USER_BT_CLASSIC_ENABLE) && TCFG_USER_BLE_ENABLE)
-	const int config_btctler_single_carrier_en = 1;   ////单模ble才设置
-#else
-	const int config_btctler_single_carrier_en = 0;
-#endif
+const int config_btctler_single_carrier_en = 0;   // 单载波，如果是单模ble建议设置为1，否则会有部分芯片测试盒连接不上的情况。by zhibin
 
 const int sniff_support_reset_anchor_point = 0;   //sniff状态下是否支持reset到最近一次通信点，用于HID
 const int sniff_long_interval = (500 / 0.625);    //sniff状态下进入long interval的通信间隔(ms)

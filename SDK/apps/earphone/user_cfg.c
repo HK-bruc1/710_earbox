@@ -74,6 +74,7 @@ const int vm_max_page_align_size_config   = TCFG_VM_SIZE; 		//page对齐vm管理
 const int vm_max_sector_align_size_config = TCFG_VM_SIZE; 	//sector对齐vm管理空间最大值配置
 //======================================================================================//
 
+#if TCFG_BT_SNIFF_ENABLE
 const struct lp_ws_t lp_winsize = {
     .lrc_ws_inc = CONFIG_LRC_WIN_STEP,      //260
     .lrc_ws_init = CONFIG_LRC_WIN_SIZE,
@@ -81,6 +82,7 @@ const struct lp_ws_t lp_winsize = {
     .bt_osc_ws_init = CONFIG_OSC_WIN_SIZE,
     .osc_change_mode = 1,                       //低功耗时钟，0：仅使用LRC 1：自动切换 2：保留
 };
+#endif
 
 u16 bt_get_tws_device_indicate(u8 *tws_device_indicate)
 {
