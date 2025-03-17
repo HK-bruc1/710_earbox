@@ -9,7 +9,7 @@
 #include "circular_buf.h"
 #include "cvp_node.h"
 #include "app_config.h"
-#include "audio_iis.h"
+#include "media/audio_iis.h"
 
 #if TCFG_AUDIO_DUT_ENABLE
 #include "audio_dut_control.h"

@@ -8,6 +8,7 @@
 #include "audio_src.h"
 #include "system/spinlock.h"
 #include "audio_def.h"
+#include "audio_general.h"
 
 /***************************************************************************
   							Audio DAC Features
@@ -157,7 +158,6 @@ struct audio_dac_hdl {
     u8 analog_inited;
     u8 digital_inited;
     volatile u8 state;
-    u8 ng_threshold;
     u8 gain;
     u8 channel;
     u8 power_on;
@@ -190,6 +190,7 @@ struct audio_dac_hdl {
     OS_MUTEX mutex;
     spinlock_t lock;
     const struct dac_platform_data *pd;
+	struct audio_dac_noisegate ng;
     void (*fade_handler)(u8 left_gain, u8 right_gain);
 };
 

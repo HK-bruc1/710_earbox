@@ -33,6 +33,7 @@
 #include "update.h"
 #include "in_ear_detect/in_ear_manage.h"
 #include "multi_protocol_main.h"
+#include "phone_call.h"
 
 #include "multi_protocol_main.h"
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
@@ -90,10 +91,9 @@ struct tws_user_var  gtws;
 
 static u8 tone_together_by_systime = 0;
 static u32 tws_tone_together_time = 0;
+extern const u8 adt_profile_support;
 
 void tws_sniff_controle_check_enable(void);
-extern u8 *lmp_get_esco_link_addr(void);
-extern int bt_phone_esco_play(u8 *bt_addr);
 
 u8 tws_network_audio_was_started(void)
 {
@@ -597,7 +597,7 @@ int bt_tws_poweroff()
 {
     log_info("bt_tws_poweroff\n");
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN))
+#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | XIMALAYA_EN))
     multi_protocol_bt_tws_poweroff_handler();
 #endif
 
@@ -831,7 +831,6 @@ int bt_tws_connction_status_event_handler(int *msg)
     char channel = 0;
     u8 mac_addr[6];
     int work_state = 0;
-    u8 *esco_addr ;
 
     log_info("tws-user: role= %d, phone_link_connection %d, reason=%d,event= %d\n",
              role, phone_link_connection, reason, evt->event);
@@ -1020,7 +1019,7 @@ int bt_tws_connction_status_event_handler(int *msg)
         break;
     case TWS_EVENT_ROLE_SWITCH:
         r_printf("TWS_EVENT_ROLE_SWITCH=%d\n", role);
-        esco_addr = lmp_get_esco_link_addr();
+        u8 *esco_addr = lmp_get_esco_link_addr();
         if (esco_addr) {
             bt_phone_esco_play(esco_addr);
         }
@@ -1042,9 +1041,9 @@ int bt_tws_connction_status_event_handler(int *msg)
         break;
     case TWS_EVENT_ESCO_ROLE_SWITCH_START:
         r_printf("TWS_EVENT_ESCO_ROLE_SWITCH_START=%d\n", role);
-        esco_addr = lmp_get_esco_link_addr();
-        if (esco_addr) {
-            bt_phone_esco_play(esco_addr);
+        u8 *esco_addr1 = lmp_get_esco_link_addr();
+        if (esco_addr1) {
+            bt_phone_esco_play(esco_addr1);
         }
 #if TCFG_TWS_POWER_BALANCE_ENABLE
         if (role == TWS_ROLE_SLAVE) {
@@ -1102,6 +1101,11 @@ static void bt_tws_enter_sniff(void *parm)
     int interval;
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
     if (is_cig_phone_conn() || is_cig_other_phone_conn()) {
+        goto __exit;
+    }
+#endif
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+    if (check_local_not_accept_sniff_by_remote()) {
         goto __exit;
     }
 #endif

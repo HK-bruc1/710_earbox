@@ -81,4 +81,6 @@ void chargestore_set_protocal(u8 protocal);
 void chargestore_set_loader_update_callback(void (*loader_callback)(void *p, void *buf, u32 len));
 void chargestore_ldo5v_fall_deal(void);
 void chargestore_set_baudrate(u32 baudrate);
+void chargestore_set_buffer_len(u32 lenght);
+
 #endif

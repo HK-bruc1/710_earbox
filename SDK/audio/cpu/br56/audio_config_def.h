@@ -41,6 +41,9 @@
 //**************************************
 // 			音频模块链接配置
 //**************************************
+#if TCFG_USER_BLE_ENABLE
+// br36启动ble功能则音频算法不放到ram
+
 /*音效处理链接配置*/
 #define AFx_VBASS_AT_RAM				    0	//虚拟低音
 #define AFx_REVERB_AT_RAM				    0	//混响
@@ -49,6 +52,59 @@
 #define AFx_DRC_AT_RAM 					    0	//DRC
 #define AFx_HARMONIC_EXCITER_AT_RAM 	    0	//谐波激励
 #define AFx_DYN_EQ_AT_RAM 				    0	//动态EQ
+#define AFx_DYN_EQ_PRO_AT_RAM 				0	//动态EQ Pro
+#define AFx_NOTCH_HOWLING_AT_RAM 		    0	//啸叫抑制：陷波
+#define AFx_FREQ_SHIFT_AT_RAM	 		    0	//啸叫抑制：移频
+#define AFx_NOISEGATE_AT_RAM	 		    0	//噪声门
+#define AFx_ADVAUDIO_PLC_AT_RAM	    	    0
+#define AFX_AUDIO_LINK_AT_RAM               0   //iis驱动
+#define AFX_AUDIO_SYNC_AT_RAM               0   //sync
+#define AFx_EQ_AT_RAM                       0	//eq
+#define AFx_VOCAL_TRACK_AT_RAM              0   //声道组合与声道拆分
+#define AFX_AUDIO_DIGITAL_VOL_AT_RAM        0   //数字音量
+#define AFX_AUDIO_ENERGY_DET_AT_RAM         0   //能量检测
+#define AFX_LIMITER_AT_RAM                  0   //限幅器
+#define AFX_MULTIBAND_CROSSOVER_AT_RAM      0   //多带限幅器与多带drc使用的多带分频器
+#define AFX_MULTIBAND_LIMITER_AT_RAM        0   //多带限幅器
+#define AFX_MULTIBAND_DRC_AT_RAM            0   //多带drc
+#define AFX_VIRTUAL_SURRUOUND_PRO_AT_RAM    0   //虚拟环绕声pro/2t4/2t5
+#define AFX_SW_EQ_AT_RAM                    0   //软件EQ
+#define AFx_SPATIAL_EFFECT_AT_RAM           0   //空间音效
+
+/*通话语音处理算法*/
+#define AUDIO_CVP_TEXT_AT_RAM		        0	//COMMON TEXT
+#define AUDIO_CVP_AEC_AT_RAM		        0	//AEC
+#define AUDIO_CVP_NLP_AT_RAM		        0	//NLP
+#define AUDIO_CVP_NS_AT_RAM			        0	//ANS/下行降噪
+#define AUDIO_CVP_COMMON_AT_RAM		        0	//COMMON
+#define AUDIO_CVP_DNS_AT_RAM		        0	//DNS
+#define AUDIO_CVP_AGC_AT_RAM		        0	//AGC
+#define AUDIO_CVP_DMS_AT_RAM		        0	//双MIC DNS
+#define AUDIO_CVP_PREP_AT_RAM		        0	//COMMON 预处理
+#define AUDIO_CVP_WN_AT_RAM			        0	//抗风噪
+#define AUDIO_CVP_THIRD_AT_RAM		        0	//3MIC
+
+/*编解码编译链接配置*/
+#define AUD_AAC_DEC_AT_RAM		            0   //AAC解码
+#define AUDIO_LDAC_AT_RAM			        0	//LDAC解码
+#define AUDIO_LHDC_AT_RAM			        0	//LHDCv3/v4解码 :78K左右,如果ram不够可以只放L2的段，40K左右
+#define AUDIO_LHDC_V5_AT_RAM			    0	//LHDCV5解码 : 18K左右
+#define AUDIO_MSBC_CODEC_AT_RAM		        0	//MSBC 编解码
+#define AUDIO_CVSD_CODEC_AT_RAM		        0	//CVSD 编解码
+#define AUDIO_JLA_CODEC_AT_RAM		        0	//JLA 编解码
+
+#else
+
+
+/*音效处理链接配置*/
+#define AFx_VBASS_AT_RAM				    0	//虚拟低音
+#define AFx_REVERB_AT_RAM				    0	//混响
+#define AFx_ECHO_AT_RAM				        0	//回声
+#define AFx_VOICECHANGER_AT_RAM			    0	//变声
+#define AFx_DRC_AT_RAM 					    0	//DRC
+#define AFx_HARMONIC_EXCITER_AT_RAM 	    0	//谐波激励
+#define AFx_DYN_EQ_AT_RAM 				    0	//动态EQ
+#define AFx_DYN_EQ_PRO_AT_RAM 				0	//动态EQ Pro
 #define AFx_NOTCH_HOWLING_AT_RAM 		    0	//啸叫抑制：陷波
 #define AFx_FREQ_SHIFT_AT_RAM	 		    0	//啸叫抑制：移频
 #define AFx_NOISEGATE_AT_RAM	 		    0	//噪声门
@@ -88,7 +144,14 @@
 #define AUDIO_MSBC_CODEC_AT_RAM		        0	//MSBC 编解码
 #define AUDIO_CVSD_CODEC_AT_RAM		        0	//CVSD 编解码
 #define AUDIO_JLA_CODEC_AT_RAM		        1	//JLA 编解码
+
+#endif
+
+#if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
+#define AUDIO_LC3_CODEC_AT_RAM		        1	//LC3 编解码
+#else
 #define AUDIO_LC3_CODEC_AT_RAM		        0	//LC3 编解码
+#endif
 
 /*语音识别算法编译链接配置*/
 #define AUDIO_KWS_COMMON_AT_RAM             0   //kws公共部分 ，0:放flash，1:放ram
@@ -236,17 +299,6 @@
 #define BT_MUSIC_VOL_LEAVE_MAX	16		/*高级音频音量等级*/
 #define BT_CALL_VOL_LEAVE_MAX	15		/*通话音量等级*/
 // #define BT_CALL_VOL_STEP		(-2.0f)	[>通话音量等级衰减步进<]
-
-/*
- *audio state define
- */
-#define APP_AUDIO_STATE_IDLE        0
-#define APP_AUDIO_STATE_MUSIC       1
-#define APP_AUDIO_STATE_CALL        2
-#define APP_AUDIO_STATE_WTONE       3
-#define APP_AUDIO_STATE_KTONE       4
-#define APP_AUDIO_STATE_RING       	5
-#define APP_AUDIO_CURRENT_STATE     6
 
 #define TONE_BGM_FADEOUT            0   //播叠加提示音时是否将背景音淡出
 

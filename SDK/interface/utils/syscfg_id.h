@@ -329,6 +329,7 @@ int syscfg_tools_init(void);
 //其它类配置项[651 ~ 700]
 #define 	CFG_STORE_BIN_ONLY_END		700
 
+#define     CFG_CONSTANT_CURRENT_CALI   1026//烧写器方案充电电流校准
 
 // votp区域
 #define     CFG_VOTP_CFG_GROUP_START     (0xD00)
