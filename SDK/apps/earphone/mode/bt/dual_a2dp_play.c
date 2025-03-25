@@ -340,6 +340,7 @@ void try_play_preempted_a2dp(void *p)
         return;
     }
     if (!a2dp_player_is_playing(a2dp_preempted_addr)) {
+        memset(a2dp_preempted_addr, 0xff, 6);
         btstack_device_control(device, USER_CTRL_AVCTP_OPID_PLAY);
     }
 }
@@ -517,7 +518,7 @@ static int a2dp_bt_status_event_handler(int *event)
         break;
     case BT_STATUS_PHONE_HANGUP:
     case BT_STATUS_SCO_DISCON:
-        printf("BT_STATUS_SCO_DISCON:%d\n", bt->event);
+        printf("A2DP BT_STATUS_SCO_DISCON:%d\n", bt->event);
         if (tws_api_get_role() == TWS_ROLE_SLAVE) {
             break;
         }

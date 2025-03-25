@@ -5,7 +5,7 @@
     {
 		.overlay_init
 		{
-#if (!TCFG_APP_LINEIN_EN && !TCFG_APP_PC_EN) || TCFG_BT_BACKGROUND_ENABLE
+#if (!TCFG_APP_LINEIN_EN && !TCFG_APP_PC_EN && !TCFG_APP_MUSIC_EN) || TCFG_BT_BACKGROUND_ENABLE
             *(.rf_init.text.cache.L2)
 #endif
         }

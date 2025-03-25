@@ -438,3 +438,4 @@ static void lp_touch_key_send_slide_key_type_event(u32 key_type)
     }
 }
 
+

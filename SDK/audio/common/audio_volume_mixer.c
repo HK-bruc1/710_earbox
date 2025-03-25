@@ -1327,6 +1327,9 @@ void app_audio_state_switch(u8 state, s16 max_volume, dvol_handle *dvol_hdl)
     __this->digital_volume = dvol_max;
 
     int cur_vol = app_audio_get_volume(state) * scale / 100 ;
+    if (!cur_vol && app_audio_get_volume(state)) {
+        cur_vol = 1; //处理某些音量等级多，音量低的场景切换到音量等级少的场景，会出现音量设置为0的情况
+    }
     cur_vol = (cur_vol > __this->max_volume[state]) ? __this->max_volume[state] : cur_vol;
     app_audio_init_dig_vol(state, cur_vol, 1, dvol_hdl);
 }

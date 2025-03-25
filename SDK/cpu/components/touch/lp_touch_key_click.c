@@ -1,3 +1,4 @@
+
 #ifdef SUPPORT_MS_EXTENSIONS
 #pragma bss_seg(".lp_touch_key_click.data.bss")
 #pragma data_seg(".lp_touch_key_click.data")
@@ -44,11 +45,13 @@ static void lp_touch_key_short_click_time_out_handle(void *priv)
 
 static void lp_touch_key_short_click_handle(u32 ch_idx)
 {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
     if (touch_abandon_short_click_once) {
         touch_abandon_short_click_once = 0;
         log_debug("lp touch key abandon the short click!\n");
         return;
     }
+#endif
 
     struct touch_key_arg *arg = &(__this->arg[ch_idx]);
     arg->last_key =  TOUCH_KEY_SHORT_CLICK;
@@ -78,6 +81,8 @@ static void lp_touch_key_raise_click_handle(u32 ch_idx)
         lp_touch_key_short_click_handle(ch_idx);
     }
 }
+
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
 
 static void lp_touch_key_cnacel_long_hold_click_check(u32 ch_idx)
 {
@@ -122,9 +127,14 @@ static void lp_touch_key_fall_click_handle(u32 ch_idx)
     }
 }
 
+#endif
+
+
 static void lp_touch_key_long_click_handle(u32 ch_idx)
 {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
     touch_abandon_short_click_once = 0;
+#endif
 
     const struct touch_key_cfg *key_cfg = &(__this->pdata->key_cfg[ch_idx]);
     struct touch_key_arg *arg = &(__this->arg[ch_idx]);
@@ -139,7 +149,9 @@ static void lp_touch_key_long_click_handle(u32 ch_idx)
 
 static void lp_touch_key_hold_click_handle(u32 ch_idx)
 {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
     touch_abandon_short_click_once = 0;
+#endif
 
     const struct touch_key_cfg *key_cfg = &(__this->pdata->key_cfg[ch_idx]);
     struct touch_key_arg *arg = &(__this->arg[ch_idx]);
@@ -154,11 +166,14 @@ static void lp_touch_key_hold_click_handle(u32 ch_idx)
 
 static void lp_touch_key_slide_up_handle(u32 ch_idx)
 {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
     if (touch_abandon_short_click_once) {
         touch_abandon_short_click_once = 0;
         log_debug("lp touch key abandon the short click!\n");
         return;
     }
+#endif
+
     struct key_event e;
     e.event = KEY_SLIDER_UP;
     e.value = __this->pdata->slide_mode_key_value;
@@ -167,15 +182,16 @@ static void lp_touch_key_slide_up_handle(u32 ch_idx)
 
 static void lp_touch_key_slide_down_handle(u32 ch_idx)
 {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
     if (touch_abandon_short_click_once) {
         touch_abandon_short_click_once = 0;
         log_debug("lp touch key abandon the short click!\n");
         return;
     }
+#endif
     struct key_event e;
     e.event = KEY_SLIDER_DOWN;
     e.value = __this->pdata->slide_mode_key_value;
     lp_touch_key_notify_key_event(&e, ch_idx);
 }
-
 

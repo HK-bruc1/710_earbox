@@ -83,7 +83,32 @@
 #define TCFG_LED_BLUE_LOGIC BRIGHT_BY_LOW // 点亮方式
 #endif // TCFG_PWMLED_ENABLE
 
+#define TCFG_SD0_ENABLE 0 // SD配置
+#if TCFG_SD0_ENABLE
+#define TCFG_SD0_DAT_MODE 1 // 线数设置
+#define TCFG_SD0_DET_MODE SD_CMD_DECT // 检测方式
+#define TCFG_SD0_CLK 12000000 // SD时钟频率
+#define TCFG_SD0_DET_IO NO_CONFIG_PORT // 检测IO
+#define TCFG_SD0_DET_IO_LEVEL 0 // IO检测方式
+#define TCFG_SD0_POWER_SEL SD_PWR_NULL // SD卡电源
+#define TCFG_SDX_CAN_OPERATE_MMC_CARD 0 // 支持MMC卡
+#define TCFG_KEEP_CARD_AT_ACTIVE_STATUS 0 // 保持卡活跃状态
+#define TCFG_SD0_PORT_CMD IO_PORTC_04 // SD_PORT_CMD
+#define TCFG_SD0_PORT_CLK IO_PORTC_03 // SD_PORT_CLK
+#define TCFG_SD0_PORT_DA0 IO_PORTC_02 // SD_PORT_DATA0
+#define TCFG_SD0_PORT_DA1 NO_CONFIG_PORT // SD_PORT_DATA1
+#define TCFG_SD0_PORT_DA2 NO_CONFIG_PORT // SD_PORT_DATA2
+#define TCFG_SD0_PORT_DA3 NO_CONFIG_PORT // SD_PORT_DATA3
+#endif // TCFG_SD0_ENABLE
+
 #define FUSB_MODE 1 // USB工作模式
+#define TCFG_USB_HOST_ENABLE 0 // USB主机总开关
+#define USB_H_MALLOC_ENABLE 1 // 主机使用malloc
+#define TCFG_USB_HOST_MOUNT_RESET 40 // usb reset时间
+#define TCFG_USB_HOST_MOUNT_TIMEOUT 50 // 握手超时时间
+#define TCFG_USB_HOST_MOUNT_RETRY 3 // 枚举失败重试次数
+#define TCFG_UDISK_ENABLE 0 // U盘使能
+#define TCFG_USB_SLAVE_MSD_ENABLE 0 // 读卡器使能
 #define TCFG_USB_SLAVE_HID_ENABLE 1 // HID使能
 #define MSD_BLOCK_NUM 1 // MSD缓存块数
 #define USB_AUDIO_VERSION USB_AUDIO_VERSION_1_0 // UAC协议版本
@@ -133,8 +158,7 @@
 #define TCFG_LP_KEY_SLIDE_ENABLE 0 // 两个按键滑动
 #define TCFG_LP_KEY_SLIDE_VALUE KEY_SLIDER // 键值
 #define TCFG_LP_EARTCH_KEY_ENABLE 0 // 入耳检测
-#define TCFG_LP_EARTCH_DETECT_CH LPCTMU_CH2_PB2 // 检测通道
-#define TCFG_LP_EARTCH_REF_CH LPCTMU_CH1_PB1 // 参考通道
+#define TCFG_LP_EARTCH_DETECT_RELY_AUDIO 0 // 检测方式
 #endif // TCFG_LP_TOUCH_KEY_ENABLE
 // ------------按键配置.json------------
 
@@ -231,9 +255,20 @@
 
 // ------------功能配置.json------------
 #define TCFG_APP_BT_EN 1 // 蓝牙模式
+#define TCFG_APP_MUSIC_EN 0 // 音乐模式
 #define TCFG_APP_LINEIN_EN 0 // LINEIN模式
 #define TCFG_APP_PC_EN 0 // PC模式
 #define TCFG_MIC_EFFECT_ENABLE 0 // 混响使能
+#define TCFG_DEC_ID3_V2_ENABLE 0 // ID3_V2
+#define TCFG_DEC_ID3_V1_ENABLE 0 // ID3_V1
+#define FILE_DEC_REPEAT_EN 0 // 无缝循环播放
+#define FILE_DEC_DEST_PLAY 0 // 指定时间播放
+#define FILE_DEC_AB_REPEAT_EN 0 // AB点复读
+#define TCFG_DEC_DECRYPT_ENABLE 0 // 加密文件播
+#define TCFG_DEC_DECRYPT_KEY 0x12345678 // 加密KEY
+#define MUSIC_PLAYER_CYCLE_ALL_DEV_EN 1 // 循环播放模式是否循环所有设备
+#define MUSIC_PLAYER_PLAY_FOLDER_PREV_FIRST_FILE_EN 0 // 切换文件夹播放时从第一首歌开始
+#define TCFG_MUSIC_DEVICE_TONE_EN 0 // 设备提示音
 #define TWFG_APP_POWERON_IGNORE_DEV 5000 // 设备忽略时间（单位：ms）
 // ------------功能配置.json------------
 
@@ -332,6 +367,17 @@
 #define TCFG_SPATIAL_EFFECT_ONLINE_ENABLE 0 // 空间音效在线调试
 #define TCFG_DEC_OPUS_ENABLE 0 // OPUS
 #define TCFG_ENC_OPUS_ENABLE 0 // OPUS
+#define TCFG_DEC_WAV_ENABLE 0 // WAV
+#define TCFG_DEC_MP3_ENABLE 0 // MP3
+#define TCFG_DEC_FLAC_ENABLE 0 // FLAC
+#define TCFG_DEC_WMA_ENABLE 0 // WMA
+#define TCFG_DEC_APE_ENABLE 0 // APE
+#define TCFG_DEC_AAC_ENABLE 0 // AAC
+#define TCFG_DEC_F2A_ENABLE 0 // F2A
+#define TCFG_DEC_WTG_ENABLE 0 // WTG
+#define TCFG_DEC_MTY_ENABLE 0 // MTY
+#define TCFG_DEC_WTS_ENABLE 0 // WTS
+#define TCFG_DEC_JLA_ENABLE 0 // JLA
 
 #define TCFG_AUDIO_HEARING_AID_ENABLE 0 // 辅听配置
 #if TCFG_AUDIO_HEARING_AID_ENABLE

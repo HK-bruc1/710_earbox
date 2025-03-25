@@ -5,7 +5,7 @@
 #pragma code_seg(".lp_touch_key_identify_algo.text")
 #endif
 #include "system/includes.h"
-#include "asm/lp_touch_key_identify_algo.h"
+#include "lp_touch_key_identify_algo.h"
 
 
 

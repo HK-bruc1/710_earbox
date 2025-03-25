@@ -1,3 +1,5 @@
+#if TCFG_LP_TOUCH_KEY_BT_TOOL_ENABLE
+
 #ifdef SUPPORT_MS_EXTENSIONS
 #pragma bss_seg(".lp_touch_key_tool.data.bss")
 #pragma data_seg(".lp_touch_key_tool.data")
@@ -7,12 +9,15 @@
 #include "system/includes.h"
 #include "asm/lp_touch_key_tool.h"
 #include "asm/lp_touch_key_api.h"
-#include "asm/lp_touch_key_identify_algo.h"
 #include "btstack/avctp_user.h"
 #include "classic/tws_api.h"
 #include "app_config.h"
 #include "key_driver.h"
 #include "online_db_deal.h"
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
+#include "lp_touch_key_identify_algo.h"
+#endif
+
 
 #define LOG_TAG_CONST       LP_KEY
 #define LOG_TAG             "[LP_KEY]"
@@ -23,9 +28,15 @@
 #define LOG_CLI_ENABLE
 #include "debug.h"
 
+
+
 //LP KEY在线调试工具版本号管理
-const u8 lp_key_sdk_name[16] = "BR56_SDK";
+const u8 lp_key_sdk_name[16] = "BRxx_SDK";
+#if LPCTMU_ANA_CFG_ADAPTIVE
 const u8 lp_key_bt_ver[4]    = {0, 0, 2, 0};
+#else
+const u8 lp_key_bt_ver[4]    = {0, 0, 1, 0};
+#endif
 struct lp_key_ver_info {
     char sdkname[16];
     u8 lp_key_ver[4];
@@ -182,10 +193,17 @@ static int lp_touch_key_online_debug_parse(u8 *packet, u8 size, u8 *ext_data, u1
     case TOUCH_CH_GET_VOL_CFG:
         log_debug("TOUCH_CH_GET_VOL_CFG");//界面按钮触发，在第4步之后
         u8 tmp_ana_cfg[6];
+#if LPCTMU_ANA_CFG_ADAPTIVE
         tmp_ana_cfg[0] = 7;//最大值
         tmp_ana_cfg[1] = lpctmu_get_ana_hv_level();
         tmp_ana_cfg[2] = 0;//最大值
         tmp_ana_cfg[3] = 0;
+#else
+        tmp_ana_cfg[0] = 3;//最大值
+        tmp_ana_cfg[1] = lpctmu_get_ana_hv_level();
+        tmp_ana_cfg[2] = 3;//最大值
+        tmp_ana_cfg[3] = lpctmu_get_ana_lv_level();
+#endif
         tmp_ana_cfg[4] = 7;//最大值
         tmp_ana_cfg[5] = lpctmu_get_ana_cur_level(lp_key_online.current_record_ch);
         log_debug("hv_max:%d hv:%d lv_max:%d lv:%d ic_max:%d ic:%d", tmp_ana_cfg[0],
@@ -203,8 +221,12 @@ static int lp_touch_key_online_debug_parse(u8 *packet, u8 size, u8 *ext_data, u1
         ana_cfg = (struct ch_ana_cfg *)(touch_cmd->data);
         log_debug("update, isel = %d, vhsel = %d, vlsel = %d", ana_cfg->isel, ana_cfg->vhsel, ana_cfg->vlsel);
         if (lp_key_online.current_record_ch < LPCTMU_CHANNEL_SIZE) {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
             u32 ch_idx = lp_touch_key_get_idx_by_cur_ch(lp_key_online.current_record_ch);
             lp_touch_key_identify_algo_reset(ch_idx);
+#else
+            lpctmu_send_m2p_cmd(RESET_IDENTIFY_ALGO);
+#endif
             lpctmu_set_ana_cur_level(lp_key_online.current_record_ch, ana_cfg->isel);
             lpctmu_set_ana_hv_level(ana_cfg->vhsel);
         }
@@ -223,8 +245,19 @@ static int lp_touch_key_online_debug_parse(u8 *packet, u8 size, u8 *ext_data, u1
         algo_cfg = (struct ch_algo_cfg *)(touch_cmd->data);
         log_debug("update, cfg0 = %d, cfg1 = %d, cfg2 = %d", algo_cfg->cfg0, algo_cfg->cfg1, algo_cfg->cfg2);
         if (lp_key_online.current_record_ch < LPCTMU_CHANNEL_SIZE) {
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
             u32 ch_idx = lp_touch_key_get_idx_by_cur_ch(lp_key_online.current_record_ch);
             lp_touch_key_identify_algorithm_init(ch_idx, algo_cfg->cfg0, algo_cfg->cfg2);
+#else
+            u32 ch = lp_key_online.current_record_ch;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG0L + ch * 8) = (algo_cfg->cfg0 >> 0) & 0xff;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG0H + ch * 8) = (algo_cfg->cfg0 >> 8) & 0xff;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG1L + ch * 8) = ((algo_cfg->cfg0 + 5) >> 0) & 0xff;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG1H + ch * 8) = ((algo_cfg->cfg0 + 5) >> 8) & 0xff;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG2L + ch * 8) = (algo_cfg->cfg2 >> 0) & 0xff;
+            M2P_MESSAGE_ACCESS(M2P_MASSAGE_CTMU_CH0_CFG2H + ch * 8) = (algo_cfg->cfg2 >> 8) & 0xff;
+            lpctmu_send_m2p_cmd(RESET_IDENTIFY_ALGO);
+#endif
         }
         break;
 
@@ -243,6 +276,19 @@ static int lp_touch_key_online_debug_parse(u8 *packet, u8 size, u8 *ext_data, u1
     default:
         break;
     }
+
+#ifdef TOUCH_KEY_IDENTIFY_ALGO_IN_MSYS
+#else
+    if (touch_cmd->cmd_id == TOUCH_RECORD_START) {
+        if (lp_key_online.current_record_ch < LPCTMU_CHANNEL_SIZE) {
+            M2P_CTMU_CH_DEBUG |= BIT(lp_key_online.current_record_ch);
+        } else {
+            M2P_CTMU_CH_DEBUG = 0xff;
+        }
+    } else {
+        M2P_CTMU_CH_DEBUG = 0;
+    }
+#endif
 
     return 0;
 }
@@ -263,3 +309,5 @@ int lp_touch_key_online_debug_exit(void)
 {
     return 0;
 }
+
+#endif
