@@ -161,7 +161,7 @@ const u8 pbg_support_enable = 1;
 const u8 adt_profile_support = 1;
 #else
 const u8 pbg_support_enable = 0;
-#if ATT_OVER_EDR_DEMO_EN
+#if (ATT_OVER_EDR_DEMO_EN || (THIRD_PARTY_PROTOCOLS_SEL & THIRD_PARTY_PROTOCOLS_SEL))
 const u8 adt_profile_support = 1;//gatt over edr
 #else
 const u8 adt_profile_support = 0;

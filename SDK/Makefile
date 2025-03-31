@@ -235,6 +235,7 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/gfps_protocol \
 	-Iapps/common/third_party_profile/custom_protocol_demo \
 	-Iapps/common/third_party_profile/ximalaya_protocol \
+	-Iapps/common/third_party_profile/auracast_app \
 	-Iapps/common/cJSON \
 	-Iinterface/media/cpu/br56 \
 	-Iinterface/utils/ui/ui/cpu/br56 \
@@ -254,6 +255,7 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/include \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/lib \
 	-Iapps/common/third_party_profile/bt_fmy \
+	-Iinterface/btstack \
 	-Iapps/common/device/usb \
 	-Iapps/common/device/usb/device \
 	-Iapps/common/device/usb/host \
@@ -410,8 +412,14 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/Tencent_LL/tencent_protocol/ble_qiot_utils_md5.c \
 	apps/common/third_party_profile/Tencent_LL/tencent_protocol/ble_qiot_utils_sha1.c \
 	apps/common/third_party_profile/ancs_client_demo/le_ancs_client.c \
+	apps/common/third_party_profile/auracast_app/auracast_app_ble.c \
+	apps/common/third_party_profile/auracast_app/auracast_app_gatt_over_edr.c \
+	apps/common/third_party_profile/auracast_app/auracast_app_protocol.c \
+	apps/common/third_party_profile/auracast_app/auracast_app_sink_api.c \
+	apps/common/third_party_profile/auracast_app/auracast_app_source_api.c \
 	apps/common/third_party_profile/bt_fmy/ble_fmy.c \
 	apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.c \
+	apps/common/third_party_profile/bt_fmy/ble_fmy_modet.c \
 	apps/common/third_party_profile/bt_fmy/ble_fmy_ota.c \
 	apps/common/third_party_profile/common/3th_profile_api.c \
 	apps/common/third_party_profile/common/custom_cfg.c \
@@ -921,9 +929,6 @@ c_SRC_FILES := \
 	cpu/br56/periph/mcpwm.c \
 	cpu/br56/periph/rdec.c \
 	cpu/br56/periph/touch/lp_touch_key.c \
-	cpu/br56/periph/touch/lp_touch_key_identify_algo.c \
-	cpu/br56/periph/touch/lp_touch_key_range_algo.c \
-	cpu/br56/periph/touch/lp_touch_key_tool.c \
 	cpu/br56/periph/touch/lpctmu_hw.c \
 	cpu/br56/power/key_wakeup.c \
 	cpu/br56/power/power_app.c \
@@ -938,6 +943,9 @@ c_SRC_FILES := \
 	cpu/components/ir_encoder.c \
 	cpu/components/led_api.c \
 	cpu/components/rdec_soft.c \
+	cpu/components/touch/lp_touch_key_identify_algo.c \
+	cpu/components/touch/lp_touch_key_range_algo.c \
+	cpu/components/touch/lp_touch_key_tool.c \
 	cpu/components/two_io_led.c \
 	cpu/config/gpio_file_parse.c \
 	cpu/config/lib_power_config.c \
@@ -1019,6 +1027,7 @@ LFLAGS := \
 	cpu/br56/liba/libDelayEstimate_pi32v2_OnChip.a \
 	cpu/br56/liba/libDualMicSystem_pi32v2_OnChip.a \
 	cpu/br56/liba/libDualMicSystem_flexible_pi32v2_OnChip.a \
+	cpu/br56/liba/libDualMicSystem_Awn.a \
 	cpu/br56/liba/libAdaptiveEchoSuppress_pi32v2_OnChip.a \
 	cpu/br56/liba/libOpcore_maskrom_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_advaudio_plc.a \
@@ -1036,6 +1045,10 @@ LFLAGS := \
 	cpu/br56/liba/mp3_decstream_lib.a \
 	cpu/br56/liba/lib_mty_dec.a \
 	cpu/br56/liba/lib_wav_dec.a \
+	cpu/br56/liba/lib_flac_dec.a \
+	cpu/br56/liba/lib_m4a_dec.a \
+	cpu/br56/liba/lib_ape_dec.a \
+	cpu/br56/liba/lib_wma_dec.a \
 	cpu/br56/liba/agreement.a \
 	cpu/br56/liba/lib_jla_codec.a \
 	cpu/br56/liba/lib_lc3_codec.a \
@@ -1101,6 +1114,7 @@ LFLAGS := \
 	cpu/br56/liba/libFFT_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
+	cpu/br56/liba/lib_opusdec_rom_dec.a \
 	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \

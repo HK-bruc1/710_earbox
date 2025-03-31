@@ -5,7 +5,6 @@
 #include "typedef.h"
 
 
-
 u32 lp_touch_key_identify_algorithm_get_tia_size(void);
 
 void lp_touch_key_identify_algorithm_set_tia_addr(u32 ch_idx, void *addr);

@@ -265,6 +265,7 @@
 #define TCFG_AUDIO_EFX_6700_RUN_MODE EFx_BW_UNUSED // Stereo Spatial Wider
 #define TCFG_AUDIO_EFX_BFE4_RUN_MODE EFx_BW_UNUSED // Frequency Compressor
 #define TCFG_AUDIO_EFX_A64E_RUN_MODE EFx_BW_UNUSED // Spatial Adv
+#define TCFG_AUDIO_EFX_6FEC_RUN_MODE EFx_BW_UNUSED // 本地音乐
 // ------------流程图节点位宽定义------------
 #endif
 
