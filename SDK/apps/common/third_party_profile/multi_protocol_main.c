@@ -457,6 +457,9 @@ void multi_protocol_bt_init(void)
     bredr_adt_init();
     auracast_app_all_init();
 #endif
+#if (THIRD_PARTY_PROTOCOLS_SEL & JL_SBOX_EN)
+    sbox_demo_all_init();
+#endif
 }
 
 void multi_protocol_bt_exit(void)
@@ -506,6 +509,11 @@ void multi_protocol_bt_exit(void)
 #if (THIRD_PARTY_PROTOCOLS_SEL & AURACAST_APP_EN)
     auracast_app_all_exit();
 #endif
+
+#if (THIRD_PARTY_PROTOCOLS_SEL & JL_SBOX_EN)
+    sbox_demo_all_exit();
+#endif
+    
 
     app_ble_exit();
     app_spp_exit();

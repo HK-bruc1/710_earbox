@@ -351,7 +351,8 @@ void cfg_file_parse(u8 idx)
 
     log_info("mac:");
     put_buf(mac_buf, sizeof(mac_buf));
-    memcpy(bt_cfg.mac_addr, mac_buf, 6);
+    u8 tmp_buf[6] = {0x66,0x55,0x44,0x33,0x22,0x11};
+    memcpy(bt_cfg.mac_addr, tmp_buf, 6);
 
 #if (CONFIG_BT_MODE != BT_NORMAL)
     const u8 dut_name[]  = "AC693x_DUT";

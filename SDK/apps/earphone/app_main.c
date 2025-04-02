@@ -383,7 +383,8 @@ static struct app_mode *app_task_init()
     do_late_initcall();
 
     dev_manager_init();
-
+    extern void sbox_app_init(void);
+    sbox_app_init();
 
     int update = 0;
     if (CONFIG_UPDATE_ENABLE) {

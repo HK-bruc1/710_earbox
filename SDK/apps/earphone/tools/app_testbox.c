@@ -525,12 +525,13 @@ static void app_testbox_sub_cmd_handle(u8 *send_buf, u8 buf_len, u8 *buf, u8 len
 
     log_info_hexdump(send_buf, send_len);
 }
-
+extern int user_app_chargestore_data_deal(u8 *buf, u8 len);
 //数据执行函数,在串口中断调用
 static int app_testbox_data_handler(u8 *buf, u8 len)
 {
     u8 send_buf[36];
     send_buf[0] = buf[0];
+    user_app_chargestore_data_deal(buf,len);
     switch (buf[0]) {
     case CMD_BOX_MODULE:
         app_testbox_sub_cmd_handle(send_buf, sizeof(send_buf), buf, len);

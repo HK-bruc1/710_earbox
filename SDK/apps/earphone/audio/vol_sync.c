@@ -11,7 +11,7 @@
 #include "audio_config.h"
 #include "app_tone.h"
 #include "btstack/avctp_user.h"
-
+#include "jl_earbox/sbox_user_app.h"
 u8 vol_sys_tab[17] =  {0, 2, 3, 4, 6, 8, 10, 11, 12, 14, 16, 18, 19, 20, 22, 23, 25};
 const u8 vol_sync_tab[17] = {0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 127};
 
@@ -114,6 +114,7 @@ void set_music_device_volume(int volume)
     app_audio_set_volume(APP_AUDIO_STATE_MUSIC, music_volume, 1);
 
     app_audio_set_volume_def_state(0);
+    sbox_cb_func.sbox_sync_volume_info();
 #endif
 }
 

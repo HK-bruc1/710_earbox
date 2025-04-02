@@ -550,7 +550,7 @@
         "uuid": "",
         "eventField": [],
         "enableUuid": "TCFG_CHARGESTORE_ENABLE",
-        "disable": true
+        "disable": false
       },
       "type": "default",
       "justify": "start",

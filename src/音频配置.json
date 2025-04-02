@@ -1370,7 +1370,7 @@
                     ],
                     "saveWay": "macro",
                     "formItemWidth": "",
-                    "defaultValue": "",
+                    "defaultValue": "0",
                     "emptyValue": "0",
                     "uuid": "TCFG_ADC0_POWER_IO",
                     "originValue": ""
@@ -1426,6 +1426,34 @@
                         "value": "id_1647485267192_78"
                       },
                       {
+                        "label": "IO_PORTB_05",
+                        "value": "id_1722236756636_0"
+                      },
+                      {
+                        "label": "IO_PORTB_06",
+                        "value": "id_1722236772403_1"
+                      },
+                      {
+                        "label": "IO_PORTB_07",
+                        "value": "id_1722236798635_2"
+                      },
+                      {
+                        "label": "IO_PORTB_08",
+                        "value": "id_1733143332567_7"
+                      },
+                      {
+                        "label": "IO_PORTB_09",
+                        "value": "id_1733143333374_8"
+                      },
+                      {
+                        "label": "IO_PORTB_10",
+                        "value": "id_1733143334192_9"
+                      },
+                      {
+                        "label": "IO_PORTB_11",
+                        "value": "id_1733143336438_10"
+                      },
+                      {
                         "label": "IO_PORTC_00",
                         "value": "id_1647485267192_82"
                       },
@@ -1446,84 +1474,16 @@
                         "value": "id_1647485267192_86"
                       },
                       {
-                        "label": "IO_PORTC_05",
-                        "value": "id_1647485267192_87"
-                      },
-                      {
-                        "label": "IO_PORTC_06",
-                        "value": "id_1647485267192_88"
-                      },
-                      {
-                        "label": "IO_PORTC_07",
-                        "value": "id_1647485267192_89"
-                      },
-                      {
-                        "label": "IO_PORTD_00",
-                        "value": "id_1651200719084_10"
-                      },
-                      {
-                        "label": "IO_PORTD_01",
-                        "value": "id_1651200755336_11"
-                      },
-                      {
-                        "label": "IO_PORTD_02",
-                        "value": "id_1651200759198_12"
-                      },
-                      {
-                        "label": "IO_PORTD_03",
-                        "value": "id_1651200760502_13"
-                      },
-                      {
-                        "label": "IO_PORTD_04",
-                        "value": "id_1651200761897_14"
-                      },
-                      {
-                        "label": "IO_PORTD_05",
-                        "value": "id_1651200763262_15"
-                      },
-                      {
-                        "label": "IO_PORTD_06",
-                        "value": "id_1651200764534_16"
-                      },
-                      {
-                        "label": "IO_PORTD_07",
-                        "value": "id_1693531000542_0"
-                      },
-                      {
-                        "label": "IO_PORTD_08",
-                        "value": "id_1693531023340_1"
-                      },
-                      {
-                        "label": "IO_PORTD_09",
-                        "value": "id_1693531033243_2"
-                      },
-                      {
-                        "label": "IO_PORTF_00",
-                        "value": "id_1685018728435_3"
-                      },
-                      {
-                        "label": "IO_PORTF_01",
-                        "value": "id_1685018728931_4"
-                      },
-                      {
-                        "label": "IO_PORTF_02",
-                        "value": "id_1685018729499_5"
-                      },
-                      {
-                        "label": "IO_PORTF_03",
-                        "value": "id_1685018729987_6"
-                      },
-                      {
-                        "label": "IO_PORTF_04",
-                        "value": "id_1685018730475_7"
-                      },
-                      {
-                        "label": "IO_PORTF_05",
-                        "value": "id_1685018826466_8"
-                      },
-                      {
                         "label": "IO_PORTP_00",
                         "value": "id_1685018828649_12"
+                      },
+                      {
+                        "label": "IO_PORTP_01",
+                        "value": "id_1741315964779_0"
+                      },
+                      {
+                        "label": "IO_PORTP_02",
+                        "value": "id_1741315965932_1"
                       },
                       {
                         "label": "IO_PORT_LDOIN",
@@ -2096,7 +2056,7 @@
                     ],
                     "saveWay": "macro",
                     "formItemWidth": "",
-                    "defaultValue": "",
+                    "defaultValue": "0",
                     "emptyValue": "0",
                     "uuid": "TCFG_ADC1_POWER_IO",
                     "originValue": ""
@@ -2152,6 +2112,34 @@
                         "value": "id_1647485267192_78"
                       },
                       {
+                        "label": "IO_PORTB_05",
+                        "value": "id_1722236756636_0"
+                      },
+                      {
+                        "label": "IO_PORTB_06",
+                        "value": "id_1722236772403_1"
+                      },
+                      {
+                        "label": "IO_PORTB_07",
+                        "value": "id_1722236798635_2"
+                      },
+                      {
+                        "label": "IO_PORTB_08",
+                        "value": "id_1733143332567_7"
+                      },
+                      {
+                        "label": "IO_PORTB_09",
+                        "value": "id_1733143333374_8"
+                      },
+                      {
+                        "label": "IO_PORTB_10",
+                        "value": "id_1733143334192_9"
+                      },
+                      {
+                        "label": "IO_PORTB_11",
+                        "value": "id_1733143336438_10"
+                      },
+                      {
                         "label": "IO_PORTC_00",
                         "value": "id_1647485267192_82"
                       },
@@ -2172,84 +2160,16 @@
                         "value": "id_1647485267192_86"
                       },
                       {
-                        "label": "IO_PORTC_05",
-                        "value": "id_1647485267192_87"
-                      },
-                      {
-                        "label": "IO_PORTC_06",
-                        "value": "id_1647485267192_88"
-                      },
-                      {
-                        "label": "IO_PORTC_07",
-                        "value": "id_1647485267192_89"
-                      },
-                      {
-                        "label": "IO_PORTD_00",
-                        "value": "id_1651200719084_10"
-                      },
-                      {
-                        "label": "IO_PORTD_01",
-                        "value": "id_1651200755336_11"
-                      },
-                      {
-                        "label": "IO_PORTD_02",
-                        "value": "id_1651200759198_12"
-                      },
-                      {
-                        "label": "IO_PORTD_03",
-                        "value": "id_1651200760502_13"
-                      },
-                      {
-                        "label": "IO_PORTD_04",
-                        "value": "id_1651200761897_14"
-                      },
-                      {
-                        "label": "IO_PORTD_05",
-                        "value": "id_1651200763262_15"
-                      },
-                      {
-                        "label": "IO_PORTD_06",
-                        "value": "id_1651200764534_16"
-                      },
-                      {
-                        "label": "IO_PORTD_07",
-                        "value": "id_1693531000542_0"
-                      },
-                      {
-                        "label": "IO_PORTD_08",
-                        "value": "id_1693531023340_1"
-                      },
-                      {
-                        "label": "IO_PORTD_09",
-                        "value": "id_1693531033243_2"
-                      },
-                      {
-                        "label": "IO_PORTF_00",
-                        "value": "id_1685018728435_3"
-                      },
-                      {
-                        "label": "IO_PORTF_01",
-                        "value": "id_1685018728931_4"
-                      },
-                      {
-                        "label": "IO_PORTF_02",
-                        "value": "id_1685018729499_5"
-                      },
-                      {
-                        "label": "IO_PORTF_03",
-                        "value": "id_1685018729987_6"
-                      },
-                      {
-                        "label": "IO_PORTF_04",
-                        "value": "id_1685018730475_7"
-                      },
-                      {
-                        "label": "IO_PORTF_05",
-                        "value": "id_1685018826466_8"
-                      },
-                      {
                         "label": "IO_PORTP_00",
                         "value": "id_1685018828649_12"
+                      },
+                      {
+                        "label": "IO_PORTP_01",
+                        "value": "id_1741315964779_0"
+                      },
+                      {
+                        "label": "IO_PORTP_02",
+                        "value": "id_1741315965932_1"
                       },
                       {
                         "label": "IO_PORT_LDOIN",
@@ -3441,7 +3361,7 @@
           }
         ],
         "eventField": [],
-        "disable": true,
+        "disable": false,
         "saveWay": "macro",
         "tip": "",
         "tipAlways": false,
@@ -5875,7 +5795,128 @@
               "tipAlways": false
             },
             "__slot__": {
-              "options": []
+              "options": [
+                {
+                  "label": "IO_PORTA_00",
+                  "value": "id_1647485267192_66"
+                },
+                {
+                  "label": "IO_PORTA_01",
+                  "value": "id_1647485267192_67"
+                },
+                {
+                  "label": "IO_PORTA_02",
+                  "value": "id_1647485267192_68"
+                },
+                {
+                  "label": "IO_PORTA_03",
+                  "value": "id_1647485267192_69"
+                },
+                {
+                  "label": "IO_PORTA_04",
+                  "value": "id_1647485267192_70"
+                },
+                {
+                  "label": "IO_PORTA_05",
+                  "value": "id_1647485267192_71"
+                },
+                {
+                  "label": "IO_PORTA_06",
+                  "value": "id_1647485267192_72"
+                },
+                {
+                  "label": "IO_PORTB_00",
+                  "value": "id_1647485267192_74"
+                },
+                {
+                  "label": "IO_PORTB_01",
+                  "value": "id_1647485267192_75"
+                },
+                {
+                  "label": "IO_PORTB_02",
+                  "value": "id_1647485267192_76"
+                },
+                {
+                  "label": "IO_PORTB_03",
+                  "value": "id_1647485267192_77"
+                },
+                {
+                  "label": "IO_PORTB_04",
+                  "value": "id_1647485267192_78"
+                },
+                {
+                  "label": "IO_PORTB_05",
+                  "value": "id_1722236756636_0"
+                },
+                {
+                  "label": "IO_PORTB_06",
+                  "value": "id_1722236772403_1"
+                },
+                {
+                  "label": "IO_PORTB_07",
+                  "value": "id_1722236798635_2"
+                },
+                {
+                  "label": "IO_PORTB_08",
+                  "value": "id_1733143332567_7"
+                },
+                {
+                  "label": "IO_PORTB_09",
+                  "value": "id_1733143333374_8"
+                },
+                {
+                  "label": "IO_PORTB_10",
+                  "value": "id_1733143334192_9"
+                },
+                {
+                  "label": "IO_PORTB_11",
+                  "value": "id_1733143336438_10"
+                },
+                {
+                  "label": "IO_PORTC_00",
+                  "value": "id_1647485267192_82"
+                },
+                {
+                  "label": "IO_PORTC_01",
+                  "value": "id_1647485267192_83"
+                },
+                {
+                  "label": "IO_PORTC_02",
+                  "value": "id_1647485267192_84"
+                },
+                {
+                  "label": "IO_PORTC_03",
+                  "value": "id_1647485267192_85"
+                },
+                {
+                  "label": "IO_PORTC_04",
+                  "value": "id_1647485267192_86"
+                },
+                {
+                  "label": "IO_PORTP_00",
+                  "value": "id_1685018828649_12"
+                },
+                {
+                  "label": "IO_PORTP_01",
+                  "value": "id_1741315964779_0"
+                },
+                {
+                  "label": "IO_PORTP_02",
+                  "value": "id_1741315965932_1"
+                },
+                {
+                  "label": "IO_PORT_LDOIN",
+                  "value": "id_1685018828937_13"
+                },
+                {
+                  "label": "IO_PORT_DP",
+                  "value": "id_1685018829257_14"
+                },
+                {
+                  "label": "IO_PORT_DM",
+                  "value": "id_1685018829513_15"
+                }
+              ]
             },
             "placeholder": "请选择串口发送引脚",
             "style": {

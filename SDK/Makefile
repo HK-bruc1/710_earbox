@@ -255,6 +255,7 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/include \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/lib \
 	-Iapps/common/third_party_profile/bt_fmy \
+	-Iapps/common/third_party_profile/jl_earbox \
 	-Iinterface/btstack \
 	-Iapps/common/device/usb \
 	-Iapps/common/device/usb/device \
@@ -542,6 +543,11 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/server/rcsp_data_respone.c \
 	apps/common/third_party_profile/jieli/trans_data_demo/le_trans_data.c \
 	apps/common/third_party_profile/jieli/trans_data_demo/spp_trans_data.c \
+	apps/common/third_party_profile/jl_earbox/sbox_core_code.c \
+	apps/common/third_party_profile/jl_earbox/sbox_core_config.c \
+	apps/common/third_party_profile/jl_earbox/sbox_protocol.c \
+	apps/common/third_party_profile/jl_earbox/sbox_user_app.c \
+	apps/common/third_party_profile/jl_earbox/sbox_uart_app.c \
 	apps/common/third_party_profile/mma_protocol/mma_config.c \
 	apps/common/third_party_profile/mma_protocol/mma_platform_api.c \
 	apps/common/third_party_profile/mma_protocol/mma_protocol.c \

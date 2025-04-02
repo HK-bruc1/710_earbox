@@ -74,54 +74,63 @@
           "type": 4,
           "fileName": "src\\音频流程\\系统模式.x6flow",
           "binName": "stream.bin",
-          "showName": "系统模式"
+          "showName": "系统模式",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\媒体.x6flow",
           "binName": "stream.bin",
-          "showName": "媒体"
+          "showName": "媒体",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\蓝牙通话.x6flow",
           "binName": "stream.bin",
-          "showName": "蓝牙通话"
+          "showName": "蓝牙通话",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\USB Audio.x6flow",
           "binName": "stream.bin",
-          "showName": "USB Audio"
+          "showName": "USB Audio",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\产测模式.x6flow",
           "binName": "stream.bin",
-          "showName": "产测模式"
+          "showName": "产测模式",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\麦克风音效.x6flow",
           "binName": "stream.bin",
-          "showName": "麦克风音效"
+          "showName": "麦克风音效",
+          "data": ""
         },
         {
           "type": 4,
           "fileName": "src\\音频流程\\LE_Audio.x6flow",
           "binName": "stream.bin",
-          "showName": "LE_Audio"
+          "showName": "LE_Audio",
+          "data": ""
         }
       ]
     }
   ],
   "create_time": "2025-03-29T02:21:53.585Z",
-  "update_time": "2025-03-29T02:22:03.421Z",
+  "update_time": "2025-04-02T11:27:37.652Z",
+  "standardPatch": "patch_01.02",
   "lastOpenToolVersion": "4.4.5",
   "lastStencilFlowTime": "2025-03-29T10:22:01.3884501+08:00",
   "proxyRepoid": null,
   "versionName": "3.0.0",
   "provider": "杰理",
+  "publishType": 1,
   "checkPatchTime": 0,
   "relateVersion": "4.3.0"
 }
