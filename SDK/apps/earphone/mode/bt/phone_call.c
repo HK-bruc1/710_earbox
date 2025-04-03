@@ -46,6 +46,10 @@
 #if TCFG_AUDIO_ANC_ENABLE
 #include "audio_anc.h"
 #endif
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#include "le_audio_player.h"
+#include "app_le_auracast.h"
+#endif
 
 
 #if (TCFG_USER_TWS_ENABLE == 0)
@@ -66,7 +70,6 @@
 #define ESCO_DUMP_PACKET_CALL		60 /*0~0xFF*/
 #define SYNC_TONE_PHONE_RING_TIME   300
 
-static u8 g_play_addr[6];
 static u8 esco_dump_packet = ESCO_DUMP_PACKET_CALL;
 
 static void phone_income_num_check(void *priv);
@@ -322,8 +325,10 @@ int bt_phone_esco_play(u8 *bt_addr)
 #if TCFG_AUDIO_SOMATOSENSORY_ENABLE && SOMATOSENSORY_CALL_EVENT
     somatosensory_open();
 #endif
-
-    a2dp_player_close(bt_addr);
+    if (a2dp_player_get_btaddr(temp_btaddr)) {
+        a2dp_player_close(temp_btaddr);
+        a2dp_media_close(temp_btaddr);
+    }
     bt_stop_a2dp_slience_detect(bt_addr);
     a2dp_media_close(bt_addr);
 #if 0   //debug
@@ -573,6 +578,11 @@ static int bt_phone_status_event_handler(int *msg)
         printf("BT_STATUS_SCO_STATUS_CHANGE len:%d, type:%d\n",
                (bt->value >> 16), (bt->value & 0x0000ffff));
         if (bt->value != 0xff) {
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+            if (le_audio_player_is_playing()) {
+                le_auracast_stop();
+            }
+#endif
             u8 call_vol = 15;
             //为了解决两个手机都在通话，在手机上轮流切声卡的音量问题
             call_vol = bt_get_call_vol_for_addr(bt->args);

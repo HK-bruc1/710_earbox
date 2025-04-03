@@ -39,6 +39,14 @@
 #include "audio_anc.h"
 #endif
 
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+#include "rt_anc_app.h"
+#endif
+
+#if AUDIO_EQ_LINK_VOLUME
+#include "effects/eq_config.h"
+#endif
+
 extern struct audio_dac_hdl dac_hdl;
 struct a2dp_player {
     u8 bt_addr[6];
@@ -130,6 +138,9 @@ static void a2dp_player_callback(void *private_data, int event)
 #if AUDIO_VBASS_LINK_VOLUME
         vbass_link_volume();
 #endif
+#if AUDIO_EQ_LINK_VOLUME
+        eq_link_volume();
+#endif
 #if TCFG_TWS_DUAL_CHANNEL
         a2dp_player_update_steromix_param(player, player->channel);
 #endif
@@ -146,7 +157,11 @@ static void a2dp_player_set_audio_channel(struct a2dp_player *player)
     }
 
     player->channel = channel;
+#if (defined(TCFG_SPATIAL_ADV_NODE_ENABLE) && TCFG_SPATIAL_ADV_NODE_ENABLE)
+    jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, AUDIO_CH_LR);
+#else
     jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, channel);
+#endif
 }
 
 void a2dp_player_tws_event_handler(int *msg)
@@ -241,6 +256,11 @@ int a2dp_player_open(u8 *btaddr)
         audio_speak_to_char_sync_suspend();
     }
 #endif
+
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE && AUDIO_RT_ANC_TIDY_MODE_ENABLE
+    audio_anc_real_time_adaptive_reset(ADT_REAL_TIME_ADAPTIVE_ANC_TIDY_MODE, 0);
+#endif
+
     err = a2dp_player_create(btaddr);
     if (err) {
         if (err == -EFAULT) {
@@ -255,6 +275,10 @@ int a2dp_player_open(u8 *btaddr)
     jlstream_set_callback(player->stream, NULL, a2dp_player_callback);
     jlstream_set_scene(player->stream, STREAM_SCENE_A2DP);
 
+#if (defined(TCFG_SPATIAL_ADV_NODE_ENABLE) && TCFG_SPATIAL_ADV_NODE_ENABLE)
+    //空间音效需要解码器输出真立体声
+    jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, AUDIO_CH_LR);
+#else
     if (CONFIG_BTCTLER_TWS_ENABLE) {
         if (tws_api_get_tws_state() & TWS_STA_SIBLING_CONNECTED) {
             if (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) {	//如果dac配置的立体声，tws 连接上时解码也要配置输出立体声，由channel_adapter节点做tws 声道适配;
@@ -262,12 +286,13 @@ int a2dp_player_open(u8 *btaddr)
             } else {
                 player->channel = tws_api_get_local_channel() == 'L' ? AUDIO_CH_L : AUDIO_CH_R;
             }
-            jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, player->channel);
         } else {
-            int channel = (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) ? AUDIO_CH_LR : AUDIO_CH_MIX;
-            jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, channel);
+            player->channel = (TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_LR) ? AUDIO_CH_LR : AUDIO_CH_MIX;
         }
+        printf("a2dp player channel setup:0x%x", player->channel);
+        jlstream_ioctl(player->stream, NODE_IOC_SET_CHANNEL, player->channel);
     }
+#endif
     err = jlstream_node_ioctl(player->stream, NODE_UUID_SOURCE,
                               NODE_IOC_SET_BTADDR, (int)player->bt_addr);
 
@@ -382,6 +407,10 @@ void a2dp_player_close(u8 *btaddr)
 
 #if (TCFG_SMART_VOICE_ENABLE && TCFG_SMART_VOICE_USE_AEC)
     audio_smart_voice_aec_close();
+#endif
+
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE && AUDIO_RT_ANC_TIDY_MODE_ENABLE
+    audio_anc_real_time_adaptive_reset(ADT_REAL_TIME_ADAPTIVE_ANC_MODE, 0);
 #endif
 }
 

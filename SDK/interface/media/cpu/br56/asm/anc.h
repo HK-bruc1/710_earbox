@@ -84,18 +84,8 @@ typedef enum {
     ANC_R_TRANS_PARM = 0x1D,     //右通透参数ID
 
     //OTHER
-    ANC_L_ADAP_FRE = 0x20,
-    ANC_L_ADAP_PZ = 0x21,
-    ANC_L_ADAP_SZPZ = 0x22,
-    ANC_L_ADAP_TARGET = 0x23,
     ANC_L_ADAP_GOLD_CURVE = 0x24,//自适应金机曲线
-    ANC_L_ADAP_TARGET_CMP = 0x25,
-    ANC_R_ADAP_FRE = 0x30,
-    ANC_R_ADAP_PZ = 0x31,
-    ANC_R_ADAP_SZPZ = 0x32,
-    ANC_R_ADAP_TARGET = 0x33,
     ANC_R_ADAP_GOLD_CURVE = 0x34,
-    ANC_R_ADAP_TARGET_CMP = 0x35,
 
 } ANC_config_seg_id_t;
 
@@ -120,12 +110,8 @@ typedef enum {
 } ANC_alogm_t;		//ANC算法模式
 
 typedef enum {
-    A_MIC0 = 0x0,			//模拟MIC0 对应IO-0(PA5 PA6) or 1(PA3 PA4)
-    A_MIC1,                 //模拟MIC1 对应IO-0(PA1 PA2) or 1(PA3 PA4)
-    A_MIC2,                 //模拟MIC2 对应IO-0(PD7 PD8)
-    A_MIC3,                 //模拟MIC3 对应IO-0(PD5 PD6) or 1(PA1 PA2)
-    A_MIC4,                 //模拟MIC4 对应IO-0(PD3 PD4) or 1(PD1 PD2)
-    ANC_LPADC,              //LPADC
+    A_MIC0 = 0x0,			//模拟MIC0 对应IO-0(PA1 PA2)
+    A_MIC1,                 //模拟MIC1 对应IO-0(PB10 PB9)
     D_MIC0,                 //数字MIC0(plnk_dat0_pin-上升沿采样)
     D_MIC1,                 //数字MIC1(plnk_dat1_pin-上升沿采样)
     D_MIC2,                 //数字MIC2(plnk_dat0_pin-下降沿采样)
@@ -166,6 +152,12 @@ typedef enum {
     AUDIO_ANC_FADE_CH_RFF = 0x4,
     AUDIO_ANC_FADE_CH_RFB = 0x8,
 } ANC_fade_ch_t;
+
+// ANC 场景自适应事件
+enum ANC_ADAPTIVE_FADE_EVENT {
+    ANC_ADAPTIVE_EVENT_FADE_STATR = 0x1,	//场景自适应增益切换启动
+    ANC_ADAPTIVE_EVENT_FADE_END,			//场景自适应增益切换结束
+};
 
 //ANC DMA sel ch
 typedef enum {
@@ -299,12 +291,13 @@ typedef struct {
 
 //ANC场景自适应结构体
 typedef struct {
-    u8 default_flag;	//初始状态标志
-    u8 fade_lvl;		//淡入时间fade_lvl*100ms
-    u8 trigger_cnt;		//触发计数 trigger_cnt*100ms
-    u16	gain;			//目标增益
-    u32 pow_lthr;		//低阈值
-    u32 pow_thr;		//高阈值
+    u8 default_flag;				//初始状态标志
+    u8 trigger_cnt;					//触发计数 trigger_cnt*100ms
+    u16 gain_decrease_fade_time;	//高增益等级 向当前等级淡入时间*100ms
+    u16 gain_increase_fade_time;	//低增益等级 向当前等级淡入时间*100ms
+    u16 gain;						//目标增益
+    u32 pow_lthr;					//低阈值
+    u32 pow_thr;					//高阈值
 } anc_adap_param_t;
 
 //ANC耳道自适应相关结构体
@@ -501,17 +494,24 @@ typedef struct {
     u8 adc_ch;						//adc数字通道
     u8 adaptive_mode;				//ANC场景自适应模式
     u8 anc_lvl;						//ANC等级
+    u8 trans_fb_en;					//通透FB使能控制
+
     u8 lff_yorder;					//LFF IIR NUM
     u8 lfb_yorder;					//LFB IIR NUM
     u8 lcmp_yorder;					//LTRANS IIR NUM
     u8 ltrans_yorder;               //LCMP IIR NUM
     u8 rff_yorder;					//RFF IIR NUM
     u8 rfb_yorder;                  //RFB IIR NUM
-    u8 rcmp_yorder;					//RTRANS IIR NUM
-    u8 rtrans_yorder;               //RCMP IIR NUM
+    u8 rcmp_yorder;					//RCMP IIR NUM
+    u8 rtrans_yorder;               //RTRANS IIR NUM
+    u8 ltrans_fb_yorder;            //LTRANS FB IIR NUM
+    u8 ltrans_cmp_yorder;           //LTRANS CMP IIR NUM
+    u8 rtrans_fb_yorder;			//RTRANS FB IIR NUM
+    u8 rtrans_cmp_yorder;			//RTRANS CMP IIR NUM
     u8 adap_ff_yorder;				//ANC耳道自适应FF IIR num
     u8 adap_fb_yorder;				//ANC耳道自适应FB IIR num
     u8 adap_cmp_yorder;				//ANC耳道自适应CMP IIR num
+
     u8 lr_lowpower_en;				//ANCLR(立体声)配置省功耗使能
     u8 anc_coeff_mode;				/*ANC coeff模式-0 普通coeff; 1 自适应coeff*/
     u8 test_type;					//ANC测试模式类型，获取SZ频响 or 获取SPK_MIC PCM数据
@@ -522,6 +522,9 @@ typedef struct {
     u8 ff_use_alogm;				//FF当前使用的算法模式
     u8 fb_use_alogm;				//FB当前使用的算法模式
     u8 sz_use_alogm;				//SZ当前使用的算法模式
+
+    u8 howling_detect_toggle;		//ANC 啸叫检测使能控制，用于在线切换
+    u8 howling_detect_ch;			//ANC 啸叫检测通道配置
 
     u16 anc_fade_gain;				//ANC淡入淡出增益
     u16 drc_fade_gain;				//DRC淡出增益
@@ -536,23 +539,26 @@ typedef struct {
     int *debug_buf;					//测试数据流，最大65536byte(堆)
     s32 *lfir_coeff;				//FZ补偿滤波器表
     s32 *rfir_coeff;				//FZ补偿滤波器表
+
     double *lff_coeff;				//左耳FF滤波器
     double *lfb_coeff;				//左耳FB滤波器
-    double *lcmp_coeff;				//左耳cmp滤波器
+    double *lcmp_coeff;				//左耳CMP滤波器
     double *ltrans_coeff;			//左耳通透滤波器
     double *rff_coeff;				//右耳FF滤波器
     double *rfb_coeff;  	    	//右耳FB滤波器
-    double *rcmp_coeff;				//右耳cmp滤波器
+    double *rcmp_coeff;				//右耳CMP滤波器
     double *rtrans_coeff;			//右耳通透滤波器
-    double *trans_default_coeff;	//通透默认滤波器
+    double *ltrans_fb_coeff;        //左耳通透FB滤波器
+    double *ltrans_cmp_coeff;       //左耳通透CMP滤波器
+    double *rtrans_fb_coeff;        //右耳通透FB滤波器
+    double *rtrans_cmp_coeff;       //右耳通透CMP滤波器
+
+    float ltrans_fbgain;  			//ANCL 通透FB增益(携带符号)     range 0.0316(-30dB) - 31.62
+    float ltrans_cmpgain;  			//ANCL 通透CMP增益(携带符号)     range 0.0316(-30dB) - 31.62
+    float rtrans_fbgain;  			//ANCR 通透FB增益(携带符号)     range 0.0316(-30dB) - 31.62
+    float rtrans_cmpgain;  			//ANCR 通透CMP增益(携带符号)     range 0.0316(-30dB) - 31.62
+
     volatile u8 ch;					//ANC通道选择 ： ANC_L_CH | ANC_R_CH
-    /*开智能免摘开通透需要开fb*/
-    float ltrans_fbgain;  //ANCL FB通透增益                        range 0.0316(-30dB) - 31.62
-    float rtrans_fbgain;  //ANCR FB通透增益                        range 0.0316(-30dB) - 31.62
-    double *ltrans_fb_coeff;                   //左耳FB通透滤波器
-    double *rtrans_fb_coeff;                   //右耳FB通透滤波器
-    u8 ltrans_fb_yorder;               //LCMP IIR NUM
-    u8 rtrans_fb_yorder;
 
     anc_gain_param_t gains;
 
@@ -567,13 +573,23 @@ typedef struct {
     int (*cfg_online_deal_cb)(u8, anc_gain_t *);
     void (*post_msg_drc)(void);
     void (*post_msg_debug)(void);
-    void (*biquad2ab)(float gain, float f, float fs, float q, double *a0, double *a1, double *a2, double *b0, double *b1, double *b2, int type);
-    void (*pow_adap_fade)(u16 gain);
+    void (*biquad2ab)(float gain, float f, float fs, float q, double *a0, double *a1, double *a2, double *b0, double *b1, double *b2, u8 type);
     void (*mult_gain_set)(u8 gain_id, void *buf, int len);
 
     u8 adt_state;//智能免摘开启状态
 } audio_anc_t;
 
+//ANC场景自适应相关结构体
+struct anc_power_adaptive_cfg {
+    u8 ref_max_lvl;
+    u8 err_max_lvl;
+    int det_time;					//ANC 场景自适应检测时间
+    anc_adap_param_t *ref_param;	//配置前馈自适应参数
+    anc_adap_param_t *err_param;	//配置后馈自适应参数
+    audio_anc_t *param;				//ANC句柄
+    void (*fade_gain_set)(u16 gain);
+    void (*event_cb)(u8 lvl, enum ANC_ADAPTIVE_FADE_EVENT event);
+};
 
 #define ANC_DB_HEAD_LEN		20/*ANC配置区数据头长度*/
 #define ANCIF_GAIN_TAG_01	"ANCGAIN01"
@@ -764,9 +780,6 @@ void audio_anc_debug_cbuf_sel_set(u8 sel);
 
 void audio_anc_debug_extern_trigger(u8 flag);
 
-/*播歌状态下特殊处理API*/
-void audio_anc_mix_process(u8 en);
-
 /*ANC模块复位*/
 void audio_anc_reset(audio_anc_t *param, u8 fade_en);
 
@@ -836,14 +849,20 @@ void anc_adaptive_ff_ref_data_save(u8 *buf, int len);
 
 /*******************ANC增益自适应************************/
 /*ANC自适应初始化*/
-void anc_pow_adap_init(audio_anc_t *param, anc_adap_param_t *ref_p, anc_adap_param_t *err_p, \
-                       u8 ref_max_lvl, u8 err_max_lvl);
+void anc_pow_adap_init(struct anc_power_adaptive_cfg *cfg);
 
 /*ANC自适应启动*/
 void audio_anc_pow_adap_start();
 
 /*ANC自适应关闭*/
 void audio_anc_pow_adap_stop(void);
+
+/*
+   ANC自适应复位：
+   1、恢复默认增益；
+   2、非ANC模式关闭，ANC模式重启
+ */
+void audio_anc_power_adaptive_reset(void);
 
 /*ANC自适应增益切换定时器注册*/
 void anc_pow_adap_fade_timer_add(int ref_lvl, int err_lvl);
@@ -907,6 +926,10 @@ void anc_dma_on_double(u8 out_sel, int *buf, int irq_point);
  */
 void anc_dma_on_double_4ch(u8 ch1_out_sel, u8 ch2_out_sel, int *buf, int irq_point);
 
+/* 注册ANC DMA输出回调函数 */
+void audio_anc_dma_add_output_handler(const char *name, void (*output)(void));
 
+/* 删除ANC DMA输出回调函数 */
+void audio_anc_dma_del_output_handler(const char *name);
 
 #endif/*_ANC_H_*/

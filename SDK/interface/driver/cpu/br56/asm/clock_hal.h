@@ -129,6 +129,8 @@ void xosc_set_bt_cfg(u32 bt_hcs, u32 bt_cls, u32 bt_crs);
 void xosc_set_sys_cfg(u32 sys_hcs, u32 sys_cls, u32 sys_crs);
 void xosc_set_lp_cfg(u32 lp_hcs, u32 lp_cls, u32 lp_crs);
 
+void xosc_set_cap_fine(u32 clsf, u32 crsf);
+
 void clk_set_osc_cap(u8 sel_l, u8 sel_r);
 u32 clk_get_osc_cap();
 u32 get_btosc_info_for_update(void *info);

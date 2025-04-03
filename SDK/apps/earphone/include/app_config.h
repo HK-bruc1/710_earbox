@@ -22,6 +22,13 @@
 #define CONFIG_DEBUG_LITE_ENABLE    0//轻量级打印开关, 默认关闭
 #endif
 
+#if CONFIG_DEBUG_LITE_ENABLE   //轻量级打印配置
+#define TCFG_DEBUG_UART_TX_PIN IO_PORT_DP // 输出IO
+#define TCFG_DEBUG_UART_BAUDRATE 2000000 // 波特率
+#define TCFG_EXCEPTION_LOG_ENABLE 1 // 打印异常信息
+#define TCFG_EXCEPTION_RESET_ENABLE 1 // 异常自动复位
+#endif
+
 #define CONFIG_KEY_SCENE_ENABLE  				  			1      //情景配置中的按键功能配置是否使能
 
 
@@ -67,6 +74,8 @@
 #define    HONOR_EN                 (1 << 13)
 #define    ONLINE_DEBUG_EN          (1 << 14)
 #define    CUSTOM_DEMO_EN           (1 << 15)   // 第三方协议的demo，用于示例客户开发自定义协议
+#define    XIMALAYA_EN              (1 << 16)
+#define    AURACAST_APP_EN          (1 << 17)
 
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 #define THIRD_PARTY_PROTOCOLS_SEL  TCFG_THIRD_PARTY_PROTOCOLS_SEL
@@ -100,7 +109,6 @@
 #error "开启 le audio 功能需要使能 TCFG_USER_BLE_ENABLE"
 #endif
 
-
 #if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)     // rcsp与le audio共用 BLE ACL 时，使用不同地址
@@ -111,6 +119,9 @@
 // #undef TCFG_LOWPOWER_LOWPOWER_SEL
 // #define  TCFG_LOWPOWER_LOWPOWER_SEL 0x0//低功耗连接还有问题
 #endif
+
+
+#define ATT_OVER_EDR_DEMO_EN          0
 
 #define LE_AUDIO_STREAM_ENABLE 	(TCFG_LE_AUDIO_APP_CONFIG)
 
@@ -141,10 +152,22 @@
 #define TCFG_AUDIO_LINEIN_ENABLE   TCFG_APP_LINEIN_EN
 #endif
 
-#if TCFG_APP_PC_EN || TCFG_APP_LINEIN_EN
+#ifndef TCFG_MUSIC_PLAYER_ENABLE
+#define TCFG_MUSIC_PLAYER_ENABLE   TCFG_APP_MUSIC_EN
+#endif
+
+#if TCFG_APP_MUSIC_EN
+#define TCFG_DEV_MANAGER_ENABLE					  			1
+#elif TCFG_APP_PC_EN || TCFG_APP_LINEIN_EN
 #define TCFG_DEV_MANAGER_ENABLE					  			0
 #else
 #define TCFG_DEV_MANAGER_ENABLE					  			0
+#endif
+
+#if TCFG_APP_MUSIC_EN
+#define TCFG_FILE_MANAGER_ENABLE							1
+#else
+#define TCFG_FILE_MANAGER_ENABLE							0
 #endif
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & FMNA_EN)
@@ -159,6 +182,8 @@
 //                          	文件系统相关配置                                   //
 //*********************************************************************************//
 #if (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)
+#define CONFIG_FATFS_ENABLE                                 1
+#elif TCFG_SD0_ENABLE || TCFG_SD1_ENABLE || TCFG_UDISK_ENABLE || TCFG_NOR_FAT
 #define CONFIG_FATFS_ENABLE                                 1
 #else
 #define CONFIG_FATFS_ENABLE                                 0
@@ -212,7 +237,7 @@
 #include "rcsp_cfg.h"
 // 详细功能参考rcsp_cfg.h
 
-#elif ((THIRD_PARTY_PROTOCOLS_SEL & (TME_EN | DMA_EN | GMA_EN)))
+#elif ((THIRD_PARTY_PROTOCOLS_SEL & (TME_EN | DMA_EN | GMA_EN | XIMALAYA_EN)))
 #define    BT_MIC_EN                 1
 #define    TCFG_ENC_SPEEX_ENABLE     0
 #define    OTA_TWS_SAME_TIME_ENABLE  0     //是否支持TWS同步升级
@@ -298,8 +323,8 @@
 #undef  TCFG_IOKEY_ENABLE
 #define TCFG_IOKEY_ENABLE					DISABLE_THIS_MOUDLE
 
-#undef TCFG_TEST_BOX_ENABLE
-#define TCFG_TEST_BOX_ENABLE			    1
+//#undef TCFG_TEST_BOX_ENABLE
+//#define TCFG_TEST_BOX_ENABLE			    0
 
 #undef TCFG_AUTO_POWERON_ENABLE
 #define TCFG_AUTO_POWERON_ENABLE    1
@@ -492,8 +517,13 @@
 
 
 #if TCFG_APP_MUSIC_EN
+#if TCFG_SD0_ENABLE
 #define CONFIG_SD_UPDATE_ENABLE
+#endif
+#if TCFG_USB_HOST_ENABLE && TCFG_UDISK_ENABLE
 #define CONFIG_USB_UPDATE_ENABLE
+#endif
+#define TCFG_DEV_UPDATE_IF_NOFILE_ENABLE   0//0：设备上线直接查找升级文件 1：无音乐文件时才查找升级文件
 #endif
 //*********************************************************************************//
 //                                 Audio配置                                        //
@@ -543,8 +573,15 @@
 
 #define  SYS_VOL_TYPE 	VOL_TYPE_DIGITAL/*目前仅支持软件数字音量模式*/
 
-/*智能免摘，广域点击，风噪检测*/
-#if (TCFG_AUDIO_SPEAK_TO_CHAT_ENABLE || TCFG_AUDIO_WIDE_AREA_TAP_ENABLE || TCFG_AUDIO_ANC_WIND_NOISE_DET_ENABLE)
+#define TCFG_AUDIO_ANC_ENV_NOISE_DET_ENABLE (TCFG_AUDIO_VOLUME_ADAPTIVE_ENABLE | TCFG_AUDIO_ANC_ENV_ADAPTIVE_GAIN_ENABLE)
+
+/*智能免摘，广域点击，风噪检测，实时自适应*/
+#if (TCFG_AUDIO_SPEAK_TO_CHAT_ENABLE || \
+	 TCFG_AUDIO_WIDE_AREA_TAP_ENABLE || \
+	 TCFG_AUDIO_ANC_WIND_NOISE_DET_ENABLE || \
+	 TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE || \
+	 TCFG_AUDIO_ANC_HOWLING_DET_ENABLE || \
+     TCFG_AUDIO_ANC_ENV_NOISE_DET_ENABLE)
 #if TCFG_AUDIO_ANC_TRAIN_MODE != ANC_HYBRID_EN
 #error "ANC智能免摘，广域点击，风噪检测，仅支持ANC HYBRID方案"
 #endif
@@ -621,7 +658,11 @@
 #endif
 
 /*使能iis输出外部参考数据*/
+#if (TCFG_IIS_NODE_ENABLE == 1) && (TCFG_DAC_NODE_ENABLE == 0)
+#define TCFG_AUDIO_CVP_OUTPUT_WAY_IIS_ENABLE    1
+#else
 #define TCFG_AUDIO_CVP_OUTPUT_WAY_IIS_ENABLE    0
+#endif
 
 /*Audio数据导出配置:通过蓝牙spp导出/sd写卡导出/uart写卡导出*/
 #define AUDIO_DATA_EXPORT_VIA_UART	1
@@ -787,6 +828,11 @@
 #if TCFG_AUDIO_HEARING_AID_ENABLE && !TCFG_AUDIO_GLOBAL_SAMPLE_RATE
 #error "开辅听需要固定全局输出采样率"
 #endif
+#if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_JL_UNICAST_SINK_EN)))
+#if ((TCFG_AUDIO_GLOBAL_SAMPLE_RATE % 16000 ) != 0)
+#error "open LE_AUDIO_JL_UNICAST TCFG_AUDIO_GLOBAL_SAMPLE_RATE 需要设置采样率为16k的倍数，方便做变采样给通话算法处理"
+#endif
+#endif
 
 #if (TCFG_AUDIO_CVP_SMS_ANS_MODE + TCFG_AUDIO_CVP_SMS_DNS_MODE \
    + TCFG_AUDIO_CVP_DMS_ANS_MODE + TCFG_AUDIO_CVP_DMS_DNS_MODE \
@@ -905,7 +951,7 @@
 
 #if APP_ONLINE_DEBUG
 #undef THIRD_PARTY_PROTOCOLS_SEL
-#if (TCFG_THIRD_PARTY_PROTOCOLS_ENABLE && (TCFG_THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | CUSTOM_DEMO_EN))) || ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
+#if (TCFG_THIRD_PARTY_PROTOCOLS_ENABLE && (TCFG_THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN))) || ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 #define THIRD_PARTY_PROTOCOLS_SEL  (TCFG_THIRD_PARTY_PROTOCOLS_SEL | ONLINE_DEBUG_EN)
 #else
 #define THIRD_PARTY_PROTOCOLS_SEL  (ONLINE_DEBUG_EN)
@@ -947,6 +993,24 @@
 #define TCFG_CHARGE_CUR_MIN         0//烧写器电流筛选最低值 -- 配置0不使能筛选,根据方案自行配置筛选范围
 #define TCFG_CHARGE_CUR_MAX         0//烧写器电流筛选最高值 -- 配置0不使能筛选,根据方案自行配置筛选范围
 #endif
+
+
+//*********************************************************************************//
+//                    异常记录/离线log配置                                      //
+//*********************************************************************************//
+#define TCFG_CONFIG_DEBUG_RECORD_ENABLE    0
+
+// #if !TCFG_DEBUG_UART_ENABLE
+#define TCFG_DEBUG_DLOG_ENABLE             0      // 离线log功能
+#define TCFG_DEBUG_DLOG_FLASH_SEL          0      // 选择log保存到内置flash还是外置flash; 0:内置flash; 1:外置flash
+#define TCFG_DEBUG_DLOG_RESET_ERASE        0      // 开机擦除flash的log数据
+#define TCFG_DEBUG_DLOG_AUTO_FLUSH_TIMEOUT (30)   // 主动刷新的超时时间(当指定时间没有刷新过缓存数据到flash, 则主动刷新)(单位秒)
+// #endif
+
+//*********************************************************************************//
+//                    关中断时间过长函数追踪配置                                      //
+//*********************************************************************************//
+#define TCFG_IRQ_TIME_DEBUG_ENABLE  0  //用于开启查找中断时间过久的函数功能,打印函数的rets和trance:"irq disable overlimit:"
 
 #ifndef __LD__
 #include "bt_profile_cfg.h"

@@ -57,7 +57,7 @@ typedef enum {
     BLE_CMD_SET_HCI_CFG,
     BLE_CMD_SCAN_ENABLE2,
     BLE_CMD_ATT_SERVER_REQ_RESUME,
-
+    BLE_CMD_EXT_SCAN_SET_PRIORITY,
     //MULTI API,多机接口
     BLE_CMD_MULTI_ATT_SEND_INIT,
     BLE_CMD_MULTI_ATT_SET_CONN_HANDLE,
@@ -857,6 +857,21 @@ void lib_make_ble_address(u8 *ble_address, u8 *edr_address);
 #define ble_op_ext_create_conn(conn_param,param_len)     \
     ble_user_cmd_prepare(BLE_CMD_EXT_CREATE_CONN, 2, conn_param, param_len)
 
+/*************************************************************************************************/
+/*!
+ *  \brief      EXT SCAN设置优先级.
+ *
+ *  \function   ble_cmd_ret_e ble_op_ext_scan_set_priority(u8 priority).
+ *
+ *  \param      [in] priority  优先级
+ *
+ *  \return     see ble_cmd_ret_e.
+ */
+/*************************************************************************************************/
+/* ble_cmd_ret_e ble_op_ext_scan_set_priority(u8 priority) */
+#define ble_op_ext_scan_set_priority(priority)     \
+    ble_user_cmd_prepare(BLE_CMD_EXT_SCAN_SET_PRIORITY, 1, (int)priority)
+
 
 /*************************************************************************************************/
 /*!
@@ -1383,7 +1398,7 @@ int att_server_change_profile(u8 const *profile_data);
 void ble_vendor_set_tx_power(u8 level);
 
 
-
+void update_list_local_addr(u8 *old_local_addr, u8 *new_local_addr);
 
 
 

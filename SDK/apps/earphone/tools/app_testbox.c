@@ -282,7 +282,6 @@ static void app_testbox_update_event_handle(u8 *data, u16 size)
     if (get_vm_ram_storage_enable() || get_vm_ram_storage_in_irq_enable()) {
         vm_flush2flash(1);
     }
-    dlog_flush2flash();
 #if (defined CONFIG_CPU_BR50) || (defined CONFIG_CPU_BR52) || (defined CONFIG_CPU_BR56) // 耳机目前仅支持br50\br52
 
     /* if ((size >= 1) && (data[0])) { */

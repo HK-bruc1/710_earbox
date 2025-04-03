@@ -117,6 +117,9 @@ stereo_widener_node_adapter
 linein_file_plug
 #endif
 
+#if TCFG_APP_MUSIC_EN
+music_file_plug
+#endif
 
 #if TCFG_ENERGY_DETECT_NODE_ENABLE
 energy_detect_node_adapter
@@ -203,6 +206,18 @@ mp3_dec_plug
 
 #if TCFG_DEC_WMA_ENABLE || TCFG_TONE_WMA_ENABLE
 wma_dec_plug
+#endif
+
+#if TCFG_DEC_FLAC_ENABLE
+flac_dec_plug
+#endif
+
+#if TCFG_DEC_M4A_ENABLE
+m4a_dec_plug
+#endif
+
+#if TCFG_DEC_APE_ENABLE
+ape_dec_plug
 #endif
 
 #if CONFIG_FATFS_ENABLE
@@ -443,22 +458,6 @@ debug_system_record
 debug_task_record
 #endif
 
-#if TCFG_MULTI_CH_IIS_RX_NODE_ENABLE
-mulit_ch_iis0_file_plug
-mulit_ch_iis1_file_plug
-#endif
-
-#if TCFG_MULTI_CH_IIS_NODE_ENABLE
-multi_ch_iis0_node_adapter
-multi_ch_iis1_node_adapter
-#endif
-
-#if TCFG_IIS_NODE_ENABLE
-iis_node_adapter
-iis1_node_adapter
-iis_file_plug
-iis1_file_plug
-#endif
 
 #if TCFG_SIGNAL_GENERATOR_NODE_ENABLE
 signal_generator_file_plug
@@ -512,3 +511,17 @@ chorus_advance_node_adapter
 pingpong_echo_node_adapter
 #endif
 
+#if TCFG_STEREO_SPATIAL_WIDER_NODE_ENABLE
+stereo_spatial_wider_node_adapter
+#endif
+
+#if TCFG_DISTORTION_CLIPPING_NODE_ENABLE
+distortion_clipping_node_adapter
+#endif
+
+#if TCFG_FREQUENCY_COMPRESSOR_NODE_ENABLE
+frequency_compressor_node_adapter
+#endif
+#if TCFG_SPATIAL_ADV_NODE_ENABLE
+spatial_adv_node_adapter
+#endif

@@ -852,7 +852,7 @@ void tuya_ble_app_init(void)
         memcpy(device_param.device_id, (void *)device_id_test, DEVICE_ID_LEN);
         memcpy(device_param.mac_addr.addr, mac_test, 6);
 #else
-        uint8_t read_buf[16 + 32 + 6 + 1] = {0};
+        uint8_t read_buf[16 + 32 + 12 + 1] = {0};
         flash_ret = read_tuya_product_info_from_flash(read_buf, sizeof(read_buf));
         if (flash_ret == TRUE) {
             uint8_t mac_data[6];

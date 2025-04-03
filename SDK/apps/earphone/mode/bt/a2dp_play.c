@@ -14,6 +14,10 @@
 #include "audio_manager.h"
 #include "clock_manager/clock_manager.h"
 #include "dac_node.h"
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#include "le_audio_player.h"
+#include "app_le_auracast.h"
+#endif
 
 #if TCFG_BT_DUAL_CONN_ENABLE == 0
 
@@ -170,6 +174,11 @@ static int a2dp_bt_status_event_handler(int *event)
         if (app_var.goto_poweroff_flag) {
             break;
         }
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+        if (le_audio_player_is_playing()) {
+            le_auracast_stop();
+        }
+#endif
         dac_try_power_on_thread();//dac初始化耗时有120ms,此处提前将dac指定到独立任务内做初始化，优化蓝牙通路启动的耗时，减少时间戳超时的情况
         if (tws_api_get_role() == TWS_ROLE_MASTER &&
             bt_get_call_status_for_addr(bt->args) == BT_CALL_INCOMING) {

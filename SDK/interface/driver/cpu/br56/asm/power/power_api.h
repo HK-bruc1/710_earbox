@@ -64,6 +64,11 @@ struct _power_pdata {
 //
 //
 //******************************************************************
+enum DCDC_L {
+    DCDC_L_4p7uH,
+    DCDC_L_10uH,
+};
+
 enum VDDIO_KEEP_TYPE {
     VDDIO_KEEP_TYPE_NULL,			//vddiow使用配置值
     VDDIO_KEEP_TYPE_NORMAL,		    //vddiow使用配置值使用vddiom挡位，即vddiom_lev

@@ -114,6 +114,9 @@ int adda_loop_player_open()
     player->stream = jlstream_pipeline_parse(uuid, NODE_UUID_ADC);
 
     if (!player->stream) {
+        player->stream = jlstream_pipeline_parse(uuid, NODE_UUID_IIS0_RX);
+    }
+    if (!player->stream) {
         err = -ENOMEM;
         goto __exit0;
     }

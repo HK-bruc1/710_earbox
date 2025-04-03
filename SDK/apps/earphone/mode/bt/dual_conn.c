@@ -67,7 +67,7 @@ static void auto_close_page_scan(void *p)
     lmp_hci_write_scan_enable((0 << 1) | 0);
 }
 
-static void write_scan_conn_enable(bool scan_enable, bool conn_enable)
+void write_scan_conn_enable(bool scan_enable, bool conn_enable)
 {
     u32 rets_addr = 0;
     __asm__ volatile("%0 = rets ;" : "=r"(rets_addr));
@@ -90,6 +90,8 @@ static void write_scan_conn_enable(bool scan_enable, bool conn_enable)
         scan_enable = 0;
         conn_enable = 0;
     }
+    r_printf("write_scan_conn_enable=%d,%d\n", scan_enable, conn_enable);
+
     r_printf("write_scan_conn_enable=%d,%d\n", scan_enable, conn_enable);
 
     lmp_hci_write_scan_enable((conn_enable << 1) | scan_enable);
@@ -403,11 +405,11 @@ static int dual_conn_btstack_event_handler(int *_event)
             }
             g_dual_conn.device_num_recorded++;
         }
-#if TCFG_BT_DUAL_CONN_ENABLE
-        write_scan_conn_enable(0, 1);
-#else
-        write_scan_conn_enable(0, 0);
-#endif
+        if (get_bt_dual_config() == DUAL_CONN_CLOSE) {
+            write_scan_conn_enable(0, 0);
+        } else {
+            write_scan_conn_enable(0, 1);
+        }
         break;
 #if TCFG_BT_DUAL_CONN_ENABLE
     case BT_STATUS_SECOND_CONNECTED:
