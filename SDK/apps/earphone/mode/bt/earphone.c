@@ -129,7 +129,7 @@ extern void clr_device_in_page_list();
 #define EDGE_SLECT_POART_OPEN  {JL_PORTC->DIR &= ~BIT(7);JL_PORTC->SPL |= BIT(7);}
 #define EDGE_SLECT_POART_CLOSE {JL_PORTC->DIR |= BIT(7);JL_PORTC->SPL &= ~BIT(7);}
 
-#elif defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56)//JL709 or JL710
+#elif defined(CONFIG_CPU_BR52)//JL709 or JL710
 
 #define OPTIMIZATION_CONN_NOISE    1//回连噪声优化,默认开启
 #define BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT//不需要io
