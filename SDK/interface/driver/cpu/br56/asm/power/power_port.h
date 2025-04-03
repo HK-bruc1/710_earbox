@@ -127,7 +127,7 @@
 
 #define		PINR_DEFAULT_IO IO_PORTB_01
 
-#define		MCLR_PORT		IO_PORTB_02
+#define		MCLR_PORT		IO_PORTC_07
 
 #define		LVD_PORT		IO_PORTB_07
 

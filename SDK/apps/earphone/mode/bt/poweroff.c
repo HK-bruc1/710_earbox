@@ -19,7 +19,6 @@
 #include "poweroff.h"
 #include "bt_background.h"
 #include "usb/otg.h"
-#include "btstack/le/le_user.h"
 #if TCFG_AUDIO_ANC_ENABLE
 #include "audio_anc.h"
 #endif

@@ -184,8 +184,7 @@ void audio_dac_initcall(void)
     dac_data.hpvdd_sel = audio_dac_hpvdd_check();
     dac_data.bit_width = audio_general_out_dev_bit_width();
     audio_dac_init(&dac_hdl, &dac_data);
-    //dac_hdl.ng.threshold = 4;			//DAC底噪优化阈值
-    //dac_hdl.ng.detect_interval = 200;	//DAC底噪优化检测间隔ms
+    /* dac_hdl.ng_threshold = 4; //dac底噪优化阈值 */
 
     //ANC & DAC_CIC时钟分配参数设置在audio_common_init & audio_dac_init之后
 #if TCFG_AUDIO_ANC_ENABLE
@@ -505,34 +504,7 @@ void audio_adda_dump(void) //打印所有的dac,adc寄存器
 /*音频模块配置跟踪*/
 void audio_config_dump()
 {
-    u8 dac_bit_width = ((JL_AUDDAC->DAC_CON0 & BIT(20)) ? 24 : 16);
-    u8 adc_bit_width = ((JL_AUDADC->ADC_CON0 & BIT(20)) ? 24 : 16);
-    int dac_dgain_max = 16384;
-    int dac_again_max = 7;
-    int mic_gain_max = 5;
-    u8 dac_dcc = (JL_AUDDAC->DAC_CON0 >> 12) & 0xF;
-    u8 mic0_dcc = (JL_AUDADC->ADC_CON1 >> 12) & 0xF;
-    u8 mic1_dcc = (JL_AUDADC->ADC_CON1 >> 16) & 0xF;
-
-    u8 dac_again_l = (JL_ADDA->DAA_CON1 >> 1) & 0x7;
-    u8 dac_again_r = (JL_ADDA->DAA_CON2 >> 1) & 0x7;
-    u32 dac_dgain_l = JL_AUDDAC->DAC_VL0 & 0xFFFF;
-    u32 dac_dgain_r = (JL_AUDDAC->DAC_VL0 >> 16) & 0xFFFF;
-    u8 mic0_0_6 = (JL_ADDA->ADA_CON2 >> 14) & 0x1;
-    u8 mic1_0_6 = (JL_ADDA->ADA_CON3 >> 14) & 0x1;
-    u8 mic0_0_3 = (JL_ADDA->ADA_CON2 >> 13) & 0x1;
-    u8 mic1_0_3 = (JL_ADDA->ADA_CON3 >> 13) & 0x1;
-    u8 mic0_gain = (JL_ADDA->ADA_CON2 >> 10) & 0x7;
-    u8 mic1_gain = (JL_ADDA->ADA_CON3 >> 10) & 0x7;
-    int dac_sr = audio_dac_get_sample_rate_base_reg();
-    int adc_sr = audio_adc_mic_get_sample_rate();
-
-    printf("[ADC]BitWidth:%d,DCC:%d,%d,SR:%d\n", adc_bit_width, mic0_dcc, mic1_dcc, adc_sr);
-    printf("[ADC]Gain(Max:%d):%d,%d,N3dB:%d,%d,N6dB:%d,%d\n", mic_gain_max, mic0_gain, mic1_gain, \
-           mic0_0_3, mic1_0_3, mic0_0_6, mic1_0_6);
-
-    printf("[DAC]BitWidth:%d,DCC:%d,SR:%d\n", dac_bit_width, dac_dcc, dac_sr);
-    printf("[DAC]AGain(Max:%d):%d,%d,DGain(Max:%d):%d,%d\n", dac_again_max, dac_again_l, dac_again_r, \
-           dac_dgain_max, dac_dgain_l, dac_dgain_r);
+#if 0
+#endif
 }
 

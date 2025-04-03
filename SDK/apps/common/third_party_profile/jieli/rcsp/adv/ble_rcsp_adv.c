@@ -70,8 +70,7 @@
 #define VER_FLAG_IOS_BLE_LINK_BREDR				BIT(1) // ios一次连接
 
 #if 1
-/* #define log_info(x, ...)       printf("[BLE-RCSP-ADV]" x " ", ## __VA_ARGS__) */
-#define log_info               printf
+#define log_info(x, ...)       printf("[BLE-RCSP-ADV]" x " ", ## __VA_ARGS__)
 #define log_info_hexdump       put_buf
 #else
 #define log_info(...)

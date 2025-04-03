@@ -10,7 +10,7 @@
 #include "jlstream.h"
 #include "iis_file.h"
 #include "app_config.h"
-#include "media/audio_iis.h"
+#include "audio_dai/audio_iis.h"
 #include "sync/audio_clk_sync.h"
 #include "gpio.h"
 #include "audio_config.h"
@@ -73,6 +73,11 @@ struct iis_file_hdl {
 
 };
 
+__attribute__((weak))
+u32 audio_iis_get_timestamp(u32 module_idx, u8 ch_idx)
+{
+    return audio_jiffies_usec();
+}
 /*
  * 24bit转32bit，处理符号位
  * bit23如果是1，高8位补1;如果是0，高8位补0*/
@@ -151,7 +156,7 @@ static void iis_rx_handle(void *priv, void *buf, int len)
     }
     frame->len          = len;
     frame->flags        = FRAME_FLAG_TIMESTAMP_ENABLE | FRAME_FLAG_PERIOD_SAMPLE | FRAME_FLAG_UPDATE_TIMESTAMP;
-    frame->timestamp    = audio_jiffies_usec() * TIMESTAMP_US_DENOMINATOR;
+    frame->timestamp    = audio_iis_get_timestamp(hdl->module_idx, hdl->ch_idx) * TIMESTAMP_US_DENOMINATOR;
     memcpy(frame->data, buf, frame->len);
 
     iis_file_fade_in(hdl, frame->data, frame->len);//淡入处理
@@ -256,7 +261,7 @@ void iis_rx_init(struct iis_file_hdl *hdl)
     if (!iis_hdl[hdl->module_idx]) {
         struct alink_param params = {0};
         params.module_idx = hdl->module_idx;
-        params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, IIS_CH_NUM, AUDIO_DAC_MAX_SAMPLE_RATE);
+        params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, IIS_CH_NUM);
         params.sr         = hdl->sample_rate;
         params.bit_width  = hdl->bit_width;
         params.fixed_pns  = const_out_dev_pns_time_ms;

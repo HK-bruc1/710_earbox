@@ -2,7 +2,7 @@
 #define __AUDIO_GAIN_PORCESS__H
 
 #include "generic/typedef.h"
-#include "effects/gain_mix_api.h"
+
 #ifndef RUN_NORMAL
 #define RUN_NORMAL  0
 #endif

@@ -141,13 +141,6 @@ int gpadc_battery_init();
 
 
 
-/**
- * @brief gpadc_get_ntc_temperature
- *
- * @return 芯片内置的ntc温度
- */
-s32 gpadc_get_ntc_temperature();
-
 
 
 
@@ -207,27 +200,6 @@ void adc_resume();
 // br56----gpadc_hw_v11
 
 
-
-#include "spinlock.h"
-#if CPU_CORE_NUM > 1
-
-#define gpadc_spin_lock(lock) \
-	do { \
-		q32DSP_testset(lock);\
-	}while(0)
-
-#define gpadc_spin_unlock(lock) \
-	do{ \
-		q32DSP_testclr(lock) ;\
-	}while(0)
-
-#else
-
-#define gpadc_spin_lock(lock)
-
-#define gpadc_spin_unlock(lock)
-
-#endif
 
 
 #endif

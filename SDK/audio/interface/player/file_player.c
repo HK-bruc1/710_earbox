@@ -20,7 +20,7 @@
 #include "effects/audio_vbass.h"
 #include "framework/include/decoder_node.h"
 
-#if TCFG_MUSIC_PLAYER_ENABLE
+#if TCFG_APP_MUSIC_EN
 
 struct music_file_player_hdl {
     u8 player_id ;

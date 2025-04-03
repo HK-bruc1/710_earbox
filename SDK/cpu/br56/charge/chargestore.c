@@ -20,13 +20,13 @@
 struct chargestore_handle {
     const struct chargestore_platform_data *data;
     s32 udev;
-    u32 dma_len;
-    u8 *uart_rx_buf;
-    u8 *uart_dma_buf;
 };
 
+#define DMA_BUF_LEN 544
 #define __this  (&hdl)
 static struct chargestore_handle hdl;
+u8 uart_rx_buf[DMA_BUF_LEN] __attribute__((aligned(4)));
+u8 uart_dma_buf[DMA_BUF_LEN] __attribute__((aligned(4)));
 
 enum {
     UPGRADE_NULL = 0,
@@ -95,10 +95,10 @@ static void chargestore_uart_isr_cb(uart_dev uart_num, enum uart_event event)
         }
         chargestore_data_deal(CMD_COMPLETE, NULL, 0);
     } else if (event == UART_EVENT_RX_TIMEOUT) {
-        rx_len = uart_recv_bytes(__this->udev, __this->uart_rx_buf, __this->dma_len);
+        rx_len = uart_recv_bytes(__this->udev, uart_rx_buf, DMA_BUF_LEN);
         if (rx_len > 0) {
-            chargestore_data_deal(CMD_RECVDATA, __this->uart_rx_buf, rx_len);
-            chargestore_uart_data_deal(__this->uart_rx_buf, rx_len);
+            chargestore_data_deal(CMD_RECVDATA, uart_rx_buf, rx_len);
+            chargestore_uart_data_deal(uart_rx_buf, rx_len);
         }
     }
 }
@@ -147,21 +147,15 @@ void chargestore_open(u8 mode)
     if (__this->data->io_port == IO_PORT_LDOIN) {
         gpio_set_mode(IO_PORT_SPILT(__this->data->io_port), PORT_INPUT_FLOATING);
     }
-
-    __this->uart_rx_buf = malloc(__this->dma_len);
-    ASSERT(__this->uart_rx_buf != NULL);
-    __this->uart_dma_buf = dma_malloc(__this->dma_len);
-    ASSERT(__this->uart_dma_buf != NULL);
-
-    //确保2byte的时间
+    //确保2byte时间
     uart_timeout = 25 * 1000000 / __this->data->baudrate;//us
     dma.rx_timeout_thresh = uart_timeout;
-    dma.frame_size = __this->dma_len;
+    dma.frame_size = DMA_BUF_LEN;
     dma.event_mask = UART_EVENT_RX_DATA | UART_EVENT_RX_TIMEOUT | UART_EVENT_TX_DONE;
     dma.irq_priority = 2;
     dma.irq_callback = chargestore_uart_isr_cb;
-    dma.rx_cbuffer = __this->uart_dma_buf;
-    dma.rx_cbuffer_size = __this->dma_len;
+    dma.rx_cbuffer = uart_dma_buf;
+    dma.rx_cbuffer_size = DMA_BUF_LEN;
     ret = uart_dma_init(__this->udev, &dma);
     if (ret < 0) {
         goto __err_exit;
@@ -174,14 +168,6 @@ __err_exit:
         uart_deinit(__this->udev);
     }
     __this->udev = -1;
-    if (__this->uart_rx_buf) {
-        free(__this->uart_rx_buf);
-        __this->uart_rx_buf = NULL;
-    }
-    if (__this->uart_dma_buf) {
-        dma_free(__this->uart_dma_buf);
-        __this->uart_dma_buf = NULL;
-    }
 }
 
 void chargestore_close(void)
@@ -194,24 +180,6 @@ void chargestore_close(void)
 #if (TCFG_CHARGE_ENABLE && (TCFG_CHARGESTORE_PORT == IO_PORT_LDOIN))
     charge_set_ldo5v_detect_stop(0);
 #endif
-    if (__this->uart_rx_buf) {
-        free(__this->uart_rx_buf);
-        __this->uart_rx_buf = NULL;
-    }
-    if (__this->uart_dma_buf) {
-        dma_free(__this->uart_dma_buf);
-        __this->uart_dma_buf = NULL;
-    }
-}
-
-void chargestore_set_buffer_len(u32 lenght)
-{
-    if (((lenght + 32) == __this->dma_len) || (lenght > 512)) {
-        return;
-    }
-    __this->dma_len = lenght + 32;
-    chargestore_close();
-    chargestore_open(MODE_RECVDATA);
 }
 
 void chargestore_set_baudrate(u32 baudrate)
@@ -233,7 +201,6 @@ void chargestore_init(const struct chargestore_platform_data *data)
     __this->data = (struct chargestore_platform_data *)data;
     ASSERT(data);
     __this->udev = -1;
-    __this->dma_len = 64;
 }
 
 #endif

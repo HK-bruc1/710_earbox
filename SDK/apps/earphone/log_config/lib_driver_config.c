@@ -78,7 +78,6 @@ const u8 lib_gptimer_timer_mode_en = 1; //gptimer timer功能使能
 const u8 lib_gptimer_pwm_mode_en = 1; //gptimer pwm功能使能
 const u8 lib_gptimer_capture_mode_en = 1; //gptimer capture功能使能
 const u8 lib_gptimer_auto_tid_en = 1; //gptimer_tid 内部自动分配使能
-const u8 lib_gptimer_extern_use = GPTIMER_EXTERN_USE; //gptimer 模块外部已经占用, bit0=1表示timer0 外部占用，以此类推
 
 const u32 lib_config_uart_flow_enable = 1;
 
@@ -88,11 +87,8 @@ const u32 lib_config_uart_flow_enable = 1;
 #define     AUTH_sdk_chip_key    (1<<2)   //SDK秘钥校验
 
 //需要对应的功能，就或上对应的宏定义，支持多种鉴权同时打开
-#if (defined(TCFG_BURNER_CURRENT_CALIBRATION) && TCFG_BURNER_CURRENT_CALIBRATION)
-const u32 lib_config_enable_auth_check = 0b0000 | AUTH_multi_algorithm;
-#else
 const u32 lib_config_enable_auth_check = 0b0000;
-#endif
+
 /**
  * @brief Log (Verbose/Info/Debug/Warn/Error)
  */
@@ -287,12 +283,6 @@ const char log_tag_const_d_EXTI  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_w_EXTI  = CONFIG_DEBUG_LIB(TRUE);
 const char log_tag_const_e_EXTI  = CONFIG_DEBUG_LIB(TRUE);
 
-const char log_tag_const_v_GPIO  = CONFIG_DEBUG_LIB(FALSE);
-const char log_tag_const_i_GPIO  = CONFIG_DEBUG_LIB(FALSE);
-const char log_tag_const_d_GPIO  = CONFIG_DEBUG_LIB(FALSE);
-const char log_tag_const_w_GPIO  = CONFIG_DEBUG_LIB(FALSE);
-const char log_tag_const_e_GPIO  = CONFIG_DEBUG_LIB(TRUE);
-
 const char log_tag_const_v_GPTIMER  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_i_GPTIMER  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_d_GPTIMER  = CONFIG_DEBUG_LIB(FALSE);
@@ -310,4 +300,3 @@ const char log_tag_const_i_GPADC  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_d_GPADC  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_w_GPADC  = CONFIG_DEBUG_LIB(FALSE);
 const char log_tag_const_e_GPADC  = CONFIG_DEBUG_LIB(TRUE);
-

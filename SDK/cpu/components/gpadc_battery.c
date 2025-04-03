@@ -32,7 +32,7 @@ u32 get_vddiom_voltage()
 _WEAK_
 u32 efuse_get_vbat_3700()
 {
-    u32 vddiom_vol = 2800;
+    u32 vddiom_vol = get_vddiom_voltage();
     u32 adc_value_max = BIT(adc_data_res) - 1;
     u32 voltage = 3700 / AD_CH_PMU_VBAT_DIV;
 
@@ -99,7 +99,7 @@ static u32 gpadc_battery_get_vbat_voltage()
     int sum_v = adc_get_value_blocking_filter_dma(AD_CH_PMU_VBAT, NULL, BATTERY_SAMPLE_TIMES);
 
     int K = efuse_get_vbat_3700();
-    int Dg = get_vddiom_vol() - 2800; //当前IOVDD档位-2800
+    int Dg = get_vddiom_voltage() - 2800; //当前IOVDD档位-2800
     int V = 3700.0f * sum_v / K + (Dg * sum_v * 1.0f / 4096);
     /* printf("voltage:%dmv, value:%d, Dg:%d, K:%d\n", V, sum_v, Dg, K); */
     return (u32)V;
@@ -160,5 +160,5 @@ u32 gpadc_battery_get_voltage()
     }
 }
 
-/* #include "init.h" */
-/* platform_initcall(gpadc_battery_init); */
+#include "init.h"
+platform_initcall(gpadc_battery_init);

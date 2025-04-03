@@ -32,9 +32,6 @@
 
 #if TCFG_USER_TWS_ENABLE
 #include "bt_tws.h"
-#include "tws_dual_conn.h"
-#else
-#include "dual_conn.h"
 #endif
 
 #if TCFG_UI_ENABLE
@@ -648,6 +645,7 @@ static void update_common_state_cbk(update_mode_info_t *info, u32 state, void *p
         if (get_vm_ram_storage_enable() || get_vm_ram_storage_in_irq_enable()) {
             vm_flush2flash(1);
         }
+        dlog_flush2flash();
 
         memset((u8 *)&succ_report, 0x00, sizeof(succ_report_t));
         update_init_common_handle(info->type);
@@ -667,7 +665,6 @@ static void update_common_state_cbk(update_mode_info_t *info, u32 state, void *p
     switch (state) {
     case UPDATE_CH_EXIT:
         update_exit_common_handle(info->type, priv);
-        dlog_flush2flash(100);
         break;
     }
 }

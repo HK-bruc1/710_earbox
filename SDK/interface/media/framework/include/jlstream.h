@@ -129,10 +129,8 @@ enum stream_event {
 
     STREAM_EVENT_GET_SWITCH_CALLBACK,
     STREAM_EVENT_GET_MERGER_CALLBACK,
-    STREAM_EVENT_GET_SPATIAL_ADV_CALLBACK,
 
     STREAM_EVENT_GLOBAL_PAUSE,
-    STREAM_EVENT_GET_NOISEGATE_CALLBACK,
 };
 
 enum stream_scene : u8 {
@@ -358,6 +356,9 @@ struct stream_thread {
     u8 id;
     u8 debug;
     u8 start;
+    u32 start_usec;
+    u32 run_usec;
+    u32 begin_msec;
     char name[16];
     OS_SEM sem;
     OS_MUTEX mutex;
@@ -476,8 +477,8 @@ enum {
 
 struct stream_note {
 
-    u8 input_empty_check;
-    u16 output_time;
+    u8 output_time;
+    u8 output_start;
     enum stream_node_state state;
 
     int delay;
@@ -506,6 +507,7 @@ struct jlstream {
     u8 incr_sys_clk;
     u8 thread_run;
     u8 thread_num;
+    u16 output_time;
     u8 thread_policy_step;
     enum stream_state state;
     enum stream_state pp_state;
@@ -517,13 +519,11 @@ struct jlstream {
     u16 thread_timer;
     enum stream_scene scene;
 
-    u16 output_time;
-    u16 run_time;
-    u32 begin_usec;
-    u32 first_start_usec;
-
     u32 end_jiffies;
     u32 coding_type;
+#if STREAM_NODE_RUN_TIMER_DEBUG_EN
+    u32 run_usec;
+#endif
 
     struct stream_snode *snode;
 

@@ -98,16 +98,15 @@
 #endif
 
 [EXTRA_CFG_PARAM]
-OTP_CFG_SIZE = 256
 #if CONFIG_DOUBLE_BANK_ENABLE
-               BR22_TWS_DB = YES;	//dual bank flash framework enable
+BR22_TWS_DB = YES;	//dual bank flash framework enable
 FLASH_SIZE = CONFIG_FLASH_SIZE;		//flash_size cfg
 BR22_TWS_VERSION = 0; //default fw version
 #if CONFIG_DB_UPDATE_DATA_GENERATE_EN
 DB_UPDATE_DATA = YES; //generate db_update_data.bin
 #endif
 #else
-               NEW_FLASH_FS = YES;	//enable single bank flash framework
+NEW_FLASH_FS = YES;	//enable single bank flash framework
 #endif 				//CONFIG_DOUBLE_BANK_ENABLE
 
 FORCE_4K_ALIGN = YES; // force aligin with 4k bytes
@@ -468,9 +467,6 @@ ANCIF1_LEN = CONFIG_ANCIF1_LEN;
 ANCIF1_OPT = CONFIG_ANCIF1_OPT;
 /*******************非用户配置区**********************/
 #endif/*CONFIG_ANC_ENABLE*/
-
-[BURNER_PASSTHROUGH_CFG]
-FLASH_WRITE_PROTECT = YES;
 
 [BURNER_CONFIG]
 SIZE = CONFIG_BURNER_INFO_SIZE;

@@ -71,7 +71,6 @@ static void app_idle_enter_softoff(void)
 
     dac_power_off();    // 关机前先关dac
 
-    dlog_flush2flash(100);
     power_set_soft_poweroff();
 }
 
@@ -96,6 +95,7 @@ static int idle_mode_enter(int param)
             if (get_vm_ram_storage_enable() || get_vm_ram_storage_in_irq_enable()) {
                 vm_flush2flash(1);
             }
+            dlog_flush2flash();
             os_taskq_flush();
             int ret = play_tone_file_callback(get_tone_files()->power_off, NULL,
                                               app_power_off_tone_cb);
@@ -114,6 +114,7 @@ static int idle_mode_enter(int param)
             if (get_vm_ram_storage_enable() || get_vm_ram_storage_in_irq_enable()) {
                 vm_flush2flash(1);
             }
+            dlog_flush2flash();
             os_taskq_flush();
             app_send_message(APP_MSG_SOFT_POWEROFF, 0);
         }

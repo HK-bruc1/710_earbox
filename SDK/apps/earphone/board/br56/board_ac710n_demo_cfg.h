@@ -397,6 +397,9 @@
 #define TCFG_WTS_TONE_MIX_ENABLE			ENABLE
 
 
+/*加密文件播放*/
+#define TCFG_DEC_DECRYPT_ENABLE				DISABLE
+#define TCFG_DEC_DECRYPT_KEY				(0x12345678)
 
 
 //*********************************************************************************//

@@ -57,8 +57,8 @@ void power_early_flowing()
 
     printf("get_boot_rom(): %d", get_boot_rom());
 
-    // 默认不关闭长按复位,烧录工具在efuse的长按复位配置才有效，key_driver的长按复位如果配置了就会覆盖efuse的长按复位配置
-    // gpio_longpress_pin0_reset_config(IO_PORTA_03, 0, 0, 1, PORT_KEEP_STATE, 0);
+    // 默认关闭长按复位0，由key_driver配置
+    gpio_longpress_pin0_reset_config(IO_PORTA_03, 0, 0, 1, PORT_KEEP_STATE);
     //长按复位1默认配置8s，写保护
 #if TCFG_CHARGE_ENABLE
     gpio_longpress_pin1_reset_config(IO_LDOIN_DET, 1, 8, 1);

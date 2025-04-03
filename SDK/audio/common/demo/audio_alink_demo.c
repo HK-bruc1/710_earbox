@@ -14,7 +14,7 @@
  *				  复制再修改
  ****************************************************************************
  */
-#include "asm/audio_link.h"
+#include "audio_link.h"
 #include "media/includes.h"
 #include "audio_config.h"
 
@@ -86,7 +86,8 @@ ALINK_PARM	alink0_demo = {
     .mode = ALINK_MD_BASIC,
     .role = ALINK_ROLE_MASTER,
     .clk_mode = ALINK_CLK_FALL_UPDATE_RAISE_SAMPLE,
-    .bitwide = ALINK_BW_16BIT,
+    .bitwide = ALINK_LEN_16BIT,
+    .sclk_per_frame = ALINK_FRAME_32SCLK,
     .dma_len = 256 * 2 * 2 * 2,
     .sample_rate = ALINK_SR_48000,
     .buf_mode = ALINK_BUF_DUAL,
@@ -109,8 +110,7 @@ struct alnk_hw_ch hw_ch0_tx_cfg = {
     .dir = ALINK_DIR_TX,
     .isr_cb = ch0_tx_handle,
     .private_data = NULL,
-#if (CONFIG_CPU_BR28 || CONFIG_CPU_BR27 || CONFIG_CPU_BR36 || CONFIG_CPU_BR29)
-#else
+#if (defined(CONFIG_CPU_BR50) || defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56))
     .ch_mode = ALINK_CH_MD_BASIC_IIS
 #endif
 };
@@ -125,8 +125,7 @@ struct alnk_hw_ch hw_ch1_rx_cfg = {
     .dir = ALINK_DIR_RX,
     .isr_cb = ch1_rx_handle,
     .private_data = NULL,
-#if (CONFIG_CPU_BR28 || CONFIG_CPU_BR27 || CONFIG_CPU_BR36 || CONFIG_CPU_BR29)
-#else
+#if (defined(CONFIG_CPU_BR50) || defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56))
     .ch_mode = ALINK_CH_MD_BASIC_IIS
 #endif
 };
@@ -141,8 +140,7 @@ struct alnk_hw_ch hw_ch2_rx_cfg = {
     .dir = ALINK_DIR_RX,
     .isr_cb = ch2_rx_handle,
     .private_data = NULL,
-#if (CONFIG_CPU_BR28 || CONFIG_CPU_BR27 || CONFIG_CPU_BR36 || CONFIG_CPU_BR29)
-#else
+#if (defined(CONFIG_CPU_BR50) || defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56))
     .ch_mode = ALINK_CH_MD_BASIC_IIS
 #endif
 };
@@ -158,8 +156,7 @@ struct alnk_hw_ch hw_ch3_tx_cfg = {
     .dir = ALINK_DIR_TX,
     .isr_cb = ch3_tx_handle,
     .private_data = NULL,
-#if (CONFIG_CPU_BR28 || CONFIG_CPU_BR27 || CONFIG_CPU_BR36 || CONFIG_CPU_BR29)
-#else
+#if (defined(CONFIG_CPU_BR50) || defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56))
     .ch_mode = ALINK_CH_MD_BASIC_IIS
 #endif
 };

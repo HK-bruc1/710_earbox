@@ -23,10 +23,6 @@
 #include "tws_dual_conn.h"
 #include "dac_node.h"
 #include "tws_dual_share.h"
-#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
-#include "le_audio_player.h"
-#include "app_le_auracast.h"
-#endif
 
 
 #if TCFG_BT_DUAL_CONN_ENABLE
@@ -195,7 +191,6 @@ static void tws_a2dp_play_in_task(u8 *data)
         app_send_message_from(MSG_FROM_APP, 12, msg);
         break;
     case CMD_A2DP_CLOSE:
-        puts("CMD_A2DP_CLOSE\n");
         tws_a2dp_player_close(bt_addr);
         /*
          * 如果后台有A2DP数据,关闭检测和MEDIA_START状态,
@@ -340,7 +335,6 @@ void try_play_preempted_a2dp(void *p)
         return;
     }
     if (!a2dp_player_is_playing(a2dp_preempted_addr)) {
-        memset(a2dp_preempted_addr, 0xff, 6);
         btstack_device_control(device, USER_CTRL_AVCTP_OPID_PLAY);
     }
 }
@@ -379,11 +373,6 @@ static int a2dp_bt_status_event_handler(int *event)
         if (app_var.goto_poweroff_flag) {
             break;
         }
-#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
-        if (le_audio_player_is_playing()) {
-            le_auracast_stop();
-        }
-#endif
         if (tws_api_get_role() == TWS_ROLE_MASTER) {
             if (device_b &&
                 btstack_get_call_esco_status(device_b) == BT_ESCO_STATUS_OPEN) {
@@ -407,11 +396,6 @@ static int a2dp_bt_status_event_handler(int *event)
             a2dp_media_close(bt->args);
             break;
         }
-#if defined(CONFIG_CPU_BR52)
-        if (CONFIG_AES_CCM_FOR_EDR_ENABLE) {
-            clock_alloc("aes_a2dp_play", 64 * 1000000UL);
-        }
-#endif
         if (tws_api_get_role() == TWS_ROLE_SLAVE) {
             break;
         }
@@ -445,11 +429,6 @@ static int a2dp_bt_status_event_handler(int *event)
         break;
     case BT_STATUS_A2DP_MEDIA_STOP:
         g_printf("BT_STATUS_A2DP_MEDIA_STOP\n");
-#if defined(CONFIG_CPU_BR52)
-        if (CONFIG_AES_CCM_FOR_EDR_ENABLE) {
-            clock_free("aes_a2dp_play");
-        }
-#endif
         put_buf(bt->args, 6);
         if (tws_api_get_role() == TWS_ROLE_SLAVE) {
             break;
@@ -516,9 +495,8 @@ static int a2dp_bt_status_event_handler(int *event)
         put_buf(bt->args, 6);
         a2dp_suspend_by_call(addr_b, device_b);
         break;
-    case BT_STATUS_PHONE_HANGUP:
     case BT_STATUS_SCO_DISCON:
-        printf("A2DP BT_STATUS_SCO_DISCON:%d\n", bt->event);
+        puts("BT_STATUS_SCO_DISCON\n");
         if (tws_api_get_role() == TWS_ROLE_SLAVE) {
             break;
         }

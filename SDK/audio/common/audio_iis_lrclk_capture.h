@@ -1,7 +1,7 @@
 #ifndef _AUDIO_IIS_LRCLK_CAPTURE_H_
 #define _AUDIO_IIS_LRCLK_CAPTURE_H_
 
-#include "media/audio_iis.h"
+#include "audio_dai/audio_iis.h"
 
 /*
  *当前仅支持只使用一个iis rx通道的情况

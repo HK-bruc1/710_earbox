@@ -255,17 +255,6 @@ s16 app_audio_volume_max_query(audio_vol_index_t index);
 */
 void audio_app_mute_en(u8 mute_en);
 
-/*
-*********************************************************************
-*          			Audio Volume Offset
-* Description: 音量偏移
-* Arguments  : offset 音量偏移大小
-* Return	 : None.
-* Note(s)    : None.
-*********************************************************************
-*/
-void audio_app_set_vol_offset_dB(float offset_dB);
-
 void dac_node_write_callback_add(const char *name, u8 scene, void (*cb)(void *, int));
 
 void dac_node_write_callback_del(const char *name);

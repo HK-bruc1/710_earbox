@@ -350,7 +350,6 @@ static void rcsp_bt_tws_event_handler(int *msg)
                 }
 #endif
             }
-            rcsp_ble_adv_enable_with_con_dev();
         } else {
             //slave disable
             printf("\nConnect Slave!!!222\n\n");
@@ -872,18 +871,6 @@ void rcsp_interface_bt_handle_tws_sync(void)
     tws_api_send_data_to_sibling(buf, buf_size, TWS_FUNC_ID_RCSP_INTERFACE_HDL_TWS_SYNC);
     free(buf);
     /* } */
-}
-
-/**
- * 清除rcsp蓝牙ble连接信息并同步到tws对端
- */
-void rcsp_clear_ble_hdl_and_tws_sync(void)
-{
-    u16 ble_con_handle = app_ble_get_hdl_con_handle(rcsp_server_ble_hdl);
-    bt_rcsp_set_conn_info(ble_con_handle, NULL, 0);
-    u16 ble_con_handle1 = app_ble_get_hdl_con_handle(rcsp_server_ble_hdl1);
-    bt_rcsp_set_conn_info(ble_con_handle1, NULL, 0);
-    rcsp_interface_bt_handle_tws_sync();
 }
 
 #endif

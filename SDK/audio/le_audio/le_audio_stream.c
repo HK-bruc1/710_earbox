@@ -54,7 +54,7 @@ struct le_audio_rx_stream {
 };
 
 struct le_audio_stream_context {
-    u16 conn;
+    void *conn;
     struct le_audio_stream_format fmt;
     struct le_audio_tx_stream *tx_stream;
     struct le_audio_rx_stream *rx_stream;
@@ -63,12 +63,10 @@ struct le_audio_stream_context {
     int (*tx_tick_handler)(void *priv, int period, u32 timestamp);
     void *rx_tick_priv;
     void (*rx_tick_handler)(void *priv);
+    u32(*time_handler)(void *conn, u8 cmd, void *arg);
 };
 
-extern int bt_audio_reference_clock_select(void *addr, u8 network);
-extern u32 bb_le_clk_get_time_us(void);
-extern void ll_config_ctrler_clk(uint16_t handle, uint8_t sel);
-void *le_audio_stream_create(u16 conn, struct le_audio_stream_format *fmt)
+void *le_audio_stream_create(void *conn, struct le_audio_stream_format *fmt, u32(*reference_time)(void *, u8, void *))
 {
     struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)zalloc(sizeof(struct le_audio_stream_context));
 
@@ -78,6 +76,7 @@ void *le_audio_stream_create(u16 conn, struct le_audio_stream_format *fmt)
            ctx->fmt.frame_dms, ctx->fmt.sdu_period, ctx->fmt.sample_rate);
     spin_lock_init(&ctx->lock);
     ctx->conn = conn;
+    ctx->time_handler = reference_time;
 
     return ctx;
 }
@@ -96,13 +95,43 @@ int le_audio_stream_clock_select(void *le_audio)
     struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)le_audio;
 
     bt_audio_reference_clock_select(NULL, 2);
-    ll_config_ctrler_clk((uint16_t)ctx->conn, 0); //蓝牙与同步关联 bis_hdl/cis_hdl
+    if (ctx->time_handler) {
+        ctx->time_handler(ctx->conn, LE_AUDIO_SYNC_ENABLE, NULL);
+    }
     return 0;
+}
+
+int le_audio_stream_get_latch_time(void *le_audio, u32 *time, u16 *us_1_12th, u32 *event)
+{
+    struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)le_audio;
+
+    if (ctx->time_handler) {
+        struct le_audio_latch_time latch_time;
+        ctx->time_handler(ctx->conn, LE_AUDIO_GET_LATCH_TIME, (void *)&latch_time);
+        *time = latch_time.us;
+        *us_1_12th = latch_time.us_1_12th;
+        *event = latch_time.event;
+    }
+    return 0;
+}
+
+void le_audio_stream_latch_time_enable(void *le_audio)
+{
+    struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)le_audio;
+
+    if (ctx->time_handler) {
+        ctx->time_handler(ctx->conn, LE_AUDIO_LATCH_ENABLE, NULL);
+    }
 }
 
 u32 le_audio_stream_current_time(void *le_audio)
 {
-    return bb_le_clk_get_time_us();
+    struct le_audio_stream_context *ctx = (struct le_audio_stream_context *)le_audio;
+
+    if (ctx->time_handler) {
+        return ctx->time_handler(ctx->conn, LE_AUDIO_CURRENT_TIME, NULL);
+    }
+    return (u32) - 1;
 }
 
 static int __le_audio_stream_tx_data_handler(void *stream, void *data, int len, u32 timestamp)
@@ -407,9 +436,6 @@ int le_audio_stream_rx_frame(void *stream, void *data, int len, u32 timestamp)
     if (rx_stream->frames_len + len > rx_stream->frames_max_size) {
         /*printf("frame no buffer.\n");*/
         putchar('H');
-        if (ctx->rx_tick_handler) {
-            ctx->rx_tick_handler(ctx->rx_tick_priv);
-        }
         return 0;
     }
     frame = malloc(sizeof(struct le_audio_frame) + len);

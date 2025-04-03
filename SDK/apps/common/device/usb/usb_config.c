@@ -371,7 +371,7 @@ u32 usb_config(const usb_dev usb_id)
         usb_config_var = &_usb_config_var;
 #endif
     }
-    log_debug("zalloc: usb_config_var = %x\n", (void *)usb_config_var);
+    log_debug("zalloc: usb_config_var = %x\n", usb_config_var);
 
     usb_var_init(usb_id, &(usb_config_var->usb_ep_addr));
     usb_setup_init(usb_id, &(usb_config_var->usb_setup), usb_config_var->usb_setup_buffer);
@@ -380,12 +380,12 @@ u32 usb_config(const usb_dev usb_id)
 
 u32 usb_release(const usb_dev usb_id)
 {
-    log_debug(" %d, free zalloc: usb_config_var = %x\n", usb_id, (void *)usb_config_var);
+    log_debug("free zalloc: usb_config_var = %x\n", usb_id, usb_config_var);
     usb_var_init(usb_id, NULL);
     usb_setup_init(usb_id, NULL, NULL);
 #if USB_MALLOC_ENABLE
     if (usb_config_var) {
-        log_debug("free: usb_config_var = %x\n", (void *)usb_config_var);
+        log_debug("free: usb_config_var = %x\n", usb_config_var);
         free(usb_config_var);
     }
 #endif

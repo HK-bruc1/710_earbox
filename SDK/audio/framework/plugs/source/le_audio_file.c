@@ -60,10 +60,6 @@ static enum stream_node_state le_audio_get_frame(void *file, struct stream_frame
     le_audio_stream_free_frame(hdl->file, le_audio_frame);
     *pframe = frame;
 
-    if (le_audio_stream_get_frame_num(hdl->file) == 0) {
-        return NODE_STA_RUN | NODE_STA_SOURCE_NO_DATA;
-    }
-
     return NODE_STA_RUN;
 
 }

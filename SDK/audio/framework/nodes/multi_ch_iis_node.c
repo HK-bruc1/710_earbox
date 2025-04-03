@@ -3,7 +3,7 @@
 #include "sync/audio_syncts.h"
 #include "circular_buf.h"
 #include "audio_splicing.h"
-#include "media/audio_iis.h"
+#include "audio_dai/audio_iis.h"
 #include "app_config.h"
 #include "gpio.h"
 #include "audio_cvp.h"
@@ -203,7 +203,7 @@ static int iis_adpater_detect_multi_timestamp(struct iis_node_hdl *hdl, struct s
     }
     int slience_frames = (u64)diff * hdl->sample_rate / 1000000;
 
-    u32 dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch, AUDIO_DAC_MAX_SAMPLE_RATE);
+    u32 dma_len = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
     int point_offset = hdl->bit_width ? 2 : 1;
     int max_frames = (dma_len >> point_offset) / hdl->nch - 4;
     if (slience_frames > max_frames) {
@@ -645,7 +645,7 @@ static void iis_ioc_start(struct iis_node_hdl *hdl, struct stream_iport *iport)
     if (!iis_hdl[hdl->module_idx]) {
         struct alink_param params = {0};
         params.module_idx = hdl->module_idx;
-        params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch, AUDIO_DAC_MAX_SAMPLE_RATE);
+        params.dma_size   = audio_iis_fix_dma_len(hdl->module_idx, TCFG_AUDIO_DAC_BUFFER_TIME_MS, AUDIO_IIS_IRQ_POINTS, hdl->bit_width, hdl->nch);
         params.sr         = hdl->sample_rate;
         params.bit_width  = hdl->bit_width;
         params.fixed_pns  = const_out_dev_pns_time_ms;

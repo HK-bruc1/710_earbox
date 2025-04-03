@@ -17,9 +17,8 @@ struct volume_cfg {
 } __attribute__((packed));
 
 //Volume Node Command List
-#define VOLUME_NODE_CMD_SET_VOL     (1<<4)
-#define VOLUME_NODE_CMD_SET_MUTE    (1<<5)
-#define VOLUME_NODE_CMD_SET_OFFSET  (1<<6)
+#define VOLUME_NODE_CMD_SET_VOL   (1<<4)
+#define VOLUME_NODE_CMD_SET_MUTE  (1<<5)
 
 #define VOLUME_TABLE_CUSTOM_EN       2
 

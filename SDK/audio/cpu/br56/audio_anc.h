@@ -7,16 +7,10 @@
 #include "anc_uart.h"
 #include "app_config.h"
 #include "in_ear_detect/in_ear_manage.h"
-#include "audio_anc_common.h"
 #include "audio_config_def.h"
 #if (TCFG_AUDIO_ANC_EAR_ADAPTIVE_VERSION == ANC_EXT_V2)
 #include "icsd_anc_v2_app.h"
 #endif
-
-#if TCFG_AUDIO_ANC_ADAPTIVE_CMP_EN
-#include "icsd_cmp_app.h"
-#endif
-
 #include "audio_anc_fade_ctr.h"
 
 /*******************ANC User Config***********************/
@@ -46,10 +40,6 @@
 #define ANC_MULT_ORDER_CMP_ONLY_USE_ID1		1	/*ANC多滤波器-CMP音乐补偿仅使用场景ID1的参数*/
 #define ANC_MULT_ORDER_TRANS_ONLY_USE_ID1	0	/*ANC多滤波器-通透模式仅使用场景ID1的参数*/
 
-//通透+FB功能配置
-#define ANC_MULT_TRANS_FB_ENABLE			0	/*ANC多滤波器- 通透+FB 使能*/
-#define ANC_MULT_TRANS_FB_USB_ANC_ID		2	/*ANC多滤波器- 通透+FB 复用ANC场景ID*/
-
 #define ANC_MULT_ORDER_NORMAL_ID			1	/*ANC多滤波器-开机默认场景ID*/
 
 //ANC多滤波器-耳道自适应ID匹配，选择0则跟随当前场景
@@ -74,7 +64,7 @@
 
 #define ANC_EAR_ADAPTIVE_EN					TCFG_AUDIO_ANC_EAR_ADAPTIVE_EN  /*ANC耳道自适应使能, 耳道是变量，主动触发校准一次性能*/
 #define ANC_POWEOFF_SAVE_ADAPTIVE_DATA		1							    /*保存耳道自适应数据 0 每次保存；1 关机保存*/
-#define ANC_EAR_ADAPTIVE_CMP_EN				TCFG_AUDIO_ANC_ADAPTIVE_CMP_EN	/*ANC耳道自适应音乐补偿使能*/
+#define ANC_EAR_ADAPTIVE_CMP_EN				ANC_ADAPTIVE_CMP_EN				/*ANC耳道自适应音乐补偿使能*/
 #define ANC_EAR_ADAPTIVE_EVERY_TIME			0                           	/*每次切ANC_ON都进行自适应*/
 
 /*
@@ -82,7 +72,14 @@
    (场景是变量，与耳道自适应功能相互独立)
  */
 #define ANC_ADAPTIVE_EN		    	0						/*ANC增益自适应使能*/
+#define ANC_ADAPTIVE_MODE			ANC_ADAPTIVE_GAIN_MODE	/*ANC增益自适应模式*/
+#define ANC_ADAPTIVE_TONE_EN		0						/*ANC增益自适应提示音使能*/
 
+/*
+   实时自适应
+   (佩戴中实时校准ANC性能)
+ */
+#define ANC_REAL_TIME_ADAPTIVE_ENABLE				0
 
 #if (TCFG_ANC_MUSIC_ANTI_CLIPPING_MODE == ANC_CLIPPING_MODE_DYNAMIC_ANC_GAIN)
 #define ANC_MUSIC_DYNAMIC_GAIN_EN					1		/*音乐动态ANC增益使能*/
@@ -91,27 +88,6 @@
 #endif
 
 #define ANC_MUSIC_DYNAMIC_GAIN_SINGLE_FB			0		/*JL708N固定为0,支持单独调FB fade gain*/
-
-/*
- 	ANC啸叫检测功能配置，检测啸叫时压低增益，定时恢复至正常增益
- */
-#define ANC_HOWLING_DETECT_EN				0		/*啸叫检测使能*/
-#define ANC_HOWLING_MSG_DEBUG				0		/*啸叫调试流程打印*/
-
-#define ANC_HOWLING_DETECT_CHANNEL			0		/*啸叫检测通道；0 FF MIC ; 1 FB MIC*/
-/*1、检测配置*/
-#define ANC_HOWLING_DETECT_CORR_THR			200		/*啸叫灵敏度设置, 越小(越灵敏，容易误触发), range [100 - 255]; default 200 */
-#define ANC_HOWLING_DETECT_PWR_THR			1200	/*啸叫阈值设置, 用于解决小声啸叫不触发的问题，越小(容易误触发),  range [100 - 32767]; default 1200*/
-
-#define ANC_HOWLING_DETECT_TIME				100		/*啸叫检测时间(单位ms), 越小(触发时间短，容易误触发) range [10 - 500]; default 100ms*/
-/*
-   2、触发配置
- 	啸叫触发后，增益直接降低至TARGET_GAIN
-	持续HOLD_TIME后，再经过RESUME_TIME, 缓慢恢复至正常增益
- */
-#define ANC_HOWLING_TARGET_GAIN				0		/*啸叫时的目标增益, range [0 - 16384]; default 0 */
-#define ANC_HOWLING_HOLD_TIME				1000	/*啸叫目标增益的持续时间(单位ms), range [0 - 10000]; default 1000 */
-#define ANC_HOWLING_RESUME_TIME				4000	/*恢复到正常增益的时间(单位ms), range [200 - 10000]; default 4000 */
 
 #if ANC_TRAIN_MODE == ANC_FB_EN
 #define ANC_MODE_ENABLE			ANC_OFF_BIT | ANC_ON_BIT
@@ -138,7 +114,7 @@
 #if TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_MONO_L
 #define TCFG_AUDIO_ANC_CH 	ANC_L_CH
 #elif TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_MONO_R
-#define TCFG_AUDIO_ANC_CH 	ANC_L_CH
+#define TCFG_AUDIO_ANC_CH 	ANC_R_CH
 #else
 #define TCFG_AUDIO_ANC_CH 	(ANC_L_CH | ANC_R_CH)
 #endif/*TCFG_AUDIO_DAC_CONNECT_MODE == DAC_OUTPUT_MONO_L*/
@@ -152,7 +128,6 @@ static const char *anc_mode_str[] = {
     "ANC_ON",		/*降噪模式*/
     "Transparency",	/*通透模式*/
     "ANC_BYPASS",	/*BYPASS模式*/
-    "ANC_EXT",		/*ANC扩展模式-针对使用ANC DMA通路做算法的场景*/
     "ANC_TRAIN",	/*训练模式*/
     "ANC_TRANS_TRAIN",	/*通透训练模式*/
 };
@@ -193,8 +168,6 @@ enum {
     ANC_MSG_ADT,
     ANC_MSG_MODE_SWITCH_IN_ANCTASK,
     ANC_MSG_COEFF_UPDATE,		//无缝切换滤波器
-    ANC_MSG_AFQ_CMD,
-    ANC_MSG_46KOUT_DEMO,
 };
 
 /*ANC MIC动态增益调整状态*/
@@ -222,12 +195,6 @@ typedef struct {
 #if ANC_EAR_ADAPTIVE_EN
 
 typedef struct {
-#if (TCFG_AUDIO_ANC_CH & ANC_L_CH)
-    float l_target[TARLEN2 + TARLEN2_L];
-#endif
-#if (TCFG_AUDIO_ANC_CH & ANC_R_CH)
-    float r_target[TARLEN2 + TARLEN2_L];
-#endif
     u8 result;
 #if ANC_CONFIG_LFF_EN
     float lff_gain;
@@ -369,11 +336,15 @@ void anc_param_fill(u8 cmd, anc_gain_t *cfg);
 /*ANC_DUT audio模块使能函数，用于分离功耗*/
 void audio_anc_dut_enable_set(u8 enablebit);
 
+/*ANC自适应TWS同步信息处理*/
+void audio_anc_adap_sync(int ref_num, int err_num, int err);
+void audio_anc_adap_num_compare(int ref_num, int err_num);
+
 /*设置fb  mic为复用mic*/
 void audio_anc_mic_mana_fb_mult_set(u8 mult_flag);
 
-/*获取fb mic复用MIC标志，左右耳有一个复用则认为被复用*/
-u8 audio_anc_mic_mana_fb_mult_get(void);
+/*切换ANC自适应模式*/
+void audio_anc_adaptive_mode_set(u8 mode, u8 lvl);
 
 void audio_anc_post_msg_music_dyn_gain(void);
 
@@ -384,21 +355,13 @@ u8 audio_anc_develop_get(void);
 void audio_anc_mic_management(audio_anc_t *param);
 
 /*
-   多滤波器-场景切换(只切换参数, 不更新效果)
+   多滤波器-场景切换
 	param:  scene 	    场景ID
+			update_flag 非ANC_OFF时，即时更新效果: 0 不更新；1 更新
 	return  1 设置失败； 0 设置成功
 	Note: ID 从1 开始
  */
-int audio_anc_mult_scene_set(u16 scene_id);
-
-/*
-   多滤波器-场景切换(立即更新效果)
-   前置条件：需在 "非ANC_OFF" 模式下调用;
-	param:  scene 	    场景ID
-	return  1 设置失败； 0 设置成功
-	Note: ID 从1 开始
- */
-int audio_anc_mult_scene_update(u16 scene_id);
+int audio_anc_mult_scene_set(u16 scene_id, u8 update_flag);
 
 /*多滤波器-获取当前场景的滤波器*/
 u8 audio_anc_mult_scene_get(void);
@@ -414,6 +377,8 @@ void audio_anc_mult_scene_switch(u8 tone_flag);
 
 int audio_anc_db_cfg_read(void);
 
+void audio_ear_adaptive_en_set(u8 en);
+
 void anc_mode_switch_deal(u8 mode);
 
 extern int anc_uart_write(u8 *buf, u8 len);
@@ -421,7 +386,6 @@ extern void ci_send_packet(u32 id, u8 *packet, int size);
 extern void sys_auto_shut_down_enable(void);
 extern void sys_auto_shut_down_disable(void);
 
-int anc_cfg_online_deal(u8 cmd, anc_gain_t *cfg);
 u32 get_anc_gains_sign();
 u32 get_anc_gains_alogm();
 void set_anc_gains_alogm(u32 alogm);
@@ -443,27 +407,10 @@ int anc_mode_change_tool(u8 dat);
 /*获取ANC alogm参数，type 滤波器类型 */
 u32 audio_anc_gains_alogm_get(enum ANC_IIR_TYPE type);
 
-void audio_ear_adaptive_en_set(u8 en);
-
 /*耳道自适应互斥功能恢复*/
 void audio_ear_adaptive_train_app_resume(void);
 /*耳道自适应互斥功能挂起*/
 void audio_ear_adaptive_train_app_suspend(void);
-
-/*
-   ANC 滤波器无缝平滑更新，
-   前置条件:1、更新前后的滤波器个数一致
-   			2、需在 "非ANC_OFF" 模式下调用
- */
-void audio_anc_coeff_smooth_update(void);
-
-/*
-   ANC 驱动复位（包括滤波器），会淡出淡出
-   前置条件：需在 "非ANC_OFF" 模式下调用;
-   param: fade_en 1 开启淡入淡出，会有一定执行时间；
-   				  0 关闭淡入淡出，会有po声；
- */
-void audio_anc_param_reset(u8 fade_en);
 
 
 #endif/*AUDIO_ANC_H*/

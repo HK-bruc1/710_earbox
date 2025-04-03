@@ -106,6 +106,9 @@ DEFINES := \
 	-DCONFIG_EQ_SUPPORT_ASYNC \
 	-DEQ_CORE_V1 \
 	-DCONFIG_BT_CTRLER_IN_MASK \
+	-DCONFIG_CRYPTO_TOOLBOX_OSIZE_IN_MASKROM \
+	-DCONFIG_CRYPTO_RESET_BITS_SZIE_IN_MASKROM \
+	-DCONFIG_CRYPTO_AES_CMC_IN_SDK \
 	-DCONFIG_AAC_CODEC_FFT_USE_MUTEX \
 	-DCONFIG_SIN_TONE_V2 \
 	-DCONFIG_DNS_ENABLE \
@@ -133,7 +136,7 @@ DEFINES := \
 	-DFS_VERSION=0x020001 \
 	-DFATFS_VERSION=0x020101 \
 	-DSDFILE_VERSION=0x020000 \
-	-DVFS_ENABLE=1 \
+	-DVFS_ENABLE=0 \
 	-DVM_MAX_SIZE_CONFIG=16*1024 \
 	-DVM_ITEM_MAX_NUM=256 \
 	-DCONFIG_EARPHONE_CASE_ENABLE \
@@ -231,11 +234,8 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/realme_protocol \
 	-Iapps/common/third_party_profile/swift_pair \
 	-Iapps/common/third_party_profile/dma_protocol \
-	-Iapps/common/third_party_profile/dma_protocol/dma_use_lib \
 	-Iapps/common/third_party_profile/gfps_protocol \
 	-Iapps/common/third_party_profile/custom_protocol_demo \
-	-Iapps/common/third_party_profile/ximalaya_protocol \
-	-Iapps/common/third_party_profile/auracast_app \
 	-Iapps/common/cJSON \
 	-Iinterface/media/cpu/br56 \
 	-Iinterface/utils/ui/ui/cpu/br56 \
@@ -254,8 +254,6 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/tuya_protocol/port \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/include \
 	-Iapps/common/third_party_profile/tuya_protocol/sdk/lib \
-	-Iapps/common/third_party_profile/bt_fmy \
-	-Iinterface/btstack \
 	-Iapps/common/device/usb \
 	-Iapps/common/device/usb/device \
 	-Iapps/common/device/usb/host \
@@ -264,7 +262,6 @@ INCLUDES := \
 	-Iaudio/framework/plugs/source \
 	-Iaudio/CVP \
 	-Iaudio/test_tools \
-	-Iaudio/common/icsd/adjdcc \
 	-Iaudio/common/icsd/adt \
 	-Iaudio/common/icsd/anc \
 	-Iaudio/common/icsd/common \
@@ -283,7 +280,6 @@ INCLUDES := \
 	-Iaudio/common/icsd/vdt \
 	-Iaudio/common/icsd/wat \
 	-Iaudio/common/icsd/ein \
-	-Iaudio/common/icsd/howl \
 	-Iaudio/common/power \
 	-Iaudio/anc \
 	-Iaudio/cpu/br56/audio_dai \
@@ -320,7 +316,6 @@ c_SRC_FILES := \
 	apps/common/debug/dlog_output_config.c \
 	apps/common/dev_manager/dev_manager.c \
 	apps/common/dev_manager/dev_reg.c \
-	apps/common/dev_manager/dev_update.c \
 	apps/common/device/eartouch/eartouch_iic_interface.c \
 	apps/common/device/eartouch/eartouch_manage.c \
 	apps/common/device/eartouch/hx300x/hx300x_driver.c \
@@ -381,14 +376,9 @@ c_SRC_FILES := \
 	apps/common/device/usb/usb_task.c \
 	apps/common/fat_nor/cfg_private.c \
 	apps/common/fat_nor/virfat_flash.c \
-	apps/common/file_operate/file_manager.c \
 	apps/common/le_audio/big.c \
 	apps/common/le_audio/cig.c \
 	apps/common/le_audio/wireless_trans_manager.c \
-	apps/common/music/breakpoint.c \
-	apps/common/music/music_decrypt.c \
-	apps/common/music/music_id3.c \
-	apps/common/music/music_player.c \
 	apps/common/temp_trim/dtemp_pll_trim.c \
 	apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions/ble_iot_anc_manager.c \
 	apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions/ble_iot_msg_manager.c \
@@ -412,24 +402,13 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/Tencent_LL/tencent_protocol/ble_qiot_utils_md5.c \
 	apps/common/third_party_profile/Tencent_LL/tencent_protocol/ble_qiot_utils_sha1.c \
 	apps/common/third_party_profile/ancs_client_demo/le_ancs_client.c \
-	apps/common/third_party_profile/auracast_app/auracast_app_ble.c \
-	apps/common/third_party_profile/auracast_app/auracast_app_gatt_over_edr.c \
-	apps/common/third_party_profile/auracast_app/auracast_app_protocol.c \
-	apps/common/third_party_profile/auracast_app/auracast_app_sink_api.c \
-	apps/common/third_party_profile/auracast_app/auracast_app_source_api.c \
-	apps/common/third_party_profile/bt_fmy/ble_fmy.c \
-	apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.c \
-	apps/common/third_party_profile/bt_fmy/ble_fmy_modet.c \
-	apps/common/third_party_profile/bt_fmy/ble_fmy_ota.c \
 	apps/common/third_party_profile/common/3th_profile_api.c \
 	apps/common/third_party_profile/common/custom_cfg.c \
 	apps/common/third_party_profile/common/mic_rec.c \
 	apps/common/third_party_profile/custom_protocol_demo/custom_protocol.c \
+	apps/common/third_party_profile/dma_protocol/dma_config.c \
+	apps/common/third_party_profile/dma_protocol/dma_platform_api.c \
 	apps/common/third_party_profile/dma_protocol/dma_protocol.c \
-	apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_le_port.c \
-	apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_setting.c \
-	apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_spp_port.c \
-	apps/common/third_party_profile/dma_protocol/dma_use_lib/platform_template.c \
 	apps/common/third_party_profile/gfps_protocol/gfps_protocol.c \
 	apps/common/third_party_profile/interface/app_protocol_api.c \
 	apps/common/third_party_profile/interface/app_protocol_common.c \
@@ -454,7 +433,6 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_event.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_manage.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_task.c \
-	apps/common/third_party_profile/jieli/rcsp/rcsp_interface.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/browser/rcsp_browser.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_bt_func.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_fm_func.c \
@@ -584,10 +562,6 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_utils.c \
 	apps/common/third_party_profile/tuya_protocol/tuya_event.c \
 	apps/common/third_party_profile/tuya_protocol/tuya_protocol.c \
-	apps/common/third_party_profile/ximalaya_protocol/xmly_ble.c \
-	apps/common/third_party_profile/ximalaya_protocol/xmly_config.c \
-	apps/common/third_party_profile/ximalaya_protocol/xmly_platform_api.c \
-	apps/common/third_party_profile/ximalaya_protocol/xmly_protocol.c \
 	apps/common/ui/pwm_led/led_ui_api.c \
 	apps/common/ui/pwm_led/led_ui_tws_sync.c \
 	apps/common/update/testbox_uart_update.c \
@@ -645,7 +619,7 @@ c_SRC_FILES := \
 	apps/earphone/mode/bt/earphone.c \
 	apps/earphone/mode/bt/eartch_event_deal.c \
 	apps/earphone/mode/bt/kws_voice_event_deal.c \
-	apps/earphone/mode/bt/le_audio/big/app_le_auracast.c \
+	apps/earphone/mode/bt/le_audio/big/app_le_broadcast.c \
 	apps/earphone/mode/bt/le_audio/big/le_broadcast.c \
 	apps/earphone/mode/bt/le_audio/big/le_broadcast_config.c \
 	apps/earphone/mode/bt/le_audio/cig/app_le_connected.c \
@@ -670,9 +644,6 @@ c_SRC_FILES := \
 	apps/earphone/mode/linein/linein_dev.c \
 	apps/earphone/mode/linein/linein_key_msg_table.c \
 	apps/earphone/mode/mic_effect/mic_effect.c \
-	apps/earphone/mode/music/music.c \
-	apps/earphone/mode/music/music_app_msg_handler.c \
-	apps/earphone/mode/music/music_key_msg_table.c \
 	apps/earphone/mode/pc/pc.c \
 	apps/earphone/mode/pc/pc_key_msg_table.c \
 	apps/earphone/mode/power_on/power_on.c \
@@ -704,7 +675,6 @@ c_SRC_FILES := \
 	audio/common/amplitude_statistic.c \
 	audio/common/audio_build_needed.c \
 	audio/common/audio_dvol.c \
-	audio/common/audio_effect_verify.c \
 	audio/common/audio_event_handler.c \
 	audio/common/audio_export_demo.c \
 	audio/common/audio_general.c \
@@ -728,7 +698,6 @@ c_SRC_FILES := \
 	audio/common/demo/codec_demo/audio_sbc_codec_demo.c \
 	audio/common/demo/codec_demo/audio_speex_codec_demo.c \
 	audio/common/frame_length_adaptive.c \
-	audio/common/icsd/adjdcc/icsd_adjdcc_config.c \
 	audio/common/icsd/adt/icsd_adt.c \
 	audio/common/icsd/adt/icsd_adt_alg.c \
 	audio/common/icsd/adt/icsd_adt_app.c \
@@ -747,50 +716,41 @@ c_SRC_FILES := \
 	audio/common/icsd/anc_v2/icsd_anc_v2.c \
 	audio/common/icsd/anc_v2/icsd_anc_v2_app.c \
 	audio/common/icsd/anc_v2/icsd_anc_v2_interactive.c \
-	audio/common/icsd/avc/icsd_avc_app.c \
 	audio/common/icsd/avc/icsd_avc_config.c \
 	audio/common/icsd/cmp/icsd_cmp_app.c \
+	audio/common/icsd/cmp/icsd_cmp_config.c \
 	audio/common/icsd/common/icsd_common.c \
 	audio/common/icsd/common_v2/icsd_common_v2.c \
 	audio/common/icsd/common_v2/icsd_common_v2_app.c \
 	audio/common/icsd/config/icsd_anc_v2_config.c \
-	audio/common/icsd/config/icsd_cmp_config.c \
 	audio/common/icsd/demo/icsd_demo.c \
 	audio/common/icsd/dot/icsd_dot.c \
 	audio/common/icsd/dot/icsd_dot_app.c \
 	audio/common/icsd/ein/icsd_ein_config.c \
-	audio/common/icsd/env_noise_det/icsd_env_noise_det_app.c \
-	audio/common/icsd/howl/icsd_howl_app.c \
-	audio/common/icsd/howl/icsd_howl_config.c \
 	audio/common/icsd/rt_anc/rt_anc.c \
 	audio/common/icsd/rt_anc/rt_anc_app.c \
 	audio/common/icsd/rt_anc/rt_anc_config.c \
 	audio/common/icsd/tool/anc_ext_tool.c \
 	audio/common/icsd/tool/anc_ext_tool_file.c \
-	audio/common/icsd/vdt/icsd_vdt_app.c \
 	audio/common/icsd/vdt/icsd_vdt_config.c \
-	audio/common/icsd/wat/icsd_wat_app.c \
 	audio/common/icsd/wat/icsd_wat_config.c \
-	audio/common/icsd/wind/cvp_wind_app.c \
-	audio/common/icsd/wind/icsd_wind_app.c \
 	audio/common/icsd/wind/icsd_wind_config.c \
 	audio/common/online_debug/aud_data_export.c \
 	audio/common/online_debug/aud_mic_dut.c \
 	audio/common/online_debug/aud_spatial_effect_dut.c \
 	audio/common/online_debug/audio_capture.c \
 	audio/common/online_debug/audio_online_debug.c \
-	audio/common/pcm_data/sine_pcm.c \
 	audio/common/power/mic_power_manager.c \
 	audio/common/uartPcmSender.c \
 	audio/cpu/br56/audio_accelerator/hw_fft.c \
-	audio/cpu/br56/audio_anc.c \
 	audio/cpu/br56/audio_config.c \
+	audio/cpu/br56/audio_dai/audio_iis.c \
+	audio/cpu/br56/audio_dai/audio_link.c \
 	audio/cpu/br56/audio_demo/audio_adc_demo.c \
 	audio/cpu/br56/audio_demo/audio_dac_demo.c \
 	audio/cpu/br56/audio_demo/audio_fft_demo.c \
 	audio/cpu/br56/audio_mic_capless.c \
 	audio/cpu/br56/audio_setup.c \
-	audio/cpu/br56/icsd_anc_user.c \
 	audio/cpu/common.c \
 	audio/effect/audio_dc_offset_remove.c \
 	audio/effect/audio_pitch_speed_api.c \
@@ -920,7 +880,6 @@ c_SRC_FILES := \
 	audio/test_tools/mic_dut_process.c \
 	cpu/br56/charge/charge.c \
 	cpu/br56/charge/charge_config.c \
-	cpu/br56/charge/charge_ocp.c \
 	cpu/br56/charge/chargestore.c \
 	cpu/br56/charge/chargestore_config.c \
 	cpu/br56/lua_port_api.c \
@@ -929,11 +888,13 @@ c_SRC_FILES := \
 	cpu/br56/periph/mcpwm.c \
 	cpu/br56/periph/rdec.c \
 	cpu/br56/periph/touch/lp_touch_key.c \
+	cpu/br56/periph/touch/lp_touch_key_identify_algo.c \
+	cpu/br56/periph/touch/lp_touch_key_range_algo.c \
+	cpu/br56/periph/touch/lp_touch_key_tool.c \
 	cpu/br56/periph/touch/lpctmu_hw.c \
 	cpu/br56/power/key_wakeup.c \
 	cpu/br56/power/power_app.c \
 	cpu/br56/power/power_config.c \
-	cpu/br56/power/power_gate.c \
 	cpu/br56/power/power_port.c \
 	cpu/br56/setup.c \
 	cpu/components/gpadc_battery.c \
@@ -943,9 +904,6 @@ c_SRC_FILES := \
 	cpu/components/ir_encoder.c \
 	cpu/components/led_api.c \
 	cpu/components/rdec_soft.c \
-	cpu/components/touch/lp_touch_key_identify_algo.c \
-	cpu/components/touch/lp_touch_key_range_algo.c \
-	cpu/components/touch/lp_touch_key_tool.c \
 	cpu/components/two_io_led.c \
 	cpu/config/gpio_file_parse.c \
 	cpu/config/lib_power_config.c \
@@ -1014,11 +972,6 @@ LFLAGS := \
 	cpu/br56/liba/btctrler.a \
 	cpu/br56/liba/aec.a \
 	cpu/br56/liba/media.a \
-	cpu/br56/liba/libdma-protocol.a \
-	cpu/br56/liba/libdma-device-ota.a \
-	cpu/br56/liba/google_fps.a \
-	cpu/br56/liba/swift_pair.a \
-	cpu/br56/liba/ximalaya_lib.a \
 	cpu/br56/liba/libepmotion.a \
 	cpu/br56/liba/libAptFilt_pi32v2_OnChip.a \
 	cpu/br56/liba/libEchoSuppress_pi32v2_OnChip.a \
@@ -1027,7 +980,6 @@ LFLAGS := \
 	cpu/br56/liba/libDelayEstimate_pi32v2_OnChip.a \
 	cpu/br56/liba/libDualMicSystem_pi32v2_OnChip.a \
 	cpu/br56/liba/libDualMicSystem_flexible_pi32v2_OnChip.a \
-	cpu/br56/liba/libDualMicSystem_Awn.a \
 	cpu/br56/liba/libAdaptiveEchoSuppress_pi32v2_OnChip.a \
 	cpu/br56/liba/libOpcore_maskrom_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_advaudio_plc.a \
@@ -1045,14 +997,8 @@ LFLAGS := \
 	cpu/br56/liba/mp3_decstream_lib.a \
 	cpu/br56/liba/lib_mty_dec.a \
 	cpu/br56/liba/lib_wav_dec.a \
-	cpu/br56/liba/lib_flac_dec.a \
-	cpu/br56/liba/lib_m4a_dec.a \
-	cpu/br56/liba/lib_ape_dec.a \
-	cpu/br56/liba/lib_wma_dec.a \
 	cpu/br56/liba/agreement.a \
-	cpu/br56/liba/lib_jla_codec.a \
-	cpu/br56/liba/lib_lc3_codec.a \
-	cpu/br56/liba/lib_jl_codec_common.a \
+	cpu/br56/liba/lc3_codec_lib.a \
 	cpu/br56/liba/opus_enc_lib.a \
 	cpu/br56/liba/libjlsp.a \
 	cpu/br56/liba/libjlsp_kws.a \
@@ -1083,20 +1029,10 @@ LFLAGS := \
 	cpu/br56/liba/lib_icsd_common_v2.a \
 	cpu/br56/liba/lib_icsd_anc_v2.a \
 	cpu/br56/liba/lib_icsd_rt_anc.a \
-	cpu/br56/liba/lib_icsd_dot.a \
-	cpu/br56/liba/lib_icsd_aeq.a \
-	cpu/br56/liba/lib_icsd_afq.a \
-	cpu/br56/liba/lib_icsd_cmp.a \
-	cpu/br56/liba/lib_icsd_adt.a \
-	cpu/br56/liba/lib_icsd_wind.a \
-	cpu/br56/liba/lib_icsd_wat.a \
-	cpu/br56/liba/lib_icsd_vdt.a \
-	cpu/br56/liba/lib_icsd_ein.a \
 	cpu/br56/liba/lib_noisegate_pro.a \
 	cpu/br56/liba/le_audio_profile.a \
 	cpu/br56/liba/lib_limiter.a \
 	cpu/br56/liba/lib_iir_filter.a \
-	cpu/br56/liba/spatial_adv.a \
 	cpu/br56/liba/lib_PcmDelay.a \
 	cpu/br56/liba/lib_SurroundEffect.a \
 	cpu/br56/liba/lib_StereoWidener.a \
@@ -1107,33 +1043,22 @@ LFLAGS := \
 	cpu/br56/liba/lib_flanger.a \
 	cpu/br56/liba/lib_chorus_adv.a \
 	cpu/br56/liba/lib_pingpong_echo.a \
-	cpu/br56/liba/libStereoSpatialWider_pi32v2_OnChip.a \
-	cpu/br56/liba/libdistortion.a \
-	cpu/br56/liba/lib_frequency_compressor.a \
-	cpu/br56/liba/lib_gain_mix.a \
 	cpu/br56/liba/libFFT_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
-	cpu/br56/liba/lib_opusdec_rom_dec.a \
-	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
-	cpu/br56/liba/cbuf.a \
 	cpu/br56/liba/lbuf.a \
-	cpu/br56/liba/printf.a \
 	cpu/br56/liba/device.a \
-	cpu/br56/liba/fs.a \
 	cpu/br56/liba/ascii.a \
-	cpu/br56/liba/cfg_tool.a \
-	cpu/br56/liba/vm.a \
 	cpu/br56/liba/debug_record.a \
 	cpu/br56/liba/lzma_dec.a \
 	cpu/br56/liba/chargestore.a \
-	cpu/br56/liba/printf.a  \
-	cpu/br56/liba/cbuf.a  \
-	cpu/br56/liba/vm.a  \
-	cpu/br56/liba/fs.a  \
-	cpu/br56/liba/cfg_tool.a  \
+	cpu/br56/liba/printf.a \
+	cpu/br56/liba/cbuf.a \
+	cpu/br56/liba/vm.a \
+	cpu/br56/liba/fs.a \
+	cpu/br56/liba/cfg_tool.a \
 	--end-group \
 	-Tcpu/br56/sdk.ld \
 	-M=cpu/br56/tools/sdk.map \

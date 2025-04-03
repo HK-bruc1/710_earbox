@@ -134,12 +134,6 @@ int le_audio_ops_unregister(void)
     return 0;
 }
 
-/**
- *	@brief 解码器开启
- *
- *	@param rx_audio		broadcast_rx_audio_hdl
- *	@param args 		le_audio_stream_params
- */
 static int default_rx_le_audio_open(void *rx_audio, void *args)
 {
     int err;
@@ -151,7 +145,7 @@ static int default_rx_le_audio_open(void *rx_audio, void *args)
 
     //打开广播音频播放
     struct le_audio_stream_params *params = (struct le_audio_stream_params *)args;
-    rx_audio_hdl->le_audio = le_audio_stream_create(params->conn, &params->fmt);
+    rx_audio_hdl->le_audio = le_audio_stream_create(params->conn, &params->fmt, params->reference_time);
     rx_audio_hdl->rx_stream = le_audio_stream_rx_open(rx_audio_hdl->le_audio, params->fmt.coding_type);
     err = le_audio_player_open(rx_audio_hdl->le_audio, params);
     if (err != 0) {
@@ -162,11 +156,6 @@ static int default_rx_le_audio_open(void *rx_audio, void *args)
     return 0;
 }
 
-/**
- *	@brief 解码器关闭
- *
- *	@param rx_audio		broadcast_rx_audio_hdl
- */
 static int default_rx_le_audio_close(void *rx_audio)
 {
     struct broadcast_rx_audio_hdl *rx_audio_hdl = (struct broadcast_rx_audio_hdl *)rx_audio;
@@ -184,13 +173,8 @@ static int default_rx_le_audio_close(void *rx_audio)
     return 0;
 }
 
-/**
- *	@brief 编码器开启
- *
- *	@param args 		le_audio_stream_params
- *	@return le_audio_stream_context*
- */
-static void *default_tx_le_audio_open(void *args)
+
+static void *mic_tx_le_audio_open(void *args)
 {
     int err;
     void *le_audio = NULL;
@@ -199,7 +183,7 @@ static void *default_tx_le_audio_open(void *args)
         /* update_app_broadcast_deal_scene(BROADCAST_MUSIC_START); */
         //打开广播音频播放
         struct le_audio_stream_params *params = (struct le_audio_stream_params *)args;
-        le_audio = le_audio_stream_create(params->conn, &params->fmt);
+        le_audio = le_audio_stream_create(params->conn, &params->fmt, params->reference_time);
         err = le_audio_mic_recorder_open(params, le_audio, params->latency);
         if (err != 0) {
             ASSERT(0, "recorder open fail");
@@ -209,12 +193,7 @@ static void *default_tx_le_audio_open(void *args)
     return le_audio;
 }
 
-/**
- *	@brief 解码器开启
- *
- *	@param le_audio 	le_audio_stream_context
- */
-static int default_tx_le_audio_close(void *le_audio)
+static int mic_tx_le_audio_close(void *le_audio)
 {
     if (!le_audio) {
         return -EPERM;
@@ -226,6 +205,18 @@ static int default_tx_le_audio_close(void *le_audio)
 
     /* update_app_broadcast_deal_scene(BROADCAST_MUSIC_STOP); */
     return 0;
+}
+
+static void *default_tx_le_audio_open(void *args)
+{
+
+    return mic_tx_le_audio_open(args);
+}
+
+static int default_tx_le_audio_close(void *rx_audio)
+{
+
+    return mic_tx_le_audio_close(rx_audio);
 }
 
 #endif

@@ -314,45 +314,49 @@
     *(.adpcm_encode_sparse_const)
     . = ALIGN(4);
     . = ALIGN(4);
-	
+    *(.lc3_decoder_code)
+    *(.lc3_decoder_const)	
 #if !AUDIO_LC3_CODEC_AT_RAM
-	    *(.lc3_dec.text.const)
-	    *(.lc3_dec.text)
-	    *(.lc3_enc.text.const)
-	    *(.lc3_enc.text)
-	    *(.lc3_codec_c_const)
-	    *(.lc3_codec_c_code)
-	    *(.lc3_codec_c_sparse_code)
-	    *(.lc3_codec_d_code)
-	    *(.lc3_codec_e_code)
-	    . = ALIGN(4);
+    *(.lc3_dec.text.const)
+    *(.lc3_dec.text)
+    *(.lc3_enc.text.const)
+    *(.lc3_enc.text)
+    *(.lc3_dec_const)
+    *(.lc3_dec_code)
+    *(.lc3_codec_c_const)
+    *(.lc3_codec_c_code)
+    *(.lc3_codec_ari_c_const)
+    *(.lc3_codec_ari_c_code)
+    *(.lc3_codec_d_code)
+    *(.lc3_codec_e_code)
+    *(.lc3_codec_c_sparse_code)
+    *(.lc3_codec_t8k_code)
+    *(.lc3_codec_t16k_code)
+    *(.lc3_codec_t24k_code)
+    *(.lc3_codec_t32k_code)  
+    *(.lc3_codec_t441k_code)
+    . = ALIGN(4);
 #endif
 #if !AUDIO_JLA_CODEC_AT_RAM
-		*(.jla_dec.text.const)
-	    *(.jla_dec.text)
-	    *(.jla_enc.text.const)
-	    *(.jla_enc.text)
-	    *(.jla_codec_c_const)
-	    *(.jla_codec_c_code)
-	    *(.jla_codec_c_sparse_code)
-	    *(.jla_codec_d_code)
-	    *(.jla_codec_e_code)
-	    . = ALIGN(4);
-#endif
-#if !(AUDIO_JLA_CODEC_AT_RAM || AUDIO_JLA_CODEC_AT_RAM)
-		*(.jl_codec_c_const) 
-		*(.jl_codec_c_code)  
-		*(.jl_codec_ari_c_const)
-		*(.jl_codec_ari_c_code)
-		*(.jl_codec_c_sparse_code)
-		*(.jl_codec_d_code)
-		*(.jl_codec_e_code)
-		*(.jl_codec_t8k_code)
-		*(.jl_codec_t16k_code)
-		*(.jl_codec_t24k_code)
-		*(.jl_codec_t32k_code)
-		*(.jl_codec_t441k_code)
-		*(.jl_codec_const) 
+    *(.jla_dec.text.const)
+    *(.jla_dec.text)
+    *(.jla_enc.text.const)
+    *(.jla_enc.text)
+    *(.jla_dec_const)
+    *(.jla_dec_code)
+    *(.jla_codec_c_const)
+    *(.jla_codec_c_code)
+    *(.jla_codec_ari_c_const)
+    *(.jla_codec_ari_c_code)
+    *(.jla_codec_d_code)
+    *(.jla_codec_e_code)
+    *(.jla_codec_c_sparse_code)
+    *(.jla_codec_t8k_code)
+    *(.jla_codec_t16k_code)
+    *(.jla_codec_t24k_code)
+    *(.jla_codec_t32k_code)
+    *(.jla_codec_t441k_code)
+    . = ALIGN(4);
 #endif
 
     *(.speex_code)
@@ -589,21 +593,11 @@
 	/* *(.pingpong_echo.text.const)	 */
 #endif
 
-#if (AFx_DISTORTION_CLIPPING_AT_RAM == 0)
+#if AFx_DISTORTION_CLIPPING_AT_RAM == 0
 	*(.distortion.text.cache.L2.code)	
 	*(.distortion.text.cache.L2.const)	
 	/* *(.distortion.text)	 */
 	/* *(.distortion.text.const)	 */
-#endif
-
-#if (AFx_FREQUENCY_COMPRESSOR_AT_RAM == 0)
-	*(.freq_compressor.text.cache.L2.code)
-	*(.freq_compressor.text.cache.L2.const)
-#endif
-
-#if AFx_GAIN_MIX_AT_RAM == 0
-	*(.gain_mix.text.cache.L2.code)	
-	*(.gain_mix.text.cache.L2.const)	
 #endif
 
     . = ALIGN(4);

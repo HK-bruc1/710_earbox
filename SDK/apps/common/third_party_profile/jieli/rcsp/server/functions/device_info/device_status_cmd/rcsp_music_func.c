@@ -11,7 +11,6 @@
 #include "rcsp_config.h"
 #include "key_event_deal.h"
 #include "music/music_player.h"
-#include "app_music.h"
 #include "JL_rcsp_attr.h"
 #include "JL_rcsp_api.h"
 
@@ -83,8 +82,9 @@ static u8 mucis_func_add_one_attr_continue(u8 *buf, u16 max_len, u8 offset, u8 t
 u32 rcsp_music_func_get(void *priv, u8 *buf, u16 buf_size, u32 mask)
 {
     u16 offset = 0;
-#if (TCFG_APP_MUSIC_EN && !RCSP_APP_MUSIC_EN && RCSP_FILE_OPT)
-    if (!app_in_mode(APP_MODE_MUSIC)) {
+#if (TCFG_APP_MUSIC_EN && !RCSP_APP_MUSIC_EN)
+    u8 app = app_get_curr_task();
+    if (app != APP_MUSIC_TASK) {
         return 0;
     }
     ///获取当前播放状态
