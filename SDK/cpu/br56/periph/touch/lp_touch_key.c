@@ -493,6 +493,9 @@ void lp_touch_key_charge_mode_exit()
 
 static void lp_touch_key_pre_softoff_cbfunc(void)
 {
+    if (0 == lpctmu_is_working()) {
+        return;
+    }
     u32 key_state = lp_touch_key_get_last_touch_state();
     while (key_state) {//等待松手
         os_time_dly(2);

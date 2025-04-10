@@ -192,7 +192,7 @@ struct audio_adc_hdl {
     u8 adc_sel[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc_en[AUDIO_ADC_MAX_NUM];
-    struct mic_open_param mic_param[AUDIO_ADC_MAX_NUM];
+    struct mic_open_param mic_param[AUDIO_ADC_MIC_MAX_NUM];
     struct linein_open_param linein_param[AUDIO_ADC_MAX_NUM];
     u8 mic_ldo_state;
     u8 state;

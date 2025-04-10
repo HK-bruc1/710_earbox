@@ -106,6 +106,9 @@ DEFINES := \
 	-DCONFIG_EQ_SUPPORT_ASYNC \
 	-DEQ_CORE_V1 \
 	-DCONFIG_BT_CTRLER_IN_MASK \
+	-DCONFIG_CRYPTO_TOOLBOX_OSIZE_IN_MASKROM \
+	-DCONFIG_CRYPTO_RESET_BITS_SZIE_IN_MASKROM \
+	-DCONFIG_CRYPTO_AES_CMC_IN_SDK \
 	-DCONFIG_AAC_CODEC_FFT_USE_MUTEX \
 	-DCONFIG_SIN_TONE_V2 \
 	-DCONFIG_DNS_ENABLE \
@@ -1117,7 +1120,6 @@ LFLAGS := \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_opusdec_rom_dec.a \
-	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
 	cpu/br56/liba/cbuf.a \

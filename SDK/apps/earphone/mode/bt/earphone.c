@@ -129,7 +129,7 @@ extern void clr_device_in_page_list();
 #define EDGE_SLECT_POART_OPEN  {JL_PORTC->DIR &= ~BIT(7);JL_PORTC->SPL |= BIT(7);}
 #define EDGE_SLECT_POART_CLOSE {JL_PORTC->DIR |= BIT(7);JL_PORTC->SPL &= ~BIT(7);}
 
-#elif defined(CONFIG_CPU_BR52)//JL709 or JL710
+#elif defined(CONFIG_CPU_BR52) || defined(CONFIG_CPU_BR56)//JL709 or JL710
 
 #define OPTIMIZATION_CONN_NOISE    1//回连噪声优化,默认开启
 #define BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT//不需要io
@@ -140,6 +140,13 @@ extern void clr_device_in_page_list();
 
 #endif
 
+#ifdef CONFIG_CPU_BR56
+#define BT_TIMER  JL_TIMER2
+#define BT_IRQ_TIME_IDX  IRQ_TIME2_IDX
+#else
+#define BT_TIMER  JL_TIMER3
+#define BT_IRQ_TIME_IDX  IRQ_TIME3_IDX
+#endif
 
 void bredr_link_disturb_scan_timeout(void *priv)
 {
@@ -1007,7 +1014,7 @@ int bt_mode_init()
 
 #if OPTIMIZATION_CONN_NOISE
 #ifdef BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT
-    if (JL_TIMER3->CON & 0b11) {
+    if (BT_TIMER->CON & 0b11) {
         ASSERT(0, "bt_edge_TIMER use ing\n");
     }
 #else
@@ -1309,47 +1316,45 @@ enum bb_irq_edge {
 ___interrupt
 void bt_edge_isr()
 {
-    SFR(JL_TIMER3->CON, 14, 1, 1);  //clean pnding
-    if ((JL_TIMER3->CON & 0x3) == 0b10) { //rise edge mode
+    SFR(BT_TIMER->CON, 14, 1, 1);  //clean pnding
+    if ((BT_TIMER->CON & 0x3) == 0b10) { //rise edge mode
         //raise edge
-        SFR(JL_TIMER3->CON, 0, 2, 0b11);  //fall edge capture
+        SFR(BT_TIMER->CON, 0, 2, 0b11);  //fall edge capture
         /* putchar('r'); */
         rx_st_ctl();
     } else {
         //fall edge
-        SFR(JL_TIMER3->CON, 0, 2, 0b10);  //rise edge capture
+        SFR(BT_TIMER->CON, 0, 2, 0b10);  //rise edge capture
         /* putchar('R'); */
         tx_st_ctl();
     }
 }
-int btbb_irq_config(u8 btbb_sig, u8 irq_edge)//pa,pb,pc,pd,usb
+int btbb_irq_config(u8 btbb_sig, u8 irq_edge)
 {
 #ifdef CONFIG_CPU_BR56
-    SFR(JL_IOMC->ICH_IOMC1, 5, 5, btbb_sig);   //set lna_en to tmr3_cap
+    SFR(JL_IOMC->ICH_IOMC1, 0, 5, btbb_sig);   //set lna_en to tmr2_cap
 #else
-    SFR(JL_IOMC->ICH_IOMC1, 15, 5, btbb_sig);   //set lna_en to tmr3_cap
+    SFR(JL_IOMC->ICH_IOMC1, 15, 5, btbb_sig);
 #endif
-
-    JL_TIMER3->CON              = (\
-                                   /* dual mode     */ (0 << 16) | \
-                                   /* clear pnd     */ (1 << 14) | \
-                                   /* pwm inv       */ (0 <<  9) | \
-                                   /* psel          */ (0 <<  8) | \
-                                   /* capture sel 2 */ (0 <<  2) | \
-                                   /* mode        2 */ (0 <<  0));
-    JL_TIMER3->CNT = 0x5555;
-    JL_TIMER3->PRD = 0;
+    BT_TIMER->CON              = (\
+                                  /* dual mode     */ (0 << 16) | \
+                                  /* clear pnd     */ (1 << 14) | \
+                                  /* pwm inv       */ (0 <<  9) | \
+                                  /* psel          */ (0 <<  8) | \
+                                  /* capture sel 2 */ (0 <<  2) | \
+                                  /* mode        2 */ (0 <<  0));
+    BT_TIMER->CNT = 0x5555;
+    BT_TIMER->PRD = 0;
     if (irq_edge == 0) {                                //set tmr cap as fall edge
-        request_irq(IRQ_TIME3_IDX, 1, bt_edge_isr, 0);
-        SFR(JL_TIMER3->CON, 0, 2, 0b11);                //fall edge
+        request_irq(BT_IRQ_TIME_IDX, 1, bt_edge_isr, 0);
+        SFR(BT_TIMER->CON, 0, 2, 0b11);                //fall edge
     } else if (irq_edge == 1) {                          //set tmr cap as rise edge
-        request_irq(IRQ_TIME3_IDX, 1, bt_edge_isr, 0);
-        SFR(JL_TIMER3->CON, 0, 2, 0b10);                //rise edge
+        request_irq(BT_IRQ_TIME_IDX, 1, bt_edge_isr, 0);
+        SFR(BT_TIMER->CON, 0, 2, 0b10);                //rise edge
     } else {                                             //disable tmr cap
-        unrequest_irq(IRQ_TIME3_IDX);
-        SFR(JL_TIMER3->CON, 0, 2, 0);  //fall edge
+        unrequest_irq(BT_IRQ_TIME_IDX);
+        SFR(BT_TIMER->CON, 0, 2, 0);  //fall edge
     }
-
     return 0;
 }
 #else
@@ -1383,7 +1388,7 @@ struct gpio_irq_config_st gpio_irq_config_rx_off = {
 
 void bt_user_page_enable(u8 enable, u8 type)
 {
-    /* printf("bt_user_page_enable=%d,type=%d", enable, type); */
+    /*y_printf("bt_user_page_enable=%d,type=%d", enable, type); */
     if (type == 1) { //tws quick page no doning
         return;
     }
@@ -1398,7 +1403,7 @@ void bt_user_page_enable(u8 enable, u8 type)
         EDGE_SLECT_POART_OPEN
 #endif
 #endif
-        /* log_info("gpio_irq_config open-----+++++"); */
+        /*y_printf("gpio_irq_config open-----+++++"); */
     } else {
 #ifdef BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT
         btbb_irq_config(WL_LNAE, BB_IRQ_EDGE_DISABLE);    //9 lna_en
@@ -1409,7 +1414,7 @@ void bt_user_page_enable(u8 enable, u8 type)
 #endif
 #endif
         hw_ctl_open();
-        /* log_info("btbb_irq_config close-----+++++"); */
+        /* y_printf("btbb_irq_config close-----+++++"); */
     }
 }
 #endif
