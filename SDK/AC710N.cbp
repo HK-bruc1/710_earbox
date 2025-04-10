@@ -38,6 +38,9 @@
 <Add option="-DCONFIG_EQ_SUPPORT_ASYNC" />
 <Add option="-DEQ_CORE_V1" />
 <Add option="-DCONFIG_BT_CTRLER_IN_MASK" />
+<Add option="-DCONFIG_CRYPTO_TOOLBOX_OSIZE_IN_MASKROM" />
+<Add option="-DCONFIG_CRYPTO_RESET_BITS_SZIE_IN_MASKROM" />
+<Add option="-DCONFIG_CRYPTO_AES_CMC_IN_SDK" />
 <Add option="-DCONFIG_AAC_CODEC_FFT_USE_MUTEX" />
 <Add option="-DCONFIG_SIN_TONE_V2" />
 <Add option="-DCONFIG_DNS_ENABLE" />
@@ -355,7 +358,6 @@
 <Add option="cpu/br56/liba/lib_wtg_dec.a" />
 <Add option="cpu/br56/liba/bfilterfun_lib.a" />
 <Add option="cpu/br56/liba/lib_opusdec_rom_dec.a" />
-<Add option="cpu/br56/liba/crypto_toolbox_Osize.a" />
 <Add option="cpu/br56/liba/lib_dns.a" />
 <Add option="cpu/br56/liba/update.a" />
 <Add option="cpu/br56/liba/cbuf.a" />

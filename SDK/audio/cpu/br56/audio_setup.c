@@ -211,9 +211,11 @@ void audio_dac_initcall(void)
             } else {
                 struct trim_init_param_t trim_init = {0};
                 trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
+                trim_init.trim_speed = 0.7f; //DAC trim的收敛速度(不建议修改)
                 int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
                 int trim_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (1250) : (2500);
-                if ((ret == 0) && (__builtin_abs(dac_trim.left + trim_offset) < 100) && (__builtin_abs(dac_trim.right + trim_offset) < 100)) {
+                int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (100) : (300);
+                if ((ret == 0) && (__builtin_abs(dac_trim.left + trim_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trim_offset) < trim_limit)) {
                     /* puts("dac_trim_succ"); */
                     syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
                 } else {

@@ -115,6 +115,7 @@ struct trim_init_param_t {
     u8 clock_mode;
     u8 power_level;
     s16 precision;
+    float trim_speed;
     struct audio_dac_trim *dac_trim;
     struct audio_dac_hdl *dac;              /* DAC设备*/
 };
