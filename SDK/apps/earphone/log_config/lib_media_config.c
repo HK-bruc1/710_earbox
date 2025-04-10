@@ -363,6 +363,17 @@ const int const_audio_wma_dec16_fifo_precision = 16;  //  24 或者 16
 //***********************
 const int OPUS_SRINDEX = 0; //选择opus解码文件的帧大小，0代表一帧40字节，1代表一帧80字节，2代表一帧160字节
 
+#ifndef TCFG_DEC_OGG_OPUS_ENABLE
+#define TCFG_DEC_OGG_OPUS_ENABLE  0
+#endif
+//支持ogg_opus 类解码
+const int CONFIG_OGG_OPUS_DEC_SUPPORT = TCFG_DEC_OGG_OPUS_ENABLE; //这里使能才能进行下面两种解码方式的配置
+//设置OPUS 为raw 数据. 带8字节packet头(4字节大端包长+4字节range校验值)
+const int CONFIG_OGG_OPUS_DEC_SET_RAW_MODE = 0;
+//设置OPUS 为raw 数据 + CBR_OPUS 包长,配配置每次解码读入的包长置每次解码读入的包长可能有多帧共用TOC. 返回0设置成功;
+//使用CBR_OPUS设置包长，需要将上面的 CONFIG_OGG_OPUS_DEC_SET_RAW_MODE 置零
+const int CONFIG_OGG_OPUS_DEC_SET_CBR_PACKET_LEN = 0;
+
 //***********************
 //*		SPEEX Codec      *
 //***********************
@@ -391,9 +402,32 @@ const  int  silk_fsW_enable = 1;  //支持16-24k采样率
 //***********************
 //* 	LC3 Codec      *
 //***********************
+//LC3帧长使能配置
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_JL_UNICAST_SINK_EN)
+const char  LC3_FRAME_LEN_SUPPORT_25_DMS = 1;	//2.5ms的帧长使能
+const char  LC3_FRAME_LEN_SUPPORT_50_DMS = 1; 	//5ms的帧长使能
+#else
+const char  LC3_FRAME_LEN_SUPPORT_25_DMS = 0;	//2.5ms的帧长使能
+const char  LC3_FRAME_LEN_SUPPORT_50_DMS = 0; 	//5ms的帧长使能
+#endif
+const char  LC3_FRAME_LEN_SUPPORT_75_DMS = 1; 	//7.5ms的帧长使能
+const char  LC3_FRAME_LEN_SUPPORT_100_DMS = 1; 	//10ms的帧长使能
+//LC3采样率使能配置
+const char  LC3_SAMPLE_RATE_SUPPORT_8K = 0;   	//8K采样率使能
+const char  LC3_SAMPLE_RATE_SUPPORT_16K = 0;  	//16K采样率使能
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+const char  LC3_SAMPLE_RATE_SUPPORT_24K = 1;  	//24K采样率使能
+#else
+const char  LC3_SAMPLE_RATE_SUPPORT_24K = 0;  	//24K采样率使能
+#endif
+const char  LC3_SAMPLE_RATE_SUPPORT_32K = 1;  	//32K采样率使能
+const char  LC3_SAMPLE_RATE_SUPPORT_48K = 1;  	//48K/44.1K采样率使能
 const int LC3_PLC_EN = 0;  				//LC3丢包修复效果配置: 0:淡入淡出; 1:时域PLC;  2:频域PLC;  3:无任何效果，仅补静音包;
+const int  LC3_PLC_FADE_OUT_START_POINT = 120;
+const int  LC3_PLC_FADE_OUT_POINTS = 120;
+const int  LC3_PLC_FADE_IN_POINTS = 120;
 const int LC3_PLC_FADE_IN_MS = 30;   	//LC3_PLC_EN = 0时有效, 淡入时间设置ms;
-#if(HW_FFT_VERSION == FFT_EXT) 			//支持非2的指数次幂点数的fft 时 置1
+#if(HW_FFT_VERSION == FFT_EXT || HW_FFT_VERSION == FFT_EXT_V2) 			//支持非2的指数次幂点数的fft 时 置1
 const int LC3_HW_FFT = 1;
 #else
 const int LC3_HW_FFT = 0;
@@ -408,8 +442,12 @@ const int LC3_DECODE_O24bit_ENABLE = 0; //控制 LC3解码输出24bit是否使�
 //* 	JLA Codec      *
 //***********************
 const int JLA_PLC_EN = 0;   			//置1做plc，置0的效果类似补静音包
-const int JLA_PLC_FADE_IN_MS = 30; 		// JLA_PLC_EN = 0时有效, 淡入时间设置ms;
-#if(HW_FFT_VERSION == FFT_EXT) 			//支持非2的指数次幂点数的fft 时 置1
+
+const int JLA_PLC_FADE_OUT_START_POINT = 480;   //丢包后维持音量的点数.
+const int JLA_PLC_FADE_OUT_POINTS = 120 * 5;    //丢包维持指定点数后,淡出的速度,音量从满幅到0需要的点数.
+const int JLA_PLC_FADE_IN_POINTS = 120 * 5;     //丢包后收到正确包淡入,淡入的速度,音量从0到满幅需要的点数.
+
+#if(HW_FFT_VERSION == FFT_EXT || HW_FFT_VERSION == FFT_EXT_V2) 			//支持非2的指数次幂点数的fft 时 置1
 const int JLA_HW_FFT = 1;
 #else
 const int JLA_HW_FFT = 0;
@@ -451,7 +489,7 @@ const int JLA_CODEC_SOFT_DECISION_ENABLE = 0;
 //***********************
 //* 	LE Audio        *
 //***********************
-#if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
+#if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN)))
 const int LE_AUDIO_TIME_ENABLE  = 1;
 #else
 const int LE_AUDIO_TIME_ENABLE  = 0;
@@ -562,15 +600,24 @@ const int LPC_JUST_FADE = TCFG_MUSIC_PLC_TYPE;
 //影响plc申请的buf大小跟速度，这个值越大，申请的buf越多，速度也越快。
 //增加的buf大小是  APLC_MOV_STAKLEN *类型(16bit是 sizeof(short), 32bit 是sizeof(int))
 const int APLC_MOV_STAKLEN = 1024;
-
+//是否使能24bit数据丢包时按照16bit修复，影响ram的使用
+const int lfaudio_plc_mode24bit_16bit_en = 1;
 /*
- * 通话PLC延时配置,支持 0【延时最大】，1，2【延时最小】配置
- * 16k:0:28.5ms, 1:17ms, 2:12.5ms
- *  8k:0:24.5ms, 1:22ms, 2:18ms
+   不同配置的ram使用情况
+-----------------------------------------------------------------------
+  APLC_MOV_STAKLEN                |        0        |       1024      |
+-----------------------------------------------------------------------
+  lfaudio_plc_mode24bit_16bit_en  |   0    |   1    |    0    |   1   |
+-----------------------------------------------------------------------
+	ram(byte)                     |  7580  |  5632  |  11676  |  7680 |
+-----------------------------------------------------------------------
  */
-const  int  ESCO_PLC_DELAY_CONTROL = 0;
+
 const  int  ESCO_PLC_SUPPORT_24BIT_EN = MEDIA_24BIT_ENABLE;  //24bit开关
 
+const  int  ESCO_PLC_FADE_OUT_START_POINT = 500;	//丢包后修复过程中，维持音量的点数.即修复这么多点后，开始淡出
+const  int  ESCO_PLC_FADE_OUT_POINTS = 2048; 		//丢包维持指定点数后,淡出的速度,音量从满幅到0需要的点数. 即淡出完需要的点数
+const  int  ESCO_PLC_FADE_IN_POINTS = 32; 			//丢包后收到正确包淡入,淡入的速度,音量从0到满幅需要的点数.即淡入完需要的点数
 //***********************
 //*   Howling Suppress  *
 //***********************

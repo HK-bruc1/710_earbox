@@ -17,6 +17,9 @@
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 #include "app_le_connected.h"
 #endif
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#include "app_le_auracast.h"
+#endif
 
 
 #define LOG_TAG             "[EARPHONE]"
@@ -35,21 +38,21 @@ const int adkey_msg_table[10][KEY_ACTION_MAX] = {
     //按住3s, 按住5s
     [0] = {
         APP_MSG_MUSIC_PP,   APP_MSG_CALL_HANGUP,   APP_MSG_NULL,   APP_MSG_NULL,
-        APP_MSG_GOTO_NEXT_MODE,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
+        APP_MSG_LOW_LANTECY,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
         APP_MSG_NULL,       APP_MSG_POWER_OFF,
     },
     [1] = {
-        APP_MSG_MUSIC_PREV, APP_MSG_VOL_DOWN,   APP_MSG_VOL_DOWN,   APP_MSG_NULL,
-        APP_MSG_NULL,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
-        APP_MSG_NULL,       APP_MSG_NULL,
-    },
-    [2] = {
         APP_MSG_MUSIC_NEXT, APP_MSG_VOL_UP,   APP_MSG_VOL_UP,   APP_MSG_NULL,
         APP_MSG_NULL,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
         APP_MSG_NULL,       APP_MSG_NULL,
     },
+    [2] = {
+        APP_MSG_MUSIC_PREV, APP_MSG_VOL_DOWN,   APP_MSG_VOL_DOWN,   APP_MSG_NULL,
+        APP_MSG_NULL,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
+        APP_MSG_NULL,       APP_MSG_NULL,
+    },
     [3] = {
-        APP_MSG_LOW_LANTECY,   APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
+        APP_MSG_GOTO_NEXT_MODE,   APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
         APP_MSG_NULL,       APP_MSG_NULL,   APP_MSG_NULL,   APP_MSG_NULL,
         APP_MSG_NULL,       APP_MSG_NULL,
     },
@@ -130,7 +133,7 @@ int bt_key_power_msg_remap(int *msg)
     /* 通话相关场景下按键流程 */
     if (active_device) {
         switch (key_action) {
-        case KEY_ACTION_CLICK:
+        case KEY_ACTION_DOUBLE_CLICK:
             app_msg = APP_MSG_CALL_HANGUP;
             break;
         default:
@@ -149,7 +152,7 @@ int bt_key_power_msg_remap(int *msg)
         }
     } else if (outgoing_device) {
         switch (key_action) {
-        case KEY_ACTION_CLICK:
+        case KEY_ACTION_DOUBLE_CLICK:
             app_msg = APP_MSG_CALL_HANGUP;
             break;
         default:
@@ -157,7 +160,7 @@ int bt_key_power_msg_remap(int *msg)
         }
     } else if (siri_device) {
         switch (key_action) {
-        case KEY_ACTION_CLICK:
+        case KEY_ACTION_DOUBLE_CLICK:
             app_msg = APP_MSG_CLOSE_SIRI;
             break;
         default:
@@ -167,7 +170,9 @@ int bt_key_power_msg_remap(int *msg)
         /* 非通话相关场景下按键流程 */
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
         int tws_cig_state = is_cig_phone_conn();
-        if (tws_state & TWS_STA_PHONE_CONNECTED || tws_cig_state) { //已连接手机经典蓝牙或者cig
+        if ((tws_state & TWS_STA_PHONE_CONNECTED) || tws_cig_state) { //已连接手机经典蓝牙或者cig
+#elif (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+        if ((tws_state & TWS_STA_PHONE_CONNECTED) && (le_auracast_status_get() != BROADCAST_STATUS_START)) { //已连接手机经典蓝牙&&耳机没有auracast播歌
 #else
         if (tws_state & TWS_STA_PHONE_CONNECTED) { //已连接手机经典蓝牙
 #endif
@@ -200,10 +205,30 @@ int bt_key_power_msg_remap(int *msg)
                 // 三击右耳进入SIRI
                 app_msg = APP_MSG_OPEN_SIRI;
                 break;
+            case KEY_ACTION_FOURTH_CLICK:
+                app_msg = APP_MSG_VOL_UP;
+                break;
+            case KEY_ACTION_FIRTH_CLICK:
+                app_msg = APP_MSG_VOL_DOWN;
+                break;
             default:
                 break;
             }
         }
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+        if (le_auracast_status_get() == BROADCAST_STATUS_START) {
+            switch (key_action) {
+            case KEY_ACTION_DOUBLE_CLICK:
+                app_msg = APP_MSG_VOL_UP;
+                break;
+            case KEY_ACTION_TRIPLE_CLICK:
+                app_msg = APP_MSG_VOL_DOWN;
+                break;
+            default:
+                break;
+            }
+        }
+#endif
     }
     /* 所有场景下按键流程 */
     switch (key_action) {

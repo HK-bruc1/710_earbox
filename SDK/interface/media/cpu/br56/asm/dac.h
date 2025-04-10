@@ -8,6 +8,7 @@
 #include "audio_src.h"
 #include "system/spinlock.h"
 #include "audio_def.h"
+#include "audio_general.h"
 
 /***************************************************************************
   							Audio DAC Features
@@ -58,8 +59,8 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_TRIM_SEL_PA_LN              2
 #define DAC_TRIM_SEL_PA_RP              3
 #define DAC_TRIM_SEL_PA_RN              3
-#define DAC_TRIM_SEL_VCM_L              4
-#define DAC_TRIM_SEL_VCM_R              5
+// #define DAC_TRIM_SEL_VCM_L              4    (unused)
+// #define DAC_TRIM_SEL_VCM_R              5    (unused)
 
 #define DAC_TRIM_CH_L                  0
 #define DAC_TRIM_CH_R                  1
@@ -157,7 +158,6 @@ struct audio_dac_hdl {
     u8 analog_inited;
     u8 digital_inited;
     volatile u8 state;
-    u8 ng_threshold;
     u8 gain;
     u8 channel;
     u8 power_on;
@@ -190,6 +190,7 @@ struct audio_dac_hdl {
     OS_MUTEX mutex;
     spinlock_t lock;
     const struct dac_platform_data *pd;
+	struct audio_dac_noisegate ng;
     void (*fade_handler)(u8 left_gain, u8 right_gain);
 };
 

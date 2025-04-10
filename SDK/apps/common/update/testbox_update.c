@@ -239,7 +239,7 @@ void testbox_update_msg_handle(int msg)
 void testbox_update_init(void)
 {
     if (CONFIG_UPDATE_ENABLE && (CONFIG_UPDATE_BLE_TEST_EN || CONFIG_UPDATE_BT_LMP_EN)) {
-        log_info("testbox msg handle reg:%x\n", testbox_update_msg_handle);
+        log_info("testbox msg handle reg:%x\n", (void *)testbox_update_msg_handle);
         btctrler_testbox_update_msg_handle_register(testbox_update_msg_handle);
     }
 }

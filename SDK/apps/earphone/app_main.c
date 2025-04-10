@@ -40,13 +40,13 @@
 #include "app_key_dut.h"
 #include "linein.h"
 #include "pc.h"
+#include "app_music.h"
 #include "rcsp_user_api.h"
 #include "pwm_led/led_ui_api.h"
 #include "dual_bank_updata_api.h"
 #if TCFG_AUDIO_WIDE_AREA_TAP_ENABLE
 #include "icsd_adt_app.h"
 #endif
-
 
 #define LOG_TAG             "[APP]"
 #define LOG_ERROR_ENABLE
@@ -91,7 +91,11 @@ const struct task_info task_info_table[] = {
 #endif
 
     {"aec",					2,	   1,   768,   128 },
-
+    /*
+     *file dec任务不打断jlstream任务运行,故优先级低于jlstream
+     */
+    {"file_dec",            4,     0,  640,   0 },
+    {"file_cache",          6,     0,  512 - 128,   0 },
     {"aec_dbg",				3,	   0,   512,   128 },
     {"update",				1,	   0,   256,   0   },
     {"tws_ota",				2,	   0,   256,   0   },
@@ -167,14 +171,15 @@ const struct task_info task_info_table[] = {
 #if TCFG_AUDIO_ANC_ACOUSTIC_DETECTOR_EN
     {"icsd_anc",            5,     0,   512,   128 },
     {"icsd_adt",            2,     0,   512,   128 },
-    {"icsd_src",            2,     0,   512,   256 },
+    {"icsd_src",            3,     0,   512,   256 },
     {"speak_to_chat",       2,     0,   512,   128 },
 #endif
-#if ANC_REAL_TIME_ADAPTIVE_ENABLE
-    {"rt_anc",              3,     1,   512,   128 },
+#if TCFG_AUDIO_ANC_REAL_TIME_ADAPTIVE_ENABLE
+    {"rt_anc",              3,     0,   512,   128 },
+    {"rt_de",              	1,     0,   512,   128 },
 #endif
 #if TCFG_AUDIO_ANC_ENABLE && (TCFG_AUDIO_ANC_EXT_VERSION == ANC_EXT_V2)
-    {"afq_common",         	2,     1,   512,   128 },
+    {"afq_common",         	1,     0,   512,   128 },
 #endif
 #endif
 
@@ -190,6 +195,10 @@ const struct task_info task_info_table[] = {
 #if TCFG_ANC_BOX_ENABLE && TCFG_AUDIO_ANC_ENABLE
     {"anc_box",             7,     0,  512,   128},//配置高优先级避免产测被打断
 #endif
+#if (defined(TCFG_DEBUG_DLOG_ENABLE) && TCFG_DEBUG_DLOG_ENABLE)
+    {"dlog",                1,     0,  256,   128 },
+#endif
+    {"aud_adc_demo",        1,     0,  512,   128 },
     {0, 0},
 };
 
@@ -355,15 +364,17 @@ static struct app_mode *app_task_init()
     sdfile_init();
     syscfg_tools_init();
     cfg_file_parse(0);
-#if (defined(TCFG_DEBUG_DLOG_ENABLE) && TCFG_DEBUG_DLOG_ENABLE)
-    dlog_init();
-#endif
 
     jlstream_init();
 
     do_early_initcall();
     board_init();
     do_platform_initcall();
+
+#if (defined(TCFG_DEBUG_DLOG_ENABLE) && TCFG_DEBUG_DLOG_ENABLE)
+    dlog_init();
+    dlog_enable(1);
+#endif
 
     key_driver_init();
 
@@ -567,12 +578,32 @@ struct app_mode *app_mode_switch_handler(int *msg)
     }
 }
 
+#if 0
+static void test_printf(void *_arg)
+{
+    //extern void mem_unfree_dump(void);
+    //mem_unfree_dump();    //打印各模块内存
+
+    extern void mem_stats(void);   //打印当前内存
+    mem_stats();
+
+    int role = tws_api_get_role();
+    printf(">tws role:%d\n", role);   //打印tws主从
+
+    //char channel = tws_api_get_local_channel();
+    //printf(">tws channel:%c\n", channel);    //打印tws通道
+
+    int curr_clk = clk_get("sys");
+    printf(">curr_clk:%d\n", curr_clk);  //打印当前时钟
+}
+#endif
+
 static void app_task_loop(void *p)
 {
     struct app_mode *mode;
 
     mode = app_task_init();
-
+    //sys_timer_add(NULL, test_printf, 2000);  //定时调试打印
 #if CONFIG_FINDMY_INFO_ENABLE || (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)
 #if (VFS_ENABLE == 1)
     if (mount(NULL, "mnt/sdfile", "sdfile", 0, NULL)) {
@@ -580,6 +611,7 @@ static void app_task_loop(void *p)
     } else {
         log_debug("sdfile mount failed!!!");
     }
+#if (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)
     int update = 0;
     u32 realme_breakpoint = 0;
     if (CONFIG_UPDATE_ENABLE) {
@@ -587,7 +619,9 @@ static void app_task_loop(void *p)
         extern int realme_check_upgrade_area(int update);
         realme_check_upgrade_area(update);
     }
+#endif
 #endif /* #if (VFS_ENABLE == 1) */
+
 #else
     extern const int support_dual_bank_update_no_erase;
     if (support_dual_bank_update_no_erase) {
@@ -621,6 +655,11 @@ static void app_task_loop(void *p)
 #if TCFG_APP_PC_EN
         case APP_MODE_PC:
             mode = app_enter_pc_mode(g_mode_switch_arg);
+            break;
+#endif
+#if TCFG_APP_MUSIC_EN
+        case APP_MODE_MUSIC:
+            mode = app_enter_music_mode(g_mode_switch_arg);
             break;
 #endif
         }

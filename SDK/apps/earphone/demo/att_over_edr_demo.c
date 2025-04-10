@@ -7,15 +7,29 @@
 #include "btstack/le/ble_api.h"
 #include "btstack/le/att.h"
 
-#define ATT_OVER_EDR_DEMO_EN          0//enalbe att_over_edr_demo
 
 /*
 开启功能需要在apps/common/config/bt_profile_config.c中修改
 const u8 adt_profile_support = 1;
+edr att不接入中间层：
 att_read_callback和att_write_callback与ble使用相同
 发数接口：
 void set_adt_send_handle(u16 handle_val)  //用于切换发送handle
 bt_cmd_prepare(USER_CTRL_ADT_SEND_DATA, 15, (u8 *)send_data);
+
+edr att接入中间层：
+使用中间层的注册接口，实现发送和接收数据；
+if (rcsp_adt_support) {
+if (rcsp_server_edr_att_hdl == NULL) {
+    rcsp_server_edr_att_hdl = app_ble_hdl_alloc();
+}
+    app_ble_adv_address_type_set(rcsp_server_edr_att_hdl, 0);
+    app_ble_att_connect_type_set(rcsp_server_edr_att_hdl, BD_ADDR_TYPE_EDR_ATT);
+    app_ble_hdl_uuid_set(rcsp_server_edr_att_hdl, EDR_ATT_HDL_UUID);
+    app_ble_profile_set(rcsp_server_edr_att_hdl, rcsp_profile_data);
+    app_ble_callback_register(rcsp_server_edr_att_hdl);
+}
+
 注意：edr连接之后app连接需要开ble广播出来用于发现设备，广播类型可连接和不可连接都可以
 app连接成功后可关闭广播。
 */
@@ -23,13 +37,31 @@ app连接成功后可关闭广播。
 #if ATT_OVER_EDR_DEMO_EN
 #define log_info(x, ...)  printf("\n[###edr_att_demo@@@]" x " ", ## __VA_ARGS__)
 extern const u8 adt_profile_support;
+u8 rcsp_adt_support = 1; //edr att是否接入rcsp
 
-const u8 sdp_att_service_data[60] = {
+extern void att_event_handler_register(void (*handler)(u8 packet_type, u16 channel, u8 *packet, u16 size));
+extern void adt_profile_init(u16 psm, uint8_t const *db, att_read_callback_t rcallback, att_write_callback_t wcallback);
+extern void bredr_adt_init();
+
+const u8 sdp_att_service_data[60] = {                           //
     0x36, 0x00, 0x31, 0x09, 0x00, 0x00, 0x0A, 0x00, 0x01, 0x00, 0x21, 0x09, 0x00, 0x01, 0x35, 0x03,
     0x19, 0x18, 0x01, 0x09, 0x00, 0x04, 0x35, 0x13, 0x35, 0x06, 0x19, 0x01, 0x00, 0x09, 0x00, 0x1F,
-    0x35, 0x09, 0x19, 0x00, 0x07, 0x09, 0x00, 0x01, 0x09, 0x00, 0x13, 0x09, 0x00, 0x05, 0x35, 0x03,
+    0x35, 0x09, 0x19, 0x00, 0x07, 0x09, 0x00, 0x01, 0x09, 0x00, 0x04, 0x09, 0x00, 0x05, 0x35, 0x03,
+    0x19, 0x10, 0x02, 0x00                    //                //
+};
+const u8 sdp_att_service_data1[60] = {
+    0x36, 0x00, 0x31, 0x09, 0x00, 0x00, 0x0A, 0x00, 0x01, 0x00, 0x22, 0x09, 0x00, 0x01, 0x35, 0x03,
+    0x19, 0xAE, 0x00, 0x09, 0x00, 0x04, 0x35, 0x13, 0x35, 0x06, 0x19, 0x01, 0x00, 0x09, 0x00, 0x1F,
+    0x35, 0x09, 0x19, 0x00, 0x07, 0x09, 0x00, 0x05, 0x09, 0x00, 0x0a, 0x09, 0x00, 0x05, 0x35, 0x03,
     0x19, 0x10, 0x02, 0x00
 };
+const u8 sdp_att_service_data2[60] = {
+    0x36, 0x00, 0x31, 0x09, 0x00, 0x00, 0x0A, 0x00, 0x01, 0x00, 0x23, 0x09, 0x00, 0x01, 0x35, 0x03,
+    0x19, 0xBF, 0x00, 0x09, 0x00, 0x04, 0x35, 0x13, 0x35, 0x06, 0x19, 0x01, 0x00, 0x09, 0x00, 0x1F,
+    0x35, 0x09, 0x19, 0x00, 0x07, 0x09, 0x00, 0x0b, 0x09, 0x00, 0x10, 0x09, 0x00, 0x05, 0x35, 0x03,
+    0x19, 0x10, 0x02, 0x00
+};
+
 typedef struct {
     // linked list - assert: first field
     void *offset_item;
@@ -43,6 +75,14 @@ typedef struct {
 SDP_RECORD_HANDLER_REGISTER(spp_att_record_item) = {
     .service_record = (u8 *)sdp_att_service_data,
     .service_record_handle = 0x00010021,
+};
+SDP_RECORD_HANDLER_REGISTER(spp_att_record_item1) = {
+    .service_record = (u8 *)sdp_att_service_data1,
+    .service_record_handle = 0x00010022,
+};
+SDP_RECORD_HANDLER_REGISTER(spp_att_record_item2) = {
+    .service_record = (u8 *)sdp_att_service_data2,
+    .service_record_handle = 0x00010023,
 };
 
 static const uint8_t self_define_profile_data[] = {
@@ -245,10 +285,12 @@ static void att_packet_handler(u8 packet_type, u16 channel, u8 *packet, u16 size
 
 void att_profile_init()
 {
-    extern void att_event_handler_register(void (*handler)(u8 packet_type, u16 channel, u8 * packet, u16 size));
-    extern void adt_profile_init(u16 psm, uint8_t const * db, att_read_callback_t rcallback, att_write_callback_t wcallback);
-    att_event_handler_register(att_packet_handler);
-    adt_profile_init(0, self_define_profile_data, att_read_callback, att_write_callback);
+    if (rcsp_adt_support) {
+        bredr_adt_init();
+    } else {
+        att_event_handler_register(att_packet_handler);
+        adt_profile_init(0, self_define_profile_data, att_read_callback, att_write_callback);
+    }
 }
 
 static int edr_att_btstack_event_handler(int *msg)

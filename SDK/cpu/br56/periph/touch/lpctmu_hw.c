@@ -654,7 +654,7 @@ void lpctmu_init(struct lpctmu_config_data *cfg_data)
         //设置分频
         SFR(P11_LPCTM0->CLKC, 6, 1, 0); //divB = 1分频
         SFR(P11_LPCTM0->CLKC, 7, 1, 0); //divC = 1分频
-        SFR(P11_LPCTM0->CLKC, 3, 3, 2); //div  = 2^2 = 4分频
+        SFR(P11_LPCTM0->CLKC, 3, 3, 0); //div  = 2^0 = 1分频
 
         //通道采集前的待稳定时间配置
         SFR(P11_LPCTM0->PPRD, 4, 4, 9);      //prp_prd = (9 + 1) * t 约等 50us > 10us
@@ -662,8 +662,8 @@ void lpctmu_init(struct lpctmu_config_data *cfg_data)
         SFR(P11_LPCTM0->PPRD, 0, 4, 9);      //stop_prd= (9 + 1) * t 约等 50us > 10us
 
         //每个通道采集的周期，常设几个毫秒
-        u8 det_prd = __this->pdata->sample_window_time * lpctmu_clk / 4 / 1000 - 1;
-        SFR(P11_LPCTM0->DPRD, 0, 8, det_prd);
+        u32 det_prd = __this->pdata->sample_window_time * lpctmu_clk / 1000 - 1;
+        SFR(P11_LPCTM0->DPRD, 0, 12, det_prd);
 
         if (__this->pdata->ext_stop_ch_en) {
             SFR(P11_LPCTM0->EXEN, 0, 5, __this->pdata->ext_stop_ch_en);

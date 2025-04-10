@@ -445,7 +445,7 @@ static void audio_aec_param_init(struct aec_s_attr *p)
         p->DNS_highGain = 2.5f; /*EQ强度, 范围：1.0f~3.5f,越大越强*/
         p->DNS_rbRate = 0.3f;   /*混响强度，范围：0~0.9f,越大越强*/
 
-        p->ANS_NoiseLevel = db2mag((int)(75.0f * (1 << 8)), 8, 23);//初始噪声水平
+        p->ANS_NoiseLevel = db2mag((int)(-75.0f * (1 << 8)), 8, 23);//初始噪声水平
     }
     p->ANS_mode = 1;
     p->wn_gain = 331;
@@ -459,7 +459,7 @@ static void audio_aec_param_init(struct aec_s_attr *p)
     p->aec_tail_length = AEC_TAIL_LENGTH;
     p->ES_OverSuppressThr = 0.02f;
     p->ES_OverSuppress = 2.f;
-
+    p->TDE_EngThr = -80.f;
     if (CONST_SMS_DNS_VERSION == SMS_DNS_V200) {
         p->AEC_Process_MaxFrequency = 8000;
         p->AEC_Process_MinFrequency = 0;

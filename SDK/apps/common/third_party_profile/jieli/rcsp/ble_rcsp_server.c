@@ -884,14 +884,10 @@ void rcsp_disconn_other_ble(u16 ble_con_handle)
 static int ble_disconnect(void *priv)
 {
     if (bt_rcsp_ble_conn_num() > 0) {
-        /* if (BLE_ST_SEND_DISCONN != rcsp_get_ble_work_state()) { */
         log_info(">>>ble send disconnect\n");
         set_ble_work_state(BLE_ST_SEND_DISCONN);
         app_ble_disconnect(rcsp_server_ble_hdl);
         app_ble_disconnect(rcsp_server_ble_hdl1);
-        /* } else { */
-        /* log_info(">>>ble wait disconnect...\n"); */
-        /* } */
         return APP_BLE_NO_ERROR;
     } else {
         return APP_BLE_OPERATION_ERROR;

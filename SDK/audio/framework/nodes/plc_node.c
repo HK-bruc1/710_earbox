@@ -58,7 +58,14 @@ struct music_plc *music_plc_open(struct plc_node_hdl *hdl, u32 sr, u8 ch_num)
             free(plc);
             return NULL;
         }
-        plc->plc_ops->open(plc->plc_mem, ch_num, sr, tws_api_get_low_latency_state() ? 4 : 0, &plc->datatype); //4是延时最低 16个点
+        int ret = plc->plc_ops->open(plc->plc_mem, ch_num, sr, tws_api_get_low_latency_state() ? 4 : 0, &plc->datatype); //4是延时最低 16个点
+        if (ret) { //低于 16k采样率,不支持做plc
+            free(plc->plc_mem);
+            plc->plc_mem = NULL;
+            plc->plc_ops = NULL;
+            free(plc);
+            return NULL;
+        }
     }
     return plc;
 }
