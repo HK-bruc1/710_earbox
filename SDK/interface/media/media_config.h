@@ -20,6 +20,7 @@ extern const int CONFIG_LOG_OUTPUT_ENABLE;
 extern const int config_audio_cfg_online_enable;
 extern const int config_audio_dac_dma_buf_realloc_enable;
 extern const int config_audio_dac_delay_off_ms;
+extern const int CONFIG_MEDIA_MEM_DEBUG;
 
 
 /*

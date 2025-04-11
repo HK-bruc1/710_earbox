@@ -195,6 +195,12 @@ opus_dec_plug
 #if TCFG_ENC_OPUS_ENABLE
 opus_encoder_plug
 #endif
+#if TCFG_STENC_OPUS_ENABLE
+opus_stenc_plug
+#endif
+#if TCFG_DEC_STENC_OPUS_ENABLE
+opus_stenc_dec_plug
+#endif
 
 #if TCFG_DEC_WTS_ENABLE || TCFG_TONE_WTS_ENABLE
 wts_dec_plug
