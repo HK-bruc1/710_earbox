@@ -89,9 +89,9 @@ static void multi_protocol_tws_sync_in_irq(void *_data, u16 len, bool rx)
     int i;
     int argv[4];
     u8 *rx_data = NULL;
-    log_info("multi_protocol_tws_sync_in_irq %d\n", len);
+    log_info("multi_protocol_tws_sync_in_irq %d tws_state:%d\n", len, tws_api_get_tws_state());
     log_info_hexdump(_data, len);
-    if (get_bt_tws_connect_status()) {
+    if (tws_api_get_tws_state() & TWS_STA_SIBLING_CONNECTED) {
         if (rx && (tws_api_get_role() == TWS_ROLE_SLAVE)) {
             rx_data = malloc(len);
             if (rx_data == NULL) {

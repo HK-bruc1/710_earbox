@@ -541,6 +541,22 @@ const int config_decoder_ff_fr_end_return_event_end = 0;
 //***********************
 //* 	 EQ             *
 //***********************
+#define AUDIO_EQ_FADE_ENABLE		1	//EQ系数更新淡入淡出
+//EQ配置relase使能：使能后根据工具EQ节点用到的滤波器类型仅使能对应的滤波器，优化代码体积，无法在线修改滤波器类型
+#define AUDIO_EQ_CONFIG_RELEASE		0
+
+#if AUDIO_EQ_CONFIG_RELEASE
+const int config_audio_eq_hp_enable = EQ_CFG_TYPE_HIGH_PASS;		//High Pass
+const int config_audio_eq_lp_enable = EQ_CFG_TYPE_LOW_PASS;			//Low Pass
+const int config_audio_eq_bp_enable = EQ_CFG_TYPE_PEAKING;			//Band Pass(Peaking)
+const int config_audio_eq_hs_enable = EQ_CFG_TYPE_HIGH_SHELF;		//High Shelf
+const int config_audio_eq_ls_enable = EQ_CFG_TYPE_LOW_SHELF;		//Low Shelf
+const int config_audio_eq_hs_q_enable = EQ_CFG_TYPE_HIGH_SHELF_Q;	//High Shelf Q
+const int config_audio_eq_ls_q_enable = EQ_CFG_TYPE_LOW_SHELF_Q;	//Low Shelf Q
+const int config_audio_eq_hp_adv_enable = EQ_CFG_TYPE_HP;			//High Pass Advance：对应工具上阶数可选的Hp
+const int config_audio_eq_lp_adv_enable = EQ_CFG_TYPE_LP;			//Low Pass Advance：对应工具上阶数可选的Lp
+#else //Debug
+
 const int config_audio_eq_hp_enable = 1;		//High Pass
 const int config_audio_eq_lp_enable = 1;		//Low Pass
 const int config_audio_eq_bp_enable = 1;		//Band Pass(Peaking)
@@ -558,6 +574,8 @@ const int config_audio_eq_hp_adv_enable = 1;	//High Pass Advance：对应工具�
 const int config_audio_eq_lp_adv_enable = 1;	//Low Pass Advance：对应工具上阶数可选的Lp
 #endif
 
+#endif
+
 #if TCFG_SPEAKER_EQ_NODE_ENABLE
 #if EQ_SECTION_MAX < 10
 #undef EQ_SECTION_MAX
@@ -572,8 +590,9 @@ const int config_audio_eq_en = EQ_EN
 #if TCFG_CROSSOVER_NODE_ENABLE
                                | EQ_HW_CROSSOVER_TYPE0_EN
 #endif
-
-                               /* | EQ_FADE_DISABLE */ //关闭 eq fade
+#if (AUDIO_EQ_FADE_ENABLE == 0)
+                               | EQ_FADE_DISABLE //关闭 eq fade
+#endif
                                ;
 #else
 const int config_audio_eq_en = 0;

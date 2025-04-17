@@ -52,12 +52,6 @@
 //*********************************************************************************//
 //                                  AI配置                                         //
 //*********************************************************************************//
-#ifdef TCFG_BT_RCSP_DUAL_CONN_ENABLE
-#define TCFG_RCSP_DUAL_CONN_ENABLE							TCFG_BT_RCSP_DUAL_CONN_ENABLE// RCSP一拖二功能开关
-#else
-#define TCFG_RCSP_DUAL_CONN_ENABLE                          0
-#endif
-
 #define    RCSP_MODE_EN             (1 << 0)
 #define    TRANS_DATA_EN            (1 << 1)
 #define    LL_SYNC_EN               (1 << 2)
@@ -114,6 +108,10 @@
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)     // rcsp与le audio共用 BLE ACL 时，使用不同地址
 #undef  TCFG_BT_BLE_BREDR_SAME_ADDR
 #define  TCFG_BT_BLE_BREDR_SAME_ADDR 0x0
+#endif
+
+#ifndef TCFG_JL_UNICAST_BOUND_PAIR_EN
+#define TCFG_JL_UNICAST_BOUND_PAIR_EN 0				// 可通过JL小板实现耳机和Dongle的绑定配对
 #endif
 
 // #undef TCFG_LOWPOWER_LOWPOWER_SEL

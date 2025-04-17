@@ -10,6 +10,8 @@
 extern struct audio_dac_hdl dac_hdl;
 extern struct audio_adc_hdl adc_hdl;
 
+extern const u16 dac_digital_gain_tab_version_c[7];
+
 struct adc_platform_cfg {
     u8 mic_mode;          // MIC工作模式
     u8 mic_ain_sel;       // 0/1/2

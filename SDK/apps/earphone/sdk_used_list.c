@@ -27,9 +27,15 @@ bt_audio_sync_node_adapter
 adc_file_plug
 #endif
 
+#if TCFG_TONE_NODE_ENABLE
 tone_file_plug
+#endif
+#if TCFG_RING_TONE_NODE_ENABLE
 ring_file_plug
+#endif
+#if TCFG_KEY_TONE_NODE_ENABLE
 key_tone_file_plug
+#endif
 msbc_decoder_plug
 
 #if 0

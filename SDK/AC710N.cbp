@@ -29,6 +29,7 @@
 <Add option="-DCONFIG_CPU_BR56" />
 <Add option="-DCONFIG_USB_SUPPORT_MRX_TX" />
 <Add option="-DCONFIG_IIC_VERSION2" />
+<Add option="-DLWIP_USE_BT" />
 <Add option="-DCONFIG_SUPPORT_AES_CCM_FOR_EDR" />
 <Add option="-DCONFIG_AES_CCM_RXMAXBUF_EXT_MICLEN" />
 <Add option="-DCONFIG_NEW_BREDR_ENABLE" />
@@ -38,6 +39,9 @@
 <Add option="-DCONFIG_EQ_SUPPORT_ASYNC" />
 <Add option="-DEQ_CORE_V1" />
 <Add option="-DCONFIG_BT_CTRLER_IN_MASK" />
+<Add option="-DCONFIG_CRYPTO_TOOLBOX_OSIZE_IN_MASKROM" />
+<Add option="-DCONFIG_CRYPTO_RESET_BITS_SZIE_IN_MASKROM" />
+<Add option="-DCONFIG_CRYPTO_AES_CMC_IN_SDK" />
 <Add option="-DCONFIG_AAC_CODEC_FFT_USE_MUTEX" />
 <Add option="-DCONFIG_SIN_TONE_V2" />
 <Add option="-DCONFIG_DNS_ENABLE" />
@@ -356,7 +360,6 @@
 <Add option="cpu/br56/liba/lib_wtg_dec.a" />
 <Add option="cpu/br56/liba/bfilterfun_lib.a" />
 <Add option="cpu/br56/liba/lib_opusdec_rom_dec.a" />
-<Add option="cpu/br56/liba/crypto_toolbox_Osize.a" />
 <Add option="cpu/br56/liba/lib_dns.a" />
 <Add option="cpu/br56/liba/update.a" />
 <Add option="cpu/br56/liba/cbuf.a" />
@@ -961,6 +964,7 @@
 <Unit filename="apps/earphone/board/br56/jlstream_node_cfg.h" />
 <Unit filename="apps/earphone/board/br56/sdk_config.h" />
 <Unit filename="apps/earphone/board/br56/undef_func.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/board/instruction_forbidden.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/board/sdk_board_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/demo/att_over_edr_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/demo/debug_record_demo.c"><Option compilerVer="CC"/></Unit>
@@ -997,6 +1001,7 @@
 <Unit filename="apps/earphone/include/default_event_handler.h" />
 <Unit filename="apps/earphone/include/dev_multiplex_api.h" />
 <Unit filename="apps/earphone/include/dev_status.h" />
+<Unit filename="apps/earphone/include/dual_a2dp_play.h" />
 <Unit filename="apps/earphone/include/dual_conn.h" />
 <Unit filename="apps/earphone/include/earphone.h" />
 <Unit filename="apps/earphone/include/idle.h" />

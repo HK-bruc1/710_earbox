@@ -98,7 +98,6 @@
 #define ANC_HOWLING_DETECT_EN				0		/*啸叫检测使能*/
 #define ANC_HOWLING_MSG_DEBUG				0		/*啸叫调试流程打印*/
 
-#define ANC_HOWLING_DETECT_CHANNEL			0		/*啸叫检测通道；0 FF MIC ; 1 FB MIC*/
 /*1、检测配置*/
 #define ANC_HOWLING_DETECT_CORR_THR			200		/*啸叫灵敏度设置, 越小(越灵敏，容易误触发), range [100 - 255]; default 200 */
 #define ANC_HOWLING_DETECT_PWR_THR			1200	/*啸叫阈值设置, 用于解决小声啸叫不触发的问题，越小(容易误触发),  range [100 - 32767]; default 1200*/
@@ -464,6 +463,8 @@ void audio_anc_coeff_smooth_update(void);
    				  0 关闭淡入淡出，会有po声；
  */
 void audio_anc_param_reset(u8 fade_en);
+
+u8 anc_btspp_train_again(u8 mode, u32 dat);
 
 
 #endif/*AUDIO_ANC_H*/

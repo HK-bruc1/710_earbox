@@ -110,9 +110,5 @@ u32 get_authkey_procode_from_cfg_file(u8 *data[], u8 *len, u8 type);
 #endif
 u32 get_serial_num_cfg_file(u8 *data[], u8 *len, u8 type);
 
-#if RCSP_UPDATE_EN
-extern int rcsp_update_msg[10];
-#endif
-
 #endif
 

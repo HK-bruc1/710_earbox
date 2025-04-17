@@ -232,7 +232,9 @@ static void rcsp_exit_in_app_core_task(void)
         __this = NULL;
     }
     rcsp_opt_release();
+#if RCSP_UPDATE_EN
     rcsp_update_resume();
+#endif
 }
 
 void rcsp_exit(void)

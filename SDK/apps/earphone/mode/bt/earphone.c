@@ -1099,6 +1099,19 @@ int bt_mode_try_exit()
 
 int bt_mode_exit()
 {
+    /*~~~~~~~~~~~~ start: 临时修改，库内没关OCH，库内改好请删除~~~~~~~~~~~~~~~~~~*/
+#if OPTIMIZATION_CONN_NOISE
+#ifdef BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT
+#else
+#if CONFIG_CPU_BR50 || CONFIG_CPU_BR52
+#if (BT_RF_CURRENT_BALANCE_SUPPORT_ONLY_ONE_PORT == 0)
+    gpio_och_disable_output_signal(RF_RXTX_STATE_PROT, 16);
+#endif
+    gpio_och_disable_output_signal(RF_RXTX_STATE_PROT, 17);
+#endif
+#endif
+#endif
+    /*~~~~~~~~~~~~ end: 临时修改~~~~~~~~~~~~~~~~~~*/
     app_send_message(APP_MSG_EXIT_MODE, APP_MODE_BT);
     return 0;
 }

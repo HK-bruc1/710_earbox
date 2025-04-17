@@ -95,7 +95,7 @@ int audio_dac_analog_status_add_check(int add);
 u16 audio_hpvdd_hw_sel_check(void);
 
 int audio_common_power_trim(audio_vbg_trim_t *vbg_trim, u8 vcm_level);
-int audio_dac_ldo_trim(u8 *dacldo_vsel);
+int audio_dac_ldo_trim(u8 *dacldo_vsel, u8 power_mode);
 
 void audio_adc_dmic_clock_open(u8 dmic_cken, u8 dmic_div);
 #endif // _AUDIO_COMMON_H_

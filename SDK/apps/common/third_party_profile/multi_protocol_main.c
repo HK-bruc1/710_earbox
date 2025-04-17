@@ -91,7 +91,7 @@ const uint8_t rcsp_profile_data[] = {
 };
 #endif
 
-#if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
+#if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN))
 extern u8 get_bt_le_audio_config();
 extern void le_audio_sm_setup_init(io_capability_t io_type, u8 auth_req, uint8_t min_key_size, u8 security_en);
 #endif
@@ -340,7 +340,7 @@ static void multi_protocol_profile_init(void)
 
 #if TCFG_BLE_BRIDGE_EDR_ENALBE
     app_ble_sm_init(IO_CAPABILITY_NO_INPUT_NO_OUTPUT, SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_BONDING, 7, 0);
-#elif (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
+#elif (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN))
     app_ble_sm_init(IO_CAPABILITY_NO_INPUT_NO_OUTPUT, SM_AUTHREQ_BONDING | SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_MITM_PROTECTION, 7, 0);
     le_audio_sm_setup_init(IO_CAPABILITY_NO_INPUT_NO_OUTPUT, SM_AUTHREQ_BONDING | SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_MITM_PROTECTION, 7, 0);
 #else
@@ -501,6 +501,11 @@ void multi_protocol_bt_exit(void)
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & XIMALAYA_EN)
     ximalaya_protocol_exit();
+#endif
+
+#if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
+    void le_audio_uninit(u8 mode);
+    le_audio_uninit(1);
 #endif
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & AURACAST_APP_EN)

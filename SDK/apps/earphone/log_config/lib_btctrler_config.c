@@ -400,7 +400,13 @@ const int config_btctler_le_master_multilink = 0;
 // LE RAM Control
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
-	const int config_btctler_le_hw_nums = 5;
+
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+	const int config_btctler_le_hw_nums = 8;
+#else
+	const int config_btctler_le_hw_nums = 6;
+#endif
+
 #elif ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN)))||((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SOURCE_EN | LE_AUDIO_JL_AURACAST_SOURCE_EN)))
 	const int config_btctler_le_hw_nums = 8;
 #else

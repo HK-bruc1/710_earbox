@@ -167,7 +167,7 @@ static void audio_common_initcall()
     // dacldo trim
     len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
     if (len != sizeof(dac_data.dacldo_vsel)) {
-        u8 ret = audio_dac_ldo_trim(&dac_data.dacldo_vsel);
+        u8 ret = audio_dac_ldo_trim(&dac_data.dacldo_vsel, dac_data.power_mode);
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
         }

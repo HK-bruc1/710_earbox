@@ -28,13 +28,13 @@
 //*********************************************************************************//
 //                                  NTC配置                                       //
 //*********************************************************************************//
-#define NTC_DET_EN      0
-#define NTC_POWER_IO    IO_PORTC_03
-#define NTC_DETECT_IO   IO_PORTC_04
-#define NTC_DET_AD_CH   (0x4)   //根据adc_api.h修改通道号
+// #define NTC_DET_EN      0
+// #define NTC_POWER_IO    IO_PORTC_03
+// #define NTC_DETECT_IO   IO_PORTC_04
+// #define NTC_DET_AD_CH   (0x4)   //根据adc_api.h修改通道号
 
-#define NTC_DET_UPPER        235  //正常范围AD值上限，0度时
-#define NTC_DET_LOWER        34  //正常范围AD值下限，45度时
+// #define NTC_DET_UPPER        235  //正常范围AD值上限，0度时
+// #define NTC_DET_LOWER        34  //正常范围AD值下限，45度时
 
 //*********************************************************************************//
 //                                 IIC配置                                        //

@@ -516,6 +516,9 @@ int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int
     audio_cvp_sync_open(init_param->sample_rate);
 #endif/*TCFG_AUDIO_CVP_SYNC*/
 
+    /*初始化dac read的资源*/
+    audio_dac_read_init();
+
     aec_hdl->output_way = 0;
     aec_hdl->fm_tx_start = 0;
     aec_hdl->ref_channel = 1;
@@ -645,6 +648,9 @@ void audio_aec_close(void)
         //在AEC关闭之后再关，否则还会跑cvp_sync_run,导致越界
         audio_cvp_sync_close();
 #endif/*TCFG_AUDIO_CVP_SYNC*/
+
+        /*释放dac read的资源*/
+        audio_dac_read_exit();
 
         if (CONST_AEC_EXPORT) {
             aec_uart_close();
