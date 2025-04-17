@@ -185,7 +185,7 @@ void setup_arch()
     clk_set_vdc_lowest_voltage(DCVDD_VOL_155V);
 #endif
 #endif
-    clk_set_osc_cap(0b0111, 0b0111); //br56适配负载电容9PF，控制频偏在正负10以内
+
 #if (TCFG_MAX_LIMIT_SYS_CLOCK==MAX_LIMIT_SYS_CLOCK_160M)
     clk_early_init(PLL_REF_XOSC_DIFF, TCFG_CLOCK_OSC_HZ, 240 * MHz);//  240:max clock 160
 #else
