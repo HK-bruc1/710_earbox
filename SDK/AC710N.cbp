@@ -1238,6 +1238,8 @@
 <Unit filename="audio/cpu/br56/audio_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_config.h" />
 <Unit filename="audio/cpu/br56/audio_config_def.h" />
+<Unit filename="audio/cpu/br56/audio_dai/audio_pdm.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/cpu/br56/audio_dai/audio_pdm.h" />
 <Unit filename="audio/cpu/br56/audio_demo/audio_adc_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_demo/audio_dac_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_demo/audio_demo.h" />
@@ -1352,6 +1354,7 @@
 <Unit filename="audio/framework/plugs/source/multi_ch_iis_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.h" />
+<Unit filename="audio/framework/plugs/source/pdm_mic_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev0_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev1_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev2_file.c"><Option compilerVer="CC"/></Unit>

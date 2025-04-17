@@ -786,6 +786,7 @@ c_SRC_FILES := \
 	audio/cpu/br56/audio_accelerator/hw_fft.c \
 	audio/cpu/br56/audio_anc.c \
 	audio/cpu/br56/audio_config.c \
+	audio/cpu/br56/audio_dai/audio_pdm.c \
 	audio/cpu/br56/audio_demo/audio_adc_demo.c \
 	audio/cpu/br56/audio_demo/audio_dac_demo.c \
 	audio/cpu/br56/audio_demo/audio_fft_demo.c \
@@ -877,6 +878,7 @@ c_SRC_FILES := \
 	audio/framework/plugs/source/multi_ch_adc_file.c \
 	audio/framework/plugs/source/multi_ch_iis_file.c \
 	audio/framework/plugs/source/pc_spk_file.c \
+	audio/framework/plugs/source/pdm_mic_file.c \
 	audio/framework/plugs/source/source_dev0_file.c \
 	audio/framework/plugs/source/source_dev1_file.c \
 	audio/framework/plugs/source/source_dev2_file.c \
