@@ -26,6 +26,7 @@
 //==============================================//
 #define TCFG_JL_KWS_AUDIO_DATA_FROM_EXTERN 			1 //配置为1, 由AEC外部输入数据
 
+extern bool esco_recoder_runing();
 
 //==============================================//
 //          KWS RAM使用OVERLAY配置              //
@@ -311,8 +312,8 @@ void kws_aec_data_output(void *priv, s16 *data, int len)
     if (__kws_audio == NULL) {
         return ;
     }
-
-    if (__kws_audio->kws_adc) {
+    if (__kws_audio->kws_adc && esco_recoder_runing()) { //通话上行数据流打开的时候才需要进这里,把kws的adc中断回调关掉,
+        //从cvp节点拿数，否则会出现类似tws从机没有打开通话上行走了这里，导致关kws的时候没有关模拟mic
         audio_adc_del_output_handler(&adc_hdl, &__kws_audio->kws_adc->adc_output);
         if (__kws_audio->kws_adc->dma_buf) {
             /*mic close时会自动释放内存*/

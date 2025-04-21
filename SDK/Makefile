@@ -951,8 +951,6 @@ c_SRC_FILES := \
 	cpu/components/ir_encoder.c \
 	cpu/components/led_api.c \
 	cpu/components/rdec_soft.c \
-	cpu/components/touch/lp_touch_key_identify_algo.c \
-	cpu/components/touch/lp_touch_key_range_algo.c \
 	cpu/components/touch/lp_touch_key_tool.c \
 	cpu/components/two_io_led.c \
 	cpu/config/gpio_file_parse.c \

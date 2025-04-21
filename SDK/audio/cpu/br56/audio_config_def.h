@@ -41,10 +41,8 @@
 //**************************************
 // 			音频模块链接配置
 //**************************************
-#if TCFG_USER_BLE_ENABLE
-// br36启动ble功能则音频算法不放到ram
-
-/*音效处理链接配置*/
+#if 0
+/*音频模块代码全部不放RAM*/
 #define AFx_VBASS_AT_RAM				    0	//虚拟低音
 #define AFx_REVERB_AT_RAM				    0	//混响
 #define AFx_ECHO_AT_RAM				        0	//回声

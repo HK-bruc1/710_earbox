@@ -106,12 +106,22 @@ u8 rcsp_allow_ble_spp_connect_simultaneously = 0;			// 1t1时，是否允许ble�
 	const int config_le_hci_connection_num = 2;//支持同时连接个数
 	const int config_le_sm_support_enable = 1; //是否支持加密配对
 #else
+#if TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
+	const int config_le_hci_connection_num = 1;//支持同时连接个数
+	const int config_le_sm_support_enable = 0; //是否支持加密配对
+#else
 	const int config_le_hci_connection_num = 2;//支持同时连接个数
 	const int config_le_sm_support_enable = 1; //是否支持加密配对
 #endif
+#endif
 
+#if TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
+const int config_le_gatt_server_num = 1;   //支持server角色个数
+const int config_le_gatt_client_num = 0;   //支持client角色个数
+#else
 const int config_le_gatt_server_num = 2;   //支持server角色个数
 const int config_le_gatt_client_num = 1;   //支持client角色个数
+#endif
 
 
 // *INDENT-ON*

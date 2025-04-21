@@ -79,8 +79,13 @@
 #endif
 
 #if THIRD_PARTY_PROTOCOLS_SEL && (TCFG_USER_BLE_ENABLE == 0)
-#error "开启 le audio 功能需要使能 TCFG_USER_BLE_ENABLE"
+#error "开启 第三方协议功能 需要使能 TCFG_USER_BLE_ENABLE"
 #endif
+
+// 三方协议简化版本，目前仅适用于RCSP
+#define TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED			0
+//代码放RAM压缩宏,在RAM资源足够的情况下将代码放RAM进行压缩
+#define TCFG_CODE_TO_RAM_COMPRESS_ENABLE		0
 
 //*********************************************************************************//
 //                                  le_audio 配置                                       //
@@ -106,8 +111,12 @@
 #if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)     // rcsp与le audio共用 BLE ACL 时，使用不同地址
+
 #undef  TCFG_BT_BLE_BREDR_SAME_ADDR
 #define  TCFG_BT_BLE_BREDR_SAME_ADDR 0x0
+#if TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED && TCFG_RCSP_DUAL_CONN_ENABLE
+#error "三方协议简化版本不支持RCSP一拖二功能"
+#endif
 #endif
 
 #ifndef TCFG_JL_UNICAST_BOUND_PAIR_EN

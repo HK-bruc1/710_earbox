@@ -27,9 +27,6 @@
 #if (RCSP_MODE)
 #define RCSP_TASK_NAME   "rcsp"
 
-#define RCSP_SPP_INTERACTIVE_SUPPORT	1
-#define RCSP_BLE_INTERACTIVE_SUPPORT	1
-
 #define RCSP_DEBUG_EN
 #ifdef RCSP_DEBUG_EN
 #define rcsp_putchar(x)                	putchar(x)
@@ -100,7 +97,6 @@ bool JL_rcsp_protocol_can_send(void)
 }
 
 
-extern void rcsp_clean_update_hdl_for_end_update(u16 ble_con_handle, u8 *spp_remote_addr);
 static void rcsp_process(void *p)
 {
     ///从vm获取相关配置
@@ -223,6 +219,9 @@ static void rcsp_exit_in_app_core_task(void)
     }
     JL_protocol_exit();
     task_kill(RCSP_TASK_NAME);
+
+#if !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
+    // rcsp代码简化
     if (__this->rcsp_buf) {
         free(__this->rcsp_buf);
         __this->rcsp_buf = NULL;
@@ -232,6 +231,7 @@ static void rcsp_exit_in_app_core_task(void)
         __this = NULL;
     }
     rcsp_opt_release();
+#endif
 #if RCSP_UPDATE_EN
     rcsp_update_resume();
 #endif

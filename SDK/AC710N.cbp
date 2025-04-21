@@ -1459,8 +1459,6 @@
 <Unit filename="cpu/components/ir_encoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/led_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/rdec_soft.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="cpu/components/touch/lp_touch_key_identify_algo.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="cpu/components/touch/lp_touch_key_range_algo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/touch/lp_touch_key_tool.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/two_io_led.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/config/gpio_file_parse.c"><Option compilerVer="CC"/></Unit>

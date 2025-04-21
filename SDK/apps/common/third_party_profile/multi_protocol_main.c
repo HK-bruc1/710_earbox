@@ -328,7 +328,9 @@ static void multi_protocol_profile_init(void)
 
 #if TCFG_BT_SUPPORT_SPP
     app_spp_init();
+#if !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
     app_spp_state_update_callback_regitster(multi_protocol_state_update_callback);
+#endif
 #endif
 
 #if TCFG_USER_BLE_ENABLE
@@ -350,7 +352,9 @@ static void multi_protocol_profile_init(void)
 #endif
     app_ble_init();
 
+#if !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
     app_ble_state_update_callback_regitster(multi_protocol_state_update_callback);
+#endif
 
     ble_op_multi_att_send_init(att_ram_buffer, ATT_RAM_BUFSIZE, ATT_LOCAL_PAYLOAD_SIZE);
 #endif

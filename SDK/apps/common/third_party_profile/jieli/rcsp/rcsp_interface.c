@@ -166,13 +166,15 @@ void rcsp_interface_set_bt_hdl_with_tws_data(u8 *recieve_buf, u16 recieve_len)
         app_ble_hdl_core_data_set(rcsp_server_ble_hdl1, recieve_buf + buf_index);
         buf_index += ble_hdl_size;
         app_spp_hdl_core_data_set(bt_rcsp_spp_hdl1, recieve_buf + buf_index);
-        u16 ble_con_handle1 = app_ble_get_hdl_con_handle(rcsp_server_ble_hdl1);
-        if (ble_con_handle1) {
-            g_rcsp_ble_conn_num++;
-        }
-        u8 *spp_remote_addr1 = app_spp_get_hdl_remote_addr(bt_rcsp_spp_hdl1);
-        if (spp_remote_addr1) {
-            g_rcsp_spp_conn_num++;
+        if (rcsp_dual_support) {
+            u16 ble_con_handle1 = app_ble_get_hdl_con_handle(rcsp_server_ble_hdl1);
+            if (ble_con_handle1) {
+                g_rcsp_ble_conn_num++;
+            }
+            u8 *spp_remote_addr1 = app_spp_get_hdl_remote_addr(bt_rcsp_spp_hdl1);
+            if (spp_remote_addr1) {
+                g_rcsp_spp_conn_num++;
+            }
         }
     }
     if (adt_profile_support && rcsp_adt_support) {
@@ -312,7 +314,7 @@ void bt_rcsp_set_conn_info(u16 con_handle, void *remote_addr, bool isconn)
                 rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__);
                 /* app_ble_set_filter_con_handle(rcsp_server_ble_hdl1, con_handle); */
                 g_rcsp_adt_conn_num++;
-            } else if (adt_profile_support && rcsp_adt_support && adt_con_handle1 && (con_handle == adt_con_handle1)) {
+            } else if (rcsp_dual_support && adt_profile_support && rcsp_adt_support && adt_con_handle1 && (con_handle == adt_con_handle1)) {
                 rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__);
                 /* app_ble_set_filter_con_handle(rcsp_server_ble_hdl1, con_handle); */
                 g_rcsp_adt_conn_num++;
@@ -335,7 +337,7 @@ void bt_rcsp_set_conn_info(u16 con_handle, void *remote_addr, bool isconn)
                 rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__);
                 app_ble_set_filter_con_handle(rcsp_server_edr_att_hdl, 0);
                 g_rcsp_adt_conn_num--;
-            } else if (rcsp_dual_support && adt_profile_support && rcsp_adt_support && adt_con_handle1 && (con_handle == adt_con_handle1)) {
+            } else if (rcsp_dual_support && rcsp_dual_support && adt_profile_support && rcsp_adt_support && adt_con_handle1 && (con_handle == adt_con_handle1)) {
                 rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__);
                 app_ble_set_filter_con_handle(rcsp_server_edr_att_hdl1, 0);
                 g_rcsp_adt_conn_num--;
@@ -525,7 +527,7 @@ void bt_rcsp_recieve_callback(void *hdl, void *remote_addr, u8 *buf, u16 len)
             rcsp_lib_printf("%d===rcsp_rx(%d):", __LINE__, len);
             rcsp_lib_printf_buf(buf, len);
             JL_protocol_data_recieve(NULL, buf, len, ble_con_handle, NULL);
-        } else if (ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
+        } else if (rcsp_dual_support && ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
             /* rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__); */
             if (!JL_rcsp_get_auth_flag_with_bthdl(ble_con_handle1, NULL)) {
                 /* rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__); */
@@ -557,7 +559,7 @@ void bt_rcsp_recieve_callback(void *hdl, void *remote_addr, u8 *buf, u16 len)
             rcsp_lib_printf("%d===rcsp_rx(%d):", __LINE__, len);
             rcsp_lib_printf_buf(buf, len);
             JL_protocol_data_recieve(NULL, buf, len, adt_con_handle, NULL);
-        } else if (adt_profile_support && adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
+        } else if (rcsp_dual_support && adt_profile_support && adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
             /* rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__); */
             if (!JL_rcsp_get_auth_flag_with_bthdl(adt_con_handle1, NULL)) {
                 /* rcsp_lib_printf("%s, %s, %d\n", __FILE__, __FUNCTION__, __LINE__); */
@@ -704,7 +706,7 @@ int bt_rcsp_data_send(u16 ble_con_hdl, u8 *remote_addr, u8 *buf, u16 len, uint16
         }
         if (ble_con_hdl == ble_con_handle) {
             ble_con_handle1 = 0;
-        } else if (ble_con_hdl == ble_con_handle1) {
+        } else if (rcsp_dual_support && ble_con_hdl == ble_con_handle1) {
             ble_con_handle = 0;
         } else {
             ble_con_handle = 0;
@@ -794,7 +796,7 @@ int bt_rcsp_data_send(u16 ble_con_hdl, u8 *remote_addr, u8 *buf, u16 len, uint16
             app_ble_att_send_data(rcsp_server_edr_att_hdl, send_att_handle, buf, len, send_att_op_type);
         }
     }
-    if (adt_profile_support && rcsp_adt_support && adt_con_handle1) {
+    if (rcsp_dual_support && adt_profile_support && rcsp_adt_support && adt_con_handle1) {
         if (!JL_rcsp_get_auth_flag_with_bthdl(adt_con_handle1, NULL)) {
             if (!rcsp_protocol_head_check(buf, len)) {
                 // 如果还没有验证，则只发送验证信息
@@ -917,9 +919,9 @@ static uint16_t att_read_callback(void *hdl, hci_con_handle_t connection_handle,
             bt_rcsp_custom_recieve_callback(ble_con_handle, NULL, buffer, buffer_size, handle);
         } else if (adt_con_handle && (hdl == rcsp_server_edr_att_hdl)) {
             bt_rcsp_custom_recieve_callback(adt_con_handle, NULL, buffer, buffer_size, handle);
-        } else if (adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
+        } else if (rcsp_dual_support && adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
             bt_rcsp_custom_recieve_callback(adt_con_handle1, NULL, buffer, buffer_size, handle);
-        } else if (ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
+        } else if (rcsp_dual_support && ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
             bt_rcsp_custom_recieve_callback(ble_con_handle1, NULL, buffer, buffer_size, handle);
         }
         break;
@@ -990,11 +992,11 @@ static int att_write_callback(void *hdl, hci_con_handle_t connection_handle, uin
         }
         if (ble_con_handle && (hdl == rcsp_server_ble_hdl)) {
             bt_rcsp_custom_recieve_callback(ble_con_handle, NULL, buffer, buffer_size, handle);
-        } else if (ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
+        } else if (rcsp_dual_support && ble_con_handle1 && (hdl == rcsp_server_ble_hdl1)) {
             bt_rcsp_custom_recieve_callback(ble_con_handle1, NULL, buffer, buffer_size, handle);
         } else if (adt_con_handle && (hdl == rcsp_server_edr_att_hdl)) {
             bt_rcsp_custom_recieve_callback(adt_con_handle, NULL, buffer, buffer_size, handle);
-        } else if (adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
+        } else if (rcsp_dual_support && adt_con_handle1 && (hdl == rcsp_server_edr_att_hdl1)) {
             bt_rcsp_custom_recieve_callback(adt_con_handle1, NULL, buffer, buffer_size, handle);
         }
         break;

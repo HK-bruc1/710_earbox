@@ -537,3 +537,7 @@ frequency_compressor_node_adapter
 #if TCFG_SPATIAL_ADV_NODE_ENABLE
 spatial_adv_node_adapter
 #endif
+
+#if TCFG_ENC_AAC_ENABLE
+aac_enc_plug
+#endif
