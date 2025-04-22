@@ -97,6 +97,7 @@ DEFINES := \
 	-DCONFIG_CPU_BR56 \
 	-DCONFIG_USB_SUPPORT_MRX_TX \
 	-DCONFIG_IIC_VERSION2 \
+	-DLWIP_USE_BT \
 	-DCONFIG_SUPPORT_AES_CCM_FOR_EDR \
 	-DCONFIG_AES_CCM_RXMAXBUF_EXT_MICLEN \
 	-DCONFIG_NEW_BREDR_ENABLE \
@@ -106,6 +107,9 @@ DEFINES := \
 	-DCONFIG_EQ_SUPPORT_ASYNC \
 	-DEQ_CORE_V1 \
 	-DCONFIG_BT_CTRLER_IN_MASK \
+	-DCONFIG_CRYPTO_TOOLBOX_OSIZE_IN_MASKROM \
+	-DCONFIG_CRYPTO_RESET_BITS_SZIE_IN_MASKROM \
+	-DCONFIG_CRYPTO_AES_CMC_IN_SDK \
 	-DCONFIG_AAC_CODEC_FFT_USE_MUTEX \
 	-DCONFIG_SIN_TONE_V2 \
 	-DCONFIG_DNS_ENABLE \
@@ -618,6 +622,7 @@ c_SRC_FILES := \
 	apps/earphone/ble/bt_ble.c \
 	apps/earphone/board/br56/board_config.c \
 	apps/earphone/board/br56/undef_func.c \
+	apps/earphone/board/instruction_forbidden.c \
 	apps/earphone/board/sdk_board_config.c \
 	apps/earphone/demo/att_over_edr_demo.c \
 	apps/earphone/demo/debug_record_demo.c \
@@ -646,6 +651,7 @@ c_SRC_FILES := \
 	apps/earphone/mode/bt/bt_event_func.c \
 	apps/earphone/mode/bt/bt_key_func.c \
 	apps/earphone/mode/bt/bt_key_msg_table.c \
+	apps/earphone/mode/bt/bt_net_event.c \
 	apps/earphone/mode/bt/bt_slience_detect.c \
 	apps/earphone/mode/bt/bt_tws.c \
 	apps/earphone/mode/bt/dual_a2dp_play.c \
@@ -794,6 +800,7 @@ c_SRC_FILES := \
 	audio/cpu/br56/audio_accelerator/hw_fft.c \
 	audio/cpu/br56/audio_anc.c \
 	audio/cpu/br56/audio_config.c \
+	audio/cpu/br56/audio_dai/audio_pdm.c \
 	audio/cpu/br56/audio_demo/audio_adc_demo.c \
 	audio/cpu/br56/audio_demo/audio_dac_demo.c \
 	audio/cpu/br56/audio_demo/audio_fft_demo.c \
@@ -885,6 +892,7 @@ c_SRC_FILES := \
 	audio/framework/plugs/source/multi_ch_adc_file.c \
 	audio/framework/plugs/source/multi_ch_iis_file.c \
 	audio/framework/plugs/source/pc_spk_file.c \
+	audio/framework/plugs/source/pdm_mic_file.c \
 	audio/framework/plugs/source/source_dev0_file.c \
 	audio/framework/plugs/source/source_dev1_file.c \
 	audio/framework/plugs/source/source_dev2_file.c \
@@ -952,8 +960,6 @@ c_SRC_FILES := \
 	cpu/components/ir_encoder.c \
 	cpu/components/led_api.c \
 	cpu/components/rdec_soft.c \
-	cpu/components/touch/lp_touch_key_identify_algo.c \
-	cpu/components/touch/lp_touch_key_range_algo.c \
 	cpu/components/touch/lp_touch_key_tool.c \
 	cpu/components/two_io_led.c \
 	cpu/config/gpio_file_parse.c \
@@ -1064,9 +1070,11 @@ LFLAGS := \
 	cpu/br56/liba/lib_lc3_codec.a \
 	cpu/br56/liba/lib_jl_codec_common.a \
 	cpu/br56/liba/opus_enc_lib.a \
+	cpu/br56/liba/lib_speex_codec.a \
 	cpu/br56/liba/libjlsp.a \
 	cpu/br56/liba/libjlsp_kws.a \
 	cpu/br56/liba/libjlsp_kws_far_keyword.a \
+	cpu/br56/liba/libjlsp_kws_india_english.a \
 	cpu/br56/liba/libkwscommon.a \
 	cpu/br56/liba/JL_Phone_Call.a \
 	cpu/br56/liba/crossover_coff.a \
@@ -1125,7 +1133,6 @@ LFLAGS := \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_opusdec_rom_dec.a \
-	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
 	cpu/br56/liba/cbuf.a \

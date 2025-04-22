@@ -65,8 +65,8 @@
                   "__slot__": {
                     "options": [
                       {
-                        "label": "IO_PORTA_00",
-                        "value": "id_1647485267192_66"
+                        "label": "IO_PORTA_03",
+                        "value": "id_1647485267192_69"
                       },
                       {
                         "label": "IO_PORTA_05",
@@ -77,8 +77,8 @@
                         "value": "id_1647485267192_72"
                       },
                       {
-                        "label": "IO_PORTB_00",
-                        "value": "id_1647485267192_74"
+                        "label": "IO_PORTA_08",
+                        "value": "id_1653449701350_0"
                       },
                       {
                         "label": "IO_PORTB_01",
@@ -89,16 +89,28 @@
                         "value": "id_1647485267192_76"
                       },
                       {
+                        "label": "IO_PORTB_04",
+                        "value": "id_1647485267192_78"
+                      },
+                      {
+                        "label": "IO_PORTB_06",
+                        "value": "id_1647485267192_80"
+                      },
+                      {
                         "label": "IO_PORTC_04",
                         "value": "id_1647485267192_86"
                       },
                       {
+                        "label": "IO_PORTC_05",
+                        "value": "id_1647485267192_87"
+                      },
+                      {
                         "label": "IO_PORT_DP",
-                        "value": "id_1685018829257_14"
+                        "value": "id_1651200840445_19"
                       },
                       {
                         "label": "IO_PORT_DM",
-                        "value": "id_1685018829513_15"
+                        "value": "id_1651200854573_20"
                       }
                     ]
                   },
@@ -592,12 +604,12 @@
                     "uuid": "TCFG_AUTO_SHUT_DOWN_TIME"
                   },
                   "placeholder": "默认60s无连接关机时间(s)",
-                  "step": 10,
+                  "step": 5,
                   "step-strictly": false,
                   "controls-position": "",
                   "disabled": false,
                   "__vModel__": "field110",
-                  "min": 60,
+                  "min": 0,
                   "max": 1800,
                   "id": "id_1660304360450_5"
                 }
@@ -1069,7 +1081,7 @@
                     "label": "一拖二",
                     "tag": "el-switch",
                     "tagIcon": "switch",
-                    "defaultValue": 0,
+                    "defaultValue": 1,
                     "span": 4,
                     "showLabel": true,
                     "labelWidth": 80,
@@ -2301,7 +2313,7 @@
                     "layout": "colFormItem",
                     "span": 5,
                     "required": false,
-                    "defaultValue": "0",
+                    "defaultValue": "id_1647485267192_73",
                     "regList": [],
                     "changeTag": true,
                     "searchSource": false,
@@ -2350,6 +2362,42 @@
                         "value": "id_1647485267192_72"
                       },
                       {
+                        "label": "IO_PORTA_07",
+                        "value": "id_1647485267192_73"
+                      },
+                      {
+                        "label": "IO_PORTA_08",
+                        "value": "id_1653449701350_0"
+                      },
+                      {
+                        "label": "IO_PORTA_09",
+                        "value": "id_1659942254419_11"
+                      },
+                      {
+                        "label": "IO_PORTA_10",
+                        "value": "id_1659942300489_12"
+                      },
+                      {
+                        "label": "IO_PORTA_11",
+                        "value": "id_1659942301465_13"
+                      },
+                      {
+                        "label": "IO_PORTA_12",
+                        "value": "id_1659942302985_15"
+                      },
+                      {
+                        "label": "IO_PORTA_13",
+                        "value": "id_1659942303977_16"
+                      },
+                      {
+                        "label": "IO_PORTA_14",
+                        "value": "id_1659942305385_17"
+                      },
+                      {
+                        "label": "IO_PORTA_15",
+                        "value": "id_1659942302234_14"
+                      },
+                      {
                         "label": "IO_PORTB_00",
                         "value": "id_1647485267192_74"
                       },
@@ -2371,31 +2419,47 @@
                       },
                       {
                         "label": "IO_PORTB_05",
-                        "value": "id_1722236756636_0"
+                        "value": "id_1647485267192_79"
                       },
                       {
                         "label": "IO_PORTB_06",
-                        "value": "id_1722236772403_1"
+                        "value": "id_1647485267192_80"
                       },
                       {
                         "label": "IO_PORTB_07",
-                        "value": "id_1722236798635_2"
+                        "value": "id_1647485267192_81"
                       },
                       {
                         "label": "IO_PORTB_08",
-                        "value": "id_1733143332567_7"
+                        "value": "id_1659942520267_25"
                       },
                       {
                         "label": "IO_PORTB_09",
-                        "value": "id_1733143333374_8"
+                        "value": "id_1659942416666_18"
                       },
                       {
                         "label": "IO_PORTB_10",
-                        "value": "id_1733143334192_9"
+                        "value": "id_1659942417369_19"
                       },
                       {
                         "label": "IO_PORTB_11",
-                        "value": "id_1733143336438_10"
+                        "value": "id_1659942418129_20"
+                      },
+                      {
+                        "label": "IO_PORTB_12",
+                        "value": "id_1659942418537_21"
+                      },
+                      {
+                        "label": "IO_PORTB_13",
+                        "value": "id_1659942418961_22"
+                      },
+                      {
+                        "label": "IO_PORTB_14",
+                        "value": "id_1659942419409_23"
+                      },
+                      {
+                        "label": "IO_PORTB_15",
+                        "value": "id_1659942420017_24"
                       },
                       {
                         "label": "IO_PORTC_00",
@@ -2418,28 +2482,92 @@
                         "value": "id_1647485267192_86"
                       },
                       {
-                        "label": "IO_PORTP_00",
-                        "value": "id_1685018828649_12"
+                        "label": "IO_PORTC_05",
+                        "value": "id_1647485267192_87"
                       },
                       {
-                        "label": "IO_PORTP_01",
-                        "value": "id_1741315964779_0"
+                        "label": "IO_PORTC_06",
+                        "value": "id_1647485267192_88"
                       },
                       {
-                        "label": "IO_PORTP_02",
-                        "value": "id_1741315965932_1"
+                        "label": "IO_PORTC_07",
+                        "value": "id_1647485267192_89"
+                      },
+                      {
+                        "label": "IO_PORTC_08",
+                        "value": "id_1659942689298_34"
+                      },
+                      {
+                        "label": "IO_PORTC_09",
+                        "value": "id_1659942548530_27"
+                      },
+                      {
+                        "label": "IO_PORTC_10",
+                        "value": "id_1659942549845_32"
+                      },
+                      {
+                        "label": "IO_PORTC_11",
+                        "value": "id_1659942548938_29"
+                      },
+                      {
+                        "label": "IO_PORTC_12",
+                        "value": "id_1659942549182_30"
+                      },
+                      {
+                        "label": "IO_PORTC_13",
+                        "value": "id_1659942548746_28"
+                      },
+                      {
+                        "label": "IO_PORTC_14",
+                        "value": "id_1659942550146_33"
+                      },
+                      {
+                        "label": "IO_PORTC_15",
+                        "value": "id_1659942867947_35"
+                      },
+                      {
+                        "label": "IO_PORTD_00",
+                        "value": "id_1651200719084_10"
+                      },
+                      {
+                        "label": "IO_PORTD_01",
+                        "value": "id_1651200755336_11"
+                      },
+                      {
+                        "label": "IO_PORTD_02",
+                        "value": "id_1651200759198_12"
+                      },
+                      {
+                        "label": "IO_PORTD_03",
+                        "value": "id_1651200760502_13"
+                      },
+                      {
+                        "label": "IO_PORTD_04",
+                        "value": "id_1651200761897_14"
+                      },
+                      {
+                        "label": "IO_PORTD_05",
+                        "value": "id_1651200763262_15"
+                      },
+                      {
+                        "label": "IO_PORTD_06",
+                        "value": "id_1651200764534_16"
+                      },
+                      {
+                        "label": "IO_PORTD_07",
+                        "value": "id_1651200765594_17"
                       },
                       {
                         "label": "IO_PORT_LDOIN",
-                        "value": "id_1685018828937_13"
+                        "value": "id_1654138247476_3"
                       },
                       {
                         "label": "IO_PORT_DP",
-                        "value": "id_1685018829257_14"
+                        "value": "id_1651200840445_19"
                       },
                       {
                         "label": "IO_PORT_DM",
-                        "value": "id_1685018829513_15"
+                        "value": "id_1651200854573_20"
                       }
                     ]
                   },
@@ -3468,7 +3596,7 @@
         "uuid": "",
         "eventField": [],
         "enableUuid": "TCFG_USER_BLE_ENABLE",
-        "disable": false
+        "disable": true
       },
       "type": "default",
       "justify": "start",
@@ -3555,7 +3683,7 @@
               "formId": 291,
               "renderKey": "2911695029290752",
               "eventField": [],
-              "uuid": "TCFG_BT_RCSP_DUAL_CONN_ENABLE",
+              "uuid": "TCFG_RCSP_DUAL_CONN_ENABLE",
               "saveWay": "macro",
               "formItemWidth": "",
               "originValue": 0
@@ -3661,6 +3789,12 @@
                   "value": "XIMALAYA_EN",
                   "hide": false,
                   "disabled": false
+                },
+                {
+                  "label": "AURACAST_APP_EN",
+                  "value": "AURACAST_APP_EN",
+                  "hide": false,
+                  "disabled": false
                 }
               ]
             },
@@ -3674,7 +3808,7 @@
           }
         ],
         "eventField": [],
-        "disable": false,
+        "disable": true,
         "saveWay": "macro"
       },
       "type": "default",
@@ -3711,7 +3845,7 @@
               "showLabel": true,
               "tag": "el-input",
               "tagIcon": "textarea",
-              "defaultValue": "使能BLE之后，按功能选择以下操作：\n1.勾选LE_AUDIO_UNICAST_SINK_EN协议，需要在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n2.勾选LE_AUDIO_JL_UNICAST_SINK_EN协议，需要对蓝牙配置->TWS功能关闭（暂时不支持），在音频配置->DAC配置->声道配置->选择双声道，在音频配置->通用音频配置->全局采样率配置->选择48000Hz，在音频流程→媒体/蓝牙通话选择LE_Audio分组，使能音频流程→LE_Audio的音频流程图。\n3.勾选LE_AUDIO_AURACAST_SINK_EN协议，需要对蓝牙配置->BLE->广播开启，在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n（上述详细可见项目帮助文档的LE_Audio章节）",
+              "defaultValue": "使能BLE之后，按功能选择以下操作：\n1.勾选LE_AUDIO_UNICAST_SINK_EN协议，需要在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n2.勾选LE_AUDIO_JL_UNICAST_SINK_EN协议，需要对蓝牙配置->TWS功能关闭（暂时不支持），在音频配置->DAC配置->声道配置->选择双声道，在音频配置->通用音频配置->全局采样率配置->选择48000Hz，在音频流程→媒体/蓝牙通话选择LE_Audio分组，使能音频流程→LE_Audio的音频流程图。\n3.勾选LE_AUDIO_AURACAST_SINK_EN协议，需要对蓝牙配置->BLE->广播开启，蓝牙配置->第三方协议配置（开启）->AURACAST_APP_EN选中，在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n（上述详细可见项目帮助文档的LE_Audio章节）",
               "required": false,
               "layout": "colFormItem",
               "span": 24,
@@ -3725,14 +3859,14 @@
               "filetype": 1,
               "formId": 108,
               "renderKey": "1081728374351220",
-              "originValue": "使能BLE之后，按功能选择以下操作：\n1.勾选LE_AUDIO_UNICAST_SINK_EN协议，需要在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n2.勾选LE_AUDIO_JL_UNICAST_SINK_EN协议，需要对蓝牙配置->TWS功能关闭（暂时不支持），在音频配置->DAC配置->声道配置->选择双声道，在音频配置->通用音频配置->全局采样率配置->选择48000Hz，在音频流程→媒体/蓝牙通话选择LE_Audio分组，使能音频流程→LE_Audio的音频流程图。\n3.勾选LE_AUDIO_AURACAST_SINK_EN协议，需要对蓝牙配置->BLE->广播开启，在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n（上述详细可见项目帮助文档的LE_Audio章节）",
+              "originValue": "使能BLE之后，按功能选择以下操作：\n1.勾选LE_AUDIO_UNICAST_SINK_EN协议，需要在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n2.勾选LE_AUDIO_JL_UNICAST_SINK_EN协议，需要对蓝牙配置->TWS功能关闭（暂时不支持），在音频配置->DAC配置->声道配置->选择双声道，在音频配置->通用音频配置->全局采样率配置->选择48000Hz，在音频流程→媒体/蓝牙通话选择LE_Audio分组，使能音频流程→LE_Audio的音频流程图。\n3.勾选LE_AUDIO_AURACAST_SINK_EN协议，需要对蓝牙配置->BLE->广播开启，蓝牙配置->第三方协议配置（开启）->AURACAST_APP_EN选中，在音频流程->媒体/蓝牙通话选择LE_Audio分组，使能音频流程->LE_Audio的音频流程图。\n（上述详细可见项目帮助文档的LE_Audio章节）",
               "eventField": []
             },
             "type": "textarea",
             "placeholder": "请输入",
             "autosize": {
-              "minRows": 6,
-              "maxRows": 6
+              "minRows": 7,
+              "maxRows": 7
             },
             "style": {
               "width": "100%"
@@ -3777,20 +3911,8 @@
             "__slot__": {
               "options": [
                 {
-                  "label": "LE_AUDIO_UNICAST_SOURCE_EN",
-                  "value": "LE_AUDIO_UNICAST_SOURCE_EN",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
                   "label": "LE_AUDIO_UNICAST_SINK_EN",
                   "value": "LE_AUDIO_UNICAST_SINK_EN",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "LE_AUDIO_AURACAST_SOURCE_EN",
-                  "value": "LE_AUDIO_AURACAST_SOURCE_EN",
                   "hide": false,
                   "disabled": false
                 },
@@ -3801,26 +3923,8 @@
                   "disabled": false
                 },
                 {
-                  "label": "LE_AUDIO_JL_UNICAST_SOURCE_EN",
-                  "value": "LE_AUDIO_JL_UNICAST_SOURCE_EN",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
                   "label": "LE_AUDIO_JL_UNICAST_SINK_EN",
                   "value": "LE_AUDIO_JL_UNICAST_SINK_EN",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "LE_AUDIO_JL_AURACAST_SOURCE_EN",
-                  "value": "LE_AUDIO_JL_AURACAST_SOURCE_EN",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "LE_AUDIO_JL_AURACAST_SINK_EN",
-                  "value": "LE_AUDIO_JL_AURACAST_SINK_EN",
                   "hide": false,
                   "disabled": false
                 }
@@ -3842,7 +3946,7 @@
               "labelWidth": 150,
               "tag": "el-input-number",
               "tagIcon": "number",
-              "span": 24,
+              "span": 8,
               "layout": "colFormItem",
               "required": false,
               "regList": [],
@@ -3868,6 +3972,42 @@
             "id": "id_1709810601587_6",
             "min": 0,
             "max": 500000
+          },
+          {
+            "__config__": {
+              "label": "JL_UNICAST绑定配对",
+              "tag": "el-switch",
+              "tagIcon": "switch",
+              "defaultValue": 0,
+              "span": 6,
+              "showLabel": true,
+              "labelWidth": 180,
+              "layout": "colFormItem",
+              "required": false,
+              "regList": [],
+              "changeTag": true,
+              "status": 0,
+              "dataType": [
+                "8",
+                "1"
+              ],
+              "formId": 145,
+              "renderKey": "1451744101951534",
+              "uuid": "TCFG_JL_UNICAST_BOUND_PAIR_EN",
+              "saveWay": "macro",
+              "tipAlways": false,
+              "tip": "可通过JL小板实现耳机与Dongle的绑定配对"
+            },
+            "style": {},
+            "disabled": false,
+            "active-text": "",
+            "inactive-text": "",
+            "active-color": null,
+            "inactive-color": null,
+            "active-value": 1,
+            "inactive-value": 0,
+            "id": "id_1744101951534_0",
+            "__vModel__": "field145"
           }
         ],
         "eventField": [],
@@ -4067,7 +4207,7 @@
   "formRules": "rules",
   "gutter": 30,
   "disabled": false,
-  "span": 22,
+  "span": 6,
   "formBtns": false,
   "unFocusedComponentBorder": false,
   "maxFormId": 306

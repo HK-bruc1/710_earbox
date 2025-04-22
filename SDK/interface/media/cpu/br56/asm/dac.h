@@ -59,8 +59,8 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_TRIM_SEL_PA_LN              2
 #define DAC_TRIM_SEL_PA_RP              3
 #define DAC_TRIM_SEL_PA_RN              3
-#define DAC_TRIM_SEL_VCM_L              4
-#define DAC_TRIM_SEL_VCM_R              5
+// #define DAC_TRIM_SEL_VCM_L              4    (unused)
+// #define DAC_TRIM_SEL_VCM_R              5    (unused)
 
 #define DAC_TRIM_CH_L                  0
 #define DAC_TRIM_CH_R                  1
@@ -115,6 +115,7 @@ struct trim_init_param_t {
     u8 clock_mode;
     u8 power_level;
     s16 precision;
+    float trim_speed;
     struct audio_dac_trim *dac_trim;
     struct audio_dac_hdl *dac;              /* DAC设备*/
 };

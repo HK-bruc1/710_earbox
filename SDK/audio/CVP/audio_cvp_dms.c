@@ -992,6 +992,9 @@ int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int
     overlay_load_code(OVERLAY_AEC);
     aec_code_movable_load();
 
+    /*初始化dac read的资源*/
+    audio_dac_read_init();
+
     aec_hdl->dump_packet = AEC_OUT_DUMP_PACKET;
     aec_hdl->inbuf_clear_cnt = AEC_IN_DUMP_PACKET;
     aec_hdl->output_fade_in = 1;
@@ -1206,6 +1209,9 @@ void audio_aec_close(void)
         //在AEC关闭之后再关，否则还会跑cvp_sync_run,导致越界
         audio_cvp_sync_close();
 #endif/*TCFG_AUDIO_CVP_SYNC*/
+
+        /*释放dac read的资源*/
+        audio_dac_read_exit();
 
 #if TCFG_SUPPORT_MIC_CAPLESS
         if (aec_hdl->dcc_hdl) {

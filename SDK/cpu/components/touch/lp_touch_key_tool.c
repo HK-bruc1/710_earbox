@@ -138,6 +138,9 @@ int lp_touch_key_online_debug_send(u32 ch, u16 val)
     int err = 0;
     putchar('s');
     if ((lp_key_online.state == LP_KEY_ONLINE_ST_CH_RES_DEBUG_START) && ((lp_key_online.current_record_ch == ch) || (lp_key_online.current_record_ch == LPCTMU_CHANNEL_SIZE))) {
+        if (lp_key_online.current_record_ch == LPCTMU_CHANNEL_SIZE) {
+            val += (ch * 10000);
+        }
         lp_key_online.res_packet = val;
         err = app_online_db_send(DB_PKT_TYPE_DAT_CH0, (u8 *)(&(lp_key_online.res_packet)), 2);
     }

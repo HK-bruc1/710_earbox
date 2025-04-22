@@ -204,6 +204,32 @@ SECTIONS
 		*(.dac_node.text)
 		*(.a2dp_streamctrl.text)
 
+#if  TCFG_CODE_TO_RAM_COMPRESS_ENABLE
+		*(.sbc_hwaccel.text)
+		*(.eq_coeff_design.text)
+		*(.aac.text)
+		*(.media_analysis.text)
+		*(.bt_audio_sync_node.text)
+		*(.esco_audio_plc.text.cache.L2.run)
+		*(.audio_cfifo.text.cache.L2.run)
+		*(.node.eq.text.cache.L2)
+		*(.node.source.text.cache.L2)
+		*(.node.dac.text.cache.L2)
+		*(.encoder_node.text)
+		*(.decoder_node.text)
+		*(.eq.text)
+		*(.hw_eq.text)
+		*(.audio_sync.text)
+		*(.jlstream.text.cache.L2)
+		*(.audio_anc_fade_ctr.text)
+		*(.tone_player.text)
+		*(.tws_tone_player.text)
+		*(.media.media_cpu.text)
+		*(.jlstream_fade.text)
+		/* *(.anc.text) */
+		/* *(.anc_core.text) */
+		/* *(.anc_user.text) */
+#endif
 
 		. = ALIGN(4);
         _SPI_CODE_START = . ;

@@ -135,6 +135,7 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define AUDIO_ADC_SEL_DMIC0			2
 #define AUDIO_ADC_SEL_DMIC1			3
 
+#define AUDIO_ADC_DVOL_LIMIT        ((1 << 8) - 1)
 
 struct mic_capless_trim_result {
     u8 bias_rsel0;      // MIC_BIASA_RSEL
@@ -157,11 +158,12 @@ struct audio_adc_output_hdl {
 struct audio_adc_private_param {
     u8 performance_mode;
     u8 mic_ldo_vsel;		//MIC0_LDO[000:1.5v 001:1.8v 010:2.1v 011:2.4v 100:2.7v 101:3.0v]
-    u8 mic_dig_gain;        //MIC硬件数字增益 0：0dB 1：6dB 2：12dB
     u8 mic_ldo_isel; 		//MIC0通道电流档位选择
     u8 adca_reserved0;
     u8 adcb_reserved0;
     u8 lowpower_lvl;
+    u8 dvol_441k;
+    u8 dvol_48k;
 };
 
 struct mic_open_param {
@@ -190,7 +192,7 @@ struct audio_adc_hdl {
     u8 adc_sel[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc[AUDIO_ADC_MAX_NUM];
     u8 adc_dcc_en[AUDIO_ADC_MAX_NUM];
-    struct mic_open_param mic_param[AUDIO_ADC_MAX_NUM];
+    struct mic_open_param mic_param[AUDIO_ADC_MIC_MAX_NUM];
     struct linein_open_param linein_param[AUDIO_ADC_MAX_NUM];
     u8 mic_ldo_state;
     u8 state;

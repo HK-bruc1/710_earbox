@@ -35,6 +35,9 @@
 #include "volume_node.h"
 #include "tone_player.h"
 #include "ring_player.h"
+#if AUDIO_EQ_LINK_VOLUME
+#include "effects/eq_config.h"
+#endif
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN)))||((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SOURCE_EN | LE_AUDIO_JL_AURACAST_SOURCE_EN)))||((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 #include "le_audio_player.h"
 #endif
@@ -1315,9 +1318,15 @@ void app_audio_state_switch(u8 state, s16 max_volume, dvol_handle *dvol_hdl)
     dB_value = (dB_value > ANC_MODE_DIG_VOL_LIMIT) ? ANC_MODE_DIG_VOL_LIMIT : dB_value;
 #endif/*TCFG_AUDIO_ANC_ENABLE*/
 #ifdef CONFIG_CPU_BR56
-    u16 dvol_max = (u16)(16100.0f * dB_Convert_Mag(dB_value));
+    u16 DAC_0dB = 0;
+    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版以后才做DAC TRIM
+        DAC_0dB = dac_digital_gain_tab_version_c[TCFG_DAC_POWER_MODE];
+    } else {
+        DAC_0dB = 16100;
+    }
+    u16 dvol_max = (u16)(DAC_0dB * dB_Convert_Mag(dB_value));
 #else
-    u16 dvol_max = (u16)(16384.0f * dB_Convert_Mag(dB_value));
+    u16 dvol_max = (u16)(16384 * dB_Convert_Mag(dB_value));
 #endif
 
     /*记录当前状态对应的最大音量*/
@@ -1552,6 +1561,11 @@ void app_audio_set_volume(u8 state, s16 volume, u8 fade)
 #if AUDIO_VBASS_LINK_VOLUME
     if (state == APP_AUDIO_STATE_MUSIC) {
         vbass_link_volume();
+    }
+#endif
+#if AUDIO_EQ_LINK_VOLUME
+    if (state == APP_AUDIO_STATE_MUSIC) {
+        eq_link_volume();
     }
 #endif
 }

@@ -166,19 +166,21 @@ static int app_connected_conn_status_event_handler(int *msg)
 
         //记录设备的cig_hdl等信息
         for (i = 0; i < CIG_MAX_NUMS; i++) {
-            if (app_cig_conn_info[i].used && (app_cig_conn_info[i].cig_hdl == 0xFF)) {
-                app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
-                for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
-                    if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
-                        app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
-                        app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
-                        app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
-                        app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
-                        app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
-                        find = 1;
+            if (app_cig_conn_info[i].used) {
+                if ((app_cig_conn_info[i].cig_hdl == 0xFF) || (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl)) {
+                    app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
+                    for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                        if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
+                            find = 1;
 
-                        log_info("Record acl hangle:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
-                        break;
+                            log_info("Record acl hangle:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
+                            break;
+                        }
                     }
                 }
             }
@@ -293,6 +295,25 @@ static int app_connected_conn_status_event_handler(int *msg)
         ble_op_latency_close(acl_info->acl_hdl);
         log_info("remote device addr:");
         put_buf((u8 *)&acl_info->pri_ch, sizeof(acl_info->pri_ch));
+#if TCFG_JL_UNICAST_BOUND_PAIR_EN
+        u8 le_com_addr_new[6];
+        int ret = syscfg_read(CFG_TWS_CONNECT_AA, le_com_addr_new, 6);
+        log_info("read binding common addr\n");
+        put_buf(le_com_addr_new, 6);
+
+        if (le_com_addr_new != NULL && memcmp(le_com_addr_new, "\0\0\0\0\0\0", 6) != 0) { //防止空地址触发读零异常
+            if (memcmp(&acl_info->pri_ch, le_com_addr_new, 6) != 0) { //地址不匹配
+                log_info("Device mismatched, connection denied!!!\n");
+                ll_hci_disconnect(acl_info->acl_hdl, 0x13);
+                break;
+            }
+            log_info("Bind information error!!!\n");
+            break;
+        } else {
+            log_info("Never bind information!!!\n");
+            break;
+        }
+#endif
         acl_connected_nums++;
         ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
 
@@ -350,8 +371,10 @@ static int app_connected_conn_status_event_handler(int *msg)
         //由于是异步操作需要加互斥量保护，避免connected_close的代码与其同时运行,添加的流程请放在互斥量保护区里面
         app_connected_mutex_pend(&mutex, __LINE__);
 
-        acl_connected_nums--;
-        ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
+        if (acl_connected_nums > 0) { // TCFG_JL_UNICAST_BOUND_PAIR_EN拒绝连接，会导致实际还没设备连接就触发断言
+            acl_connected_nums--;
+            ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
+        }
 
         //释放互斥量
         app_connected_mutex_post(&mutex, __LINE__);
@@ -715,12 +738,11 @@ void app_connected_close(u8 cig_hdl, u8 status)
 /* ----------------------------------------------------------------------------*/
 void app_connected_close_all(u8 status)
 {
-    u8 i;
     log_info("connected_close");
     //由于是异步操作需要加互斥量保护，避免和开启的流程同时运行,添加的流程请放在互斥量保护区里面
     app_connected_mutex_pend(&mutex, __LINE__);
 
-    for (i = 0; i < CIG_MAX_NUMS; i++) {
+    for (u8 i = 0; i < CIG_MAX_NUMS; i++) {
         if (app_cig_conn_info[i].used && app_cig_conn_info[i].cig_hdl) {
             connected_close(app_cig_conn_info[i].cig_hdl);
             memset(&app_cig_conn_info[i], 0, sizeof(struct app_cig_conn_info));
@@ -1080,7 +1102,7 @@ void le_audio_profile_init()
 void le_audio_profile_exit()
 {
     g_le_audio_hdl.le_audio_profile_ok = 0;
-    if (!is_cig_phone_conn()) {
+    if (!is_cig_phone_conn()) { // 有连接就卸载否则会异常
         app_connected_close_in_other_mode();
     }
 }
@@ -1097,7 +1119,7 @@ static int le_audio_app_msg_handler(int *msg)
         log_info("APP_MSG_STATUS_INIT_OK");
 #if (TCFG_USER_TWS_ENABLE==0)
         le_audio_profile_init();
-        le_audio_adv_open_discover_mode(1);
+        le_audio_adv_open_discover_mode();
 #endif
         break;
     case APP_MSG_ENTER_MODE://1
@@ -1335,6 +1357,7 @@ void le_audio_adv_conn_success(u8 adv_id)
 void le_audio_adv_disconn_success(u8 adv_id)
 {
     log_info("le_audio_adv_disconn_success,adv id:%d\n", adv_id);
+    le_audio_adv_api_enable(0);
     g_le_audio_hdl.le_audio_adv_connected = 0;
 }
 /*定义接口获取le audio广播的连接状态*/

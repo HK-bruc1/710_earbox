@@ -97,7 +97,12 @@ void a2dp_energy_detect_handler(int *arg)
             memset(a2dp_energy_detect_addr, 0xff, 6);
         }
     }
-
+#if !TCFG_A2DP_PREEMPTED_ENABLE
+    if (bt_a2dp_slience_detect_num() < 1) {
+        // 无后台待播放设备
+        return;
+    }
+#endif
     if (g_a2dp_slience_detect == 0 && g_a2dp_play_time >= 10000) {
         /* 播放1s后开启静音检测 */
         g_a2dp_slience_detect = 1;
@@ -694,6 +699,7 @@ static int a2dp_tws_msg_handler(int *msg)
     case TWS_EVENT_ROLE_SWITCH:
         while (bt_slience_get_detect_addr(addr)) {
             bt_stop_a2dp_slience_detect(addr);
+            a2dp_media_unmute(addr);
             a2dp_media_close(addr);
         }
         break;

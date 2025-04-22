@@ -53,7 +53,7 @@
 // ------------电源配置.json------------
 
 // ------------板级配置.json------------
-#define TCFG_DEBUG_UART_ENABLE 1 // 调试串口
+#define TCFG_DEBUG_UART_ENABLE 0 // 调试串口
 #if TCFG_DEBUG_UART_ENABLE
 #define TCFG_DEBUG_UART_TX_PIN IO_PORTB_03 // 输出IO
 #define TCFG_DEBUG_UART_BAUDRATE 2000000 // 波特率
@@ -69,8 +69,9 @@
 #endif // TCFG_CFG_TOOL_ENABLE
 
 #define CONFIG_SPI_DATA_WIDTH 2 // flash通信
-#define CONFIG_FLASH_SIZE 1048576 // flash容量
-#define TCFG_VM_SIZE 40 // VM大小(K)
+// #define CONFIG_FLASH_SIZE 1048576 // flash容量
+#define CONFIG_FLASH_SIZE 524288 // flash容量
+#define TCFG_VM_SIZE 8 // VM大小(K)
 
 #define TCFG_PWMLED_ENABLE 1 // LED配置
 #if TCFG_PWMLED_ENABLE
@@ -135,6 +136,15 @@
 #define TCFG_IO_CFG_AT_POWER_OFF 0 // 关机时IO配置
 
 #define TCFG_CHARGESTORE_PORT IO_PORT_LDOIN // 通信IO
+
+#define NTC_DET_EN 0 // NTC检测
+#if NTC_DET_EN
+#define NTC_DETECT_IO IO_PORTC_04 // 检测IO选择
+#define NTC_DET_PULLUP_TYPE 1 // 上拉电阻
+#define NTC_POWER_IO IO_PORTC_03 // 供电IO选择
+#define NTC_UPPER_RES 235 // NTC阻值上限
+#define NTC_LOWER_RES 34 // NTC阻值下限
+#endif // NTC_DET_EN
 // ------------板级配置.json------------
 
 // ------------按键配置.json------------
@@ -142,13 +152,13 @@
 #define TCFG_SEND_HOLD_SEC_MSG_DURING_HOLD 1 // 按住过程中发送按住几秒消息
 #define TCFG_MAX_HOLD_SEC ((KEY_ACTION_HOLD_5SEC << 8) | 5) // 最长按住消息
 
-#define TCFG_IOKEY_ENABLE 1 // IO按键配置
+#define TCFG_IOKEY_ENABLE 0 // IO按键配置
 
 #define TCFG_ADKEY_ENABLE 0 // AD按键配置
 
 #define TCFG_LP_TOUCH_KEY_BT_TOOL_ENABLE 0 // 内置触摸在线调试
 
-#define TCFG_LP_TOUCH_KEY_ENABLE 0 // 内置触摸按键配置
+#define TCFG_LP_TOUCH_KEY_ENABLE 1 // 内置触摸按键配置
 #if TCFG_LP_TOUCH_KEY_ENABLE
 #define TCFG_LP_KEY_LIMIT_VOLTAGE_DELTA 800 // 上下限电压差
 #define TCFG_LP_KEY_CHARGE_FREQ_KHz 2500 // 充放电频率
@@ -197,6 +207,7 @@
 #define TCFG_BT_SUPPORT_A2DP 1 // A2DP
 #define TCFG_BT_SUPPORT_HID 1 // HID
 #define TCFG_BT_SUPPORT_SPP 1 // SPP
+#define TCFG_BT_SUPPORT_PAN 0
 #define TCFG_BT_BACKGROUND_ENABLE 0 // 蓝牙后台
 #define TCFG_BT_BACKGROUND_GOBACK 1 // 蓝牙后台连接断开返回
 #define TCFG_BT_BACKGROUND_DETECT_TIME 750 // 音乐检测时间
@@ -215,11 +226,6 @@
 #define TCFG_TWS_AUTO_ROLE_SWITCH_ENABLE 1 // 自动主从切换
 #define TCFG_TWS_POWER_BALANCE_ENABLE 1 // 主从电量平衡
 #define CONFIG_TWS_AUTO_PAIR_WITHOUT_UNPAIR 0 // TWS连接超时自动配对新耳机
-#define TCFG_TWS_AUDIO_SHARE_ENABLE 0 // TWS共享音频
-#define TCFG_BT_SHARE_PAGE_TIMEOUT 20 // 共享配对连接超时(s)
-#define TCFG_BT_SHARE_PAGE_CONN_TIMEOUT 120 // 共享回连超时(s)
-#define TCFG_TWS_AUDIO_SHARE_AUTO_SWITCH_ENABLE 0 // 互相共享音频自动切换
-#define TCFG_TWS_SHARE_2PHONE_CONN_ENABLE 0 // 开启共享功能可连接2个手机
 #endif // TCFG_USER_TWS_ENABLE
 
 #define TCFG_BT_SNIFF_ENABLE 1 // sniff
@@ -242,11 +248,12 @@
 #define TCFG_THIRD_PARTY_PROTOCOLS_ENABLE 1 // 第三方协议配置
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 #define TCFG_BT_RCSP_DUAL_CONN_ENABLE 0 // 支持连接两路RCSP
-#define TCFG_THIRD_PARTY_PROTOCOLS_SEL 0 // 第三方协议选择
+#define TCFG_THIRD_PARTY_PROTOCOLS_SEL 1 // 第三方协议选择
 #endif // TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 
 #define TCFG_LE_AUDIO_APP_CONFIG 0 // LE_AUDIO 应用选择（选择后自动开启LC3编解码）
 #define TCFG_LE_AUDIO_PLAY_LATENCY 30000 // LE_AUDIO延时（us）
+#define TCFG_JL_UNICAST_BOUND_PAIR_EN 0 // JL_UNICAST绑定配对
 #define TCFG_BT_DONGLE_ENABLE 0 // 支持dongle连接
 #define TCFG_JL_DONGLE_PLAYBACK_LATENCY 40 // dongle下行播放延时(msec)
 #define TCFG_BT_DONGLE_A2DP_PHONE_A2DP_MIX_ENABLE 0 // dongle游戏声音和手机蓝牙播歌声音叠加
@@ -276,7 +283,7 @@
 #define TCFG_UPDATE_ENABLE 1 // 升级选择
 #if TCFG_UPDATE_ENABLE
 #define TCFG_UPDATE_STORAGE_DEV_EN 0 // 设备升级
-#define TCFG_UPDATE_BLE_TEST_EN 1 // ble蓝牙升级
+#define TCFG_UPDATE_BLE_TEST_EN 0 // ble蓝牙升级
 #define TCFG_UPDATE_BT_LMP_EN 1 // edr蓝牙升级
 #define TCFG_TEST_BOX_ENABLE 1 // 测试盒串口升级
 #define TCFG_UPDATE_UART_IO_EN 0 // 普通io串口升级
@@ -303,6 +310,7 @@
 #if TCFG_AUDIO_ADC_ENABLE
 #define TCFG_AUDIO_MIC_LDO_VSEL 4 // MICLDO电压
 #define TCFG_ADC_PERFORMANCE_MODE ADC_MODE_LOW_POWER // 性能模式
+#define TCFG_ADC_DIGITAL_GAIN 0 // 数字增益
 #define TCFG_ADC0_ENABLE 1 // 使能
 #define TCFG_ADC0_MODE 0 // 模式
 #define TCFG_ADC0_AIN_SEL 1 // 输入端口
@@ -325,8 +333,9 @@
 #if CONFIG_ANC_ENABLE
 #define TCFG_AUDIO_ANC_TRAIN_MODE ANC_FF_EN // ANC类型
 #define TCFG_ANC_TOOL_DEBUG_ONLINE 1 // 蓝牙调试/产测
-#define TCFG_ANC_BOX_ENABLE 1 // 串口调试/产测
-#define TCFG_AUDIO_ANC_MULT_ORDER_ENABLE 1 // 多场景滤波器
+#define TCFG_ANC_BOX_ENABLE 0 // 串口调试/产测
+#define TCFG_AUDIO_ANC_BASE_DEBUG_ENABLE	1 //ANC基础调试功能
+#define TCFG_AUDIO_ANC_MULT_ORDER_ENABLE 0 // 多场景滤波器
 #define TCFG_AUDIO_ANC_ON_AUTO_SHUT_DOWN 1 // ANC_ON允许自动关机
 #define TCFG_ANC_MODE_ANC_EN 1 // 降噪
 #define TCFG_ANC_MODE_TRANS_EN 1 // 通透
@@ -337,10 +346,14 @@
 #define TCFG_AUDIO_ANCR_FB_MIC 0XFF // 右声道FBMIC
 #define TCFG_ANCIF_FILE_LOAD_SEL 3 // 配置文件选择
 #define TCFG_ANCIF_FILE_SPACE 4096 // 配置文件大小
-#define TCFG_AUDIO_ANC_EAR_ADAPTIVE_EN 0 // 耳道自适应
 #define TCFG_ANC_MUSIC_ANTI_CLIPPING_MODE 0 // 防破音模式
 #define TCFG_ANC_MUSIC_DYNAMIC_GAIN_THR -12 // ANC动态增益-触发阈值
 #endif // CONFIG_ANC_ENABLE
+
+#define TCFG_AUDIO_ANC_EXT_EN 0 // ANC_EXT 扩展功能
+#if TCFG_AUDIO_ANC_EXT_EN
+#define TCFG_AUDIO_ANC_EAR_ADAPTIVE_EN 0 // 耳道自适应
+#endif // TCFG_AUDIO_ANC_EXT_EN
 
 #define TCFG_AUDIO_GLOBAL_SAMPLE_RATE 44100 // 全局采样率
 #define TCFG_AEC_TOOL_ONLINE_ENABLE 0 // 手机APP在线调试
@@ -351,7 +364,7 @@
 #define TCFG_AUDIO_DMS_GLOBAL_VERSION DMS_GLOBAL_V200 // 2micDNS算法选择
 #define TCFG_3MIC_MODE_SEL JLSP_3MIC_MODE2 // 3mic算法选择
 #define TCFG_MUSIC_PLC_TYPE 0 // PLC类型选择
-#define TCFG_AUDIO_DUT_ENABLE 1 // 音频/通话产测
+#define TCFG_AUDIO_DUT_ENABLE 0 // 音频/通话产测
 #define TCFG_AUDIO_MIC_ARRAY_TRIM_ENABLE 0 // 麦克风阵列校准
 #define TCFG_ANC_HAT_DUT 0 // JL自研ANC产测
 #define AUDIO_ENC_MPT_SELF_ENABLE 0 // JL自研ENC产测

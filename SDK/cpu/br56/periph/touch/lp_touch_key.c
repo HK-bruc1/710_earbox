@@ -78,6 +78,8 @@ void lp_touch_key_save_identify_algo_param(void)
 
 #include "../../../components/touch/lp_touch_key_common.c"
 
+#include "../../../components/touch/lp_touch_key_eartch.c"
+
 #include "../../../components/touch/lp_touch_key_click.c"
 
 #include "../../../components/touch/lp_touch_key_slide.c"
@@ -86,6 +88,7 @@ void lp_touch_key_save_identify_algo_param(void)
 void lp_touch_key_state_event_deal(u32 ch_idx, u32 event)
 {
     struct touch_key_arg *arg = &(__this->arg[ch_idx]);
+    const struct touch_key_cfg *key_cfg = &(__this->pdata->key_cfg[ch_idx]);
 
     if (__this->pdata->slide_mode_en) {
         if (event == TOUCH_KEY_FALLING_EVENT) {
@@ -103,6 +106,14 @@ void lp_touch_key_state_event_deal(u32 ch_idx, u32 event)
         case TOUCH_KEY_FALLING_EVENT:
             log_debug("touch key%d FALLING !\n", ch_idx);
 
+#if TCFG_LP_EARTCH_KEY_ENABLE
+            if (key_cfg->eartch_en) {
+                touch_abandon_short_click_once = 0;
+                lp_touch_key_eartch_event_deal(1);
+                return;
+            }
+#endif
+
 #if CTMU_CHECK_LONG_CLICK_BY_RES
             arg->falling_res_avg = lp_touch_key_ctmu_res_buf_avg(ch_idx);
             log_debug("falling_res_avg: %d", arg->falling_res_avg);
@@ -113,6 +124,14 @@ void lp_touch_key_state_event_deal(u32 ch_idx, u32 event)
 
         case TOUCH_KEY_RAISING_EVENT:
             log_debug("touch key%d RAISING !\n", ch_idx);
+
+#if TCFG_LP_EARTCH_KEY_ENABLE
+            if (key_cfg->eartch_en) {
+                touch_abandon_short_click_once = 0;
+                lp_touch_key_eartch_event_deal(0);
+                return;
+            }
+#endif
 
 #if CTMU_CHECK_LONG_CLICK_BY_RES
             lp_touch_key_ctmu_res_buf_clear(ch_idx);
@@ -157,6 +176,9 @@ void lp_touch_key_ctmu_res_deal(u32 pnd_type)
         return;
     }
 
+    const struct touch_key_cfg *key_cfg;
+    u32 eartch_algo_state;
+
     u32 algo_valid;
     u16 ref_lim_l;
     u16 ref_lim_h;
@@ -171,6 +193,7 @@ void lp_touch_key_ctmu_res_deal(u32 pnd_type)
         if (len == 0) {
             return;
         }
+        key_cfg = &(__this->pdata->key_cfg[ch_idx]);
 
 #if TCFG_LP_TOUCH_KEY_BT_TOOL_ENABLE
         if ((touch_bt_tool_enable) && (touch_bt_online_debug_send)) {
@@ -194,11 +217,41 @@ void lp_touch_key_ctmu_res_deal(u32 pnd_type)
             __this->last_touch_state &= ~BIT(ch_idx);
             __this->identify_algo_invalid |=  BIT(ch_idx);
             if (data_len <= __this->pdata->key_num) {
-                lpctmu_cur_trim_by_res(ch, ch_res);
+#if TCFG_LP_EARTCH_KEY_ENABLE
+                if (key_cfg->eartch_en) {
+                } else
+#endif
+                {
+                    lpctmu_cur_trim_by_res(ch, ch_res);
+                }
             }
         }
 
         touch_state = lp_touch_key_identify_algorithm_analyze(ch_idx, ch_res);
+
+#if TCFG_LP_EARTCH_KEY_ENABLE
+        if (key_cfg->eartch_en) {
+            eartch_algo_state = lp_touch_key_eartch_algorithm_analyze(ch_idx, ch_res);
+            if (__this->eartch.ear_state == 0) {
+                if ((touch_state) && (eartch_algo_state)) {
+                    touch_state = 1;
+                } else {
+                    touch_state = 0;
+                }
+            } else {
+                touch_state = eartch_algo_state;
+            }
+            if (eartch_algo_state != (!!(__this->eartch.algo_state & BIT(ch_idx)))) {
+                if (eartch_algo_state) {
+                    __this->eartch.algo_state |=  BIT(ch_idx);
+                } else {
+                    __this->eartch.algo_state &= ~BIT(ch_idx);
+                    u32 res_avg =  lp_touch_key_eartch_algorithm_get_vaild_avg(ch_idx);
+                    lp_touch_key_identify_algorithm_reinit(ch_idx, res_avg);
+                }
+            }
+        }
+#endif
         /* log_debug("idx:%d ch:%d, res:%d, L:%d H:%d key:%d", ch_idx, ch, ch_res, ref_lim_l, ref_lim_h, touch_state); */
         /* log_debug("idx:%d ch:%d, res:%d, key:%d", ch_idx, ch, ch_res, touch_state); */
         if (touch_state != (!!(__this->last_touch_state & BIT(ch_idx)))) {
@@ -218,8 +271,12 @@ void lp_touch_key_ctmu_res_deal(u32 pnd_type)
     } else
 #endif
     {
+#if TCFG_LP_EARTCH_KEY_ENABLE
+        if ((__this->last_touch_state) || (__this->identify_algo_invalid) || (__this->eartch.algo_state)) {
+#else
         /* log_debug("key:%x invld:%x",  __this->last_touch_state, __this->identify_algo_invalid); */
         if ((__this->last_touch_state) || (__this->identify_algo_invalid)) {
+#endif
             lpctmu_set_dma_res_ie(1);
         } else {
             lpctmu_set_dma_res_ie(0);
@@ -279,6 +336,7 @@ void lp_touch_key_task(void *p)
         ch = key_cfg->key_ch;
         __this->lpctmu_cfg.ch_num = __this->pdata->key_num;
         __this->lpctmu_cfg.ch_list[ch_idx] = ch;
+        __this->lpctmu_cfg.ch_fixed_isel[ch] = 0;
         __this->lpctmu_cfg.ch_en |= BIT(ch);
         __this->lpctmu_cfg.lim_l[ch] = -1;
         __this->lpctmu_cfg.lim_h[ch] = -1;
@@ -318,12 +376,26 @@ void lp_touch_key_task(void *p)
                 }
             }
         }
+#if TCFG_LP_EARTCH_KEY_ENABLE
+        if (key_cfg->eartch_en) {
+            __this->eartch.ch_list[__this->eartch.ch_num] = ch;
+            __this->eartch.ch_num ++;
+            lp_touch_key_eartch_algorithm_init(ch_idx, algo_cfg->algo_cfg0, algo_cfg->algo_cfg2, 6);
+        } else
+#endif
+        {
 
 #if !TCFG_LP_TOUCH_KEY_BT_TOOL_ENABLE
-        lp_touch_key_range_algo_init(ch_idx, algo_cfg);
+            lp_touch_key_range_algo_init(ch_idx, algo_cfg);
 #endif
+        }
 
     }
+
+#if TCFG_LP_EARTCH_KEY_ENABLE
+    lp_touch_key_eartch_init();
+    lp_touch_key_eartch_state_reset();
+#endif
 
     if (__this->lpctmu_cfg.ch_wkp_en) {
         __this->lpctmu_cfg.softoff_wakeup_cfg = LPCTMU_WAKEUP_EN_WITHOUT_CHARGE_ONLINE;
@@ -493,6 +565,9 @@ void lp_touch_key_charge_mode_exit()
 
 static void lp_touch_key_pre_softoff_cbfunc(void)
 {
+    if (0 == lpctmu_is_working()) {
+        return;
+    }
     u32 key_state = lp_touch_key_get_last_touch_state();
     while (key_state) {//等待松手
         os_time_dly(2);

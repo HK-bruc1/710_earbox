@@ -13,6 +13,16 @@
 #include "audio_config.h"
 #include "clock_manager/clock_manager.h"
 
+const u16 dac_digital_gain_tab_version_c[7] = {
+    16384,  // 20mW
+    16384,  // 30mW
+    16766,  // 50mW
+    17156,  // 80mW
+    17156,  // 100mW
+    16766,  // 2Vrms
+    17156   // 2Vrms
+};
+
 /*
  *******************************************************************
  *						Audio Codec Config

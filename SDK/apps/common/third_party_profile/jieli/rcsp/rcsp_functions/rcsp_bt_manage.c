@@ -696,6 +696,7 @@ APP_MSG_HANDLER(rcsp_bt_msg_entry) = {
     .handler    = rcsp_bt_msg_handler,
 };
 
+#if 1//!TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
 
 #if (0 == BT_CONNECTION_VERIFY)
 #define TWS_FUNC_ID_RCSP_AUTH \
@@ -886,6 +887,8 @@ void rcsp_clear_ble_hdl_and_tws_sync(void)
     rcsp_interface_bt_handle_tws_sync();
 }
 
-#endif
+#endif // !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
+
+#endif // TCFG_USER_TWS_ENABLE
 
 #endif

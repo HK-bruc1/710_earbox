@@ -453,9 +453,9 @@ enum gpio_function {
     PORT_FUNC_GPADC,    //in
     PORT_FUNC_PWM_LED,
 
-    // PORT_FUNC_PLNK_SCLK,//out
-    // PORT_FUNC_PLNK_DAT0,//in
-    // PORT_FUNC_PLNK_DAT1,//in
+    PORT_FUNC_PLNK_SCLK,//out
+    PORT_FUNC_PLNK_DAT0,//in
+    PORT_FUNC_PLNK_DAT1,//in
 
     PORT_FUNC_OCH_CLOCK_OUT0,
     PORT_FUNC_OCH_CLOCK_OUT1,//PORT_FUNC_OCH_RESERVED0,//不连续

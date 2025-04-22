@@ -7,9 +7,9 @@
   "ingoreConfig": false,
   "pack": "AC710N-demo",
   "patch": {
-    "title": "patch_01.02",
-    "sn": 1.02,
-    "relateVersion": "4.3.0"
+    "title": "patch_02.02",
+    "sn": 2.02,
+    "path": "C:\\JLStudio\\standard\\TWS耳机\\AC710N\\3.0.0\\patch\\patch_02.02"
   },
   "specialPatchKey": "",
   "projectType": "NormalProject",
@@ -123,7 +123,7 @@
     }
   ],
   "create_time": "2025-03-29T02:21:53.585Z",
-  "update_time": "2025-04-22T06:18:41.281Z",
+  "update_time": "2025-04-22T06:21:20.605Z",
   "standardPatch": "patch_02.02",
   "lastOpenToolVersion": "4.4.5",
   "lastStencilFlowTime": "2025-03-29T10:22:01.3884501+08:00",
