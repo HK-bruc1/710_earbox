@@ -259,8 +259,8 @@
 #define TCFG_APP_LINEIN_EN 0 // LINEIN模式
 #define TCFG_APP_PC_EN 0 // PC模式
 #define TCFG_MIC_EFFECT_ENABLE 0 // 混响使能
-#define TCFG_DEC_ID3_V2_ENABLE 0 // ID3_V2
-#define TCFG_DEC_ID3_V1_ENABLE 0 // ID3_V1
+#define TCFG_DEC_ID3_V2_ENABLE 1 // ID3_V2
+#define TCFG_DEC_ID3_V1_ENABLE 1 // ID3_V1
 #define FILE_DEC_REPEAT_EN 0 // 无缝循环播放
 #define FILE_DEC_DEST_PLAY 0 // 指定时间播放
 #define FILE_DEC_AB_REPEAT_EN 0 // AB点复读

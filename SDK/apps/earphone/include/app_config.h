@@ -9,7 +9,9 @@
 /*
  * 系统打印总开关
  */
-
+#define TCFG_USER_EDR_ENABLE    1
+#define CFG_USER_TIKTOK_X       13
+#define CFG_USER_TIKTOK_Y       14
 
 #define CONFIG_DEBUG_ENABLE TCFG_DEBUG_UART_ENABLE
 
@@ -981,7 +983,7 @@
 #undef  TCFG_BT_SUPPORT_PBAP
 #define  TCFG_BT_SUPPORT_PBAP 0x1
 #endif
-#define  TCFG_BT_SUPPORT_MAP 0x0
+#define  TCFG_BT_SUPPORT_MAP 0x1
 #define  TCFG_BLE_BRIDGE_EDR_ENALBE 0x0   //ios 一键连接，ctkd
 #if TCFG_BLE_BRIDGE_EDR_ENALBE   //一键连接必须同地址
 #undef  TCFG_BT_BLE_BREDR_SAME_ADDR

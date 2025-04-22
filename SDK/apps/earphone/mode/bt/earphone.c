@@ -257,6 +257,7 @@ void bredr_handle_register()
 #endif
 
     bt_dut_test_handle_register(bt_dut_api);
+    bt_music_info_handle_register(user_get_bt_music_info);
 }
 
 #if TCFG_USER_TWS_ENABLE
@@ -457,6 +458,9 @@ void bt_function_select_init()
     bt_tws_share_function_select_init();
 #endif
 
+#if ((TCFG_BT_SUPPORT_HID==1) && TCFG_USER_EDR_ENABLE)
+   edr_hid_config_init();
+#endif
 }
 
 
@@ -839,30 +843,7 @@ static int bt_hci_event_handler(struct bt_event *bt)
 
 
 
-#if TCFG_BT_SUPPORT_MAP
-#define PROFILE_CMD_TRY_AGAIN_LATER 	    -1004
-void bt_get_time_date()
-{
-    int error = bt_cmd_prepare(USER_CTRL_HFP_GET_PHONE_DATE_TIME, 0, NULL);
-    log_info(">>>>>error = %d\n", error);
-    if (error == PROFILE_CMD_TRY_AGAIN_LATER) {
-        sys_timeout_add(NULL, bt_get_time_date, 100);
-    }
-}
-void phone_date_and_time_feedback(u8 *data, u16 len)
-{
-    log_info("time：%s ", data);
-}
-void map_get_time_data(char *time, int status)
-{
-    if (status == 0) {
-        log_info("time：%s ", time);
-    } else {
-        log_info(">>>map get fail\n");
-        sys_timeout_add(NULL, bt_get_time_date, 100);
-    }
-}
-#endif
+
 
 u8 bt_app_exit_check(void)
 {

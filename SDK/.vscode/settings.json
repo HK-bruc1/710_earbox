@@ -4,6 +4,9 @@
         "sbox_core_config.h": "c",
         "avctp_user.h": "c",
         "app_config.h": "c",
-        "aes.h": "c"
+        "aes.h": "c",
+        "bt_tws.h": "c",
+        "app_msg.h": "c",
+        "app_main.h": "c"
     }
 }

@@ -2,7 +2,7 @@
  * @Author: shenzihao@zh-jieli.com shenzihao@zh-jieli.com
  * @Date: 2024-09-27 11:01:23
  * @LastEditors:  shenzihao@zh-jieli.com
- * @LastEditTime: 2025-04-02 17:24:36
+ * @LastEditTime: 2025-04-21 19:31:45
  * @FilePath: \SDK\apps\common\third_party_profile\jl_earbox\sbox_core_config.c
  * @Description: 
  * 此文件是配置彩屏仓通信协议相关的配置：
@@ -141,12 +141,10 @@ extern void sys_smartstore_event_handle(struct box_info *boxinfo);
 //仓协议推送事件到app_core执行
 void sys_smartstore_notify_event(struct box_info *boxinfo)
 {
-
     int ret = sbox_tr_ibuf_to_cbuf(boxinfo->data, boxinfo->lens, boxinfo->cmd);
     if(ret < 0){
         printf("%s[%s]", __func__, "sbox_tr_ibuf_to_cbuf faild");
     }
-
     int err;
     int msg[3];
     msg[0] = (int)sys_smartstore_event_handle;

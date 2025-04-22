@@ -58,7 +58,7 @@ struct s_box_app_cb {
     void (*sbox_control_siri)(void *data);                  //仓设置语音助手
     void (*sbox_control_playmode)(void *data);              //仓设置低延时模式
     void (*sbox_control_phone_call)(void *data);            //仓设置通话状态，接听挂断
-    void (*sbox_control_phone_out)(void *data);             //仓设置电话呼出
+    void (*sbox_control_phone_out)(void *data,u8 len);             //仓设置电话呼出
     void (*sbox_control_tiktok)(void *data);                //抖音点赞，上下滑
     void (*sbox_control_photo)(void *data);                 //仓控制拍照
     void (*sbox_control_edr_conn)(void *data);              //仓同步发射器信息
@@ -191,23 +191,26 @@ void custom_sync_music_state(void);
 void custom_sync_key_setting(void);
 void custom_sync_phone_call_info(void);
 void custom_sync_edr_info(void);
-void custom_sync_time_info(struct user_time my_time);
+void custom_sync_time_info(void *data);
 
-// void custom_music_info_sync(struct custom_music_info my_music);
+
 void custom_control_eq_mode(void *mode);
 void custom_control_anc_mode(void *mode);
 void custom_control_volume(void *data);
 void custom_control_phone_call(void *datas);
-void custom_control_play_mode(void *datas);
-void custom_eq_param_index_switch(u8 index);
-void sbox_check_is_ble_con(unsigned short handle);
-void custom_sync_call_state(u8 state);
-void custom_set_music_state(u8 *data);
-void custom_set_find_phone(u8 *data);
-void custom_ble_into_no_latency(u8 enable);
+// void custom_control_play_mode(void *datas);
+void custom_control_find_ear_tone(void *datas);
+void custom_sync_call_state(u8 data);
+void custom_set_find_phone(void *datas);
+void custom_ble_into_no_latency(void *datas);
 int att_write_without_rsp_handler(uint8_t *buffer, uint16_t buffer_size);
-// void sys_smartstore_event_handle(struct box_info *boxinfo);
+void custom_control_phone_out(void *data,u8 len);
 void custom_control_music_state(void *data);
+void custom_ble_into_no_latency(void *data);
+void custom_sync_lyric_info(void *data);
+void custom_control_photo(void *data);
+void custom_control_tiltok(void *data);
+
 extern struct s_box_app_cb sbox_cb_func;
 
 #endif  

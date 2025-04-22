@@ -55,7 +55,8 @@ void bt_volume_up(u8 inc)
             /*本地音量最大，如果手机音量还没最大，继续加，以防显示不同步*/
             if (g_bt_hdl.phone_vol < 15) {
                 if (bt_get_curr_channel_state() & HID_CH) {
-                    bt_cmd_prepare(USER_CTRL_HID_VOL_UP, 0, NULL);
+                    key_vol_ctrl(0);
+                    // bt_cmd_prepare(USER_CTRL_HID_VOL_UP, 0, NULL);
                 } else {
                     bt_cmd_prepare(USER_CTRL_HFP_CALL_VOLUME_UP, 0, NULL);
                 }
@@ -84,7 +85,11 @@ void bt_volume_up(u8 inc)
         }
     } else {
 #if TCFG_BT_VOL_SYNC_ENABLE
-        bt_cmd_prepare_for_addr(data, USER_CTRL_CMD_SYNC_VOL_INC, 0, NULL); //使用HID调音量
+        if (edr_hid_is_connected()) {
+            key_vol_ctrl(0);
+        }else{
+            bt_cmd_prepare_for_addr(data, USER_CTRL_CMD_SYNC_VOL_INC, 0, NULL); //使用HID调音量
+        }
 #endif
     }
 }
@@ -123,7 +128,8 @@ void bt_volume_down(u8 dec)
              */
             if (g_bt_hdl.phone_vol > 1) {
                 if (bt_get_curr_channel_state() & HID_CH) {
-                    bt_cmd_prepare(USER_CTRL_HID_VOL_DOWN, 0, NULL);
+                    key_vol_ctrl(1);
+                    // bt_cmd_prepare(USER_CTRL_HID_VOL_DOWN, 0, NULL);
                 } else {
                     bt_cmd_prepare(USER_CTRL_HFP_CALL_VOLUME_DOWN, 0, NULL);
 
@@ -157,7 +163,11 @@ void bt_volume_down(u8 dec)
         if (app_audio_get_volume(APP_AUDIO_CURRENT_STATE) == 0) {
             app_audio_volume_down(0);
         }
-        bt_cmd_prepare_for_addr(data, USER_CTRL_CMD_SYNC_VOL_DEC, 0, NULL);
+        if (edr_hid_is_connected()) {
+            key_vol_ctrl(1);
+        }else{
+            bt_cmd_prepare_for_addr(data, USER_CTRL_CMD_SYNC_VOL_DEC, 0, NULL);
+        }
 #endif
     }
 }

@@ -543,11 +543,14 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/server/rcsp_data_respone.c \
 	apps/common/third_party_profile/jieli/trans_data_demo/le_trans_data.c \
 	apps/common/third_party_profile/jieli/trans_data_demo/spp_trans_data.c \
-	apps/common/third_party_profile/jl_earbox/sbox_core_code.c \
 	apps/common/third_party_profile/jl_earbox/sbox_core_config.c \
 	apps/common/third_party_profile/jl_earbox/sbox_protocol.c \
 	apps/common/third_party_profile/jl_earbox/sbox_user_app.c \
 	apps/common/third_party_profile/jl_earbox/sbox_uart_app.c \
+	apps/common/third_party_profile/jl_earbox/sbox_eq_switch.c \
+	apps/common/third_party_profile/jl_earbox/user_video_ctr.c \
+	apps/common/third_party_profile/jl_earbox/edr_hid_user.c \
+	apps/common/third_party_profile/jl_earbox/sbox_connect_emitter.c \
 	apps/common/third_party_profile/mma_protocol/mma_config.c \
 	apps/common/third_party_profile/mma_protocol/mma_platform_api.c \
 	apps/common/third_party_profile/mma_protocol/mma_protocol.c \
@@ -1020,6 +1023,7 @@ LFLAGS := \
 	cpu/br56/liba/btctrler.a \
 	cpu/br56/liba/aec.a \
 	cpu/br56/liba/media.a \
+	cpu/br56/liba/lib_esbox.a \
 	cpu/br56/liba/libdma-protocol.a \
 	cpu/br56/liba/libdma-device-ota.a \
 	cpu/br56/liba/google_fps.a \

@@ -82,7 +82,7 @@ set compress_tool=.\lzma_enc.exe
 set compress_tool=.\lz4_packet.exe
 #endif
 
-REM %OBJDUMP% -D -address-mask=0x1ffffff -print-dbg $1.elf > $1.lst
+%OBJDUMP% -D -address-mask=0x1ffffff -print-dbg sdk.elf > sdk.lst
 %OBJCOPY% -O binary -j .text %ELFFILE% text.bin
 %OBJCOPY% -O binary -j .data %ELFFILE% data.bin
 %OBJCOPY% -O binary -j .data_code %ELFFILE% data_code.bin

@@ -109,7 +109,7 @@ int bt_key_power_msg_remap(int *msg)
     if (tws_api_get_role() == TWS_ROLE_SLAVE) {
         return APP_MSG_NULL;
     }
-
+    u8 number[30] = {0x31,0x30,0x30,0x38,0x36};
     void *devices[2];
     void *active_device = NULL;
     void *incoming_device = NULL;
@@ -232,6 +232,13 @@ int bt_key_power_msg_remap(int *msg)
     }
     /* 所有场景下按键流程 */
     switch (key_action) {
+    case KEY_ACTION_CLICK:
+        // sbox_ctrl_douyin(1);
+        custom_control_phone_out(number,5);
+        break;
+    case KEY_ACTION_DOUBLE_CLICK:
+        // sbox_ctrl_douyin(2);
+        break;
     case KEY_ACTION_HOLD_1SEC:
         //长按切换ANC模式
         app_msg = APP_MSG_ANC_SWITCH;

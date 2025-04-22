@@ -163,27 +163,27 @@ static void ms_to_time(u8 *info, u16 len)
     }
     printf("music_time: %02d : %02d", time / 1000 / 60, (time % 60000) / 1000);
 }
-void user_get_bt_music_info(u8 type, u32 time, u8 *info, u16 len)
-{
-    //profile define type:
-    //1-title 2-artist name 3-album names 4-track number
-    //5-total number of tracks 6-genre  7-playing time
-    //JL define 0x10-total time , 0x11 current play position
-    u8  min, sec;
-    //printf("type %d\n", type );
-    if ((info != NULL) && (len != 0) && (type != 7)) {
-        printf(" %s \n", info);
-    }
+// void user_get_bt_music_info(u8 type, u32 time, u8 *info, u16 len)
+// {
+//     //profile define type:
+//     //1-title 2-artist name 3-album names 4-track number
+//     //5-total number of tracks 6-genre  7-playing time
+//     //JL define 0x10-total time , 0x11 current play position
+//     u8  min, sec;
+//     //printf("type %d\n", type );
+//     if ((info != NULL) && (len != 0) && (type != 7)) {
+//         printf(" %s \n", info);
+//     }
 
-    if (type == 7) {
-        ms_to_time(info, len);
-    }
-    if (time != 0) {
-        min = time / 1000 / 60;
-        sec = time / 1000 - (min * 60);
-        printf(" time %02d : %02d\n ", min, sec);
-    }
-}
+//     if (type == 7) {
+//         ms_to_time(info, len);
+//     }
+//     if (time != 0) {
+//         min = time / 1000 / 60;
+//         sec = time / 1000 - (min * 60);
+//         printf(" time %02d : %02d\n ", min, sec);
+//     }
+// }
 
 static void bt_music_player_time_deal(void *priv)
 {

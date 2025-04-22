@@ -20595,7 +20595,7 @@
       },
       {
         "position": {
-          "x": 1040,
+          "x": 1240,
           "y": 600
         },
         "size": {
@@ -20748,7 +20748,7 @@
               {
                 "name": "EscoUlEq",
                 "modeId": "id_1675672290562_2",
-                "current": "arg0",
+                "current": "",
                 "bypass": false,
                 "list": [
                   {
@@ -22253,6 +22253,10 @@
                             "value": 0
                           },
                           {
+                            "id": "id_1719316377982_0",
+                            "value": 100
+                          },
+                          {
                             "id": "id_1682666801718_3",
                             "value": 0
                           },
@@ -22392,54 +22396,6 @@
               "index": 0
             }
           ]
-        }
-      },
-      {
-        "shape": "edge",
-        "attrs": {
-          "line": {
-            "stroke": "#A4A5A9",
-            "strokeWidth": "2px",
-            "targetMarker": {
-              "tagName": "path",
-              "d": "M 12 -5 0 0 12 5 Z",
-              "strokeWidth": 2,
-              "fill": "#A4A5A9",
-              "stroke": "#A4A5A9"
-            },
-            "distance": 40
-          },
-          "class": {
-            "0": "c",
-            "1": "l",
-            "2": "a",
-            "3": "s",
-            "4": "s",
-            "5": "-",
-            "6": "e",
-            "7": "d",
-            "8": "g",
-            "9": "e",
-            "10": "-",
-            "11": "t",
-            "12": "e",
-            "13": "s",
-            "14": "t"
-          }
-        },
-        "id": "54de7951-e36b-49f0-b172-9551115e11c9",
-        "data": {
-          "itemId": 1657001467960
-        },
-        "zIndex": 24,
-        "visible": true,
-        "source": {
-          "cell": "69cf8aa4-c502-409b-a23f-8cd9ed4ca6d5",
-          "port": "5114f0b1-23ea-4659-844f-a8bd9b1e634d"
-        },
-        "target": {
-          "cell": "67dd0319-60bb-4682-a186-af684a753145",
-          "port": "25ac1764-1e03-461d-8a28-4d109b881a7f"
         }
       },
       {
@@ -23423,6 +23379,334 @@
           "cell": "48d11dd5-7e37-4bd3-948a-fe3c95be32bc",
           "port": "58736285-2984-4a7c-b09e-262d9fe1d874"
         }
+      },
+      {
+        "position": {
+          "x": 1000,
+          "y": 600
+        },
+        "size": {
+          "width": 120,
+          "height": 80
+        },
+        "view": "vue-shape-view",
+        "shape": "vue-shape",
+        "id": "819b1799-8160-4ab7-b68c-5e30315e3164",
+        "component": "node-cust",
+        "group": "hardware",
+        "data": {
+          "name": "EffectDev0",
+          "group": "第三方算法",
+          "uuid": "0XA4E1",
+          "type": 1,
+          "fun": 1,
+          "cmd": {
+            "exe": "",
+            "args": "",
+            "workplace": ""
+          },
+          "formFile": "../../.第三方音效配置.json",
+          "ports": [],
+          "sAlias": "",
+          "dynamicPort": {
+            "iMax": 0,
+            "iMin": 0,
+            "oMax": 0,
+            "oMin": 0
+          },
+          "marco": "TCFG_EFFECT_DEV0_NODE_ENABLE",
+          "bitConsistency": true,
+          "inBit": 2,
+          "outBit": 2,
+          "nodeDoc": "\\docs\\html\\SDK\\audio_flow\\third_party_algorithm\\music_effect_3rd_party.html",
+          "subId": 1,
+          "itemId": 1657001467960,
+          "configs": {
+            "name": "EffectDev01",
+            "list": [
+              {
+                "modeId": "id_1675672290562_2",
+                "name": "EffectDev01",
+                "current": "",
+                "bypass": false,
+                "list": [
+                  {
+                    "name": "arg0",
+                    "data": [
+                      {
+                        "id": "id_1675825867879_66",
+                        "list": [
+                          {
+                            "id": "id_1712901132802_2",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901399198_3",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901458318_4",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901458742_5",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901460719_6",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901461366_7",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901461974_8",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712901462423_9",
+                            "value": 0
+                          }
+                        ]
+                      },
+                      {
+                        "id": "id_1712903542975_9",
+                        "list": [
+                          {
+                            "id": "id_1712903542976_18",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_19",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_20",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_21",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_22",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_23",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_24",
+                            "value": 0
+                          },
+                          {
+                            "id": "id_1712903542976_25",
+                            "value": 0
+                          }
+                        ]
+                      }
+                    ],
+                    "enable": true
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "visible": true,
+        "ports": {
+          "groups": {
+            "in": {
+              "position": "left",
+              "label": {
+                "position": "bottom"
+              },
+              "attrs": {
+                "text": {
+                  "fill": "#2b3f57",
+                  "font-size": "12",
+                  "visibility": "visible",
+                  "text": ""
+                },
+                "circle": {
+                  "r": 6,
+                  "id": "1",
+                  "event": "port:click",
+                  "magnet": true,
+                  "stroke": "#E3B14C",
+                  "strokeWidth": 2,
+                  "fill": "#f2f2f2",
+                  "style": {
+                    "visibility": "visible"
+                  }
+                }
+              }
+            },
+            "out": {
+              "position": "right",
+              "label": {
+                "position": "bottom",
+                "color": "#ffff"
+              },
+              "attrs": {
+                "text": {
+                  "fill": "#2b3f57",
+                  "font-size": "12",
+                  "visibility": "visible",
+                  "text": ""
+                },
+                "circle": {
+                  "r": 6,
+                  "magnet": true,
+                  "stroke": "#7DC06E",
+                  "strokeWidth": 2,
+                  "fill": "#f2f2f2",
+                  "event": "port:click",
+                  "style": {
+                    "visibility": "visible"
+                  }
+                }
+              }
+            }
+          },
+          "items": [
+            {
+              "group": "in",
+              "index": 0,
+              "label": {
+                "position": {
+                  "name": "outside",
+                  "args": {
+                    "y": 10
+                  }
+                }
+              },
+              "attrs": {
+                "text": {
+                  "text": "",
+                  "visibility": "visible"
+                }
+              },
+              "id": "ecc22b3d-602c-4d87-81d6-8f2c71022a39"
+            },
+            {
+              "group": "out",
+              "index": 1,
+              "label": {
+                "position": {
+                  "name": "outside",
+                  "args": {
+                    "y": 10
+                  }
+                }
+              },
+              "attrs": {
+                "text": {
+                  "text": "",
+                  "visibility": "visible"
+                }
+              },
+              "id": "dc8b7b1f-98f4-4b98-b76e-e80e2e1c16c4"
+            }
+          ]
+        },
+        "zIndex": 39
+      },
+      {
+        "shape": "edge",
+        "attrs": {
+          "line": {
+            "stroke": "#A4A5A9",
+            "strokeWidth": "2px",
+            "targetMarker": {
+              "tagName": "path",
+              "d": "M 12 -5 0 0 12 5 Z",
+              "strokeWidth": 2,
+              "fill": "#A4A5A9",
+              "stroke": "#A4A5A9"
+            },
+            "distance": 40
+          },
+          "class": {
+            "0": "c",
+            "1": "l",
+            "2": "a",
+            "3": "s",
+            "4": "s",
+            "5": "-",
+            "6": "e",
+            "7": "d",
+            "8": "g",
+            "9": "e",
+            "10": "-",
+            "11": "t",
+            "12": "e",
+            "13": "s",
+            "14": "t"
+          }
+        },
+        "id": "bb390c9f-343b-412d-9436-d9595a83bec4",
+        "source": {
+          "cell": "69cf8aa4-c502-409b-a23f-8cd9ed4ca6d5",
+          "port": "5114f0b1-23ea-4659-844f-a8bd9b1e634d"
+        },
+        "data": {
+          "itemId": 1657001467960
+        },
+        "target": {
+          "cell": "819b1799-8160-4ab7-b68c-5e30315e3164",
+          "port": "ecc22b3d-602c-4d87-81d6-8f2c71022a39"
+        },
+        "zIndex": 40
+      },
+      {
+        "shape": "edge",
+        "attrs": {
+          "line": {
+            "stroke": "#A4A5A9",
+            "strokeWidth": "2px",
+            "targetMarker": {
+              "tagName": "path",
+              "d": "M 12 -5 0 0 12 5 Z",
+              "strokeWidth": 2,
+              "fill": "#A4A5A9",
+              "stroke": "#A4A5A9"
+            },
+            "distance": 40
+          },
+          "class": {
+            "0": "c",
+            "1": "l",
+            "2": "a",
+            "3": "s",
+            "4": "s",
+            "5": "-",
+            "6": "e",
+            "7": "d",
+            "8": "g",
+            "9": "e",
+            "10": "-",
+            "11": "t",
+            "12": "e",
+            "13": "s",
+            "14": "t"
+          }
+        },
+        "id": "c7f49a9d-22ea-49b1-90c7-43db74398557",
+        "source": {
+          "cell": "819b1799-8160-4ab7-b68c-5e30315e3164",
+          "port": "dc8b7b1f-98f4-4b98-b76e-e80e2e1c16c4"
+        },
+        "data": {
+          "itemId": 1657001467960
+        },
+        "target": {
+          "cell": "67dd0319-60bb-4682-a186-af684a753145",
+          "port": "25ac1764-1e03-461d-8a28-4d109b881a7f"
+        },
+        "zIndex": 41
       }
     ]
   },
