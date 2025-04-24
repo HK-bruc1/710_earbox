@@ -82,10 +82,12 @@
 #error "开启 第三方协议功能 需要使能 TCFG_USER_BLE_ENABLE"
 #endif
 
+#ifndef TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
 // 三方协议简化版本，目前仅适用于RCSP
-#define TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED			0
-//代码放RAM压缩宏,在RAM资源足够的情况下将代码放RAM进行压缩
-#define TCFG_CODE_TO_RAM_COMPRESS_ENABLE		0
+#define TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED				0
+#endif
+//代码放RAM压缩宏，在RAM资源足够的情况下将代码放RAM进行压缩
+#define TCFG_CODE_TO_RAM_COMPRESS_ENABLE					0
 
 //*********************************************************************************//
 //                                  le_audio 配置                                       //
@@ -1001,6 +1003,18 @@
 #define TCFG_CHARGE_CUR_MAX         0//烧写器电流筛选最高值 -- 配置0不使能筛选,根据方案自行配置筛选范围
 #endif
 
+//*********************************************************************************//
+//                   NTC配置                                      //
+//*********************************************************************************//
+#if NTC_DET_EN && NTC_DET_PULLUP_TYPE   //ntc如果选择内部上拉的，检测IO要选择对应的内部上拉引脚，具体看各芯片方案的原理图
+#if defined(CONFIG_CPU_BR56) && (NTC_DETECT_IO != IO_PORTC_01)
+#error "710 NTC_DETECT_IO must be IO_PORTC_01"
+#elif defined(CONFIG_CPU_BR52) && (NTC_DETECT_IO != IO_PORTC_03)
+#error "709 NTC_DETECT_IO must be IO_PORTC_03"
+#elif defined(CONFIG_CPU_BR50) && (NTC_DETECT_IO != IO_PORTC_05)
+#error "708 NTC_DETECT_IO must be IO_PORTC_05"
+#endif
+#endif
 
 //*********************************************************************************//
 //                    异常记录/离线log配置                                      //

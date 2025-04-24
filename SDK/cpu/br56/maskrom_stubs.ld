@@ -272,6 +272,12 @@
   uECC_vli_sub = ABSOLUTE(0xffa90);
   uECC_vli_cmp_unsafe = ABSOLUTE(0xffa94);
   uECC_set_rng = ABSOLUTE(0xffa98);
+
+  /* SHA256，直接到函数体，非entry模式 */
+  sha256Init = ABSOLUTE(0xf0340);
+  sha256Update = ABSOLUTE(0xef9a0);
+  sha256Final = ABSOLUTE(0xefa00);
+
   get_cvsd_codec_ops = ABSOLUTE(0xffa9c);
   dns_16k_data = ABSOLUTE(0xe0270);
  

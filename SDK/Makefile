@@ -459,6 +459,7 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_manage.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_task.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_interface.c \
+	apps/common/third_party_profile/jieli/rcsp/rcsp_simplified/rcsp_interface_simplified.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/browser/rcsp_browser.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_bt_func.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_fm_func.c \
@@ -692,6 +693,7 @@ c_SRC_FILES := \
 	apps/earphone/ui/led/led_config.c \
 	apps/earphone/ui/led/led_ui_msg_handler.c \
 	apps/earphone/user_cfg.c \
+	audio/CVP/audio_aec.c \
 	audio/CVP/audio_cvp.c \
 	audio/CVP/audio_cvp_3mic.c \
 	audio/CVP/audio_cvp_ais_3mic.c \
