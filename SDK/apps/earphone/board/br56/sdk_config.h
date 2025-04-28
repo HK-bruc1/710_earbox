@@ -21,7 +21,7 @@
 #define TCFG_LOWPOWER_LOWPOWER_SEL 1 // 低功耗模式
 #define TCFG_AUTO_POWERON_ENABLE 1 // 上电自动开机
 
-#define TCFG_CHARGESTORE_ENABLE 1 // 智能仓
+#define TCFG_CHARGESTORE_ENABLE 0 // 智能仓
 
 #define TCFG_CHARGE_ENABLE 1 // 充电配置
 #if TCFG_CHARGE_ENABLE
@@ -53,7 +53,7 @@
 // ------------电源配置.json------------
 
 // ------------板级配置.json------------
-#define TCFG_DEBUG_UART_ENABLE 0 // 调试串口
+#define TCFG_DEBUG_UART_ENABLE 1 // 调试串口
 #if TCFG_DEBUG_UART_ENABLE
 #define TCFG_DEBUG_UART_TX_PIN IO_PORT_DP // 输出IO
 #define TCFG_DEBUG_UART_BAUDRATE 2000000 // 波特率
@@ -69,17 +69,16 @@
 #endif // TCFG_CFG_TOOL_ENABLE
 
 #define CONFIG_SPI_DATA_WIDTH 2 // flash通信
-// #define CONFIG_FLASH_SIZE 1048576 // flash容量
-#define CONFIG_FLASH_SIZE 524288 // flash容量
-#define TCFG_VM_SIZE 8 // VM大小(K)
+#define CONFIG_FLASH_SIZE 1048576 // flash容量
+#define TCFG_VM_SIZE 40 // VM大小(K)
 
 #define TCFG_PWMLED_ENABLE 1 // LED配置
 #if TCFG_PWMLED_ENABLE
 #define TCFG_LED_LAYOUT ONE_IO_TWO_LED // 连接方式
-#define TCFG_LED_RED_ENABLE 1 // 红灯(Red)
+#define TCFG_LED_RED_ENABLE 1 // 红灯
 #define TCFG_LED_RED_GPIO IO_PORTC_02 // IO
 #define TCFG_LED_RED_LOGIC BRIGHT_BY_HIGH // 点亮方式
-#define TCFG_LED_BLUE_ENABLE 1 // 蓝灯(Blue)
+#define TCFG_LED_BLUE_ENABLE 1 // 蓝灯
 #define TCFG_LED_BLUE_GPIO IO_PORTC_02 // IO
 #define TCFG_LED_BLUE_LOGIC BRIGHT_BY_LOW // 点亮方式
 #endif // TCFG_PWMLED_ENABLE
@@ -152,13 +151,13 @@
 #define TCFG_SEND_HOLD_SEC_MSG_DURING_HOLD 1 // 按住过程中发送按住几秒消息
 #define TCFG_MAX_HOLD_SEC ((KEY_ACTION_HOLD_5SEC << 8) | 5) // 最长按住消息
 
-#define TCFG_IOKEY_ENABLE 0 // IO按键配置
+#define TCFG_IOKEY_ENABLE 1 // IO按键配置
 
 #define TCFG_ADKEY_ENABLE 0 // AD按键配置
 
 #define TCFG_LP_TOUCH_KEY_BT_TOOL_ENABLE 0 // 内置触摸在线调试
 
-#define TCFG_LP_TOUCH_KEY_ENABLE 1 // 内置触摸按键配置
+#define TCFG_LP_TOUCH_KEY_ENABLE 0 // 内置触摸按键配置
 #if TCFG_LP_TOUCH_KEY_ENABLE
 #define TCFG_LP_KEY_LIMIT_VOLTAGE_DELTA 800 // 上下限电压差
 #define TCFG_LP_KEY_CHARGE_FREQ_KHz 2500 // 充放电频率
@@ -190,7 +189,7 @@
 #define TCFG_A2DP_DELAY_TIME_LDAC_LO 300 // A2DP低延时LDAC(msec)
 #define TCFG_A2DP_DELAY_TIME_LHDC 300 // A2DP延时LHDC(msec)
 #define TCFG_A2DP_DELAY_TIME_LHDC_LO 300 // A2DP低延时LHDC(msec)
-#define TCFG_BT_DUAL_CONN_ENABLE 0 // 一拖二
+#define TCFG_BT_DUAL_CONN_ENABLE 1 // 一拖二
 #define TCFG_A2DP_PREEMPTED_ENABLE 1 // A2DP抢播
 #define TCFG_BT_VOL_SYNC_ENABLE 1 // 音量同步
 #define TCFG_BT_DISPLAY_BAT_ENABLE 1 // 电量显示
@@ -207,7 +206,6 @@
 #define TCFG_BT_SUPPORT_A2DP 1 // A2DP
 #define TCFG_BT_SUPPORT_HID 1 // HID
 #define TCFG_BT_SUPPORT_SPP 1 // SPP
-#define TCFG_BT_SUPPORT_PAN 0
 #define TCFG_BT_BACKGROUND_ENABLE 0 // 蓝牙后台
 #define TCFG_BT_BACKGROUND_GOBACK 1 // 蓝牙后台连接断开返回
 #define TCFG_BT_BACKGROUND_DETECT_TIME 750 // 音乐检测时间
@@ -226,6 +224,11 @@
 #define TCFG_TWS_AUTO_ROLE_SWITCH_ENABLE 1 // 自动主从切换
 #define TCFG_TWS_POWER_BALANCE_ENABLE 1 // 主从电量平衡
 #define CONFIG_TWS_AUTO_PAIR_WITHOUT_UNPAIR 0 // TWS连接超时自动配对新耳机
+#define TCFG_TWS_AUDIO_SHARE_ENABLE 0 // TWS共享音频
+#define TCFG_BT_SHARE_PAGE_TIMEOUT 20 // 共享配对连接超时(s)
+#define TCFG_BT_SHARE_PAGE_CONN_TIMEOUT 120 // 共享回连超时(s)
+#define TCFG_TWS_AUDIO_SHARE_AUTO_SWITCH_ENABLE 0 // 互相共享音频自动切换
+#define TCFG_TWS_SHARE_2PHONE_CONN_ENABLE 0 // 开启共享功能可连接2个手机
 #endif // TCFG_USER_TWS_ENABLE
 
 #define TCFG_BT_SNIFF_ENABLE 1 // sniff
@@ -237,7 +240,7 @@
 #define CONFIG_OSC_WIN_STEP 400 // OSC窗口步进
 #endif // TCFG_BT_SNIFF_ENABLE
 
-#define TCFG_USER_BLE_ENABLE 1 // BLE
+#define TCFG_USER_BLE_ENABLE 0 // BLE
 #if TCFG_USER_BLE_ENABLE
 #define TCFG_BT_BLE_TX_POWER 9 // 最大发射功率
 #define TCFG_BT_BLE_BREDR_SAME_ADDR 1 // 和2.1同地址
@@ -245,10 +248,11 @@
 #define TCFG_BLE_HIGH_PRIORITY_ENABLE 0 // 高优先级
 #endif // TCFG_USER_BLE_ENABLE
 
-#define TCFG_THIRD_PARTY_PROTOCOLS_ENABLE 1 // 第三方协议配置
+#define TCFG_THIRD_PARTY_PROTOCOLS_ENABLE 0 // 第三方协议配置
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
-#define TCFG_BT_RCSP_DUAL_CONN_ENABLE 0 // 支持连接两路RCSP
-#define TCFG_THIRD_PARTY_PROTOCOLS_SEL 1 // 第三方协议选择
+#define TCFG_RCSP_DUAL_CONN_ENABLE 0 // 支持连接两路RCSP
+#define TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED 0 // 三方协议轻量化
+#define TCFG_THIRD_PARTY_PROTOCOLS_SEL 0 // 第三方协议选择
 #endif // TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 
 #define TCFG_LE_AUDIO_APP_CONFIG 0 // LE_AUDIO 应用选择（选择后自动开启LC3编解码）
@@ -283,7 +287,7 @@
 #define TCFG_UPDATE_ENABLE 1 // 升级选择
 #if TCFG_UPDATE_ENABLE
 #define TCFG_UPDATE_STORAGE_DEV_EN 0 // 设备升级
-#define TCFG_UPDATE_BLE_TEST_EN 0 // ble蓝牙升级
+#define TCFG_UPDATE_BLE_TEST_EN 1 // ble蓝牙升级
 #define TCFG_UPDATE_BT_LMP_EN 1 // edr蓝牙升级
 #define TCFG_TEST_BOX_ENABLE 1 // 测试盒串口升级
 #define TCFG_UPDATE_UART_IO_EN 0 // 普通io串口升级
@@ -329,14 +333,14 @@
 #define TCFG_ADC1_DCC_LEVEL 1 // DCC 截止频率
 #endif // TCFG_AUDIO_ADC_ENABLE
 
-#define CONFIG_ANC_ENABLE 1 // ANC 配置
+#define CONFIG_ANC_ENABLE 0 // ANC 配置
 #if CONFIG_ANC_ENABLE
 #define TCFG_AUDIO_ANC_TRAIN_MODE ANC_FF_EN // ANC类型
 #define TCFG_ANC_TOOL_DEBUG_ONLINE 1 // 蓝牙调试/产测
 #define TCFG_ANC_BOX_ENABLE 0 // 串口调试/产测
-#define TCFG_AUDIO_ANC_BASE_DEBUG_ENABLE	1 //ANC基础调试功能
-#define TCFG_AUDIO_ANC_MULT_ORDER_ENABLE 0 // 多场景滤波器
+#define TCFG_AUDIO_ANC_MULT_ORDER_ENABLE 1 // 多场景滤波器
 #define TCFG_AUDIO_ANC_ON_AUTO_SHUT_DOWN 1 // ANC_ON允许自动关机
+#define TCFG_AUDIO_ANC_BASE_DEBUG_ENABLE 1 // Debug调试
 #define TCFG_ANC_MODE_ANC_EN 1 // 降噪
 #define TCFG_ANC_MODE_TRANS_EN 1 // 通透
 #define TCFG_ANC_MODE_OFF_EN 1 // 关闭

@@ -40,8 +40,8 @@
 #define TCFG_AUDIO_CVP_DMS_FLEXIBLE_ANS_MODE 0 // 话务双MIC通话
 #define TCFG_AUDIO_CVP_DMS_FLEXIBLE_DNS_MODE 0 // 话务双MIC+DNS
 #define TCFG_AUDIO_CVP_DMS_HYBRID_DNS_MODE 0 // HYBRID双MIC+DNS
-#define TCFG_AUDIO_CVP_SMS_ANS_MODE 1 // 单MIC通话
-#define TCFG_AUDIO_CVP_SMS_DNS_MODE 0 // 单MIC+DNS
+#define TCFG_AUDIO_CVP_SMS_ANS_MODE 0 // 单MIC通话
+#define TCFG_AUDIO_CVP_SMS_DNS_MODE 1 // 单MIC+DNS
 #define TCFG_AUTO_WAH_NODE_ENABLE 0 // Auto Wah
 #define TCFG_AUTODUCK_NODE_ENABLE 0 // AutoDuck Trigger、AutoDuck
 #define TCFG_AUTOMUTE_NODE_ENABLE 0 // automute
@@ -76,7 +76,7 @@
 #define TCFG_HARMONIC_EXCITER_NODE_ENABLE 0 // Harmonic Exciter
 #define TCFG_IIS_NODE_ENABLE 0 // IIS0_TX、IIS0_RX
 #define TCFG_INDICATOR_NODE_ENABLE 0 // Indicator
-#define TCFG_KEY_TONE_NODE_ENABLE 0 // 按键音
+#define TCFG_KEY_TONE_NODE_ENABLE 1 // 按键音
 #define TCFG_LIMITER_NODE_ENABLE 0 // Limiter
 #define TCFG_LLNS_NODE_ENABLE 0 // LLNS
 #define TCFG_MIXER_NODE_ENABLE 0 // MIXER
@@ -116,6 +116,7 @@
 #define TCFG_STEROMIX_NODE_ENABLE 0 // SteroMix
 #define TCFG_SURROUND_DEMO_NODE_ENABLE 0 // Surround Demo、环绕音demo
 #define TCFG_SURROUND_NODE_ENABLE 0 // Surround Effect
+#define TCFG_SWITCH_NODE_ENABLE 0 // Switch
 #define TCFG_THREE_D_EFFECT_NODE_ENABLE 0 // ThreeD
 #define TCFG_TONE_NODE_ENABLE 1 // 提示音
 #define TCFG_UART_NODE_ENABLE 0 // 串口打印
@@ -132,6 +133,7 @@
 #define TCFG_WDRC_ADVANCE_NODE_ENABLE 0 // DRC Advance
 #define TCFG_WDRC_NODE_ENABLE 0 // DRC
 #define EQ_SECTION_MAX 0xc // EQ_SECTION_MAX
+#define TCFG_STREAM_BIN_ENC_ENABLE 0 // stream.bin加密使能
 // ------------流程图宏定义------------
 
 // ------------流程图节点位宽定义------------
@@ -170,8 +172,8 @@
 #define TCFG_AUDIO_EFX_B7C4_RUN_MODE EFx_BW_UNUSED // NoiseGate
 #define TCFG_AUDIO_EFX_3F20_RUN_MODE EFx_BW_UNUSED // 环绕音demo
 #define TCFG_AUDIO_EFX_36D7_RUN_MODE EFx_BW_UNUSED // 声道交换器
-#define TCFG_AUDIO_EFX_D0BC_RUN_MODE EFx_BW_16t16 // 单MIC通话
-#define TCFG_AUDIO_EFX_DBF5_RUN_MODE EFx_BW_UNUSED // 单MIC+DNS
+#define TCFG_AUDIO_EFX_D0BC_RUN_MODE EFx_BW_UNUSED // 单MIC通话
+#define TCFG_AUDIO_EFX_DBF5_RUN_MODE EFx_BW_16t16 // 单MIC+DNS
 #define TCFG_AUDIO_EFX_2115_RUN_MODE EFx_BW_UNUSED // 双MIC通话
 #define TCFG_AUDIO_EFX_420E_RUN_MODE EFx_BW_UNUSED // 双MIC+DNS
 #define TCFG_AUDIO_EFX_3BE6_RUN_MODE EFx_BW_UNUSED // SpeakerEQ
@@ -267,5 +269,17 @@
 #define TCFG_AUDIO_EFX_A64E_RUN_MODE EFx_BW_UNUSED // Spatial Adv
 #define TCFG_AUDIO_EFX_6FEC_RUN_MODE EFx_BW_UNUSED // 本地音乐
 // ------------流程图节点位宽定义------------
+
+// ------------流程图EQ节点类型宏定义------------
+#define EQ_CFG_TYPE_HIGH_PASS 0 // High Pass
+#define EQ_CFG_TYPE_LOW_PASS 0 // Low Pass
+#define EQ_CFG_TYPE_PEAKING 1 // Peaking
+#define EQ_CFG_TYPE_HIGH_SHELF 0 // High Shelf
+#define EQ_CFG_TYPE_LOW_SHELF 0 // Low Shelf
+#define EQ_CFG_TYPE_HIGH_SHELF_Q 0 // High Shelf Q
+#define EQ_CFG_TYPE_LOW_SHELF_Q 0 // Low Shelf Q
+#define EQ_CFG_TYPE_HP 0 // Hp
+#define EQ_CFG_TYPE_LP 0 // Lp
+// ------------流程图EQ节点类型宏定义------------
 #endif
 

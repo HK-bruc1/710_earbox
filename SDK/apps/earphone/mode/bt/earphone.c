@@ -865,9 +865,17 @@ void bt_get_time_date()
 void phone_date_and_time_feedback(u8 *data, u16 len)
 {
     log_info("time：%s ", data);
+
+#if TCFG_IFLYTEK_ENABLE
+    extern void get_time_from_bt(u8 * data);
+    get_time_from_bt(data);
+    extern void ifly_vad_demo(void);
+    ifly_vad_demo();
+#endif
 }
 void map_get_time_data(char *time, int status)
 {
+    printf("[zwz info] func %s line %d \n", __func__, __LINE__);
     if (status == 0) {
         log_info("time：%s ", time);
     } else {

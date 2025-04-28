@@ -23,17 +23,17 @@ enum CLK_OUT_SOURCE0 {
 
 enum CLK_OUT_SOURCE1 {
     CLK_OUT_SRC1_NULL = 0,
-    CLK_OUT_SRC1_SYS_PLL_D3P5 = 4,
+    CLK_OUT_SRC1_HSB_CLK,
+    CLK_OUT_SRC1_WAT_CLK,
+    CLK_OUT_SRC1_RING_CLK,
+    CLK_OUT_SRC1_SYS_PLL_D3P5,
     CLK_OUT_SRC1_SYS_PLL_D2P5,
     CLK_OUT_SRC1_SYS_PLL_D2P0,
     CLK_OUT_SRC1_SYS_PLL_D1P5,
     CLK_OUT_SRC1_SYS_PLL_D1P0,
-    CLK_OUT_SRC1_BSB_PLL_D3P5,
-    CLK_OUT_SRC1_BSB_PLL_D2P5,
-    CLK_OUT_SRC1_BSB_PLL_D2P0,
-    CLK_OUT_SRC1_BSB_PLL_D1P5,
-    CLK_OUT_SRC1_BSB_PLL_D1P0,
+    CLK_OUT_SRC1_D_PLL_D1P0,
 };
+
 void clk_out0(u8 gpio, enum CLK_OUT_SOURCE0 clk);
 void clk_out2(u8 gpio, enum CLK_OUT_SOURCE1 clk, u8 div);
 //无 clk_out1
@@ -116,7 +116,7 @@ u32 clk_out_fixed_io_check(u32 gpio);
 
 void ic_btosc_init(void);
 u32 ic_pll_init(u32 osc_freq);
-void clock_std_clock_config(u32 sys_pll_clk);
+void clock_std_clock_config();
 
 void xosc_common_init(u32 lrc_clk, void(*udly)(u32));//1.2ms~2.4ms
 

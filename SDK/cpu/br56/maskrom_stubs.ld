@@ -57,7 +57,7 @@
   os_task_coreaffinityset = ABSOLUTE(0xff834);
   os_task_create_affinity_core = ABSOLUTE(0xff838);
   os_task_create = ABSOLUTE(0xff83c);
-  os_time_dly = ABSOLUTE(0xff840);
+  rom_os_time_dly = ABSOLUTE(0xff840);
   os_task_del_req = ABSOLUTE(0xff844);
   os_task_del_res = ABSOLUTE(0xff848);
   os_task_del = ABSOLUTE(0xff84c);

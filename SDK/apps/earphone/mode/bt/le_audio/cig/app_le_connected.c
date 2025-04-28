@@ -154,7 +154,7 @@ static int app_connected_conn_status_event_handler(int *msg)
 
     switch (event[0]) {
     case CIG_EVENT_PERIP_CONNECT:
-        g_printf("CIG_EVENT_PERIP_CONNECT");
+
 #if TCFG_USER_TWS_ENABLE
         tws_api_tx_unsniff_req();
 #endif
@@ -163,11 +163,12 @@ static int app_connected_conn_status_event_handler(int *msg)
         app_connected_mutex_pend(&mutex, __LINE__);
 
         hdl = (cig_hdl_t *)&event[1];
+        g_printf("CIG_EVENT_PERIP_CONNECT 0x%x", hdl->cig_hdl);
 
         //记录设备的cig_hdl等信息
         for (i = 0; i < CIG_MAX_NUMS; i++) {
             if (app_cig_conn_info[i].used) {
-                if ((app_cig_conn_info[i].cig_hdl == 0xFF) || (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl)) {
+                if (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl) {
                     app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
                     for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
                         if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
@@ -178,7 +179,22 @@ static int app_connected_conn_status_event_handler(int *msg)
                             app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
                             find = 1;
 
-                            log_info("Record acl hangle:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
+                            log_info("Record acl hangle1:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
+                            break;
+                        }
+                    }
+                } else if (app_cig_conn_info[i].cig_hdl == 0xFF) {
+                    app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
+                    for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                        if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
+                            find = 0;
+
+                            log_info("Record acl hangle2:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
                             break;
                         }
                     }
@@ -219,26 +235,30 @@ static int app_connected_conn_status_event_handler(int *msg)
         break;
 
     case CIG_EVENT_PERIP_DISCONNECT:
-        log_info("CIG_EVENT_PERIP_DISCONNECT");
         //由于是异步操作需要加互斥量保护，避免connected_close的代码与其同时运行,添加的流程请放在互斥量保护区里面
         app_connected_mutex_pend(&mutex, __LINE__);
 
         hdl = (cig_hdl_t *)&event[1];
+        g_printf("CIG_EVENT_PERIP_DISCONNECT 0x%x", hdl->cig_hdl);
         u8  dis_reason = hdl->flush_timeout_C_to_P;     //  复用了flush_timeout_C_to_P参数上传断开错误码
         u16 acl_handle_for_disconnect_cis = 0;
         for (i = 0; i < CIG_MAX_NUMS; i++) {
             if (app_cig_conn_info[i].used && (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl)) {
-                for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
-                    if (app_cig_conn_info[i].cis_conn_info[j].cis_hdl == hdl->cis_hdl) {
-                        app_cig_conn_info[i].cis_conn_info[j].cis_hdl = 0;
-                        acl_handle_for_disconnect_cis = app_cig_conn_info[i].cis_conn_info[j].acl_hdl;
-                        /* app_cig_conn_info[i].cis_conn_info[j].acl_hdl = 0; */
-                        app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_DISCONNECT;
-                        app_cig_conn_info[i].cig_hdl = 0xFF;
-                        break;
+                if (app_cig_conn_info[i].used) {
+                    if (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl) {
+                        for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                            // if (app_cig_conn_info[i].cis_conn_info[j].cis_hdl == hdl->cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = 0;
+                            acl_handle_for_disconnect_cis = app_cig_conn_info[i].cis_conn_info[j].acl_hdl;
+                            /* app_cig_conn_info[i].cis_conn_info[j].acl_hdl = 0; */
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_DISCONNECT;
+                            app_cig_conn_info[i].cig_hdl = 0xFF;
+                            //break;
+                            // }
+                        }
+                        find = 1;
                     }
                 }
-                find = 1;
             }
         }
 
@@ -359,7 +379,6 @@ static int app_connected_conn_status_event_handler(int *msg)
 #if ((TCFG_LE_AUDIO_APP_CONFIG & ( LE_AUDIO_JL_UNICAST_SINK_EN)))
         if (get_le_audio_jl_dongle_device_type()) {
             cig_event_to_user(CIG_EVENT_JL_DONGLE_DISCONNECT, (void *)&acl_info->acl_hdl, 2);
-
         }
 #endif
         set_le_audio_jl_dongle_device_type(0);

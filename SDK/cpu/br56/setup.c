@@ -174,6 +174,9 @@ void setup_arch()
 
     efuse_init();
 
+    sdfile_init();
+    syscfg_tools_init();
+
 #if (TCFG_DAC_POWER_MODE == 0)      // power_mode: 20mW
     clk_set_vdc_lowest_voltage(DCVDD_VOL_115V);
 #elif (TCFG_DAC_POWER_MODE == 1)    // power_mode: 30mW

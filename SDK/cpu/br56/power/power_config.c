@@ -2,7 +2,7 @@
 #include "app_config.h"
 #include "gpio_config.h"
 
-const u32 dcdc_L = DCDC_L_4p7uH;
+const u32 dcdc_L = DCDC_L_10uH;//DCDC_L_4p7uH;
 
 //-----------------------------------------------------------------------------------------------------------------------
 /* power_param

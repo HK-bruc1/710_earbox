@@ -95,7 +95,6 @@ DEFINES := \
 	-DCONFIG_RELEASE_ENABLE \
 	-DCONFIG_EARPHONE_CASE \
 	-DCONFIG_CPU_BR56 \
-	-DCONFIG_USB_SUPPORT_MRX_TX \
 	-DCONFIG_IIC_VERSION2 \
 	-DLWIP_USE_BT \
 	-DCONFIG_SUPPORT_AES_CCM_FOR_EDR \
@@ -175,15 +174,19 @@ INCLUDES := \
 	-Iinterface/btstack/third_party/common \
 	-Iinterface/btstack/third_party \
 	-Iinterface/utils \
+	-Iinterface/utils/generic \
 	-Iinterface/utils/device \
 	-Iinterface/utils/fs \
-	-Iinterface/utils/generic \
 	-Iinterface/utils/math/cpu/br56 \
+	-Iinterface/net/mbedtls_3_4_0 \
 	-Iinterface/btstack/third_party/rcsp \
 	-Iinterface/media/media_new \
 	-Iinterface/media/media_new/media \
 	-Iinterface/media/media_new/media/cpu/br56 \
 	-Iinterface/media/media_new/media/cpu/br56/asm \
+	-Iinterface/net/lwip_2_2_0/lwip/src/include \
+	-Iinterface/net/lwip_2_2_0/lwip/port \
+	-Iinterface/net/lwip_2_2_0/lwip/app \
 	-Iapps/earphone \
 	-Iapps/earphone/include \
 	-Iapps/earphone/include/wireless_mic \
@@ -214,6 +217,7 @@ INCLUDES := \
 	-Iaudio/common \
 	-Iaudio/effect \
 	-Iapps/common/device/sensor/imu_sensor \
+	-Iinterface/net/lwip_2_2_0/lwip/src \
 	-Iapps/common/third_party_profile/jieli/rcsp \
 	-Iapps/common/third_party_profile/jieli/rcsp/adv \
 	-Iapps/common/third_party_profile/jieli/rcsp/rcsp_functions \
@@ -627,6 +631,7 @@ c_SRC_FILES := \
 	apps/earphone/log_config/lib_btstack_config.c \
 	apps/earphone/log_config/lib_driver_config.c \
 	apps/earphone/log_config/lib_media_config.c \
+	apps/earphone/log_config/lib_net_config.c \
 	apps/earphone/log_config/lib_system_config.c \
 	apps/earphone/log_config/lib_update_config.c \
 	apps/earphone/message/adapter/app_msg.c \
@@ -1125,6 +1130,7 @@ LFLAGS := \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_opusdec_rom_dec.a \
+	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
 	cpu/br56/liba/cbuf.a \

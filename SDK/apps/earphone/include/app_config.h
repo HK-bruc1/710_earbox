@@ -988,11 +988,17 @@
 #undef  TCFG_BT_SUPPORT_PBAP
 #define  TCFG_BT_SUPPORT_PBAP 0x1
 #endif
-#define  TCFG_BT_SUPPORT_MAP 0x0
+#define  TCFG_BT_SUPPORT_MAP 0x1
 #define  TCFG_BLE_BRIDGE_EDR_ENALBE 0x0   //ios 一键连接，ctkd
 #if TCFG_BLE_BRIDGE_EDR_ENALBE   //一键连接必须同地址
 #undef  TCFG_BT_BLE_BREDR_SAME_ADDR
 #define  TCFG_BT_BLE_BREDR_SAME_ADDR 0x1
+#endif
+
+#define TCFG_IFLYTEK_ENABLE			0
+#if TCFG_IFLYTEK_ENABLE//目前耳机没有rtc，先用蓝牙时间转UTC再转GMT(earphone.c)
+#undef  TCFG_BT_SUPPORT_MAP
+#define  TCFG_BT_SUPPORT_MAP 0x1
 #endif
 
 //*********************************************************************************//
