@@ -625,6 +625,7 @@ u8 cvp_get_talk_ref_mic_ch(void)
 #endif
 }
 
+__CVP_BANK_CODE
 int cvp_node_param_cfg_read(void *priv, u8 ignore_subid)
 {
     struct cvp_cfg_t cfg;
@@ -838,6 +839,7 @@ static int cvp_ioc_negotiate(struct stream_iport *iport)
 }
 
 /*节点start函数*/
+__CVP_BANK_CODE
 static void cvp_ioc_start(struct cvp_node_hdl *hdl)
 {
     struct stream_fmt *fmt = &hdl_node(hdl)->oport->fmt;

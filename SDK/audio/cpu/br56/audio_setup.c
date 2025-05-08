@@ -26,6 +26,7 @@
 #include "media/audio_event_manager.h"
 #include "asm/hw_eq.h"
 #include "media/media_config.h"
+#include "media_bank.h"
 
 #if (SYS_VOL_TYPE == VOL_TYPE_DIGITAL)
 #include "audio_dvol.h"
@@ -115,6 +116,7 @@ void audio_dac_power_state(u8 state)
 }
 #endif
 
+__AUDIO_INIT_BANK_CODE
 static void audio_common_initcall()
 {
     printf("audio_common_initcall\n");
@@ -175,6 +177,7 @@ static void audio_common_initcall()
     printf(">>DACLDO_TRIM: %d\n", dac_data.dacldo_vsel);
 }
 
+__AUDIO_INIT_BANK_CODE
 void audio_dac_initcall(void)
 {
     printf("audio_dac_initcall\n");
@@ -298,6 +301,7 @@ struct adc_platform_cfg adc_platform_cfg_table[AUDIO_ADC_MAX_NUM] = {
 };
 #endif
 
+__AUDIO_INIT_BANK_CODE
 void audio_input_initcall(void)
 {
     printf("audio_input_initcall\n");
@@ -392,6 +396,7 @@ static void wl_audio_clk_on(void)
     JL_WL_AUD->CON0 = 1;
 }
 
+__AUDIO_INIT_BANK_CODE
 static int audio_init()
 {
     audio_common_initcall();

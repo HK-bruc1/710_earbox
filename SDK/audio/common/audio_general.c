@@ -435,6 +435,7 @@ int audio_general_in_dev_bit_width()
     return DATA_BIT_WIDE_16BIT;
 }
 
+__AUDIO_INIT_BANK_CODE
 int audio_general_init()
 {
 #if defined(TCFG_SCENE_UPDATE_ENABLE) && TCFG_SCENE_UPDATE_ENABLE

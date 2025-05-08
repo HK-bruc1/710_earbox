@@ -123,6 +123,7 @@ DEFINES := \
 	-DCONFIG_SUPPORT_EX_TWS_ADJUST \
 	-D__GCC_PI32V2__ \
 	-DCONFIG_NEW_ECC_ENABLE \
+	-DCONFIG_CODE_BANK_ENABLE \
 	-DCONFIG_EFFECT_CORE_V2_ENABLE \
 	-DCONFIG_OS_AFFINITY_ENABLE=0 \
 	-DEVENT_HANDLER_NUM_CONFIG=2 \
@@ -254,14 +255,6 @@ INCLUDES := \
 	-Iinterface/btstack/third_party/le_audio \
 	-Iinterface/btstack/third_party/broadcast \
 	-Iaudio/le_audio \
-	-Iapps/common/third_party_profile/tuya_protocol \
-	-Iapps/common/third_party_profile/tuya_protocol/app/demo \
-	-Iapps/common/third_party_profile/tuya_protocol/app/product_test \
-	-Iapps/common/third_party_profile/tuya_protocol/app/uart_common \
-	-Iapps/common/third_party_profile/tuya_protocol/extern_components/mbedtls \
-	-Iapps/common/third_party_profile/tuya_protocol/port \
-	-Iapps/common/third_party_profile/tuya_protocol/sdk/include \
-	-Iapps/common/third_party_profile/tuya_protocol/sdk/lib \
 	-Iapps/common/third_party_profile/bt_fmy \
 	-Iinterface/btstack \
 	-Iapps/common/device/usb \
@@ -561,38 +554,6 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/realme_protocol/realme_platform_api.c \
 	apps/common/third_party_profile/realme_protocol/realme_protocol.c \
 	apps/common/third_party_profile/swift_pair/swift_pair_protocol.c \
-	apps/common/third_party_profile/tuya_protocol/app/demo/tuya_app_func.c \
-	apps/common/third_party_profile/tuya_protocol/app/demo/tuya_ble_app_demo.c \
-	apps/common/third_party_profile/tuya_protocol/app/demo/tuya_ota.c \
-	apps/common/third_party_profile/tuya_protocol/app/product_test/tuya_ble_app_production_test.c \
-	apps/common/third_party_profile/tuya_protocol/app/uart_common/tuya_ble_app_uart_common_handler.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/aes.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/ccm.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/hmac.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/md5.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/sha1.c \
-	apps/common/third_party_profile/tuya_protocol/extern_components/mbedtls/sha256.c \
-	apps/common/third_party_profile/tuya_protocol/port/tuya_ble_port.c \
-	apps/common/third_party_profile/tuya_protocol/port/tuya_ble_port_JL.c \
-	apps/common/third_party_profile/tuya_protocol/port/tuya_ble_port_peripheral.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_api.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_bulk_data.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_data_handler.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_event.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_event_handler.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_event_handler_weak.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_feature_weather.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_gatt_send_queue.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_heap.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_main.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_mem.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_mutli_tsf_protocol.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_queue.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_storage.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_unix_time.c \
-	apps/common/third_party_profile/tuya_protocol/sdk/src/tuya_ble_utils.c \
-	apps/common/third_party_profile/tuya_protocol/tuya_event.c \
-	apps/common/third_party_profile/tuya_protocol/tuya_protocol.c \
 	apps/common/third_party_profile/ximalaya_protocol/xmly_ble.c \
 	apps/common/third_party_profile/ximalaya_protocol/xmly_config.c \
 	apps/common/third_party_profile/ximalaya_protocol/xmly_platform_api.c \
@@ -740,6 +701,7 @@ c_SRC_FILES := \
 	audio/common/demo/codec_demo/audio_opus_codec_demo.c \
 	audio/common/demo/codec_demo/audio_sbc_codec_demo.c \
 	audio/common/demo/codec_demo/audio_speex_codec_demo.c \
+	audio/common/demo/hw_math_v2_demo.c \
 	audio/common/frame_length_adaptive.c \
 	audio/common/icsd/adjdcc/icsd_adjdcc_config.c \
 	audio/common/icsd/adt/icsd_adt.c \
@@ -951,6 +913,8 @@ c_SRC_FILES := \
 	cpu/br56/power/power_gate.c \
 	cpu/br56/power/power_port.c \
 	cpu/br56/setup.c \
+	cpu/br56/ui_driver/led7/led7_driver.c \
+	cpu/br56/ui_driver/ui_common.c \
 	cpu/components/gpadc_battery.c \
 	cpu/components/iic_api.c \
 	cpu/components/iic_soft.c \
@@ -1014,6 +978,14 @@ LFLAGS := \
 	--plugin-opt=-warn-stack-size=1024 \
 	--sort-common \
 	--dont-complain-call-overflow \
+	--plugin-opt=-enable-banked-function=true \
+	--plugin-opt=-bank-stub-section-prefix=.bank.stub. \
+	--plugin-opt=-bank-stub-prefix=__bank_stub_ \
+	--plugin-opt=-banknum-section-prefix=.bank.code. \
+	--plugin-opt=-banknum-map-file-list=apps/earphone/bank/banknum_func.list \
+	--plugin-opt=-banknum-section-map-file-list=apps/earphone/bank/banknum_sec.list \
+	--plugin-opt=-banknum-exclude-func-file-list=apps/earphone/bank/banknum_exclude.list \
+	--plugin-opt=-custom-section-map-file-list=apps/earphone/bank/cussec_map.ld \
 	--plugin-opt=-used-symbol-file=apps/earphone/sdk_used_list.used \
 	--plugin-opt=-floating-point-may-trap=true \
 	--gc-sections \

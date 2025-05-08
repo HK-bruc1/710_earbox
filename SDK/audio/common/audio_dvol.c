@@ -99,6 +99,7 @@ const u16 default_dig_vol_table[DEFAULT_DIGITAL_VOL_MAX + 1] = {
 * Note(s)    : None.
 *********************************************************************
 */
+__AUDIO_INIT_BANK_CODE
 int audio_digital_vol_init(u16 *vol_table, u16 vol_max)
 {
     memset(&dvol_attr, 0, sizeof(dvol_attr));
@@ -142,6 +143,7 @@ float audio_digital_vol_2_dB(dvol_handle *dvol, u16 volume)
     return (dvol_db);
 }
 
+__VOLUME_BANK_CODE
 static s16 audio_digital_vol_2_gain(dvol_handle *dvol, u16 volume)
 {
     s16 gain;
@@ -177,6 +179,7 @@ static s16 audio_digital_vol_2_gain(dvol_handle *dvol, u16 volume)
 *				(2)淡出的时候可以快一点，尽快淡出到0
 *********************************************************************
 */
+__VOLUME_BANK_CODE
 dvol_handle *audio_digital_vol_open(struct audio_vol_params *params)
 {
     dvol_handle *dvol;
@@ -350,6 +353,7 @@ void audio_digital_vol_offset_dB_set(dvol_handle *dvol, float offset_dB)
 * Note(s)    : None.
 *********************************************************************
 */
+__VOLUME_BANK_CODE
 void audio_digital_vol_set(dvol_handle *dvol, u16 vol)
 {
     if (dvol == NULL) {

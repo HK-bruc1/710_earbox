@@ -379,6 +379,7 @@ void *read_triple_mic_param()
 *			   认参数配置
 *********************************************************************
 */
+__CVP_BANK_CODE
 static void audio_aec_param_init(struct tms_attr *p)
 {
     int ret = 0;
@@ -587,6 +588,7 @@ int audio_tms_get_malfunc_state(void)
 *			   数据输出回调函数
 *********************************************************************
 */
+__CVP_BANK_CODE
 int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int (*out_hdl)(s16 *data, u16 len))
 {
     s16 sample_rate = init_param->sample_rate;
@@ -727,6 +729,7 @@ int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int
 * Note(s)    : None.
 *********************************************************************
 */
+__CVP_BANK_CODE
 int audio_aec_init(struct audio_aec_init_param_t *init_param)
 {
     return audio_aec_open(init_param, -1, NULL);
@@ -797,6 +800,7 @@ void audio_aec_output_sel(CVP_OUTPUT_ENUM sel, u8 agc)
 * Note(s)    : None.
 *********************************************************************
 */
+__CVP_BANK_CODE
 void audio_aec_close(void)
 {
     printf("audio_aec_close:%x", (u32)cvp_tms);

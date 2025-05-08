@@ -114,12 +114,6 @@
 //#define CONFIG_RESERVED_AREA2_FILE				anc_gains.bin
 #endif
 
-#if (defined TCFG_CONFIG_DEBUG_RECORD_ENABLE && TCFG_CONFIG_DEBUG_RECORD_ENABLE)
-#define CONFIG_DEBUG_ADDR                                              AUTO
-#define CONFIG_DEBUG_LEN                                               0x1000
-#define CONFIG_DEBUG_OPT                                               0 //0: 擦除, 1:不操作
-#endif
-
 /* Above Macros Only For Post Bulid Configuaration */
 #endif /* #ifdef CONFIG_BOARD_AC710N_DEMO */
 

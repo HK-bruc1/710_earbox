@@ -996,6 +996,12 @@
 #endif
 
 #define TCFG_IFLYTEK_ENABLE			0
+#ifdef TCFG_BT_SUPPORT_PAN
+#if TCFG_BT_SUPPORT_PAN
+#undef TCFG_IFLYTEK_ENABLE
+#define TCFG_IFLYTEK_ENABLE			1
+#endif
+#endif
 #if TCFG_IFLYTEK_ENABLE//目前耳机没有rtc，先用蓝牙时间转UTC再转GMT(earphone.c)
 #undef  TCFG_BT_SUPPORT_MAP
 #define  TCFG_BT_SUPPORT_MAP 0x1
@@ -1027,12 +1033,15 @@
 //*********************************************************************************//
 #define TCFG_CONFIG_DEBUG_RECORD_ENABLE    0
 
-// #if !TCFG_DEBUG_UART_ENABLE
+#if !TCFG_DEBUG_UART_ENABLE
 #define TCFG_DEBUG_DLOG_ENABLE             0      // 离线log功能
 #define TCFG_DEBUG_DLOG_FLASH_SEL          0      // 选择log保存到内置flash还是外置flash; 0:内置flash; 1:外置flash
 #define TCFG_DEBUG_DLOG_RESET_ERASE        0      // 开机擦除flash的log数据
 #define TCFG_DEBUG_DLOG_AUTO_FLUSH_TIMEOUT (30)   // 主动刷新的超时时间(当指定时间没有刷新过缓存数据到flash, 则主动刷新)(单位秒)
-// #endif
+#if ((TCFG_DEBUG_DLOG_ENABLE) && (!defined(DLOG_PRINT_FUNC_USE_MACRO) || (DLOG_PRINT_FUNC_USE_MACRO == 0)))
+#error "DLOG_PRINT_FUNC_USE_MACRO must be enable"
+#endif
+#endif
 
 //*********************************************************************************//
 //                    关中断时间过长函数追踪配置                                      //

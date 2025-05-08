@@ -257,6 +257,18 @@ int custom_demo_spp_send(u8 *data, u32 len)
                   SPP 相关内容 end
 *************************************************/
 
+#define CUSTOM_BLE_HDL_UUID \
+    (((u8)('C' + 'U' + 'S') << (3 * 8)) | \
+     ((u8)('T' + 'O' + 'M') << (2 * 8)) | \
+     ((u8)('B' + 'L' + 'E') << (1 * 8)) | \
+     ((u8)('H' + 'D' + 'L') << (0 * 8)))
+
+#define CUSTOM_SPP_HDL_UUID \
+    (((u8)('C' + 'U' + 'S') << (3 * 8)) | \
+     ((u8)('T' + 'O' + 'M') << (2 * 8)) | \
+     ((u8)('S' + 'P' + 'P') << (1 * 8)) | \
+     ((u8)('H' + 'D' + 'L') << (0 * 8)))
+
 void custom_demo_all_init(void)
 {
     printf("custom_demo_all_init\n");
@@ -271,6 +283,7 @@ void custom_demo_all_init(void)
             printf("custom_demo_ble_hdl alloc err !\n");
             return;
         }
+        app_ble_hdl_uuid_set(custom_demo_ble_hdl, CUSTOM_BLE_HDL_UUID);
         app_ble_set_mac_addr(custom_demo_ble_hdl, (void *)edr_addr);
         app_ble_profile_set(custom_demo_ble_hdl, custom_demo_profile_data);
         app_ble_att_read_callback_register(custom_demo_ble_hdl, custom_att_read_callback);
@@ -290,6 +303,7 @@ void custom_demo_all_init(void)
             printf("custom_demo_spp_hdl alloc err !\n");
             return;
         }
+        app_spp_hdl_uuid_set(custom_demo_spp_hdl, CUSTOM_SPP_HDL_UUID);
         app_spp_recieve_callback_register(custom_demo_spp_hdl, custom_spp_recieve_callback);
         app_spp_state_callback_register(custom_demo_spp_hdl, custom_spp_state_callback);
         app_spp_wakeup_callback_register(custom_demo_spp_hdl, NULL);

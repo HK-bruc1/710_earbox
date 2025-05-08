@@ -47,6 +47,7 @@ int cvp_node_output_handle(s16 *data, u16 len)
     return len;
 }
 
+__CVP_BANK_CODE
 int cvp_node_param_cfg_read(void *priv, u8 ignore_subid)
 {
     struct cvp_node_hdl *hdl = (struct cvp_node_hdl *)priv;
@@ -174,6 +175,7 @@ static void cvp_ioc_open_iport(struct stream_iport *iport)
 
 
 /*节点start函数*/
+__CVP_BANK_CODE
 static void cvp_ioc_start(struct cvp_node_hdl *hdl)
 {
     struct stream_fmt *fmt = &hdl_node(hdl)->oport->fmt;

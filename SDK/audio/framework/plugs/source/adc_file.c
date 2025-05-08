@@ -153,6 +153,7 @@ void audio_adc_file_set_mic_en_map(u8 mic_en_map)
 }
 
 
+__AUDIO_ADC_BANK_CODE
 void audio_adc_file_global_cfg_init(void)
 {
     memcpy(&esco_adc_file_g.cfg, &esco_adc_f.cfg, sizeof(struct adc_file_cfg));
@@ -211,6 +212,7 @@ void audio_all_adc_file_init(void)
 #endif
 }
 
+__AUDIO_INIT_BANK_CODE
 void audio_adc_file_init(void)  //通话的ADC节点配置
 {
     u32 i;
@@ -279,6 +281,7 @@ void audio_adc_file_init(void)  //通话的ADC节点配置
     audio_adc_file_global_cfg_init();
 }
 
+__AUDIO_ADC_BANK_CODE
 void audio_adc_cfg_init(struct adc_file_common *adc_f)  //通话外其他ADC节点读配置
 {
     if (!adc_f->read_flag) {
@@ -520,6 +523,7 @@ static void *adc_init(void *source_node, struct stream_node *node)
     return hdl;
 }
 
+__AUDIO_ADC_BANK_CODE
 static void adc_ioc_get_fmt(struct adc_file_hdl *hdl, struct stream_fmt *fmt)
 {
     /*
@@ -640,6 +644,7 @@ int adc_file_mic_open(struct adc_mic_ch *mic, int ch) //用于打开通话使用
     return 0;
 }
 
+__AUDIO_ADC_BANK_CODE
 int adc_file_cfg_mic_open(struct adc_mic_ch *mic, int ch, struct adc_file_common *adc_f) //用于打开通话外其他mic
 {
     struct mic_open_param mic_param = {0};
@@ -686,6 +691,7 @@ static void adc_open_task(void *_hdl)
 
 }
 
+__AUDIO_ADC_BANK_CODE
 static int adc_file_ioc_start(struct adc_file_hdl *hdl)
 {
     int ret = 0;
@@ -746,6 +752,7 @@ static int adc_file_ioc_start(struct adc_file_hdl *hdl)
     return ret;
 }
 
+__AUDIO_ADC_BANK_CODE
 static int adc_file_ioc_stop(struct adc_file_hdl *hdl)
 {
     if (hdl->start) {
@@ -785,6 +792,7 @@ static int adc_file_ioc_stop(struct adc_file_hdl *hdl)
     return 0;
 }
 
+__AUDIO_ADC_BANK_CODE
 static int adc_file_ioc_update_parm(struct adc_file_hdl *hdl, int parm)
 {
     int i;

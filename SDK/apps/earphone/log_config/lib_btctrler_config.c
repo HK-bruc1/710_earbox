@@ -44,6 +44,8 @@ const int CONFIG_LMP_CONNECTION_LIMIT_NUM = 1;
 		return 0;
 	}
 #endif
+const int CONFIG_TWS_PURE_MONITOR_MODE = TWS_PURE_MONITOR_MODE; /*自适应延时策略使用*/
+
 #if TCFG_TWS_AUDIO_SHARE_ENABLE
 	const int CONFIG_TWS_AUDIO_SHARE_ENABLE  = 1;
 #else
@@ -435,7 +437,7 @@ const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;//BIT(7);//|BIT(8
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
     #define TWS_LE_AUDIO_LE_ROLE_SW_EN (0)
 #elif (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
-    #define TWS_LE_AUDIO_LE_ROLE_SW_EN (1)
+    #define TWS_LE_AUDIO_LE_ROLE_SW_EN (0)
 #else
     #define TWS_LE_AUDIO_LE_ROLE_SW_EN (0)
 #endif

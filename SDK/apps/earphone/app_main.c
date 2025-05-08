@@ -376,6 +376,10 @@ static struct app_mode *app_task_init()
 #if (defined(TCFG_DEBUG_DLOG_ENABLE) && TCFG_DEBUG_DLOG_ENABLE)
     dlog_init();
     dlog_enable(1);
+    extern void dlog_uart_auto_enable_init(void);
+    extern int dlog_uart_output_set(enum DLOG_OUTPUT_TYPE type);
+    dlog_uart_output_set(DLOG_OUTPUT_2_FLASH | dlog_output_type_get());
+    dlog_uart_auto_enable_init();
 #endif
 
     key_driver_init();

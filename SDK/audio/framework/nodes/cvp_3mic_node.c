@@ -303,6 +303,7 @@ u8 cvp_get_talk_fb_mic_ch(void)
     return global_cvp_cfg.mic_sel.talk_fb_mic;
 }
 
+__CVP_BANK_CODE
 int cvp_node_param_cfg_read(void *priv, u8 ignore_subid)
 {
     AEC_TMS_CONFIG *p = (AEC_TMS_CONFIG *)priv;
@@ -523,6 +524,7 @@ static int cvp_ioc_negotiate(struct stream_iport *iport)
 }
 
 /*节点start函数*/
+__CVP_BANK_CODE
 static void cvp_ioc_start(struct cvp_node_hdl *hdl)
 {
     struct stream_fmt *fmt = &hdl_node(hdl)->oport->fmt;
@@ -558,6 +560,7 @@ static void cvp_ioc_start(struct cvp_node_hdl *hdl)
 }
 
 /*节点stop函数*/
+__CVP_BANK_CODE
 static void cvp_ioc_stop(struct cvp_node_hdl *hdl)
 {
     if (hdl) {
@@ -565,6 +568,7 @@ static void cvp_ioc_stop(struct cvp_node_hdl *hdl)
     }
 }
 
+__CVP_BANK_CODE
 static int cvp_ioc_update_parm(struct cvp_node_hdl *hdl, int parm)
 {
     int ret = false;

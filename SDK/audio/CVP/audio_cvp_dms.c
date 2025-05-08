@@ -335,6 +335,7 @@ static int audio_aec_output(s16 *data, u16 len)
 *			   认参数配置
 *********************************************************************
 */
+__CVP_BANK_CODE
 static void audio_aec_param_init(struct dms_attr *p)
 {
     int ret = 0;
@@ -486,6 +487,7 @@ static void audio_aec_param_init(struct dms_attr *p)
     //aec_param_dump(p);
 }
 
+__CVP_BANK_CODE
 static void audio_dms_flexible_param_init(struct dms_attr *p)
 {
     int ret = 0;
@@ -628,6 +630,7 @@ void *read_dms_hybrid_mic_coeff()
     return cvp_dms->transfer_func;
 }
 
+__CVP_BANK_CODE
 static void audio_dms_hybrid_param_init(struct dms_attr *p)
 {
     int ret = 0;
@@ -759,6 +762,7 @@ static void audio_dms_hybrid_param_init(struct dms_attr *p)
 }
 
 
+__CVP_BANK_CODE
 static void audio_dms_awn_param_init(struct dms_attr *p)
 {
     int ret = 0;
@@ -933,6 +937,7 @@ static int audio_cvp_advanced_options(void *aec, void *nlp, void *ns, void *enc,
 *			   数据输出回调函数
 *********************************************************************
 */
+__CVP_BANK_CODE
 int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int (*out_hdl)(s16 *data, u16 len))
 {
     s16 sample_rate = init_param->sample_rate;
@@ -1081,6 +1086,7 @@ int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int
 * Note(s)    : None.
 *********************************************************************
 */
+__CVP_BANK_CODE
 int audio_aec_init(struct audio_aec_init_param_t *init_param)
 {
     return audio_aec_open(init_param, -1, NULL);
@@ -1150,6 +1156,7 @@ void audio_aec_output_sel(CVP_OUTPUT_ENUM sel, u8 agc)
 * Note(s)    : None.
 *********************************************************************
 */
+__CVP_BANK_CODE
 void audio_aec_close(void)
 {
     printf("audio_aec_close:%x", (u32)cvp_dms);

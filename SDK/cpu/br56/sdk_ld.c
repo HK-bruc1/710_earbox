@@ -85,9 +85,6 @@ SECTIONS
 	{
 		*(.boot_info)
         . = ALIGN(128);
-        // 需要避免与uboot和maskrom冲突
-        *(.debug_record)
-        . = ALIGN(4);
 	} > ram0
 
 	.irq_stack ALIGN(32):
@@ -192,17 +189,22 @@ SECTIONS
 		/* *(.baseband_manger.text) */
 		/* *(.lmp_rxtx_v2.text) */
 		/* *(.baseband.text) */
-		*(.dac_node.text)
-		*(.jlstream.text)
-		*(.jlstream.text*)
-		*(.a2dp_streamctrl.text)
-		*(.a2dp_player.text)
-		*(.volume_node.text)
-		*(.bt_audio_timestamp.text)
-		*(.audio_src_coef.text)
-		*(.media.audio_libutils.text)
-		*(.dac_node.text)
-		*(.a2dp_streamctrl.text)
+        *(.tws_lmp_sync.text)
+        *(.tws_conn_edr.text)
+        *(.tws_esco.text)
+
+        *(.jlstream.text.cache.L2)
+		//*(.dac_node.text)
+		//*(.jlstream.text)
+		//*(.jlstream.text*)
+		//*(.a2dp_streamctrl.text)
+		//*(.a2dp_player.text)
+		//*(.volume_node.text)
+		//*(.bt_audio_timestamp.text)
+		//*(.audio_src_coef.text)
+		//*(.media.audio_libutils.text)
+		//*(.dac_node.text)
+		//*(.a2dp_streamctrl.text)
 
 #if  TCFG_CODE_TO_RAM_COMPRESS_ENABLE
 		*(.sbc_hwaccel.text)
@@ -256,6 +258,17 @@ SECTIONS
 
 	data_code_pc_limit_end = .;
 	__report_overlay_end = .;
+
+#if TCFG_CONFIG_DEBUG_RECORD_ENABLE
+    // 需要避免与uboot和maskrom冲突
+    .debug_record_ram ALIGN(4):
+    {
+        /* . = . + 0x1000; */
+        . = ALIGN(4);
+        *(.debug_record)
+        . = ALIGN(4);
+    } > ram0
+#endif
 
 	_HEAP_BEGIN = . ;
 	_HEAP_END = RAM0_END;

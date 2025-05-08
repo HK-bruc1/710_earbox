@@ -920,6 +920,7 @@ int audio_anc_db_cfg_read(void)
 }
 
 /*ANC初始化*/
+__AUDIO_INIT_BANK_CODE
 void anc_init(void)
 {
     anc_hdl = zalloc(sizeof(anc_t));
