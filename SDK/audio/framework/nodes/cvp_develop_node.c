@@ -34,7 +34,7 @@ struct cvp_node_hdl {
 
 static struct cvp_node_hdl *g_cvp_hdl;
 
-int cvp_node_output_handle(s16 *data, u16 len)
+int cvp_dev_node_output_handle(s16 *data, u16 len)
 {
     struct stream_frame *frame;
     frame = jlstream_get_frame(hdl_node(g_cvp_hdl)->oport, len);
@@ -154,6 +154,7 @@ static int cvp_adapter_bind(struct stream_node *node, u16 uuid)
 
     node->type = NODE_TYPE_ASYNC;
     cvp_node_param_cfg_read(hdl, 0);
+    cvp_node_context_setup(uuid);
     //根据算法单麦/双麦分配对应的空间
     hdl->buf = (s16 *)malloc(CVP_INPUT_SIZE << 1);
     if (hdl->cfg.mic_num == 2) {
@@ -262,6 +263,7 @@ static void cvp_adapter_release(struct stream_node *node)
         hdl->buf_ref_1 = NULL;
     }
     g_cvp_hdl = NULL;
+    cvp_node_context_setup(0);
 }
 
 /*节点adapter 注意需要在sdk_used_list声明，否则会被优化*/

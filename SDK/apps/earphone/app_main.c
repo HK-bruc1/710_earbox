@@ -244,6 +244,7 @@ int *__errno()
     return &err;
 }
 
+_INLINE_
 void app_var_init(void)
 {
     app_var.play_poweron_tone = 1;
@@ -274,6 +275,7 @@ u8 get_power_on_status(void)
 }
 
 
+__INITCALL_BANK_CODE
 void check_power_on_key(void)
 {
     u32 delay_10ms_cnt = 0;
@@ -306,6 +308,7 @@ u8 get_charge_online_flag(void)
 }
 
 /*充电拔出,CPU软件复位, 不检测按键，直接开机*/
+__INITCALL_BANK_CODE
 static void app_poweron_check(int update)
 {
 #if (CONFIG_BT_MODE == BT_NORMAL)
@@ -342,6 +345,7 @@ void board_init()
 
 }
 
+__INITCALL_BANK_CODE
 static void app_version_check()
 {
     extern char __VERSION_BEGIN[];
@@ -356,6 +360,7 @@ static void app_version_check()
     puts("=======================================\n");
 }
 
+__INITCALL_BANK_CODE
 static struct app_mode *app_task_init()
 {
     app_var_init();

@@ -538,6 +538,14 @@ frequency_compressor_node_adapter
 spatial_adv_node_adapter
 #endif
 
+#if TCFG_VIRTUAL_BASS_PRO_MODULE_NODE_ENABLE
+virtual_bass_pro_node_adapter
+#endif
+
 #if TCFG_ENC_AAC_ENABLE
 aac_enc_plug
+#endif
+
+#if TCFG_LHDC_X_NODE_ENABLE
+lhdc_x_node_adapter
 #endif

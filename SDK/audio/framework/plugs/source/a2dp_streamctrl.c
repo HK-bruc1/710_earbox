@@ -280,7 +280,7 @@ void a2dp_stream_bandwidth_detect_handler(void *_ctrl, int frame_len, int pcm_fr
 
     if (frame_len) {
         int max_buf_size = a2dp_stream_max_buf_size(ctrl->codec_type);
-        max_latency = (max_buf_size * pcm_frames / frame_len) * 1000 / sample_rate * 9 / 10;
+        max_latency = (max_buf_size * pcm_frames / frame_len) * 1000 / sample_rate * 8 / 10;
     }
 
     if (!max_latency) {
@@ -719,8 +719,8 @@ static int a2dp_stream_error_filter(struct a2dp_stream_control *ctrl, struct a2d
             ctrl->missed_num = a2dp_media_get_remain_play_time(ctrl->stream, 1) < ctrl->initial_latency ? 2 : 1;//(u16)(seqn - ctrl->seqn);
             /*printf("case 2 : %d, %d, %d\n", seqn, ctrl->seqn, ctrl->missed_num);*/
         }
+        ctrl->repair_num = 0;
     }
-    ctrl->repair_num = 0;
 
 __exit:
     ctrl->seqn = seqn;

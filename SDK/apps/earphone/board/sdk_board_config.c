@@ -257,6 +257,7 @@ void board_init()
 }
 
 #if TCFG_LP_TOUCH_KEY_ENABLE
+__INITCALL_BANK_CODE
 static int touch_key_init(void)
 {
     lp_touch_key_init(&lp_touch_key_pdata);

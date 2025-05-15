@@ -315,6 +315,7 @@
 <Add option="cpu/br56/liba/lib_voiceChanger.a" />
 <Add option="cpu/br56/liba/VirtualBass.a" />
 <Add option="cpu/br56/liba/lib_virtual_bass_classic.a" />
+<Add option="cpu/br56/liba/lib_virtual_bass_pro.a" />
 <Add option="cpu/br56/liba/DynamicEQ.a" />
 <Add option="cpu/br56/liba/DynamicEQPro.a" />
 <Add option="cpu/br56/liba/lib_point360_td.a" />
@@ -361,6 +362,7 @@
 <Add option="cpu/br56/liba/libdistortion.a" />
 <Add option="cpu/br56/liba/lib_frequency_compressor.a" />
 <Add option="cpu/br56/liba/lib_gain_mix.a" />
+<Add option="cpu/br56/liba/liblhdc_x_edge.a" />
 <Add option="cpu/br56/liba/libFFT_pi32v2_OnChip.a" />
 <Add option="cpu/br56/liba/lib_wtg_dec.a" />
 <Add option="cpu/br56/liba/bfilterfun_lib.a" />
@@ -485,6 +487,7 @@
 <Unit filename="apps/common/device/sensor/ir_sensor/jsa1221.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det_api.h" />
+<Unit filename="apps/common/device/storage_device/norflash/norflash.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/storage_device/norflash/norflash_sfc.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/demo/host/udisk_block_test.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/device/cdc.c"><Option compilerVer="CC"/></Unit>
@@ -1092,6 +1095,7 @@
 <Unit filename="audio/common/audio_utils.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/audio_utils.h" />
 <Unit filename="audio/common/audio_volume_mixer.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/common/audio_volume_mixer.h" />
 <Unit filename="audio/common/bt_audio_energy_detection.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/bt_audio_energy_detection.h" />
 <Unit filename="audio/common/debug/audio_debug.c"><Option compilerVer="CC"/></Unit>
@@ -1220,6 +1224,7 @@
 <Unit filename="audio/effect/demo/frequency_shift_howling_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/gain_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/harmonic_exciter_demo.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/effect/demo/lhdc_x_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/multiband_drc_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/noisegate_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/notch_howling_demo.c"><Option compilerVer="CC"/></Unit>
@@ -1276,6 +1281,8 @@
 <Unit filename="audio/framework/nodes/esco_tx_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/iis_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/le_audio_source.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/framework/nodes/lhdc_x_node.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/framework/nodes/lhdc_x_node.h" />
 <Unit filename="audio/framework/nodes/local_tws_source_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/multi_ch_iis_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/ns_node.c"><Option compilerVer="CC"/></Unit>
@@ -1362,6 +1369,7 @@
 <Unit filename="audio/smart_voice/kws_event.h" />
 <Unit filename="audio/smart_voice/nn_vad.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/nn_vad.h" />
+<Unit filename="audio/smart_voice/nn_vad_bin.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/smart_voice.h" />
 <Unit filename="audio/smart_voice/smart_voice_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/smart_voice_core.c"><Option compilerVer="CC"/></Unit>
@@ -1657,6 +1665,7 @@
 <Unit filename="interface/media/effects/audio_surround.h" />
 <Unit filename="interface/media/effects/audio_vbass.h" />
 <Unit filename="interface/media/effects/audio_virtual_bass_classic.h" />
+<Unit filename="interface/media/effects/audio_virtual_bass_pro.h" />
 <Unit filename="interface/media/effects/audio_virtual_surround_pro.h" />
 <Unit filename="interface/media/effects/audio_vocal_remove.h" />
 <Unit filename="interface/media/effects/audio_voice_changer.h" />
@@ -1665,6 +1674,7 @@
 <Unit filename="interface/media/effects/channel_adapter.h" />
 <Unit filename="interface/media/effects/chorus_api.h" />
 <Unit filename="interface/media/effects/convert_data.h" />
+<Unit filename="interface/media/effects/crossOver.h" />
 <Unit filename="interface/media/effects/distortion_api.h" />
 <Unit filename="interface/media/effects/drc_advance_api.h" />
 <Unit filename="interface/media/effects/drc_api.h" />
@@ -1702,6 +1712,7 @@
 <Unit filename="interface/media/effects/stereo_spatialwider.h" />
 <Unit filename="interface/media/effects/stereo_widen_api.h" />
 <Unit filename="interface/media/effects/virtual_bass_classic_api.h" />
+<Unit filename="interface/media/effects/virtual_bass_pro_api.h" />
 <Unit filename="interface/media/effects/voiceChanger_api.h" />
 <Unit filename="interface/media/framework/include/dac_node.h" />
 <Unit filename="interface/media/framework/include/decoder_node.h" />

@@ -25,6 +25,7 @@ static const struct _p33_io_wakeup_config ldoin_port = {
     .callback			= vpwr_wakeup_callback,
 };
 
+__INITCALL_BANK_CODE
 void charge_wakeup_init()
 {
     p33_io_wakeup_port_init(&vbat_port);
@@ -63,6 +64,7 @@ static const struct charge_platform_data charge_data  = {
     .ldo5v_pulldown_en		= TCFG_LDOIN_PULLDOWN_EN,
 };
 
+__INITCALL_BANK_CODE
 int board_charge_init(void)
 {
     charge_wakeup_init();

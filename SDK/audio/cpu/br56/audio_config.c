@@ -22,6 +22,7 @@ const u16 dac_digital_gain_tab_version_c[7] = {
     16766,  // 2Vrms
     17156   // 2Vrms
 };
+const int config_audio_dac_mute_timeout = 70;   //单位：ms
 
 /*
  *******************************************************************
@@ -58,6 +59,17 @@ void audio_linein_param_fill(struct linein_open_param *linein_param, const struc
     linein_param->linein_mode    = platform_cfg->mic_mode;
     linein_param->linein_ain_sel = platform_cfg->mic_ain_sel;
     linein_param->linein_dcc     = platform_cfg->mic_dcc;
+}
+
+/*param:dvol*/
+u16 dac_dvol_max_query(void)
+{
+    u16 DAC_0dB = 16100;
+    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版以后才做DAC TRIM
+        DAC_0dB = dac_digital_gain_tab_version_c[TCFG_DAC_POWER_MODE];
+    }
+    //printf("dac_dvol_max_query:%d",DAC_0dB);
+    return DAC_0dB;
 }
 
 //***********************

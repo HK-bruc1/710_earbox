@@ -10,8 +10,8 @@ extern int putchar(int a);
 #define putchar(a)  {if(config_ulog_enable){putchar(a);}if(config_dlog_enable){dlog_putchar(a);}}
 extern int puts(const char *out);
 // puts 目前无法提取字符串常量
-// #define puts(format)  {if(config_ulog_enable){puts(format);}if(config_dlog_enable){dlog_printf(0xFE, "%s", (const char *)format);}}
-#define puts(format)  {if(config_ulog_enable){puts(format);}if(config_dlog_enable){dlog_printf(0xFE, format);}}
+// #define puts(format)  {if(config_ulog_enable){puts(format);}if(config_dlog_enable){dlog_printf(7, "%s", (const char *)format);}}
+#define puts(format)  {if(config_ulog_enable){puts(format);}if(config_dlog_enable){dlog_printf(7, format);}}
 extern void put_float(double fv);
 void put_u4hex(unsigned char dat);
 void put_u8hex(unsigned char dat);
@@ -20,7 +20,7 @@ void put_u32hex(unsigned int dat);
 void put_buf(const u8 *buf, int len);
 #define put_buf(buf, len)  {if(config_ulog_enable){put_buf(buf, len);}if(config_dlog_enable){dlog_put_buf(buf, len);}}
 int printf(const char *format, ...);
-#define printf(format, ...)  {if(config_ulog_enable){printf(format, ##__VA_ARGS__);}if(config_dlog_enable){dlog_printf(0xFF, format, ##__VA_ARGS__);}}
+#define printf(format, ...)  {if(config_ulog_enable){printf(format, ##__VA_ARGS__);}if(config_dlog_enable){dlog_printf(6, format, ##__VA_ARGS__);}}
 int assert_printf(const char *format, ...);
 int sprintf(char *out, const char *format, ...);
 int vprintf(const char *fmt, __builtin_va_list va);

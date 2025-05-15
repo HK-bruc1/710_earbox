@@ -30,6 +30,22 @@
         {
             *(.bank.code.6)
         }
+        .overlay_bank7
+        {
+            *(.bank.code.7)
+        }
+        .overlay_bank8
+        {
+            *(.bank.code.8)
+        }
+        .overlay_bank9
+        {
+            *(.bank.code.9)
+        }
+        .overlay_bank10
+        {
+            *(.bank.code.10)
+        }
     } > ram0
 
 

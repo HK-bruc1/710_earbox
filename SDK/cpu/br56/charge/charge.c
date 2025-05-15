@@ -11,6 +11,7 @@
 #include "device/device.h"
 #include "asm/power_interface.h"
 #include "system/event.h"
+#include "system/init.h"
 #include "asm/efuse.h"
 #include "gpio.h"
 #include "clock.h"
@@ -696,6 +697,7 @@ u16 get_charge_full_value(void)
     return __this->full_voltage;
 }
 
+__INITCALL_BANK_CODE
 static void charge_config(void)
 {
     u8 charge_trim_val;
@@ -780,6 +782,7 @@ static void charge_config(void)
     set_charge_mA(__this->data->charge_trickle_mA);
 }
 
+__INITCALL_BANK_CODE
 int charge_init(const struct charge_platform_data *data)
 {
     log_info("%s\n", __func__);

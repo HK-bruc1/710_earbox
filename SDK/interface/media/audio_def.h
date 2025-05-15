@@ -135,6 +135,10 @@
 #define MIC_CAPLESS_VER1					(1)	//697N 897N 698N
 #define MIC_CAPLESS_VER2					(2)	//700N 701N
 #define MIC_CAPLESS_VER3					(3)	//703N 706N AW32N
+
+/*ADC性能模式*/
+#define	ADC_MODE_HIGH_PERFORMANCE           (0) //高性能模式
+#define	ADC_MODE_LOW_POWER		            (1)	//低功耗模式
 /*
  *******************************************************************
  *						FFT Definitions

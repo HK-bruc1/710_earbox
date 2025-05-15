@@ -437,10 +437,5 @@ int tws_play_tone_file_alone_callback(const char *file_name, int delay_msec, u32
 }
 
 
-static int tws_tone_player_init()
-{
-    return 0;
-}
-__initcall(tws_tone_player_init);
 
 #endif
