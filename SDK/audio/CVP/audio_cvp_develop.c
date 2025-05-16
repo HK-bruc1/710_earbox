@@ -128,7 +128,7 @@ void audio_aec_ref_start(u8 en)
 /*通话上行同步输出回调*/
 int audio_aec_sync_buffer_set(s16 *data, int len)
 {
-    return cvp_node_output_handle(data, len);
+    return cvp_dev_node_output_handle(data, len);
 }
 
 /*
@@ -168,7 +168,7 @@ static int audio_aec_output(s16 *data, u16 len)
             }
         }
 
-        return cvp_node_output_handle(data, len);
+        return cvp_dev_node_output_handle(data, len);
     }
     return wlen;
 }

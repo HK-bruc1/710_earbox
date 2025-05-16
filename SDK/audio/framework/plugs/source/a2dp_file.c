@@ -416,7 +416,7 @@ __again:
         fmt->sample_rate = ldac_sample_rates[sr];
         hdl->chconfig_id = chconfig_id;
         //printf(" %x  %x  %x\n",frame[0],frame[1],frame[2]);
-        //printf("sr:%d, sample_rate : %d  chconfig_id : %d\n",sr,fmt->sample_rate,chconfig_id);
+        printf("LDAC param : sr:%d, sample_rate : %d  chconfig_id : %d\n", sr, fmt->sample_rate, chconfig_id);
 #endif
     } else {
         /*

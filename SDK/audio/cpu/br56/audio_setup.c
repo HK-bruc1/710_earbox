@@ -165,6 +165,8 @@ static void audio_common_initcall()
     common->audio_vbg_value = vbg_trim.aud_vbg_value;
     common->pmu_vbg_value = vbg_trim.pmu_vbg_value;
     printf(">>VBG_TRIM: %d, %d\n", common->audio_vbg_value, common->pmu_vbg_value);
+    const u8 power_mode[] = {20, 30, 50, 80, 100, 0xFF};
+    printf("DAC power mode:%dmW", power_mode[dac_data.power_mode]);
 
     // dacldo trim
     len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
@@ -188,6 +190,8 @@ void audio_dac_initcall(void)
     dac_data.max_sample_rate    = AUDIO_DAC_MAX_SAMPLE_RATE;
     dac_data.hpvdd_sel = audio_dac_hpvdd_check();
     dac_data.bit_width = audio_general_out_dev_bit_width();
+    dac_data.mute_delay_isel = 2;
+    dac_data.mute_delay_time = 50;
     audio_dac_init(&dac_hdl, &dac_data);
     //dac_hdl.ng.threshold = 4;			//DAC底噪优化阈值
     //dac_hdl.ng.detect_interval = 200;	//DAC底噪优化检测间隔ms
@@ -216,9 +220,16 @@ void audio_dac_initcall(void)
                 trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
                 trim_init.trim_speed = 0.7f; //DAC trim的收敛速度(不建议修改)
                 int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
-                int trim_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (1250) : (2500);
+                int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (1250) : (2500);
+                int trimr_offset = triml_offset;
                 int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (100) : (300);
-                if ((ret == 0) && (__builtin_abs(dac_trim.left + trim_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trim_offset) < trim_limit)) {
+                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
+                    trimr_offset = 0;
+                }
+                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_R) {
+                    triml_offset = 0;
+                }
+                if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
                     /* puts("dac_trim_succ"); */
                     syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
                 } else {
@@ -396,9 +407,13 @@ static void wl_audio_clk_on(void)
     JL_WL_AUD->CON0 = 1;
 }
 
-__AUDIO_INIT_BANK_CODE
+__INITCALL_BANK_CODE
 static int audio_init()
 {
+    struct volume_mixer vol_mixer = {
+        .hw_dvol_max = dac_dvol_max_query,
+    };
+    audio_volume_mixer_init(&vol_mixer);
     audio_common_initcall();
 #ifndef CONFIG_FPGA_ENABLE
     wl_audio_clk_on();

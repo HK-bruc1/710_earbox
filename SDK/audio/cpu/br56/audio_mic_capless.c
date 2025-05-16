@@ -388,6 +388,7 @@ void mic_capless_trim_result(u8 result)
     }
 }
 
+__INITCALL_BANK_CODE
 void mic_capless_trim_init(int update)
 {
     struct adc_platform_cfg *platform_cfg = audio_adc_platform_get_cfg();

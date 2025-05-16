@@ -213,6 +213,7 @@ __retry:
 
 extern void update_tone_event_clear();
 
+__INITCALL_BANK_CODE
 int update_result_deal()
 {
 #ifdef CONFIG_FPGA_ENABLE
@@ -686,7 +687,7 @@ static void update_common_state_cbk(update_mode_info_t *info, u32 state, void *p
     }
 }
 
-
+__INITCALL_BANK_CODE
 static int app_update_init(void)
 {
     update_module_init(update_common_state_cbk);

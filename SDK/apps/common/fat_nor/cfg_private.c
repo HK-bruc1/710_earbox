@@ -24,6 +24,14 @@ typedef struct {
 CFG_PRIVATE_HDL *cp_hdl = NULL;
 
 
+static int cfg_private_addr_check(u32 addr)
+{
+    if (addr < cp_hdl->cfg_private_part_flash_addr || addr >= (cp_hdl->cfg_private_part_flash_addr + cp_hdl->cfg_private_part_maxsize)) {
+        return CFG_PRIVATE_ADDR_CHECK_ERR;
+    }
+    return CFG_PRIVATE_OK;
+}
+
 static RESFILE *cfg_private_create(const char *path, const char *mode)
 {
     int i = 0;
@@ -101,6 +109,9 @@ int cfg_private_read(RESFILE *file, void *buf, u32 len)
 
 void cfg_private_erase(u32 addr, u32 len)
 {
+    if (cfg_private_addr_check(addr)) {
+        return;
+    }
     /* r_printf(">>>[test]:addr = 0x%x, len = %d\n", addr, len); */
     u32 erase_total_size = len;
     u32 erase_addr = addr;
@@ -160,6 +171,10 @@ int cfg_private_write(RESFILE *file, void *buf, u32 len)
         }
         memcpy(buf_temp + w_pos, buf, wlen);
         /* put_buf(buf_temp, cp_hdl->cfg_private_align_size); */
+        if (cfg_private_addr_check(align_addr)) {
+            res = -1;
+            goto __exit;
+        }
         norflash_write(NULL, (void *)buf_temp, cp_hdl->cfg_private_align_size, align_addr);
         fptr += wlen;
         len -= wlen;

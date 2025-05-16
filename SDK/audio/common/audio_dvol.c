@@ -143,7 +143,6 @@ float audio_digital_vol_2_dB(dvol_handle *dvol, u16 volume)
     return (dvol_db);
 }
 
-__VOLUME_BANK_CODE
 static s16 audio_digital_vol_2_gain(dvol_handle *dvol, u16 volume)
 {
     s16 gain;
@@ -353,7 +352,6 @@ void audio_digital_vol_offset_dB_set(dvol_handle *dvol, float offset_dB)
 * Note(s)    : None.
 *********************************************************************
 */
-__VOLUME_BANK_CODE
 void audio_digital_vol_set(dvol_handle *dvol, u16 vol)
 {
     if (dvol == NULL) {

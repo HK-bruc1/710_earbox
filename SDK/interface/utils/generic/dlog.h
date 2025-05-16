@@ -185,7 +185,7 @@ int dlog_log_type_set(enum DLOG_LOG_TYPE type);
 enum DLOG_LOG_TYPE dlog_log_type_get(void);
 
 // 仅声明, 非外部调用接口
-int dlog_print(int level, const struct dlog_str_tab_s *str_tab, u32 arg_bit_map_and_num, const char *format, ...);
+int dlog_print(const struct dlog_str_tab_s *str_tab, u32 arg_bit_map_and_num, const char *format, ...);
 int dlog_putchar(char c);
 int dlog_put_buf(const u8 *buf, int len);
 
@@ -251,20 +251,22 @@ extern const int dlog_seg_begin;
 
 #define VA_ARGS_TYPE_CHECK(...)  VA_ARGS_TYPE_CHECK_PRIV(-1, ##__VA_ARGS__, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
 
+#define DLOG_LEVEL_TO_STR(level) #level
+
 #define dlog_printf(level, format, ...) \
     if(config_dlog_enable){ \
         VA_ARGS_NUM_CHECK(VA_ARGS_NUM(__VA_ARGS__)); \
         VA_ARGS_TYPE_CHECK(__VA_ARGS__); \
         DLOG_STR_TAB_SIZE_CHECK(); \
-        __attribute__((used,section(".dlog.rodata.string")))  static const char dlog_printf_str[] = format; \
-        __attribute__((used,section(".dlog.rodata.str_tab"))) static const struct dlog_str_tab_s dlog_printf_str_tab = \
+        __attribute__((used,section(".dlog.rodata.string."DLOG_LEVEL_TO_STR(level))))  static const char dlog_printf_str[] = format; \
+        __attribute__((used,section(".dlog.rodata.str_tab."DLOG_LEVEL_TO_STR(level)))) static const struct dlog_str_tab_s dlog_printf_str_tab = \
         { \
             .arg_num = (u32)VA_ARGS_NUM(__VA_ARGS__), \
             .dlog_level = (u8)level,\
             .dlog_str_addr = (u32)dlog_printf_str, \
             .arg_type_bit_map = (u32)VA_ARGS_TYPE_BIT_SIZE(__VA_ARGS__) \
         }; \
-        dlog_print(level, (const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
+        dlog_print((const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
                 ((u32)VA_ARGS_NUM(__VA_ARGS__) & 0x0F) | ((VA_ARGS_TYPE_BIT_SIZE(__VA_ARGS__) & 0x0FFFFFFF) << 4), \
                 format, \
                 ##__VA_ARGS__); \
@@ -286,7 +288,7 @@ extern const int dlog_seg_begin;
                 .dlog_str_addr = (u32)dlog_printf_str, \
                 .arg_type_bit_map = (u32)args_bit_map \
             }; \
-            dlog_print(level, (const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
+            dlog_print((const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
                     ((u32)args_num << 28) | (args_bit_map & 0x0FFFFFFF), \
                     format, \
                     ##__VA_ARGS__); \
@@ -302,7 +304,7 @@ extern const int dlog_seg_begin;
                 .dlog_str_addr = (u32)dlog_printf_str, \
                 .arg_type_bit_map = (u32)args_bit_map \
             }; \
-            dlog_print(level, (const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
+            dlog_print((const struct dlog_str_tab_s *)&dlog_printf_str_tab, \
                     ((u32)args_num << 28) | (args_bit_map & 0x0FFFFFFF), \
                     format, \
                     ##__VA_ARGS__); \
@@ -318,7 +320,7 @@ extern const int dlog_seg_begin;
                 .dlog_str_addr = (u32)dlog_printf_str, \
                 .arg_type_bit_map = (u32)2 \
             }; \
-            dlog_print(level, &dlog_printf_str_tab, \
+            dlog_print(&dlog_printf_str_tab, \
                     ((u32)dlog_printf_str_tab.arg_num << 28) | (dlog_printf_str_tab.arg_type_bit_map & 0x0FFFFFFF), "%s", format); \
         }
 #endif

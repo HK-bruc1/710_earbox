@@ -14,6 +14,7 @@
 #include "asm/audio_common.h"
 #include "mic_effect.h"
 #include "pc_mic_recoder.h"
+#include "btstack/avctp_user.h"
 #if TCFG_AUDIO_ANC_ENABLE
 #include "audio_anc.h"
 #endif
@@ -73,7 +74,7 @@ struct adc_file_common {
 
 struct adc_file_global {
     u8 fixed_ch_num;
-    s16 *fixed_buf;						//固定的ADCbuffer
+    s16 *fixed_buf;				//固定的ADCbuffer
     struct adc_file_cfg cfg;	//ESCO ADC的参数信息
 };
 
@@ -237,13 +238,14 @@ void audio_adc_file_init(void)  //通话的ADC节点配置
         }
         memcpy(&esco_adc_f.platform_cfg, adc_platform_cfg_table, sizeof(struct adc_platform_cfg) * AUDIO_ADC_MAX_NUM);
 
-        adc_file_log(" %s len %d, sizeof(cfg) %d\n", __func__,  len, (int)sizeof(struct adc_file_cfg));
+        adc_file_log("%s len %d, sizeof(cfg) %d\n", __func__,  len, (int)sizeof(struct adc_file_cfg));
 
-#if 0
-        adc_file_log(" esco_adc_f.cfg.mic_en_map = %x\n", esco_adc_f.cfg.mic_en_map);
+#if 0//dump出ESCO通话ADC节点参数配置
+        adc_file_log("esco_adc_f.cfg.mic_en_map = 0x%x\n", esco_adc_f.cfg.mic_en_map);
         for (i = 0; i < AUDIO_ADC_MAX_NUM; i++) {
-            adc_file_log(" esco_adc_f.cfg.param[%d].mic_gain      = %d\n", i, esco_adc_f.cfg.param[i].mic_gain);
-            adc_file_log(" esco_adc_f.cfg.param[%d].mic_pre_gain  = %d\n", i, esco_adc_f.cfg.param[i].mic_pre_gain);
+            adc_file_log("esco_adc_f.cfg.mic[%d] enable = %d\n", i, !!(esco_adc_f.cfg.mic_en_map & BIT(i)));
+            adc_file_log("esco_adc_f.cfg.param[%d].mic_gain      = %d\n", i, esco_adc_f.cfg.param[i].mic_gain);
+            adc_file_log("esco_adc_f.cfg.param[%d].mic_pre_gain  = %d\n", i, esco_adc_f.cfg.param[i].mic_pre_gain);
         }
 #endif
         esco_adc_f.read_flag = 1;
@@ -515,11 +517,6 @@ static void *adc_init(void *source_node, struct stream_node *node)
     node->type |= NODE_TYPE_IRQ;
 
 
-#if ((defined TCFG_CALL_KWS_SWITCH_ENABLE) && TCFG_CALL_KWS_SWITCH_ENABLE)
-    extern void smart_voice_mcu_mic_suspend();
-    smart_voice_mcu_mic_suspend();
-#endif
-
     return hdl;
 }
 
@@ -697,6 +694,10 @@ static int adc_file_ioc_start(struct adc_file_hdl *hdl)
     int ret = 0;
     if (hdl->start == 0) {
         hdl->start = 1;
+#if ((defined TCFG_CALL_KWS_SWITCH_ENABLE) && TCFG_CALL_KWS_SWITCH_ENABLE)
+        extern void smart_voice_mcu_mic_suspend();
+        smart_voice_mcu_mic_suspend();
+#endif
         hdl->dump_cnt = 0;
         //不启动ANC动态MIC增益时，由用户自己保证ANC与通话复用的ADC增益一致
 #if TCFG_AUDIO_ANC_ENABLE && TCFG_AUDIO_DYNAMIC_ADC_GAIN
@@ -757,6 +758,13 @@ static int adc_file_ioc_stop(struct adc_file_hdl *hdl)
 {
     if (hdl->start) {
         hdl->start = 0;
+#if ((defined TCFG_CALL_KWS_SWITCH_ENABLE) && TCFG_CALL_KWS_SWITCH_ENABLE)
+        extern u16 jl_call_kws_get_status();
+        extern int audio_phone_call_kws_start(void);
+        if (jl_call_kws_get_status() == BT_STATUS_PHONE_INCOME) {
+            audio_phone_call_kws_start();
+        }
+#endif
 #if TCFG_AUDIO_ANC_ENABLE && TCFG_AUDIO_DYNAMIC_ADC_GAIN
         anc_dynamic_micgain_stop();
 #endif
