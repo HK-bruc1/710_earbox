@@ -49,7 +49,6 @@ void board_set_soft_poweroff()
     //gpio_config_uninit();
 }
 
-__INITCALL_BANK_CODE
 void power_early_flowing()
 {
     PORT_TABLE(g);
@@ -81,7 +80,7 @@ void power_early_flowing()
 }
 
 //early_initcall(_power_early_init);
-__INITCALL_BANK_CODE
+
 static int power_later_flowing()
 {
     pmu_trim(0, 0);

@@ -36,7 +36,6 @@ static const struct chargestore_platform_data chargestore_data = {
     .write                  = chargestore_write,
 };
 
-__INITCALL_BANK_CODE
 int board_chargestore_config()
 {
     p33_io_wakeup_port_init(&port1);

@@ -6,7 +6,6 @@
 #include "audio_config_def.h"
 #include "audio_adc.h"
 #include "mic_power_manager.h"
-#include "audio_volume_mixer.h"
 
 extern struct audio_dac_hdl dac_hdl;
 extern struct audio_adc_hdl adc_hdl;
@@ -276,8 +275,6 @@ void dac_node_write_callback_del(const char *name);
 void audio_adc_param_fill(struct mic_open_param *mic_param, struct adc_platform_cfg *platform_cfg);
 
 void audio_linein_param_fill(struct linein_open_param *linein_param, const struct adc_platform_cfg *platform_cfg);
-
-u16 dac_dvol_max_query(void);
 
 void audio_fast_mode_test();
 

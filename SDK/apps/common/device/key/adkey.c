@@ -9,7 +9,6 @@
 #include "gpio.h"
 #include "app_config.h"
 #include "asm/power_interface.h"
-#include "system/init.h"
 
 
 #if TCFG_ADKEY_ENABLE
@@ -44,7 +43,6 @@ const struct adkey_platform_data *get_adkey_platform_data()
     return NULL;
 }
 
-__INITCALL_BANK_CODE
 int adkey_init(void)
 {
     __this = get_adkey_platform_data();

@@ -208,14 +208,6 @@ enum {
 #define ANC_CONFIG_RFF_EN ((TCFG_AUDIO_ANC_TRAIN_MODE & (ANC_HYBRID_EN | ANC_FF_EN)) && (TCFG_AUDIO_ANC_CH & ANC_R_CH))
 #define ANC_CONFIG_RFB_EN ((TCFG_AUDIO_ANC_TRAIN_MODE & (ANC_HYBRID_EN | ANC_FB_EN)) && (TCFG_AUDIO_ANC_CH & ANC_R_CH))
 
-#if (TCFG_AUDIO_ANC_TRAIN_MODE == ANC_HYBRID_EN) && (TCFG_AUDIO_ANC_CH == (ANC_L_CH | ANC_R_CH))
-#error "JL710N doesn't support HEADSET ANC HYBRID"
-#endif
-
-#if (TCFG_AUDIO_ANC_TRAIN_MODE == ANC_FF_EN) && (TCFG_AUDIO_ANC_CH == (ANC_L_CH | ANC_R_CH))
-#error "JL710N doesn't support HEADSET ANC FF"
-#endif
-
 /*ANC记忆信息*/
 typedef struct {
     u8 mode;		/*当前模式*/

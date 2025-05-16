@@ -104,8 +104,6 @@ struct dac_platform_data {
     u8 fade_volume;
     u8 classh_en;           // CLASSH使能(当输出功率为50mW时可用)
     u8 classh_mode;         // CLASSH 模式  0：蓝牙最低电压1.2v  1:蓝牙最低电压1.15v
-    u8 mute_delay_time;         //开关机延时参数
-    u8 mute_delay_isel;         //开关机速度参数
     u16 dma_buf_time_ms;    // DAC dma buf 大小
     s16 *dig_vol_tab;
     u32 digital_gain_limit;

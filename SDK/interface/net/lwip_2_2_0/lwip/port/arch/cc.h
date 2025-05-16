@@ -14,8 +14,7 @@
 //typedef int     sys_prot_t;
 
 
-//extern int printf(const char *format, ...);
-#include "printf.h"
+extern int printf(const char *format, ...);
 /*----------------------------------------------------------------------------*/
 
 /**********使用GCC开发工具时的宏定义**************/

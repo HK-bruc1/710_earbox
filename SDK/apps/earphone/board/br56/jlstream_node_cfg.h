@@ -132,7 +132,6 @@
 #define TCFG_VOICE_CHANGER_NODE_ENABLE 0 // Voice Changer
 #define TCFG_WDRC_ADVANCE_NODE_ENABLE 0 // DRC Advance
 #define TCFG_WDRC_NODE_ENABLE 0 // DRC
-#define TCFG_LHDC_X_NODE_ENABLE 0
 #define EQ_SECTION_MAX 0xc // EQ_SECTION_MAX
 #define TCFG_STREAM_BIN_ENC_ENABLE 0 // stream.bin加密使能
 // ------------流程图宏定义------------

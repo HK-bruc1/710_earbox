@@ -247,7 +247,6 @@ static void volume_ioc_stop(struct volume_hdl *hdl)
     hdl->dvol_hdl = NULL;
 }
 
-__STREAM_BANK_CODE
 int volume_ioc_get_cfg(const char *name, struct volume_cfg *vol_cfg)
 {
     struct cfg_info info;
@@ -287,6 +286,7 @@ float volume_ioc_2_dB(struct volume_hdl *hdl, s16 volume)
     return 0;
 }
 
+__VOLUME_BANK_CODE
 static int volume_ioc_update_parm(struct volume_hdl *hdl, int parm)
 {
     struct volume_cfg *vol_cfg = (struct volume_cfg *)parm;
@@ -373,6 +373,7 @@ static int volume_ioc_update_parm(struct volume_hdl *hdl, int parm)
     return ret;
 }
 
+__VOLUME_BANK_CODE
 static int get_volume_ioc_get_parm(struct volume_hdl *hdl, int parm)
 {
     int ret = 0;

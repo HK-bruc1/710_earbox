@@ -32,9 +32,7 @@ typedef struct {
     uint8_t frame_duration;
     uint8_t BIG_Handle;
     uint8_t Num_BIS;
-    uint8_t BIS[8];
     uint16_t Connection_Handle[2];
-    uint8_t bn;
 } auracast_sink_source_info_t;
 
 typedef enum {

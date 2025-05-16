@@ -451,7 +451,6 @@ void lp_touch_key_task(void *p)
     }
 }
 
-__INITCALL_BANK_CODE
 void lp_touch_key_init(const struct lp_touch_key_platform_data *pdata)
 {
     log_info("%s >>>>", __func__);

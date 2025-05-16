@@ -172,16 +172,6 @@ void auracast_sink_source_info_report_event_deal(uint8_t *packet, uint16_t lengt
 #endif
 }
 
-static void auracast_sink_big_info_report_event_deal(uint8_t *packet, uint16_t length)
-{
-    auracast_sink_source_info_t *param = (auracast_sink_source_info_t *)packet;
-    printf("auracast_sink_big_info_report_event_deal\n");
-    printf("num bis : %d\n", param->Num_BIS);
-    if (param->Num_BIS > MAX_NUM_BIS) {
-        param->Num_BIS = MAX_NUM_BIS;
-    }
-}
-
 static void auracast_sink_event_callback(uint16_t event, uint8_t *packet, uint16_t length)
 {
     // 这里监听后会一直打印
@@ -227,7 +217,6 @@ static void auracast_sink_event_callback(uint16_t event, uint8_t *packet, uint16
         break;
     case AURACAST_SINK_BIG_INFO_REPORT_EVENT:
         printf("AURACAST_SINK_BIG_INFO_REPORT_EVENT\n");
-        auracast_sink_big_info_report_event_deal(packet, length);
         break;
     case AURACAST_SINK_ISO_RX_CALLBACK_EVENT:
         //printf("AURACAST_SINK_ISO_RX_CALLBACK_EVENT\n");

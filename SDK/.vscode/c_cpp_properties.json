@@ -37,7 +37,6 @@
                 "CONFIG_SUPPORT_EX_TWS_ADJUST",
                 "__GCC_PI32V2__",
                 "CONFIG_NEW_ECC_ENABLE",
-                "CONFIG_CODE_BANK_ENABLE",
                 "CONFIG_EFFECT_CORE_V2_ENABLE",
                 "CONFIG_OS_AFFINITY_ENABLE=0",
                 "EVENT_HANDLER_NUM_CONFIG=2",

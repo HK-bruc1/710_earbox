@@ -30,7 +30,6 @@
 #include "effects/audio_gain_process.h"
 
 
-
 #if TCFG_USER_TWS_ENABLE
 #include "bt_tws.h"
 #endif/* TCFG_USER_TWS_ENABLE */
@@ -56,7 +55,6 @@
 
 
 /*使用输入立体声参考数据的TDE回音消除算法*/
-extern const u8 CONST_SMS_TDE_STEREO_REF_ENABLE;
 //const u8 CONST_SMS_TDE_STEREO_REF_ENABLE = 0;
 
 
@@ -289,7 +287,8 @@ static int acoustic_echo_cancel_output(s16 *data, u16 len)
             }
         }
     }
-    return len;
+
+    return cvp_node_output_handle(data, len);
 }
 
 /*
@@ -795,5 +794,6 @@ void aec_input_clear_enable(u8 enable)
 /* } */
 
 #endif
+
 
 

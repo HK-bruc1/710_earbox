@@ -123,7 +123,6 @@ DEFINES := \
 	-DCONFIG_SUPPORT_EX_TWS_ADJUST \
 	-D__GCC_PI32V2__ \
 	-DCONFIG_NEW_ECC_ENABLE \
-	-DCONFIG_CODE_BANK_ENABLE \
 	-DCONFIG_EFFECT_CORE_V2_ENABLE \
 	-DCONFIG_OS_AFFINITY_ENABLE=0 \
 	-DEVENT_HANDLER_NUM_CONFIG=2 \
@@ -349,7 +348,6 @@ c_SRC_FILES := \
 	apps/common/device/sensor/ir_sensor/ir_manage.c \
 	apps/common/device/sensor/ir_sensor/jsa1221.c \
 	apps/common/device/sensor/ntc/ntc_det.c \
-	apps/common/device/storage_device/norflash/norflash.c \
 	apps/common/device/storage_device/norflash/norflash_sfc.c \
 	apps/common/device/usb/demo/host/udisk_block_test.c \
 	apps/common/device/usb/device/cdc.c \
@@ -786,7 +784,6 @@ c_SRC_FILES := \
 	audio/effect/demo/frequency_shift_howling_demo.c \
 	audio/effect/demo/gain_demo.c \
 	audio/effect/demo/harmonic_exciter_demo.c \
-	audio/effect/demo/lhdc_x_demo.c \
 	audio/effect/demo/multiband_drc_demo.c \
 	audio/effect/demo/noisegate_demo.c \
 	audio/effect/demo/notch_howling_demo.c \
@@ -829,7 +826,6 @@ c_SRC_FILES := \
 	audio/framework/nodes/esco_tx_node.c \
 	audio/framework/nodes/iis_node.c \
 	audio/framework/nodes/le_audio_source.c \
-	audio/framework/nodes/lhdc_x_node.c \
 	audio/framework/nodes/local_tws_source_node.c \
 	audio/framework/nodes/multi_ch_iis_node.c \
 	audio/framework/nodes/ns_node.c \
@@ -888,7 +884,6 @@ c_SRC_FILES := \
 	audio/smart_voice/jl_kws_platform.c \
 	audio/smart_voice/kws_event.c \
 	audio/smart_voice/nn_vad.c \
-	audio/smart_voice/nn_vad_bin.c \
 	audio/smart_voice/smart_voice_config.c \
 	audio/smart_voice/smart_voice_core.c \
 	audio/smart_voice/user_asr.c \
@@ -982,14 +977,6 @@ LFLAGS := \
 	--plugin-opt=-warn-stack-size=1024 \
 	--sort-common \
 	--dont-complain-call-overflow \
-	--plugin-opt=-enable-banked-function=true \
-	--plugin-opt=-bank-stub-section-prefix=.bank.stub. \
-	--plugin-opt=-bank-stub-prefix=__bank_stub_ \
-	--plugin-opt=-banknum-section-prefix=.bank.code. \
-	--plugin-opt=-banknum-map-file-list=apps/earphone/bank/banknum_func.list \
-	--plugin-opt=-banknum-section-map-file-list=apps/earphone/bank/banknum_sec.list \
-	--plugin-opt=-banknum-exclude-func-file-list=apps/earphone/bank/banknum_exclude.list \
-	--plugin-opt=-custom-section-map-file-list=apps/earphone/bank/cussec_map.ld \
 	--plugin-opt=-used-symbol-file=apps/earphone/sdk_used_list.used \
 	--plugin-opt=-floating-point-may-trap=true \
 	--gc-sections \
@@ -1056,7 +1043,6 @@ LFLAGS := \
 	cpu/br56/liba/lib_voiceChanger.a \
 	cpu/br56/liba/VirtualBass.a \
 	cpu/br56/liba/lib_virtual_bass_classic.a \
-	cpu/br56/liba/lib_virtual_bass_pro.a \
 	cpu/br56/liba/DynamicEQ.a \
 	cpu/br56/liba/DynamicEQPro.a \
 	cpu/br56/liba/lib_point360_td.a \
@@ -1103,7 +1089,6 @@ LFLAGS := \
 	cpu/br56/liba/libdistortion.a \
 	cpu/br56/liba/lib_frequency_compressor.a \
 	cpu/br56/liba/lib_gain_mix.a \
-	cpu/br56/liba/liblhdc_x_edge.a \
 	cpu/br56/liba/libFFT_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \

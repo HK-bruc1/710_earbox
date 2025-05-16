@@ -4,7 +4,6 @@
 
 
 
-#define __INITCALL_BANK_CODE    __attribute__((section(".initcall.bank.text")))
 
 
 
