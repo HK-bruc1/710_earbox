@@ -235,6 +235,8 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/browser \
+	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd \
+	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/mass_data \
 	-Iapps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update \
 	-Iapps/common/third_party_profile/mma_protocol \
 	-Iapps/common/third_party_profile/realme_protocol \
@@ -484,6 +486,9 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_simple_transfer.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_trans_back.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_opt.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_sync.c \

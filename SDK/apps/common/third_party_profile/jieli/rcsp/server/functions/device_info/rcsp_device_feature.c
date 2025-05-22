@@ -352,6 +352,9 @@ static u32 target_feature_md5_game_support(void *priv, u8 attr, u8 *buf, u16 buf
     // 是否一拖二
     ext_function_flag_byte1 |= BIT(7);
 #endif
+#if RCSP_TONE_FILE_TRANSFER_ENABLE
+    ext_function_flag_byte1 |= BIT(2);
+#endif
     ext_function_flag[1] = ext_function_flag_byte1;
 
     rlen = add_one_attr(buf, buf_size, offset,  attr, ext_function_flag, 2);

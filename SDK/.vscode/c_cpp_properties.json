@@ -146,6 +146,8 @@
                 "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt",
                 "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt",
                 "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/server/functions/browser",
+                "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd",
+                "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data",
                 "${workspaceFolder}/apps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update",
                 "${workspaceFolder}/apps/common/third_party_profile/mma_protocol",
                 "${workspaceFolder}/apps/common/third_party_profile/realme_protocol",

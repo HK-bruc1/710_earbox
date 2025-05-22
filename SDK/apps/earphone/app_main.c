@@ -100,7 +100,7 @@ const struct task_info task_info_table[] = {
     {"update",				1,	   0,   256,   0   },
     {"tws_ota",				2,	   0,   256,   0   },
     {"tws_ota_msg",			2,	   0,   256,   128 },
-    {"dw_update",		 	2,	   0,   256,   128 },
+    {"dw_update",		 	1,	   0,   256,   128 },
 #if TCFG_AUDIO_DATA_EXPORT_DEFINE
     {"aud_capture",         4,     0,   512,   256 },
     {"data_export",         5,     0,   512,   256 },
@@ -114,6 +114,9 @@ const struct task_info task_info_table[] = {
     {"rcsp",		    	1,	   0,   768,   128 },
 #if RCSP_FILE_OPT
     {"rcsp_file_bs",		1,	   0,   768,   128 },
+#endif
+#if (RCSP_TONE_FILE_TRANSFER_ENABLE && TCFG_USER_TWS_ENABLE)
+    {"rcsp_ft_tws",			1,	   0,   256,   128 },
 #endif
 #endif
 #if TCFG_KWS_VOICE_RECOGNITION_ENABLE

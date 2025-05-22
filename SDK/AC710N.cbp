@@ -161,6 +161,8 @@
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/browser" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update" />
 <Add directory="apps/common/third_party_profile/mma_protocol" />
 <Add directory="apps/common/third_party_profile/realme_protocol" />
@@ -741,6 +743,12 @@
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_trans_back.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_opt.c"><Option compilerVer="CC"/></Unit>

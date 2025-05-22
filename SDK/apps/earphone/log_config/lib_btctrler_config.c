@@ -35,6 +35,7 @@ const int CONFIG_LMP_CONNECTION_NUM = 1;
 const int CONFIG_LMP_CONNECTION_LIMIT_NUM = 1;
 #endif
 
+const int CONFIG_DISTURB_SCAN_ENABLE = 0;
 
 #define TWS_PURE_MONITOR_MODE    0//1:纯监听模式
 
@@ -221,6 +222,7 @@ u8 auto_check_a2dp_play_control_qos(u16 cur_delay_timer,u16 delay_set_timer,u16 
 }
 #endif
 const int CONFIG_TWS_SUPER_TIMEOUT          = 4000;
+const int CONFIG_TWS_SAVE_POWER_ENABLE      = 0;     //tws省功耗配置，默认不开，客户需要再开
 const int CONFIG_BTCTLER_QOS_ENABLE         = 1;
 const int CONFIG_A2DP_DATA_CACHE_LOW_AAC    = 100;
 const int CONFIG_A2DP_DATA_CACHE_HI_AAC     = 250;
@@ -310,6 +312,11 @@ const int CONFIG_LMP_MASTER_ESCO_ENABLE  =  0;
 #endif
 
     const int CONFIG_MPR_CLOSE_WHEN_ESCO = 0;
+#ifdef CONFIG_BT_CTRLER_USE_SDK
+		const int CONFIG_BT_CTRLER_USE_SDK_ENABLE = 1;//br56不用maskrom的lmp，外面重写流程过滤掉
+#else
+		const int CONFIG_BT_CTRLER_USE_SDK_ENABLE = 0;
+#endif
 
 #ifdef CONFIG_SUPPORT_WIFI_DETECT
 	#if TCFG_USER_TWS_ENABLE

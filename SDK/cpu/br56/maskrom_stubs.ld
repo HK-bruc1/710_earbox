@@ -280,8 +280,8 @@
 
   get_cvsd_codec_ops = ABSOLUTE(0xffa9c);
   dns_16k_data = ABSOLUTE(0xe0270);
- 
-#if CONFIG_BT_CTRLER_IN_MASK
+
+#ifndef CONFIG_BT_CTRLER_USE_SDK
   bt_mask_cb_init = ABSOLUTE(0xffaa0);
   bt_lmp_varible_init = ABSOLUTE(0xffaa4);
   set_config_lmp_connection_num = ABSOLUTE(0xffaa8);
