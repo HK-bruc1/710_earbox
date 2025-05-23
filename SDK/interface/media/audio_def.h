@@ -69,6 +69,10 @@
 
 #define DAC_UNMUTE                         (0)
 #define DAC_MUTE                           (1)
+
+#define DAC_NG_THRESHOLD_CLEAR		  	   (1)	//BIT(0)：信号小于等于噪声门阈值，清0
+#define DAC_NG_THRESHOLD_MUTE			   (5) 	//BIT(0)|BIT(2)：信号小于等于噪声门阈值，清0并mute
+#define DAC_NG_SILENCE_MUTE				   (2)	//BIT(1)：信号静音(全0)时候mute
 /*
  *******************************************************************
  *						Class-D Driver Definitions

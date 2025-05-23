@@ -135,7 +135,7 @@ static void *file_t_open(const char *path, const char *mode)
 #ifdef TONE_FILE_RESERVED_AREA_NAME
     if (ftp_d && (RCSPDevMapRESERVE == ftp_d->dev_handle)) {
         if (ftp_d->filepath) {
-            char *file_path = zalloc(strlen(ftp_d->filepath) + strlen(TONE_FILE_RESERVED_AREA_NAME) + 1 + strlen(path) + 1);
+            char *file_path = zalloc(strlen(ftp_d->filepath) + strlen(TONE_FILE_RESERVED_AREA_NAME) + 1 + strlen(path) + 1 + 1);
             strcat(file_path, ftp_d->filepath);
             strcat(file_path, TONE_FILE_RESERVED_AREA_NAME);
             strcat(file_path, "/");

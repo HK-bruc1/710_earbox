@@ -230,8 +230,10 @@ static int dual_conn_try_open_inquiry_page_scan()
     int connect_device      = bt_get_total_connect_dev();
     if (connect_device == 0) {
         write_scan_conn_enable(1, 1);
-    } else {
+    } else if ((g_dual_conn.device_num_recorded > 1) && connect_device == 1)  {
         write_scan_conn_enable(g_dual_conn.inquiry_scan_disable ? 0 : 1, 1);
+    } else {
+        write_scan_conn_enable(g_dual_conn.inquiry_scan_disable ? 0 : 1, 0);
     }
 #else
     if (g_dual_conn.need_keep_scan) {

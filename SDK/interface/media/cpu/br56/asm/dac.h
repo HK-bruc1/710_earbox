@@ -93,7 +93,8 @@ struct dac_platform_data {
     u8 performance_mode;
     u8 power_mode;          // DAC 功率模式， 0:20mw  1:30mw  2:50mw  3:80mw
     u8 dacldo_vsel;         // DACLDO电压档位:0~15
-    u8 pa_isel0;            // 电流档位:2~6
+    u8 pa_isel0;            // 电流档位0:2~6
+    u8 pa_isel1;            // 电流档位1:2~7
     u8 hpvdd_sel;
     u8 l_ana_gain;
     u8 r_ana_gain;
@@ -106,6 +107,7 @@ struct dac_platform_data {
     u8 classh_mode;         // CLASSH 模式  0：蓝牙最低电压1.2v  1:蓝牙最低电压1.15v
     u8 mute_delay_time;         //开关机延时参数
     u8 mute_delay_isel;         //开关机速度参数
+    u8 miller_en;           // miller使能
     u16 dma_buf_time_ms;    // DAC dma buf 大小
     s16 *dig_vol_tab;
     u32 digital_gain_limit;

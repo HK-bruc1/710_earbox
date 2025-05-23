@@ -39,7 +39,7 @@
 #define CONFIG_ONLY_GRENERATE_ALIGN_4K_CODE     0    	//ufw只生成1份4K对齐的代码
 
 //config for supported chip version
-#define CONFIG_SUPPORTED_CHIP_VERSION			N,M
+#define CONFIG_SUPPORTED_CHIP_VERSION			N,M,C
 
 //DON'T MODIFY THIS CONFIG EXCEPT SDK PUBLISHER
 #define CONFIG_CHIP_NAME                        AC710N              //除了SDK发布者,请不要修改

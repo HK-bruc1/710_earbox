@@ -192,6 +192,19 @@ void audio_dac_initcall(void)
     dac_data.bit_width = audio_general_out_dev_bit_width();
     dac_data.mute_delay_isel = 2;
     dac_data.mute_delay_time = 50;
+    dac_data.miller_en = 1;
+    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版及C版以后支持工具配置电流档位
+        dac_data.pa_isel0 = TCFG_AUDIO_DAC_PA_ISEL0;
+        dac_data.pa_isel1 = TCFG_AUDIO_DAC_PA_ISEL1;
+    } else {
+        if (dac_data.performance_mode == DAC_MODE_HIGH_PERFORMANCE) {
+            dac_data.pa_isel0 = 5;
+            dac_data.pa_isel1 = 7;
+        } else {
+            dac_data.pa_isel0 = 3;
+            dac_data.pa_isel1 = 7;
+        }
+    }
     audio_dac_init(&dac_hdl, &dac_data);
     //dac_hdl.ng.threshold = 4;			//DAC底噪优化阈值
     //dac_hdl.ng.detect_interval = 200;	//DAC底噪优化检测间隔ms
@@ -388,11 +401,6 @@ struct dac_platform_data dac_data = {//临时处理
     .bit_width      = DAC_BIT_WIDTH_16,
     // TODO
     .dacldo_vsel    = 3,
-#if (TCFG_DAC_PERFORMANCE_MODE == DAC_MODE_HIGH_PERFORMANCE)
-    .pa_isel0           = TCFG_AUDIO_DAC_HP_PA_ISEL0,
-#else
-    .pa_isel0           = TCFG_AUDIO_DAC_LP_PA_ISEL0,
-#endif
     .classh_en      = TCFG_AUDIO_DAC_CLASSH_EN,
     .classh_mode    = 0,
     .classh_down_step = 3000000,
