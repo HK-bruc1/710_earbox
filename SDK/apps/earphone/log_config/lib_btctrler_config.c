@@ -161,7 +161,7 @@ const int CONFIG_LNA_CHECK_VAL = -80;
 #endif
 
 const int CONFIG_A2DP_MAX_BUF_SIZE      = 25 * 1024;    //不再使用
-const int CONFIG_A2DP_AAC_MAX_BUF_SIZE  = 15 * 1024;
+const int CONFIG_A2DP_AAC_MAX_BUF_SIZE  = 20 * 1024;
 const int CONFIG_A2DP_SBC_MAX_BUF_SIZE  = 25 * 1024;
 const int CONFIG_A2DP_LHDC_MAX_BUF_SIZE = 50 * 1024;
 const int CONFIG_A2DP_LDAC_MAX_BUF_SIZE = 50 * 1024;

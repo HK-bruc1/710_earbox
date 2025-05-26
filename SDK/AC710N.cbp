@@ -55,7 +55,6 @@
 <Add option="-DCONFIG_SUPPORT_EX_TWS_ADJUST" />
 <Add option="-D__GCC_PI32V2__" />
 <Add option="-DCONFIG_NEW_ECC_ENABLE" />
-<Add option="-DCONFIG_CODE_BANK_ENABLE" />
 <Add option="-DCONFIG_EFFECT_CORE_V2_ENABLE" />
 <Add option="-DCONFIG_OS_AFFINITY_ENABLE=0" />
 <Add option="-DEVENT_HANDLER_NUM_CONFIG=2" />
@@ -251,14 +250,6 @@
 <Add option="--plugin-opt=-warn-stack-size=1024" />
 <Add option="--sort-common" />
 <Add option="--dont-complain-call-overflow" />
-<Add option="--plugin-opt=-enable-banked-function=true" />
-<Add option="--plugin-opt=-bank-stub-section-prefix=.bank.stub." />
-<Add option="--plugin-opt=-bank-stub-prefix=__bank_stub_" />
-<Add option="--plugin-opt=-banknum-section-prefix=.bank.code." />
-<Add option="--plugin-opt=-banknum-map-file-list=apps/earphone/bank/banknum_func.list" />
-<Add option="--plugin-opt=-banknum-section-map-file-list=apps/earphone/bank/banknum_sec.list" />
-<Add option="--plugin-opt=-banknum-exclude-func-file-list=apps/earphone/bank/banknum_exclude.list" />
-<Add option="--plugin-opt=-custom-section-map-file-list=apps/earphone/bank/cussec_map.ld" />
 <Add option="--plugin-opt=-used-symbol-file=apps/earphone/sdk_used_list.used" />
 <Add option="--plugin-opt=-floating-point-may-trap=true" />
 <Add option="--gc-sections" />
