@@ -778,7 +778,12 @@ void rcsp_file_transfer_download_start(void *priv, u8 OpCode_SN, u8 *data, u16 l
 #ifdef TONE_FILE_RESERVED_AREA_NAME
     if (RCSPDevMapRESERVE == ftp_d->dev_handle) {
         new_file = 1;
-        ftp_d->file = file_t_open((const char *)file_name, "w+");
+        u8 *tmp_file_name = zalloc(file_name_len + 1);
+        memcpy(tmp_file_name, file_name, file_name_len);
+        ftp_d->file = file_t_open((const char *)tmp_file_name, "w+");
+        if (tmp_file_name) {
+            free(tmp_file_name);
+        }
     } else if (FILE_TRANSFER_TONE_FILE == ftp_d->special_flag) {
         new_file = 1;
         ftp_d->filepath = TONE_FILE_RESERVED_AREA_NAME;
@@ -1229,6 +1234,7 @@ _ERR_RET:
     // pend住等待从机关闭结束
     file_trans_close_tws_sync_pend();
 #endif
+    return;
 }
 
 //*----------------------------------------------------------------------------*/

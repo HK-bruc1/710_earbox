@@ -246,7 +246,9 @@ int update_result_deal()
     }
 
     int voice_max_cnt = 5;
-
+#ifdef UPDATE_VOICE_REMIND
+    app_var.update_tone_end_flag = 0;
+#endif
     while (1) {
         wdt_clear();
 
@@ -261,6 +263,7 @@ int update_result_deal()
                 os_time_dly(5);
                 os_taskq_accept(8, msg);
             }
+            app_var.update_tone_end_flag = 1;
             tone_player_stop();
             puts(">>>>>>>>>>>\n");
             update_tone_event_clear();
@@ -273,6 +276,7 @@ int update_result_deal()
                 os_time_dly(2);
                 os_taskq_accept(8, msg);
             }
+            app_var.update_tone_end_flag = 1;
             tone_player_stop();
             update_tone_event_clear();
         }

@@ -90,6 +90,11 @@ static u8 a2dp_low_latency = 0;
 #define RB16(b)    (u16)(((u8 *)b)[0] << 8 | (((u8 *)b))[1])
 #define RB32(b)    (u32)(((u8 *)b)[0] << 24 | (((u8 *)b))[1] << 16 | (((u8 *)b))[2] << 8 | (((u8 *)b))[3])
 
+#define A2DP_TWS_ALIGN_STATE_OVERRUN        -1
+#define A2DP_TWS_ALIGN_STATE_NOERR          0
+#define A2DP_TWS_ALIGN_STATE_UNDERRUN       1
+#define A2DP_TWS_ALIGN_STATE_BUF_OVERFLOW   2
+
 #include "a2dp_handshake.c"
 /*#include "a2dp_aac_demuxer.c"*/
 
@@ -165,7 +170,7 @@ static enum stream_node_state a2dp_get_frame(void *_hdl, struct stream_frame **p
 {
     struct a2dp_file_hdl *hdl = (struct a2dp_file_hdl *)_hdl;
     struct a2dp_media_frame _frame;
-    int drop = 0;
+    int drop_state = 0;
     int stream_error = 0;
 
     *pframe = NULL;
@@ -196,6 +201,7 @@ static enum stream_node_state a2dp_get_frame(void *_hdl, struct stream_frame **p
         hdl->start = 1;
     }
 
+pull_frame:
     int len = hdl->frame_len;
     if (len == 0) {
         if (hdl->stream_ctrl) {
@@ -215,26 +221,21 @@ static enum stream_node_state a2dp_get_frame(void *_hdl, struct stream_frame **p
     if (stream_error != FRAME_FLAG_FILL_PACKET) {
         hdl->seqn = RB16((u8 *)_frame.packet + 2);
     }
-    int err = a2dp_stream_ts_enable_detect(hdl, _frame.packet, &drop);
+    int err = a2dp_stream_ts_enable_detect(hdl, _frame.packet, &drop_state);
     if (err) {
-        if (drop) {
+        if (drop_state == A2DP_TWS_ALIGN_STATE_UNDERRUN || drop_state == A2DP_TWS_ALIGN_STATE_BUF_OVERFLOW) {
             if (hdl->stream_ctrl) {
                 a2dp_stream_control_free_frame(hdl->stream_ctrl, &_frame);
             } else {
                 a2dp_media_free_packet(hdl->file, _frame.packet);
             }
             hdl->frame_len = 0;
+            if (drop_state == A2DP_TWS_ALIGN_STATE_UNDERRUN) {
+                goto pull_frame;
+            }
         }
         a2dp_tws_media_try_handshake_ack(0, hdl->seqn, _frame.clkn);
-        if (!hdl->wake_up_timer) {//快速唤醒数据流，加速tws时间戳交互的过程
-            hdl->ts_align_time = 0;
-            hdl->wake_up_timer = sys_hi_timer_add((void *)hdl, a2dp_source_direct_wake_jlstream_run, 4);
-        }
         return NODE_STA_RUN | NODE_STA_SOURCE_NO_DATA;
-    }
-    if (hdl->wake_up_timer) {
-        sys_hi_timer_del(hdl->wake_up_timer);
-        hdl->wake_up_timer = 0;
     }
 
     int head_len = 0;
@@ -264,10 +265,11 @@ static enum stream_node_state a2dp_get_frame(void *_hdl, struct stream_frame **p
     } else {
         a2dp_media_free_packet(hdl->file, _frame.packet);
     }
-
+#if A2DP_TIMESTAMP_ENABLE
     if (!(frame->flags & FRAME_FLAG_FILL_PACKET)) {
         a2dp_stream_bandwidth_detect_handler(hdl->stream_ctrl, len, pcm_frames, hdl->sample_rate);
     }
+#endif
     hdl->frame_len = 0;
     hdl->start = 1;
 
@@ -704,6 +706,7 @@ void a2dp_ts_handle_create(struct a2dp_file_hdl *hdl)
     hdl->sync_step = 0;
     hdl->frame_len = 0;
     hdl->reset_frame_clkn = 0;
+    hdl->handshake_timeout = jiffies + msecs_to_jiffies(1500); /*TWS时间戳对齐复用该超时计时*/
     hdl->dts = 0;
 #endif
 }
@@ -767,13 +770,13 @@ static void a2dp_frame_pack_timestamp(struct a2dp_file_hdl *hdl, struct stream_f
     hdl->pcm_frames = pcm_frames;
 }
 
-static int a2dp_stream_ts_enable_detect(struct a2dp_file_hdl *hdl, u8 *packet, int *drop)
+static int a2dp_stream_ts_enable_detect(struct a2dp_file_hdl *hdl, u8 *packet, int *drop_state)
 {
     if (hdl->sync_step) {
         return 0;
     }
 
-    if (!drop) {
+    if (!drop_state) {
         printf("wrong argument 'drop'!\n");
     }
     if (CONFIG_BTCTLER_TWS_ENABLE && hdl->ts_handle) {
@@ -784,19 +787,25 @@ static int a2dp_stream_ts_enable_detect(struct a2dp_file_hdl *hdl, u8 *packet, i
 
         /*TWS 音频握手对齐失败，强制进入时间戳对齐流程*/
         if (hdl->tws_case != 3 && \
-            !a2dp_audio_timestamp_is_available(hdl->ts_handle, hdl->seqn, 0, drop)) {
-            if (*drop) {
+            !a2dp_audio_timestamp_is_available(hdl->ts_handle, hdl->seqn, 0, drop_state)) {
+            if (*drop_state == A2DP_TWS_ALIGN_STATE_UNDERRUN) {
                 hdl->base_time = a2dp_stream_update_base_time(hdl);
                 a2dp_audio_set_base_time(hdl->ts_handle, hdl->base_time);
             } else {/*TWS加入和握手超时容错处理*/
+                if (*drop_state == A2DP_TWS_ALIGN_STATE_OVERRUN && time_after(jiffies, hdl->handshake_timeout)) {
+                    r_printf("tws slave overrun : %d\n", hdl->seqn);
+                    goto release;
+                }
                 int max_buf_size = a2dp_stream_max_buf_size(hdl->media_type);
-                if (a2dp_media_get_sbc_data_len(hdl->file) >= (max_buf_size * 8 / 10)) {
-                    *drop = 1;
+                if (a2dp_media_get_sbc_data_len(hdl->file) >= (max_buf_size * 9 / 10)) {
+                    *drop_state = A2DP_TWS_ALIGN_STATE_BUF_OVERFLOW;
                 }
             }
             return -EINVAL;
         }
     }
+
+release:
     log_d(">>>>ts align time %d ms<<<<\n", hdl->ts_align_time);
     hdl->sync_step = 2;
     return 0;
