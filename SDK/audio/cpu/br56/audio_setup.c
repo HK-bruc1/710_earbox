@@ -156,7 +156,9 @@ static void audio_common_initcall()
     int len;
     audio_vbg_trim_t vbg_trim = {0};
     len = audio_event_notify(AUDIO_LIB_EVENT_VBG_TRIM_READ, (void *)&vbg_trim, sizeof(audio_vbg_trim_t));
-    if (len != sizeof(audio_vbg_trim_t)) {
+    if ((len != sizeof(audio_vbg_trim_t)) || (vbg_trim.src_sel != common->vcm_cap_en)) {
+        printf("VBG trim, vcm_cap_en: %d, vcm_cap_en(VM): %d\n", common->vcm_cap_en, vbg_trim.src_sel);
+        vbg_trim.src_sel = common->vcm_cap_en;
         u8 ret = audio_common_power_trim(&vbg_trim, 0);
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_VBG_TRIM_WRITE, (void *)&vbg_trim, sizeof(audio_vbg_trim_t));
@@ -169,13 +171,17 @@ static void audio_common_initcall()
     printf("DAC power mode:%dmW", power_mode[dac_data.power_mode]);
 
     // dacldo trim
-    len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
-    if (len != sizeof(dac_data.dacldo_vsel)) {
-        u8 ret = audio_dac_ldo_trim(&dac_data.dacldo_vsel, dac_data.power_mode);
+    audio_dacldo_trim_t dacldo_trim = {0};
+    len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
+    if ((len != sizeof(audio_dacldo_trim_t)) || (dacldo_trim.power_mode != dac_data.power_mode)) {
+        printf("DACLDO trim, power mode:%dmW, power mode(VM):%dmW", power_mode[dac_data.power_mode], power_mode[dacldo_trim.power_mode]);
+        dacldo_trim.power_mode = dac_data.power_mode;
+        u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode);
         if (ret == 0) {
-            audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dac_data.dacldo_vsel, sizeof(dac_data.dacldo_vsel));
+            audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
         }
     }
+    dac_data.dacldo_vsel = dacldo_trim.dacldo_vsel;
     printf(">>DACLDO_TRIM: %d\n", dac_data.dacldo_vsel);
 }
 
