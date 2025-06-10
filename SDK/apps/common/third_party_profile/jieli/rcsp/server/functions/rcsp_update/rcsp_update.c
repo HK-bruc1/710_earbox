@@ -100,10 +100,12 @@ static void rcsp_update_prepare()
     rcsp_device_status_setting_stop();
 #endif
 
+#if (RCSP_MODE && RCSP_REVERBERATION_SETTING && TCFG_MIC_EFFECT_ENABLE && RCSP_ADV_EQ_SET_ENABLE)
 #if (RCSP_MODE != RCSP_MODE_SOUNDBOX)
     // 关闭混响
     extern void rcsp_close_reverbrateion_state_and_update(void);
     rcsp_close_reverbrateion_state_and_update();
+#endif
 #endif
 
 #if (SOUNDCARD_ENABLE)

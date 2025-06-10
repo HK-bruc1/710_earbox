@@ -58,6 +58,10 @@
  * 一旦下降到低于VBAT电压,电池就会给系统供电,这种模式称为补电模式,在改模式下,VPWR和VBAT同时为系统供电
  */
 
+#ifndef TCFG_CHARGE_NVDC_EN
+#define TCFG_CHARGE_NVDC_EN 0 // NVDC架构使能
+#endif
+
 #define CHARGE_VILOOP1_ENABLE       1//默认开启
 #define CHARGE_VILOOP2_ENABLE       TCFG_CHARGE_NVDC_EN//默认关闭
 #define SUPER_FOLLOW_CHARGE_ENABLE  0//超级跟随充(默认关闭)
@@ -805,6 +809,7 @@ int charge_init(const struct charge_platform_data *data)
     CHG_VILOOP_EN(0);
     CHG_VILOOP2_EN(0);
     PMU_NVDC_EN(0);
+    L5V_IO_MODE(0);
 
     //消除vbat到vpwr的漏电再判断ldo5v状态
     u8 temp = 10;

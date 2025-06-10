@@ -45,8 +45,10 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_MODE_DIFF                      (1)
 #define DAC_MODE_VCMO                      (2)
 
-
 #define DACR32_DEFAULT		8192
+
+#define DAC_OFFSET_FADE_OUT             0
+#define DAC_OFFSET_FADE_IN              1
 
 /************************************
              dac性能模式
@@ -158,6 +160,23 @@ struct audio_dac_sync {
     void (*handler)(void *priv, u8 state);
 };
 
+struct dac_offset_fade_param {
+    u16 fade_target;    // 淡入目标值
+    u16 fade_freq;      // 淡入频率
+    s16 fade_step;      // 淡入步进
+};
+
+struct dac_offset_fade {
+    u8 trim_fade_en;
+    u8  direction;
+    s16 l_target;
+    s16 r_target;
+    s16 l_step;
+    s16 r_step;
+    u16 fade_timer;
+    struct dac_offset_fade_param param;
+    OS_SEM sem;
+};
 
 struct audio_dac_hdl {
     u8 analog_inited;
@@ -187,6 +206,8 @@ struct audio_dac_hdl {
     s16 fade_vol;
     u16 unread_samples;             /*未读样点个数*/
     u16 mute_timer;           //DAC PA Mute Timer
+    s16 cur_trim_left; //保存当前使用的trim值，AB版芯片需要对trim值做淡入淡出
+    s16 cur_trim_right;
     s16 *output_buf;
     u32 sample_rate;
     u32 digital_gain_limit;
@@ -194,11 +215,13 @@ struct audio_dac_hdl {
     OS_SEM *sem;
     OS_MUTEX mutex;
     spinlock_t lock;
+    struct dac_offset_fade offset;
     const struct dac_platform_data *pd;
 	struct audio_dac_noisegate ng;
     void (*fade_handler)(u8 left_gain, u8 right_gain);
 };
 
 
+void audio_dac_offset_fade(u8 fade);    // 0:淡出到默认trim值 1:淡入到设定的目标值
 #endif
 

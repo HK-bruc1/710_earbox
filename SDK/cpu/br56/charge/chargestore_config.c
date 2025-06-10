@@ -14,6 +14,10 @@
 
 #elif (TCFG_CHARGESTORE_ENABLE || TCFG_TEST_BOX_ENABLE || TCFG_ANC_BOX_ENABLE)
 
+#if ((TCFG_NORMAL_SET_DUT_MODE && TCFG_USER_BLE_ENABLE) && (TCFG_DEBUG_UART_ENABLE))  //br56串口有限，需要测试ble的rf指标时，请选择关闭充电脚串口(无法串口升级)或者关闭串口调试
+#error BR56 serial quantity limit !!!
+#endif
+
 static void chargestore_wakeup_callback(P33_IO_WKUP_EDGE edge)
 {
     chargestore_ldo5v_fall_deal();

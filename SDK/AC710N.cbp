@@ -55,8 +55,12 @@
 <Add option="-DCONFIG_SUPPORT_EX_TWS_ADJUST" />
 <Add option="-D__GCC_PI32V2__" />
 <Add option="-DCONFIG_NEW_ECC_ENABLE" />
+<Add option="-DEXPORT_FNMA_ENABLE=0" />
+<Add option="-DEXPORT_TENCENT_LL_ENABLE=1" />
 <Add option="-DCONFIG_EFFECT_CORE_V2_ENABLE" />
 <Add option="-DCONFIG_OS_AFFINITY_ENABLE=0" />
+<Add option="-DEXPORT_CONFIG_USB_ENABLE=1" />
+<Add option="-DEXPORT_CONFIG_SD_ENABLE=1" />
 <Add option="-DEVENT_HANDLER_NUM_CONFIG=2" />
 <Add option="-DEVENT_TOUCH_ENABLE_CONFIG=0" />
 <Add option="-DEVENT_POOL_SIZE_CONFIG=256" />
@@ -101,18 +105,20 @@
 <Add directory="interface/btstack/third_party" />
 <Add directory="interface/utils" />
 <Add directory="interface/utils/generic" />
+<Add directory="interface/utils/apple_dock" />
 <Add directory="interface/utils/device" />
 <Add directory="interface/utils/fs" />
 <Add directory="interface/utils/math/cpu/br56" />
 <Add directory="interface/net/mbedtls_3_4_0" />
+<Add directory="interface/utils/flash_translation_layer" />
+<Add directory="interface/media/cpu/br56" />
+<Add directory="interface/media/framework/include" />
+<Add directory="interface/media/cvp" />
 <Add directory="interface/btstack/third_party/rcsp" />
 <Add directory="interface/media/media_new" />
 <Add directory="interface/media/media_new/media" />
 <Add directory="interface/media/media_new/media/cpu/br56" />
 <Add directory="interface/media/media_new/media/cpu/br56/asm" />
-<Add directory="interface/net/lwip_2_2_0/lwip/src/include" />
-<Add directory="interface/net/lwip_2_2_0/lwip/port" />
-<Add directory="interface/net/lwip_2_2_0/lwip/app" />
 <Add directory="apps/earphone" />
 <Add directory="apps/earphone/include" />
 <Add directory="apps/earphone/include/wireless_mic" />
@@ -129,12 +135,7 @@
 <Add directory="apps/common/ui" />
 <Add directory="apps/common/config/include" />
 <Add directory="apps/common/dev_manager" />
-<Add directory="apps/common/third_party_profile" />
-<Add directory="apps/common/third_party_profile/common" />
-<Add directory="apps/common/third_party_profile/interface" />
-<Add directory="apps/common/third_party_profile/jieli" />
-<Add directory="apps/common/third_party_profile/jieli/trans_data_demo" />
-<Add directory="apps/common/third_party_profile/jieli/online_db" />
+<Add directory="apps/common/cJSON" />
 <Add directory="cpu" />
 <Add directory="cpu/br56" />
 <Add directory="audio" />
@@ -143,26 +144,10 @@
 <Add directory="audio/common" />
 <Add directory="audio/effect" />
 <Add directory="apps/common/device/sensor/imu_sensor" />
-<Add directory="interface/net/lwip_2_2_0/lwip/src" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/adv" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/rcsp_functions" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/include" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/settings" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/device_info" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_update" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/external_flash" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/browser" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data" />
-<Add directory="apps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update" />
+<Add directory="interface/utils/ui/ui/cpu/br56" />
+<Add directory="apps/common/third_party_profile" />
+<Add directory="apps/common/third_party_profile/common" />
+<Add directory="apps/common/third_party_profile/interface" />
 <Add directory="apps/common/third_party_profile/mma_protocol" />
 <Add directory="apps/common/third_party_profile/realme_protocol" />
 <Add directory="apps/common/third_party_profile/swift_pair" />
@@ -170,18 +155,6 @@
 <Add directory="apps/common/third_party_profile/dma_protocol/dma_use_lib" />
 <Add directory="apps/common/third_party_profile/gfps_protocol" />
 <Add directory="apps/common/third_party_profile/custom_protocol_demo" />
-<Add directory="apps/common/third_party_profile/ximalaya_protocol" />
-<Add directory="apps/common/third_party_profile/auracast_app" />
-<Add directory="apps/common/cJSON" />
-<Add directory="interface/media/cpu/br56" />
-<Add directory="interface/utils/ui/ui/cpu/br56" />
-<Add directory="apps/common/le_audio" />
-<Add directory="apps/earphone/include/le_audio" />
-<Add directory="apps/earphone/include/le_audio/big" />
-<Add directory="apps/earphone/include/le_audio/cig" />
-<Add directory="interface/btstack/third_party/le_audio" />
-<Add directory="interface/btstack/third_party/broadcast" />
-<Add directory="audio/le_audio" />
 <Add directory="apps/common/third_party_profile/tuya_protocol" />
 <Add directory="apps/common/third_party_profile/tuya_protocol/app/demo" />
 <Add directory="apps/common/third_party_profile/tuya_protocol/app/product_test" />
@@ -190,8 +163,38 @@
 <Add directory="apps/common/third_party_profile/tuya_protocol/port" />
 <Add directory="apps/common/third_party_profile/tuya_protocol/sdk/include" />
 <Add directory="apps/common/third_party_profile/tuya_protocol/sdk/lib" />
-<Add directory="apps/common/third_party_profile/bt_fmy" />
+<Add directory="apps/common/third_party_profile/Tencent_LL/include" />
+<Add directory="apps/common/third_party_profile/Tencent_LL/Tencent_LL_demo" />
+<Add directory="apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions" />
+<Add directory="apps/common/third_party_profile/jieli" />
+<Add directory="apps/common/third_party_profile/jieli/trans_data_demo" />
+<Add directory="apps/common/third_party_profile/jieli/online_db" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/rcsp_functions" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/device_info" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/adv" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/include" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/settings" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_update" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/external_flash" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/browser" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update" />
+<Add directory="apps/common/third_party_profile/ximalaya_protocol" />
+<Add directory="apps/common/third_party_profile/auracast_app" />
+<Add directory="interface/btstack/third_party/le_audio" />
+<Add directory="interface/btstack/third_party/broadcast" />
 <Add directory="interface/btstack" />
+<Add directory="audio/le_audio" />
+<Add directory="apps/common/third_party_profile/bt_fmy" />
 <Add directory="apps/common/device/usb" />
 <Add directory="apps/common/device/usb/device" />
 <Add directory="apps/common/device/usb/host" />
@@ -200,7 +203,6 @@
 <Add directory="audio/framework/plugs/source" />
 <Add directory="audio/CVP" />
 <Add directory="audio/test_tools" />
-<Add directory="audio/common/icsd/adjdcc" />
 <Add directory="audio/common/icsd/adt" />
 <Add directory="audio/common/icsd/anc" />
 <Add directory="audio/common/icsd/common" />
@@ -219,7 +221,6 @@
 <Add directory="audio/common/icsd/vdt" />
 <Add directory="audio/common/icsd/wat" />
 <Add directory="audio/common/icsd/ein" />
-<Add directory="audio/common/icsd/howl" />
 <Add directory="audio/common/power" />
 <Add directory="audio/anc" />
 <Add directory="audio/cpu/br56/audio_dai" />
@@ -227,11 +228,10 @@
 <Add directory="audio/effect/spatial_effect" />
 <Add directory="audio/effect/somatosensory" />
 <Add directory="interface/media/aispeech/enc" />
-<Add directory="interface/media/framework/include" />
-<Add directory="interface/media/cvp" />
-<Add directory="apps/common/third_party_profile/Tencent_LL/include" />
-<Add directory="apps/common/third_party_profile/Tencent_LL/Tencent_LL_demo" />
-<Add directory="apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions" />
+<Add directory="apps/common/le_audio" />
+<Add directory="apps/earphone/include/le_audio" />
+<Add directory="apps/earphone/include/le_audio/big" />
+<Add directory="apps/earphone/include/le_audio/cig" />
 <Add directory="interface/system/math/cpu/br56" />
 </Compiler>
 <Linker>
@@ -393,11 +393,13 @@
 <Add library="C:\JL\pi32\pi32v2-lib\r3\libm.a" />
 </Linker>
 <ExtraCommands>
-<Add before="$compiler $options $includes -D__LD__ -E -P apps\earphone\sdk_used_list.c -o apps\earphone\sdk_used_list.used" />
-<Add before="$compiler $options $includes -D__LD__ -E -P cpu\br56\sdk_ld.c -o cpu\br56\sdk.ld" />
-<Add before="$compiler $options $includes -D__LD__ -E -P cpu\br56\tools\download.c -o cpu\br56\tools\download.bat" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P build\genFileList.c -o build\fileList.dumy" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P build\fileList.c -o build\fileList.mk" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P apps\earphone\sdk_used_list.c -o apps\earphone\sdk_used_list.used" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\sdk_ld.c -o cpu\br56\sdk.ld" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\tools\download.c -o cpu\br56\tools\download.bat" />
 <Add before="tools\utils\fixbat.exe cpu\br56\tools\download.bat" />
-<Add before="$compiler $options $includes -D__LD__ -E -P cpu\br56\tools\isd_config_rule.c -o cpu\br56\tools\isd_config.ini" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\tools\isd_config_rule.c -o cpu\br56\tools\isd_config.ini" />
 <Mode before="always" />
 <Add after="cpu\br56\tools\download.bat sdk" />
 <Mode after="always" />
@@ -432,7 +434,6 @@
 <Unit filename="apps/common/dev_manager/dev_manager.h" />
 <Unit filename="apps/common/dev_manager/dev_reg.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/dev_manager/dev_reg.h" />
-<Unit filename="apps/common/dev_manager/dev_update.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/dev_manager/dev_update.h" />
 <Unit filename="apps/common/device/eartouch/eartouch_iic_interface.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/eartouch/eartouch_iic_interface.h" />
@@ -488,7 +489,6 @@
 <Unit filename="apps/common/device/sensor/ir_sensor/jsa1221.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det_api.h" />
-<Unit filename="apps/common/device/storage_device/norflash/norflash.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/storage_device/norflash/norflash_sfc.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/demo/host/udisk_block_test.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/device/cdc.c"><Option compilerVer="CC"/></Unit>
@@ -542,7 +542,6 @@
 <Unit filename="apps/common/fat_nor/nor_fs.h" />
 <Unit filename="apps/common/fat_nor/virfat_flash.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/file_operate/file_bs_deal.h" />
-<Unit filename="apps/common/file_operate/file_manager.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/file_operate/file_manager.h" />
 <Unit filename="apps/common/include/bt_common.h" />
 <Unit filename="apps/common/include/norflash.h" />
@@ -553,13 +552,9 @@
 <Unit filename="apps/common/le_audio/cig.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/le_audio/wireless_trans_manager.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/le_audio/wireless_trans_manager.h" />
-<Unit filename="apps/common/music/breakpoint.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/breakpoint.h" />
-<Unit filename="apps/common/music/music_decrypt.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_decrypt.h" />
-<Unit filename="apps/common/music/music_id3.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_id3.h" />
-<Unit filename="apps/common/music/music_player.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_player.h" />
 <Unit filename="apps/common/storage_dev/storage_dev.h" />
 <Unit filename="apps/common/temp_trim/dtemp_pll_trim.c"><Option compilerVer="CC"/></Unit>
@@ -1015,7 +1010,6 @@
 <Unit filename="apps/earphone/include/bt_slience_detect.h" />
 <Unit filename="apps/earphone/include/bt_tws.h" />
 <Unit filename="apps/earphone/include/cvp_user.h" />
-<Unit filename="apps/earphone/include/default_event_handler.h" />
 <Unit filename="apps/earphone/include/dev_multiplex_api.h" />
 <Unit filename="apps/earphone/include/dev_status.h" />
 <Unit filename="apps/earphone/include/dual_a2dp_play.h" />
@@ -1029,7 +1023,6 @@
 <Unit filename="apps/earphone/include/le_audio/cig/app_le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/cig/le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/wireless_trans.h" />
-<Unit filename="apps/earphone/include/led7_driver.h" />
 <Unit filename="apps/earphone/include/led_config.h" />
 <Unit filename="apps/earphone/include/linein.h" />
 <Unit filename="apps/earphone/include/linein_dev.h" />
@@ -1045,7 +1038,6 @@
 <Unit filename="apps/earphone/include/tws_a2dp_play.h" />
 <Unit filename="apps/earphone/include/tws_dual_conn.h" />
 <Unit filename="apps/earphone/include/tws_dual_share.h" />
-<Unit filename="apps/earphone/include/ui_common.h" />
 <Unit filename="apps/earphone/include/undef_func.h" />
 <Unit filename="apps/earphone/include/user_cfg_id.h" />
 <Unit filename="apps/earphone/include/vol_sync.h" />
@@ -1105,9 +1097,6 @@
 <Unit filename="apps/earphone/mode/linein/linein_dev.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/linein/linein_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/mic_effect/mic_effect.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="apps/earphone/mode/music/music.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="apps/earphone/mode/music/music_app_msg_handler.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="apps/earphone/mode/music/music_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/pc/pc.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/pc/pc_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/power_on/power_on.c"><Option compilerVer="CC"/></Unit>
@@ -1237,7 +1226,6 @@
 <Unit filename="audio/common/icsd/tool/anc_ext_tool.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/tool/anc_ext_tool.h" />
 <Unit filename="audio/common/icsd/tool/anc_ext_tool_file.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="audio/common/icsd/vdt/icsd_vdt_app.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/vdt/icsd_vdt_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/wat/icsd_wat_app.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/wat/icsd_wat_config.c"><Option compilerVer="CC"/></Unit>
@@ -1386,7 +1374,6 @@
 <Unit filename="audio/framework/plugs/source/multi_ch_iis_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.h" />
-<Unit filename="audio/framework/plugs/source/pdm_mic_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev0_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev1_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev2_file.c"><Option compilerVer="CC"/></Unit>
@@ -1403,7 +1390,6 @@
 <Unit filename="audio/interface/include/file_player.h" />
 <Unit filename="audio/interface/include/file_recorder.h" />
 <Unit filename="audio/interface/include/le_audio_player.h" />
-<Unit filename="audio/interface/include/le_audio_recorder.h" />
 <Unit filename="audio/interface/include/linein_player.h" />
 <Unit filename="audio/interface/include/local_tws_player.h" />
 <Unit filename="audio/interface/include/pc_mic_recoder.h" />
@@ -1428,7 +1414,6 @@
 <Unit filename="audio/interface/recoder/dev_flow_recoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/interface/recoder/esco_recoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/interface/recoder/file_recorder.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="audio/interface/recoder/le_audio_recorder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/interface/recoder/pc_mic_recoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/jl_kws/jl_kws_algo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/jl_kws/jl_kws_api.h" />
@@ -1466,7 +1451,6 @@
 <Unit filename="cpu/br56/charge/charge_ocp.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/charge/chargestore.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/charge/chargestore_config.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="cpu/br56/lua_port_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/overlay_code.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/overlay_code.h" />
 <Unit filename="cpu/br56/periph/led/pwm_led.c"><Option compilerVer="CC"/></Unit>
@@ -1480,9 +1464,6 @@
 <Unit filename="cpu/br56/power/power_gate.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/power/power_port.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/setup.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="cpu/br56/ui_driver/led7/led7_driver.c"><Option compilerVer="CC"/></Unit>
-<Unit filename="cpu/br56/ui_driver/led7/led7_driver_cfg.h" />
-<Unit filename="cpu/br56/ui_driver/ui_common.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/gpadc_battery.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_soft.c"><Option compilerVer="CC"/></Unit>
@@ -1639,7 +1620,6 @@
 <Unit filename="interface/driver/power/power_reset.h" />
 <Unit filename="interface/driver/power/power_wakeup.h" />
 <Unit filename="interface/driver/power/wdt.h" />
-<Unit filename="interface/driver/trim.h" />
 <Unit filename="interface/driver/utils/resource_multiplex.h" />
 <Unit filename="interface/media/PLC.h" />
 <Unit filename="interface/media/Resample_api.h" />

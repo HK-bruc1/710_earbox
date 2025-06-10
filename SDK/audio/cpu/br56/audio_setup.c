@@ -163,6 +163,7 @@ static void audio_common_initcall()
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_VBG_TRIM_WRITE, (void *)&vbg_trim, sizeof(audio_vbg_trim_t));
         }
+        common->audio_trim_flag |= BIT(0);  //当前上电进行了VBG_TRIM
     }
     common->audio_vbg_value = vbg_trim.aud_vbg_value;
     common->pmu_vbg_value = vbg_trim.pmu_vbg_value;
@@ -173,13 +174,14 @@ static void audio_common_initcall()
     // dacldo trim
     audio_dacldo_trim_t dacldo_trim = {0};
     len = audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_READ, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
-    if ((len != sizeof(audio_dacldo_trim_t)) || (dacldo_trim.power_mode != dac_data.power_mode)) {
-        printf("DACLDO trim, power mode:%dmW, power mode(VM):%dmW", power_mode[dac_data.power_mode], power_mode[dacldo_trim.power_mode]);
+    if ((len != sizeof(audio_dacldo_trim_t)) || (dacldo_trim.power_mode != dac_data.power_mode) || common->audio_trim_flag) {
+        printf("DACLDO trim, power mode:%dmW, power mode(VM):%dmW, audio_trim_flag: %d\n", power_mode[dac_data.power_mode], power_mode[dacldo_trim.power_mode], common->audio_trim_flag);
         dacldo_trim.power_mode = dac_data.power_mode;
         u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode);
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
         }
+        common->audio_trim_flag |= BIT(1); //当前上电进行了DACLDO_TRIM
     }
     dac_data.dacldo_vsel = dacldo_trim.dacldo_vsel;
     printf(">>DACLDO_TRIM: %d\n", dac_data.dacldo_vsel);
@@ -227,39 +229,49 @@ void audio_dac_initcall(void)
     audio_dac_set_analog_vol(&dac_hdl, 0);
 
 #if AUD_DAC_TRIM_ENABLE
-    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版以后才做DAC TRIM
-        struct audio_dac_trim dac_trim = {0};
-        int len = syscfg_read(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(dac_trim));
-        if (len != sizeof(dac_trim)) {
-            if (config_audio_dac_output_mode == DAC_MODE_SINGLE) {
-                dac_trim.left = -1250;
-                dac_trim.right = -1250;
-            } else {
-                struct trim_init_param_t trim_init = {0};
-                trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
-                trim_init.trim_speed = 0.7f; //DAC trim的收敛速度(不建议修改)
-                int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
-                int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (1250) : (2500);
-                int trimr_offset = triml_offset;
-                int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (100) : (300);
-                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
-                    trimr_offset = 0;
-                }
-                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_R) {
-                    triml_offset = 0;
-                }
-                if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
-                    /* puts("dac_trim_succ"); */
-                    syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
-                } else {
-                    dac_trim.left = -1250;
-                    dac_trim.right = -1250;
-                }
-                audio_dac_close(&dac_hdl);
-            }
-        }
-        audio_dac_set_trim_value(&dac_hdl, &dac_trim);
+    s16 trim_offset_value;
+    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) {
+        trim_offset_value = 1250;   //C版之后 trim目标值为-1250
+    } else {
+        trim_offset_value = 0;      //AB版trim目标值为0
+        dac_hdl.offset.param.fade_target = 0; //打开dac时,trim值淡入的目标值
+        dac_hdl.offset.param.fade_step = 1;
+        dac_hdl.offset.param.fade_freq = 50; //us
     }
+    struct audio_dac_trim dac_trim = {0};
+    int len = syscfg_read(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(dac_trim));
+    audio_common_param_t *common = audio_common_get_param();
+    if (len != sizeof(dac_trim) || common->audio_trim_flag) {
+        printf("DAC_TRIM, len: %d, audio_trim_flag: %d\n", len, common->audio_trim_flag);
+        if (config_audio_dac_output_mode == DAC_MODE_SINGLE) {
+            dac_trim.left = -trim_offset_value;
+            dac_trim.right = -trim_offset_value;
+        } else {
+            struct trim_init_param_t trim_init = {0};
+            trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
+            trim_init.trim_speed = 0.7f; //DAC trim的收敛速度(不建议修改)
+            int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
+            //vcmo模式offset 为 diff模式的两倍
+            int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (trim_offset_value) : (trim_offset_value * 2);
+            int trimr_offset = triml_offset;
+            int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (100) : (300);
+            if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
+                trimr_offset = 0;
+            }
+            if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_R) {
+                triml_offset = 0;
+            }
+            if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
+                /* puts("dac_trim_succ"); */
+                syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
+            } else {
+                dac_trim.left = -trim_offset_value;
+                dac_trim.right = -trim_offset_value;
+            }
+            audio_dac_close(&dac_hdl);
+        }
+    }
+    audio_dac_set_trim_value(&dac_hdl, &dac_trim);
 #endif
 
     audio_dac_set_fade_handler(&dac_hdl, NULL, audio_fade_in_fade_out);

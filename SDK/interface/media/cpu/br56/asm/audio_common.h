@@ -54,7 +54,8 @@ typedef struct {
     u8 vbg_trim_value;
     u8 audio_vbg_value;
     u8 pmu_vbg_value;
-    u8 vcm0d5_mode;             // 0:vcm = 0.6v  1:vcm = 0.5v  跟trim电压相关，默认选0.5v
+    u8 audio_trim_flag;
+    u8 vcm0d5_mode;         // 0:vcm = 0.6v  1:vcm = 0.5v  跟trim电压相关，默认选0.5v
     u8 vcm_cap_en;
     u8 clk_mode;			// 音频时钟模式选择, 0: 数字单端时钟		1: 差分晶振时钟
     u8 aud_en;				// ADDA总使能开关
