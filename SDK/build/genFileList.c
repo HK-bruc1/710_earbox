@@ -1667,30 +1667,30 @@ c_SRC_FILES += \
 // *INDENT-OFF*
 
 c_SRC_FILES += \
-	  audio/cpu/$(CPU)/audio_setup.c \
-	  audio/cpu/$(CPU)/audio_mic_capless.c \
-  	  audio/cpu/$(CPU)/audio_config.c \
-      audio/cpu/$(CPU)/audio_anc.c \
-	  audio/cpu/$(CPU)/icsd_anc_user.c \
+	  audio/cpu/br56/audio_setup.c \
+	  audio/cpu/br56/audio_mic_capless.c \
+  	  audio/cpu/br56/audio_config.c \
+      audio/cpu/br56/audio_anc.c \
+	  audio/cpu/br56/icsd_anc_user.c \
 
 c_SRC_FILES += \
-	  audio/cpu/$(CPU)/audio_dai/audio_pdm.c \
+	  audio/cpu/br56/audio_dai/audio_pdm.c \
 
 //Audio Accelerator
 c_SRC_FILES += \
-	  audio/cpu/$(CPU)/audio_accelerator/hw_fft.c \
+	  audio/cpu/br56/audio_accelerator/hw_fft.c \
 
 //Audio Demo Files
 c_SRC_FILES += \
-	  audio/cpu/$(CPU)/audio_demo/audio_adc_demo.c \
+	  audio/cpu/br56/audio_demo/audio_adc_demo.c \
 
 
 #if 0
 c_SRC_FILES += \
-	  audio/cpu/$(CPU)/audio_demo/audio_dac_demo.c \
-	  audio/cpu/$(CPU)/audio_demo/audio_fft_demo.c \
-	  #audio/cpu/$(CPU)/audio_demo/audio_alink_demo.c \
-	  #audio/cpu/$(CPU)/audio_demo/audio_pdm_demo.c \
+	  audio/cpu/br56/audio_demo/audio_dac_demo.c \
+	  audio/cpu/br56/audio_demo/audio_fft_demo.c \
+	  #audio/cpu/br56/audio_demo/audio_alink_demo.c \
+	  #audio/cpu/br56/audio_demo/audio_pdm_demo.c \
 
 #endif
 
@@ -1747,8 +1747,8 @@ c_SRC_FILES += \
 	  	cpu/br56/power/power_config.c \
 
 c_SRC_FILES += \
-      cpu/$(CPU)/ui_driver/led7/led7_driver.c \
-      cpu/$(CPU)/ui_driver/ui_common.c
+      cpu/br56/ui_driver/led7/led7_driver.c \
+      cpu/br56/ui_driver/ui_common.c
 
 // *INDENT-OFF*
 

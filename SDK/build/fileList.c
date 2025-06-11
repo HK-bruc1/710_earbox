@@ -1224,27 +1224,27 @@ objs += \
 
 
 objs += \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_setup.o \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_mic_capless.o \
-  	  $(ROOT)/audio/cpu/$(CPU)/audio_config.o \
-      $(ROOT)/audio/cpu/$(CPU)/audio_anc.o \
-	  $(ROOT)/audio/cpu/$(CPU)/icsd_anc_user.o \
+	  $(ROOT)/audio/cpu/br56/audio_setup.o \
+	  $(ROOT)/audio/cpu/br56/audio_mic_capless.o \
+  	  $(ROOT)/audio/cpu/br56/audio_config.o \
+      $(ROOT)/audio/cpu/br56/audio_anc.o \
+	  $(ROOT)/audio/cpu/br56/icsd_anc_user.o \
 
 objs += \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_dai/audio_pdm.o \
+	  $(ROOT)/audio/cpu/br56/audio_dai/audio_pdm.o \
 
 objs += \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_accelerator/hw_fft.o \
+	  $(ROOT)/audio/cpu/br56/audio_accelerator/hw_fft.o \
 
 objs += \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_demo/audio_adc_demo.o \
+	  $(ROOT)/audio/cpu/br56/audio_demo/audio_adc_demo.o \
 
 
 objs += \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_demo/audio_dac_demo.o \
-	  $(ROOT)/audio/cpu/$(CPU)/audio_demo/audio_fft_demo.o \
-	  #$(ROOT)/audio/cpu/$(CPU)/audio_demo/audio_alink_demo.o \
-	  #$(ROOT)/audio/cpu/$(CPU)/audio_demo/audio_pdm_demo.o \
+	  $(ROOT)/audio/cpu/br56/audio_demo/audio_dac_demo.o \
+	  $(ROOT)/audio/cpu/br56/audio_demo/audio_fft_demo.o \
+	  #$(ROOT)/audio/cpu/br56/audio_demo/audio_alink_demo.o \
+	  #$(ROOT)/audio/cpu/br56/audio_demo/audio_pdm_demo.o \
 
 
 
@@ -1289,8 +1289,8 @@ objs += \
 	  	$(ROOT)/cpu/br56/power/power_config.o \
 
 objs += \
-      $(ROOT)/cpu/$(CPU)/ui_driver/led7/led7_driver.o \
-      $(ROOT)/cpu/$(CPU)/ui_driver/ui_common.o
+      $(ROOT)/cpu/br56/ui_driver/led7/led7_driver.o \
+      $(ROOT)/cpu/br56/ui_driver/ui_common.o
 
 
 objs += \
