@@ -349,6 +349,7 @@ c_SRC_FILES += \
 	audio/common/icsd/demo/icsd_demo.c \
 	audio/common/icsd/ein/icsd_ein_config.c \
 	audio/common/icsd/vdt/icsd_vdt_config.c \
+	audio/common/icsd/vdt/icsd_vdt_app.c \
 	audio/common/icsd/wat/icsd_wat_config.c \
 	audio/common/icsd/wat/icsd_wat_app.c \
 	audio/common/icsd/wind/icsd_wind_config.c \
@@ -1745,12 +1746,25 @@ c_SRC_FILES += \
 	  	cpu/br56/power/power_app.c \
 	  	cpu/br56/power/power_config.c \
 
+c_SRC_FILES += \
+      cpu/$(CPU)/ui_driver/led7/led7_driver.c \
+      cpu/$(CPU)/ui_driver/ui_common.c
+
 // *INDENT-OFF*
 
 #if TCFG_APP_MUSIC_EN
 c_SRC_FILES += \
 	apps/common/dev_manager/dev_reg.c \
+	apps/common/dev_manager/dev_update.c \
+	apps/common/music/breakpoint.c \
+	apps/common/music/music_decrypt.c \
+	apps/common/music/music_id3.c \
+	apps/common/music/music_player.c \
+	apps/common/file_operate/file_manager.c \
 	apps/earphone/mode/common/dev_status.c \
+	apps/earphone/mode/music/music.c \
+	apps/earphone/mode/music/music_key_msg_table.c \
+	apps/earphone/mode/music/music_app_msg_handler.c \
 
 #endif
 

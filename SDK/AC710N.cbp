@@ -393,13 +393,13 @@
 <Add library="C:\JL\pi32\pi32v2-lib\r3\libm.a" />
 </Linker>
 <ExtraCommands>
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P build\genFileList.c -o build\fileList.dumy" />
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P build\fileList.c -o build\fileList.mk" />
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P apps\earphone\sdk_used_list.c -o apps\earphone\sdk_used_list.used" />
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\sdk_ld.c -o cpu\br56\sdk.ld" />
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\tools\download.c -o cpu\br56\tools\download.bat" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P build\genFileList.c -o build\fileList.dumy" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P build\fileList.c -o build\fileList.mk" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P apps\earphone\sdk_used_list.c -o apps\earphone\sdk_used_list.used" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P cpu\br56\sdk_ld.c -o cpu\br56\sdk.ld" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P cpu\br56\tools\download.c -o cpu\br56\tools\download.bat" />
 <Add before="tools\utils\fixbat.exe cpu\br56\tools\download.bat" />
-<Add before="$compiler $options $includes -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -D__LD__ -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=0 -E -P cpu\br56\tools\isd_config_rule.c -o cpu\br56\tools\isd_config.ini" />
+<Add before="$compiler $options $includes -DEXPORT_PLATFORM_AUDIO_UART_SENDER_ENABLE=1 -DEXPORT_PLATFORM_HW_MATH_VERSION=2 -DEXPORT_PLATFORM_AUDIO_ALINK_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_MIDI_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_PDM_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_WM8978_ENABLE=0 -DEXPORT_PLATFORM_AUDIO_SPDIF_ENABLE=0 -D__LD__ -DEXPORT_PLATFORM_AUDIO_FM_ENABLE=0 -DEXPORT_PLATFORM_ANC_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SPATIAL_EFFECT_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_SMART_VOICE_ENABLE=1 -DEXPORT_PLATFORM_AUDIO_EFFECT_DEMO_ENABLE=1 -DEXPORT_PLATFORM_ICSD_ENABLE=1 -DEXPORT_LE_AUDIO_SUPPORT=0 -DEXPORT_PLATFORM_AUDIO_TDM_ENABLE=0 -DEXPORT_SOMATOSENSORY_ENABLE=1 -E -P cpu\br56\tools\isd_config_rule.c -o cpu\br56\tools\isd_config.ini" />
 <Mode before="always" />
 <Add after="cpu\br56\tools\download.bat sdk" />
 <Mode after="always" />
@@ -434,6 +434,7 @@
 <Unit filename="apps/common/dev_manager/dev_manager.h" />
 <Unit filename="apps/common/dev_manager/dev_reg.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/dev_manager/dev_reg.h" />
+<Unit filename="apps/common/dev_manager/dev_update.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/dev_manager/dev_update.h" />
 <Unit filename="apps/common/device/eartouch/eartouch_iic_interface.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/eartouch/eartouch_iic_interface.h" />
@@ -542,6 +543,7 @@
 <Unit filename="apps/common/fat_nor/nor_fs.h" />
 <Unit filename="apps/common/fat_nor/virfat_flash.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/file_operate/file_bs_deal.h" />
+<Unit filename="apps/common/file_operate/file_manager.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/file_operate/file_manager.h" />
 <Unit filename="apps/common/include/bt_common.h" />
 <Unit filename="apps/common/include/norflash.h" />
@@ -552,9 +554,13 @@
 <Unit filename="apps/common/le_audio/cig.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/le_audio/wireless_trans_manager.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/le_audio/wireless_trans_manager.h" />
+<Unit filename="apps/common/music/breakpoint.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/breakpoint.h" />
+<Unit filename="apps/common/music/music_decrypt.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_decrypt.h" />
+<Unit filename="apps/common/music/music_id3.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_id3.h" />
+<Unit filename="apps/common/music/music_player.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/music/music_player.h" />
 <Unit filename="apps/common/storage_dev/storage_dev.h" />
 <Unit filename="apps/common/temp_trim/dtemp_pll_trim.c"><Option compilerVer="CC"/></Unit>
@@ -1010,6 +1016,7 @@
 <Unit filename="apps/earphone/include/bt_slience_detect.h" />
 <Unit filename="apps/earphone/include/bt_tws.h" />
 <Unit filename="apps/earphone/include/cvp_user.h" />
+<Unit filename="apps/earphone/include/default_event_handler.h" />
 <Unit filename="apps/earphone/include/dev_multiplex_api.h" />
 <Unit filename="apps/earphone/include/dev_status.h" />
 <Unit filename="apps/earphone/include/dual_a2dp_play.h" />
@@ -1023,6 +1030,7 @@
 <Unit filename="apps/earphone/include/le_audio/cig/app_le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/cig/le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/wireless_trans.h" />
+<Unit filename="apps/earphone/include/led7_driver.h" />
 <Unit filename="apps/earphone/include/led_config.h" />
 <Unit filename="apps/earphone/include/linein.h" />
 <Unit filename="apps/earphone/include/linein_dev.h" />
@@ -1038,6 +1046,7 @@
 <Unit filename="apps/earphone/include/tws_a2dp_play.h" />
 <Unit filename="apps/earphone/include/tws_dual_conn.h" />
 <Unit filename="apps/earphone/include/tws_dual_share.h" />
+<Unit filename="apps/earphone/include/ui_common.h" />
 <Unit filename="apps/earphone/include/undef_func.h" />
 <Unit filename="apps/earphone/include/user_cfg_id.h" />
 <Unit filename="apps/earphone/include/vol_sync.h" />
@@ -1097,6 +1106,9 @@
 <Unit filename="apps/earphone/mode/linein/linein_dev.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/linein/linein_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/mic_effect/mic_effect.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/mode/music/music.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/mode/music/music_app_msg_handler.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/mode/music/music_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/pc/pc.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/pc/pc_key_msg_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/mode/power_on/power_on.c"><Option compilerVer="CC"/></Unit>
@@ -1226,6 +1238,7 @@
 <Unit filename="audio/common/icsd/tool/anc_ext_tool.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/tool/anc_ext_tool.h" />
 <Unit filename="audio/common/icsd/tool/anc_ext_tool_file.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/common/icsd/vdt/icsd_vdt_app.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/vdt/icsd_vdt_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/wat/icsd_wat_app.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/icsd/wat/icsd_wat_config.c"><Option compilerVer="CC"/></Unit>
@@ -1374,6 +1387,7 @@
 <Unit filename="audio/framework/plugs/source/multi_ch_iis_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/pc_spk_file.h" />
+<Unit filename="audio/framework/plugs/source/pdm_mic_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev0_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev1_file.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/plugs/source/source_dev2_file.c"><Option compilerVer="CC"/></Unit>
@@ -1464,6 +1478,9 @@
 <Unit filename="cpu/br56/power/power_gate.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/power/power_port.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/setup.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="cpu/br56/ui_driver/led7/led7_driver.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="cpu/br56/ui_driver/led7/led7_driver_cfg.h" />
+<Unit filename="cpu/br56/ui_driver/ui_common.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/gpadc_battery.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_soft.c"><Option compilerVer="CC"/></Unit>
@@ -1620,6 +1637,7 @@
 <Unit filename="interface/driver/power/power_reset.h" />
 <Unit filename="interface/driver/power/power_wakeup.h" />
 <Unit filename="interface/driver/power/wdt.h" />
+<Unit filename="interface/driver/trim.h" />
 <Unit filename="interface/driver/utils/resource_multiplex.h" />
 <Unit filename="interface/media/PLC.h" />
 <Unit filename="interface/media/Resample_api.h" />

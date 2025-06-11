@@ -255,6 +255,7 @@ objs += \
 	$(ROOT)/audio/common/icsd/demo/icsd_demo.o \
 	$(ROOT)/audio/common/icsd/ein/icsd_ein_config.o \
 	$(ROOT)/audio/common/icsd/vdt/icsd_vdt_config.o \
+	$(ROOT)/audio/common/icsd/vdt/icsd_vdt_app.o \
 	$(ROOT)/audio/common/icsd/wat/icsd_wat_config.o \
 	$(ROOT)/audio/common/icsd/wat/icsd_wat_app.o \
 	$(ROOT)/audio/common/icsd/wind/icsd_wind_config.o \
@@ -1287,10 +1288,23 @@ objs += \
 	  	$(ROOT)/cpu/br56/power/power_app.o \
 	  	$(ROOT)/cpu/br56/power/power_config.o \
 
+objs += \
+      $(ROOT)/cpu/$(CPU)/ui_driver/led7/led7_driver.o \
+      $(ROOT)/cpu/$(CPU)/ui_driver/ui_common.o
+
 
 objs += \
 	$(ROOT)/apps/common/dev_manager/dev_reg.o \
+	$(ROOT)/apps/common/dev_manager/dev_update.o \
+	$(ROOT)/apps/common/music/breakpoint.o \
+	$(ROOT)/apps/common/music/music_decrypt.o \
+	$(ROOT)/apps/common/music/music_id3.o \
+	$(ROOT)/apps/common/music/music_player.o \
+	$(ROOT)/apps/common/file_operate/file_manager.o \
 	$(ROOT)/apps/earphone/mode/common/dev_status.o \
+	$(ROOT)/apps/earphone/mode/music/music.o \
+	$(ROOT)/apps/earphone/mode/music/music_key_msg_table.o \
+	$(ROOT)/apps/earphone/mode/music/music_app_msg_handler.o \
 
 
 objs += \
