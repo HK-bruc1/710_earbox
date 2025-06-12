@@ -64,8 +64,13 @@ static void audio_effect_dev0_init(struct effect_dev0_node_hdl *hdl)
  * *outdata:输出数据地址
  * indata_len :输入数据长度,byte
  * */
+#include "sbox_user_app.h"
 static void audio_effect_dev0_run(struct effect_dev0_node_hdl *hdl, s16 *indata, s16 *outdata, u32 indata_len)
 {
+    if(user_info.phone_call_mute){
+        memset(outdata,0,indata_len);
+    }
+    
 #if 0
     //test 2to4
     if (hdl->dev.bit_width && ((hdl->dev.out_ch_num == 4) && (hdl->dev.in_ch_num == 2))) {

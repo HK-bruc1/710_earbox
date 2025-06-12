@@ -78,8 +78,8 @@
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 #define THIRD_PARTY_PROTOCOLS_SEL  TCFG_THIRD_PARTY_PROTOCOLS_SEL
 #else
-#define THIRD_PARTY_PROTOCOLS_SEL  0
-#define TCFG_THIRD_PARTY_PROTOCOLS_SEL 0 // 第三方协议选择
+#define THIRD_PARTY_PROTOCOLS_SEL  TCFG_THIRD_PARTY_PROTOCOLS_SEL
+#define TCFG_THIRD_PARTY_PROTOCOLS_SEL JL_SBOX_EN // 第三方协议选择
 #endif
 
 #if THIRD_PARTY_PROTOCOLS_SEL && (TCFG_USER_BLE_ENABLE == 0)
@@ -937,7 +937,7 @@
 #define TCFG_BT_SUPPORT_A2DP   0
 #define APP_ONLINE_DEBUG            1//通过spp导出数据
 #else
-#define APP_ONLINE_DEBUG            0//在线APP调试,发布默认不开
+#define APP_ONLINE_DEBUG            1//在线APP调试,发布默认不开
 #endif/*TCFG_AUDIO_DATA_EXPORT_DEFINE*/
 
 //*********************************************************************************//

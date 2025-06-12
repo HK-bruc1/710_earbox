@@ -1,5 +1,5 @@
 {
-  "enable": false,
+  "enable": true,
   "name": "pipeline-mic_effect",
   "uuid": "0x9C2D",
   "childrenGroup": [
@@ -19349,5 +19349,6 @@
     ]
   },
   "bitWidth": 16,
-  "showConfigName": false
+  "showConfigName": false,
+  "abFlow": false
 }

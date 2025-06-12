@@ -66,6 +66,8 @@ struct s_box_app_cb sbox_cb_func = {
 void sbox_app_init(void)
 {
     sbox_tr_cbuf_init();
+    emitter_last_phone_mac_init();
+    sbox_eq_init();
 }
 
 
@@ -86,27 +88,28 @@ extern u8 get_eq_index(void);
 __attribute__((weak))
 void custom_sync_all_info_to_box(void)
 {
-    u8 all_info[8];
+    u8 all_info[25];
     u8 channel = tws_api_get_local_channel();
     
-    all_info[0]=bt_get_total_connect_dev();
-    all_info[1]=get_eq_index();
+    all_info[0]=bt_get_total_connect_dev()?1:0;
+
 #if CONFIG_ANC_ENABLE
-    all_info[2]=anc_mode_get();
+    all_info[1]=anc_mode_get();
 #endif
-    all_info[3]=a2dp_player_runing()?1:2;//user_info.music_states;
-    all_info[4]=app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
+    all_info[2]=a2dp_player_runing()?1:2;//user_info.music_states;
+    all_info[3]=app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
     if ('L' == channel) {
-         all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
-        all_info[6] = get_tws_sibling_bat_persent();
-    } else if ('R' == channel) {
+         all_info[4] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
         all_info[5] = get_tws_sibling_bat_persent();
-        all_info[6] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
+    } else if ('R' == channel) {
+        all_info[4] = get_tws_sibling_bat_persent();
+        all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
     } else {
-         all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
-         all_info[6] = 10*(battery_value_to_phone_level()+1);
+         all_info[4] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
+         all_info[5] = 10*(battery_value_to_phone_level()+1);
     }
-    all_info[7] = user_info.game_mode;
+    memcpy(all_info+6,&sbox_user_c_info.eq_mode_info,11);
+    memcpy(all_info+17,&sbox_user_c_info.default_key_set,8);
     log_info("custom_sync_all_info_to_box %c L :%d R:%d\n",channel,all_info[5],all_info[6]);
     sbox_ble_att_send_data(CUSTOM_ALL_INFO_CMD, all_info, sizeof(all_info));
 }
@@ -227,7 +230,8 @@ void custom_sync_lyric_info(void *data)
     memcpy(music_buf+offset,my_musics->artist_name,my_musics->name_len);offset+=my_musics->name_len;
     memcpy(music_buf+offset,my_musics->album_name,my_musics->album_len);offset+=my_musics->album_len;
     memcpy(music_buf+offset,my_musics->title,my_musics->title_len);offset+=my_musics->title_len;
-    sbox_ble_att_send_data(CUSTOM_CALL_STATEE_CMD, music_buf, offset);
+    // sbox_ble_att_send_data(CUSTOM_CALL_STATEE_CMD, music_buf, offset);
+    sbox_demo_ble_send(music_buf, offset);
 } 
 
 
@@ -419,6 +423,14 @@ void custom_control_phone_out(void *data,u8 len)
     bt_cmd_prepare(USER_CTRL_HFP_DIAL_NUMBER, len, number);
 }
 
+
+void custom_sync_wait_emitter_conn(void)
+{
+    log_info("%s \n",__func__);
+    u8 data = 1;
+    sbox_ble_att_send_data(CUSTOM_EDR_CLEAR_COMP, &data, sizeof(data)); //将当前音乐状态回复给手表
+}
+
 //仓设置耳机播放闹钟提示音
 __attribute__((weak))
 void custom_control_alarm_toneplay(void *data)
@@ -437,7 +449,7 @@ __attribute__((weak))
 void custom_sync_time_info(void *data)
 {
     struct user_time *my_times = (struct user_time *)data;
-    sbox_ble_att_send_data(CUSTOM_CALL_STATEE_CMD, (u8 *)my_times, sizeof(struct user_time));
+    sbox_ble_att_send_data(CUSTOM_BLE_TIME_DATE_CMD, (u8 *)my_times, sizeof(struct user_time));
 }
 
 //仓控制耳机通话接听挂断
@@ -659,6 +671,11 @@ char *strtok(char *str, const char *delim) {
 }
 void ios_ascill_to_data(u8 *data)
 {
+    u8 p[20];
+    memset(p,0,20);
+    sprintf(p,"%s%s",data,"\"");
+    data=p;
+    put_buf(data,20);
     u8 *year = strtok(data,"/");
     u8 *month = strtok(NULL,"/");
     u8 *day = strtok(NULL,",");
@@ -703,7 +720,8 @@ void bt_get_time_date()
 }
 void phone_date_and_time_feedback(u8 *data, u16 len)
 {
-    log_info("time：%s ", data);
+    log_info("%d time：%s ", len,data);
+    put_buf(data,strlen(data));
     ios_ascill_to_data(data);
 }
 void map_get_time_data(char *time, int status)
@@ -850,8 +868,7 @@ static void sbox_tws_app_info_sync(u8 cmd)
             }
             break;
         case SYNC_CMD_CALL_MUTE:
-
-            // user_info.phone_call_mute=(!user_info.phone_call_mute);
+            user_info.phone_call_mute=(!user_info.phone_call_mute);
             break;
         case SYNC_CMD_SBOX_POWER_OFF_TOGETHER:
             extern void sys_enter_soft_poweroff(enum poweroff_reason reason);
@@ -893,6 +910,7 @@ static int bt_call_status_event_handler(int *msg)
     case BT_STATUS_PHONE_HANGUP:
         sbox_cb_func.sbox_sync_call_state(SBOX_CALL_HANDUP);
         // custom_sync_call_state(SBOX_CALL_HANDUP);
+        user_info.phone_call_mute=0;
         break;
     case BT_STATUS_PHONE_ACTIVE:
         sbox_cb_func.sbox_sync_call_state(SBOX_CALL_ACTIVE);
@@ -1064,21 +1082,22 @@ __recmd:
             log_info("CUSTOM_BLE_EQ_MODE_CONTROL_CMD\n");
             sbox_cb_func.sbox_control_eq(&sbox_tr_rbuf[0]);
             break;
-        case CUSTOM_BLE_CONTRAL_DOUYIN:
-            log_info("CUSTOM_BLE_CONTRAL_DOUYIN\n");
-            // sbox_ctrl_douyin(sbox_tr_rbuf[0]);
+        case CUSTOM_BLE_CONTRAL_TILTOK:
+            log_info("CUSTOM_BLE_CONTRAL_TILTOK\n");
+            sbox_cb_func.sbox_control_tiktok(&sbox_tr_rbuf[0]);
             break;
         case CUSTOM_BLE_CONTRAL_PHOTO:
             log_info("CUSTOM_BLE_CONTRAL_PHOTO\n");
             // custom_ctrl_phone_photo();
+            sbox_cb_func.sbox_control_photo(NULL);
             break;
         case CUSTOM_EDR_CONTRAL_CONN:
             log_info("CUSTOM_EDR_CONTRAL_CONN\n");
-            // custom_ctrle_edr_conn(sbox_tr_rbuf[0]);
+            custom_ctrle_edr_conn(sbox_tr_rbuf[0]);
             break;
         case CUSTOM_EDR_SYNC_INFO:
             log_info("CUSTOM_EDR_CONTRAL_CONN\n");
-            // custom_ctrle_emitter_info(sbox_tr_rbuf,len);
+            custom_ctrle_emitter_info(sbox_tr_rbuf,len);
             break;
         case CUSTOM_BLE_CONTRAL_CALL:
             sbox_cb_func.sbox_control_phone_call(&sbox_tr_rbuf[0]);

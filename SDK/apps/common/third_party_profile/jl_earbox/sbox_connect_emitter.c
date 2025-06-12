@@ -77,6 +77,9 @@ void clear_last_info(void)
         if(!memcmp(get_remote_emitter_addr(), mac_addr, sizeof(mac_addr))){
           bt_cmd_prepare(USER_CTRL_DEL_LAST_REMOTE_INFO,0,NULL);
             // delete_last_device_from_vm();
+            if(bt_get_total_connect_dev()==1){
+                bt_cmd_prepare(USER_CTRL_DISCONNECTION_HCI, 0, NULL);
+            }
         }
     }
     delete_link_key(get_remote_emitter_addr(), 1);  
@@ -189,6 +192,8 @@ void sync_clear_last_info(void)
 void custom_ctrle_edr_conn(u8 cmd)
 {
     u8 phone_mac[6];
+    u8 test_mac[10][6];
+    memset(test_mac,0,10*6);
     bt_get_current_poweron_memory_search_index(phone_mac);
     printf("%s[line:%d, last edr addr]\n",__func__,__LINE__);
     put_buf(phone_mac, 6);
@@ -212,9 +217,20 @@ void custom_ctrle_edr_conn(u8 cmd)
         case 2:
             clear_last_info();
             sync_clear_last_info();
+            
             puts("coonet to mac ");
-            put_buf(real_phone_addr,6);
-            add_device_2_page_list(real_phone_addr, TCFG_BT_POWERON_PAGE_TIME * 1000, 0);
+            u8 flag = bt_restore_remote_device_info_opt(test_mac, 10, 0);
+            put_buf(test_mac,10*6);
+            clr_device_in_page_list();
+            if(flag){
+                if(!memcmp(get_remote_emitter_addr(), test_mac[0], 6)){
+                    printf("mac error\n");
+                    return;
+                }
+                u8 phone_mac[6];
+                memcpy(phone_mac,test_mac[0],6);
+                add_device_2_page_list(phone_mac, TCFG_BT_POWERON_PAGE_TIME * 1000,0);
+            }
             dual_conn_page_device();
     default:
         break;
@@ -256,22 +272,22 @@ static int emitter_connction_status_event_handler(struct bt_event *bt)
         bt_clear_current_poweron_memory_search_index(0);
     case BT_STATUS_FIRST_CONNECTED:
         printf("BT_STATUS_CONNECTED\n");
-        int compare_is_phone_mac;
-        u8 is_phone_connet=0;
-        put_buf(bt->args,6);
-        put_buf(real_phone_addr,6);
-        compare_is_phone_mac=memcmp(emitter_info,bt->args,6);
+        // int compare_is_phone_mac;
+        // u8 is_phone_connet=0;
+        // put_buf(bt->args,6);
+        // put_buf(real_phone_addr,6);
+        // compare_is_phone_mac=memcmp(emitter_info,bt->args,6);
 
-        printf("compare_is_phone_mac %d",compare_is_phone_mac);
-        if(compare_is_phone_mac){
-            printf("bt_get_total_connect_dev %d",bt_get_total_connect_dev());
-            if(bt_get_total_connect_dev()){
-                is_phone_connet=1;
-                //recourd phone mac
-                memcpy(real_phone_addr, bt->args, 6);
-                sys_timeout_add(NULL,save_real_phone_addr_to_VM,100);
-            }
-        }
+        // printf("compare_is_phone_mac %d",compare_is_phone_mac);
+        // if(compare_is_phone_mac){
+        //     printf("bt_get_total_connect_dev %d",bt_get_total_connect_dev());
+        //     if(bt_get_total_connect_dev()){
+        //         is_phone_connet=1;
+        //         //recourd phone mac
+        //         memcpy(real_phone_addr, bt->args, 6);
+        //         sys_timeout_add(NULL,save_real_phone_addr_to_VM,100);
+        //     }
+        // }
         break;
     }
 }

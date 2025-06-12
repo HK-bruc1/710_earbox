@@ -4,8 +4,18 @@
 #include "effects/eq_config.h"
 #include "sbox_user_app.h"
 
+#define     VM_SBOX_EQ_INFO      46
+#define     SBOX_EQ_SECTION_MAX       10
 
 u8 user_custom_eq_index = 0;
+
+
+struct eq_sbox_info{
+    u8 index;
+    float eq_gain[SBOX_EQ_SECTION_MAX];
+};
+
+static struct eq_sbox_info local_eq_info ={0};
 
 struct eq_seg_info custom_eq_tab[] = 
 {
@@ -85,6 +95,8 @@ int user_eq_mode_set_custom_param(u16 index, int gain, int freq, int q_value, u1
 
     return 0;
 }
+
+
 void custom_eq_param_update(void)
 {
     /*
@@ -118,15 +130,48 @@ void custom_eq_param_update(void)
 }
 
 
-u8 get_eq_index(void)
+u8 sbox_get_eq_index(void)
 {
     return user_custom_eq_index;
 }
+
 //切换工具内置的EQ参数表
-void custom_control_eq_mode_switch(void *datas)
+void sbox_control_eq_mode_switch(void *datas)
 {
-    u8 *data = (u8*)datas;
-    user_custom_eq_index = *data;
-    eq_file_cfg_switch("MusicEqBt",user_custom_eq_index);
+    struct eq_sbox_info *data = (struct eq_sbox_info *)datas;
+    user_custom_eq_index = data->index;
+
+    if(user_custom_eq_index == EQ_MODE_CUSTOM){
+
+        for(int i =0 ; i<SBOX_EQ_SECTION_MAX;i++){
+            custom_eq_tab[i].gain = data->eq_gain[i];
+        }
+        custom_eq_param_update();
+
+    }else{
+        printf("custom_control_eq_mode_switch %d\n",user_custom_eq_index);
+        eq_file_cfg_switch("MusicEqBt",user_custom_eq_index);
+    }
 }
 
+
+void sbox_eq_init(void)
+{
+    u8 eq_tmp[11] = {0}; // 确保数组大小正确
+    int ret = syscfg_read(VM_SBOX_EQ_INFO, eq_tmp, sizeof(eq_tmp));
+    if (ret == sizeof(eq_tmp)) { // 检查返回值是否等于期望的长度
+        printf("%s sbox_eq_init ok  ", __func__);
+        printf("\n");
+        put_buf(eq_tmp, ret); // 使用返回值作为参数
+        sbox_control_eq_mode_switch(eq_tmp);
+    } else {
+        printf("%s sbox_eq_init error %d\n", __func__, ret);
+
+    }
+}
+
+void sbox_eq_reset(void)
+{
+
+
+}

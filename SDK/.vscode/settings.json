@@ -7,6 +7,9 @@
         "aes.h": "c",
         "bt_tws.h": "c",
         "app_msg.h": "c",
-        "app_main.h": "c"
+        "app_main.h": "c",
+        "custom_cfg.h": "c",
+        "btstack_event.h": "c",
+        "eq_config.h": "c"
     }
 }

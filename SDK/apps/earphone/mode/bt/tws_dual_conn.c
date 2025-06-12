@@ -279,7 +279,9 @@ int add_device_2_page_list(u8 *mac_addr, u32 timeout, u8 dev_type)
 static void del_device_from_page_list(u8 *mac_addr)
 {
     struct page_device_info *info;
-
+    printf("del_device_from_page_list %d\n",g_dual_conn.page_head_inited);
+    put_buf(mac_addr,6);
+    int cnt =0;
     if (!g_dual_conn.page_head_inited) {
         return;
     }
@@ -290,6 +292,9 @@ static void del_device_from_page_list(u8 *mac_addr)
     }
 #endif
     list_for_each_entry(info, &g_dual_conn.page_head, entry) {
+        cnt++;
+        printf("list for each %d\n",cnt);
+         put_buf(info->mac_addr,6);
         if (memcmp(info->mac_addr, mac_addr, 6) == 0) {
             puts("del_device\n");
             put_buf(mac_addr, 6);
@@ -314,8 +319,10 @@ void clr_device_in_page_list()
     }
 
     list_for_each_entry_safe(info, n, &g_dual_conn.page_head, entry) {
+        printf("clr_device_in_page_list del timer111\n");
         __list_del_entry(&info->entry);
         if (info->timer) {
+            printf("clr_device_in_page_list del timer\n");
             sys_timeout_del(info->timer);
         }
         free(info);
@@ -342,6 +349,7 @@ static int get_device_type_in_page_list(u8 *addr)
 }
 void del_device_type_from_page_list(u8 dev_type)
 {
+    printf("del_device_type_from_page_list\n");
     struct page_device_info *info;
 
     if (!g_dual_conn.page_head_inited) {
@@ -353,6 +361,7 @@ void del_device_type_from_page_list(u8 dev_type)
             printf("del_device=%d\n", dev_type);
             __list_del_entry(&info->entry);
             if (info->timer) {
+                printf("del_device_type_from_page_list del timer\n");
                 sys_timeout_del(info->timer);
             }
             free(info);
@@ -571,6 +580,7 @@ void tws_dual_conn_state_handler()
 
 static void dual_conn_page_device_timeout(void *p)
 {
+    printf("dual_conn_page_device_timeout\n");
     struct page_device_info *info;
 
     if (!g_dual_conn.page_head_inited) {

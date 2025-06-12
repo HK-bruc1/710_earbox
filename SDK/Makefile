@@ -1142,6 +1142,7 @@ LFLAGS := \
 	cpu/br56/liba/fs.a \
 	cpu/br56/liba/ascii.a \
 	cpu/br56/liba/cfg_tool.a \
+	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/vm.a \
 	cpu/br56/liba/debug_record.a \
 	cpu/br56/liba/lzma_dec.a \

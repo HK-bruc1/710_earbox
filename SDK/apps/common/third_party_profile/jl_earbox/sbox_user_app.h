@@ -11,7 +11,6 @@ struct sbox_state_info{
     bool music_states;
     bool game_mode;
     u8 box_addr[6];
-
 };
 struct user_time {
     u16 years;
@@ -107,7 +106,7 @@ extern struct custom_music_info local_music_info;
 #define CUSTOM_BLE_SWITCH_LANGUAGE                      0x40 //切换中英文
 #define CUSTOM_BLE_CONTRAL_CALL                         0x41 //控制通话状态
 #define CUSTOM_BLE_USER_ADD_CMD                         0X42 //用户自定义命令
-#define CUSTOM_BLE_CONTRAL_DOUYIN                       0X43  //控制抖音操作  
+#define CUSTOM_BLE_CONTRAL_TILTOK                       0X43  //控制抖音操作  
 #define CUSTOM_BLE_CONTRAL_PHOTO                        0X44  //控制拍照操作 
 
 #define CUSTOM_EDR_CONTRAL_CONN                         0X45  //控制edr连接
@@ -144,7 +143,6 @@ extern struct custom_music_info local_music_info;
 
 //tws同步执行指令
 enum{
-
     SYNC_CMD_EQ_SWITCH_0,
     SYNC_CMD_EQ_SWITCH_1,
     SYNC_CMD_EQ_SWITCH_2,
@@ -172,6 +170,7 @@ enum{
     SYNC_CMD_REMOTE_ADDR,
 };
 
+
 /*
  * 函数名：sbox_ble_att_send_data
  * 功能：往对应BLE服务的handle，按照指定方式去发送数据
@@ -192,7 +191,6 @@ void custom_sync_key_setting(void);
 void custom_sync_phone_call_info(void);
 void custom_sync_edr_info(void);
 void custom_sync_time_info(void *data);
-
 
 void custom_control_eq_mode(void *mode);
 void custom_control_anc_mode(void *mode);

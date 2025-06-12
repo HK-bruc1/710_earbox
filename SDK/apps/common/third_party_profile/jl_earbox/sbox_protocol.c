@@ -85,7 +85,7 @@ static u16 sbox_adv_interval_min = 150;
 static const uint8_t connection_update_enable = 1; ///0--disable, 1--enable
 static uint8_t connection_update_cnt = 0; //
 static const struct conn_update_param_t connection_param_table[] = {
-    {16, 24, 16, 600},
+    {264, 264, 3, 600},
     {12, 28, 14, 600},//11
     {8,  20, 20, 600},//3.7
     /* {12, 28, 4, 600},//3.7 */
@@ -287,7 +287,7 @@ static int sbox_att_write_callback(void *hdl, hci_con_handle_t connection_handle
         printf("rx(%d):\n", buffer_size);
         put_buf(buffer, buffer_size);
         // test
-        sbox_demo_ble_send(buffer, buffer_size);
+        // sbox_demo_ble_send(buffer, buffer_size);
         break;
     case ATT_CHARACTERISTIC_ae02_01_CLIENT_CONFIGURATION_HANDLE:
         printf("\nwrite ccc:%04x, %02x\n", handle, buffer[0]);
@@ -303,7 +303,10 @@ static int sbox_att_write_callback(void *hdl, hci_con_handle_t connection_handle
         break;
     case ATT_CHARACTERISTIC_ae99_01_CLIENT_CONFIGURATION_HANDLE:
         printf("\nwrite ccc:%04x, %02x\n", handle, buffer[0]);
+        check_connetion_updata_deal(connection_handle);
         att_set_ccc_config(handle, buffer[0]);
+        sbox_cb_func.sbox_sync_all_info();
+
         break;
     default:
         break;
@@ -361,7 +364,7 @@ int sbox_demo_ble_send(u8 *data, u32 len)
     int ret = 0;
     int i;
     printf("sbox_demo_ble_send len = %d", len);
-    put_buf(data, len);
+    // put_buf(data, len);
     ret = app_ble_att_send_data(sbox_demo_ble_hdl, ATT_CHARACTERISTIC_ae99_01_VALUE_HANDLE, data, len, ATT_OP_NOTIFY);
     if (ret) {
         printf("send fail\n");
@@ -467,6 +470,44 @@ void sbox_demo_all_exit(void)
     app_spp_hdl_free(sbox_demo_spp_hdl);
     sbox_demo_spp_hdl = NULL;
 }
+
+int sbox_ble_disconnect(void)
+{
+    // BLE exit
+    if (app_ble_get_hdl_con_handle(sbox_demo_ble_hdl)) {
+        app_ble_disconnect(sbox_demo_ble_hdl);
+    }
+    return 0;
+}
+
+
+static int sbox_tws_connction_status_event_handler(int *msg)
+{
+    struct tws_event *evt = (struct tws_event *)msg;
+    switch (evt->event) {
+    case TWS_EVENT_CONNECTED:
+        if (tws_api_get_role() == TWS_ROLE_MASTER) {
+            //master enable
+            // sbox_demo_adv_enable(1);
+        } else {
+            //slave disable
+            printf("\nConnect Slave!!!\n\n");
+            /*从机ble关掉*/
+            sbox_ble_disconnect();
+            sbox_demo_adv_enable(0);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+APP_MSG_HANDLER(sbox_tws_msg_handler) = {
+    .owner      = APP_MODE_BT,
+    .from       = MSG_FROM_TWS,
+    .handler    = sbox_tws_connction_status_event_handler,
+};
+
 
 #endif
 

@@ -92,7 +92,7 @@
 
 #if TCFG_APP_BT_EN
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN| JL_SBOX_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
 
 #include "multi_protocol_main.h"
 #endif
@@ -147,6 +147,12 @@ extern void clr_device_in_page_list();
 #define BT_TIMER  JL_TIMER3
 #define BT_IRQ_TIME_IDX  IRQ_TIME3_IDX
 #endif
+//修复换4Mbit 芯片会btstack_init死机问题
+u8 btstck_app_init_setting(void)
+{
+    return 1;
+}
+
 
 void bredr_link_disturb_scan_timeout(void *priv)
 {
@@ -555,7 +561,7 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
         }
 #endif
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN| JL_SBOX_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
         multi_protocol_bt_init();
 #endif
 
@@ -913,7 +919,7 @@ static void bt_no_background_exit_check(void *priv)
     bt_ble_exit();
 #endif
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN))
+#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN| JL_SBOX_EN))
     multi_protocol_bt_exit();
 #endif
 
