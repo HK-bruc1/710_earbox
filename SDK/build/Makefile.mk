@@ -11,6 +11,8 @@ c_SRC_FILES := \
 	apps/common/device/storage_device/norflash/norflash_sfc.c \
 	apps/common/fat_nor/virfat_flash.c \
 	apps/common/temp_trim/dtemp_pll_trim.c \
+	apps/common/third_party_profile/common/3th_profile_api.c \
+	apps/common/third_party_profile/multi_protocol_main.c \
 	apps/earphone/app_main.c \
 	apps/earphone/audio/jlstream_event_handler.c \
 	apps/earphone/audio/scene_switch.c \

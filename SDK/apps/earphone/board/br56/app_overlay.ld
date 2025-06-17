@@ -36,6 +36,8 @@
             PROVIDE(module_initcall_end = .);
 
             *(.initcall.bank.text)
+            *(.rf_init.bank1.text)
+            *(.rf_init.bank1.text.const)
             *(.rf_init.bank2.text)
         }
 		.overlay_aec

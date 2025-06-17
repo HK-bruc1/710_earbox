@@ -18,6 +18,7 @@
 //**************************************
 #define MEDIA_24BIT_ENABLE					TCFG_AUDIO_BIT_WIDTH
 #define AUD_DAC_TRIM_ENABLE					1
+#define AUD_DAC_TRIM_FADE_ENABLE            1 //A/B版芯片建议开启，C版及以后芯片可关闭，节省代码空间
 #define TCFG_AUDIO_DAC_NOISEGATE_ENABLE     1
 #define AUDIO_DAC_MAX_SAMPLE_RATE           48000
 #define TCFG_AUDIO_DAC_CLASSH_EN            1

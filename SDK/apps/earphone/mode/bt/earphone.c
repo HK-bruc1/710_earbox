@@ -350,6 +350,11 @@ void test_set_dual_config()
 
 void user_read_remote_name_handle(u8 status, u8 *addr, u8 *name)
 {
+    //字符串名字，添加结束符
+    name[31] = 0;   //earphone类的SDK，默认配置名字长度32byte
+    //void set_bt_full_name_event(u8 en);
+    //name[47] = 0;   //set_bt_full_name_event配置名字长度48byte
+
     log_info("\nuser_read_remote_name_handle:\n");
     put_buf(addr, 6);
     log_info("name=%s\n", name);

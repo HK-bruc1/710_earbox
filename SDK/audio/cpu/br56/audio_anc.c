@@ -117,6 +117,17 @@ const u8 CONST_ANC_HOWLING_MSG_DEBUG = ANC_HOWLING_MSG_DEBUG;
 const u8 CONST_ANC_HOWLING_MSG_DEBUG = 0;
 #endif
 
+#if TCFG_AUDIO_ANC_CH == (ANC_L_CH | ANC_R_CH)
+#if TCFG_AUDIO_ANC_TRAIN_MODE == ANC_FF_EN
+const u8 CONST_ANC_WORK_MODE = ANC_STEREO_FF;
+#else
+const u8 CONST_ANC_WORK_MODE = ANC_STEREO_FB;
+#endif
+
+#else	/*TWS*/
+const u8 CONST_ANC_WORK_MODE = ANC_MONO_HYBRID;
+#endif
+
 #define TWS_ANC_SYNC_TIMEOUT	400 //ms
 
 static void anc_mix_out_audio_drc_thr(float thr);

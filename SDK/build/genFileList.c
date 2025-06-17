@@ -751,7 +751,7 @@ c_SRC_FILES += \
 c_SRC_FILES += \
 	apps/common/third_party_profile/multi_protocol_common.c \
 	apps/common/third_party_profile/multi_protocol_event.c \
-	apps/common/third_party_profile/multi_protocol_main.c
+
 #endif
 
 
@@ -793,15 +793,6 @@ c_SRC_FILES += \
     apps/common/third_party_profile/swift_pair/swift_pair_protocol.c
 #endif
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & DMA_EN)
-c_SRC_FILES += \
-    apps/common/third_party_profile/dma_protocol/dma_protocol.c \
-
-c_SRC_FILES += \
-	apps/common/third_party_profile/interface/app_protocol_dma.c \
-
-#endif
-
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & GFPS_EN)
 c_SRC_FILES += \
@@ -837,7 +828,7 @@ c_SRC_FILES += \
     apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/ll_task.c \
     apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/ll_sync_event_handler.c \
 
-#if 0
+#if 1
 c_SRC_FILES += \
 	apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions/ble_iot_utils.c \
 	apps/common/third_party_profile/Tencent_LL/tencent_ll_demo/jieli_iot_functions/ble_iot_msg_manager.c \
@@ -852,7 +843,7 @@ c_SRC_FILES += \
 #endif
 
 
-#if (BT_AI_SEL_PROTOCOL & TUYA_DEMO_EN)
+#if (THIRD_PARTY_PROTOCOLS_SEL & TUYA_DEMO_EN)
 c_SRC_FILES += \
 	apps/common/third_party_profile/tuya_protocol/app/demo/tuya_ble_app_demo.c \
 	apps/common/third_party_profile/tuya_protocol/app/demo/tuya_ota.c \
@@ -901,24 +892,10 @@ c_SRC_FILES += \
 	apps/common/third_party_profile/common/mic_rec.c
 #endif
 
-#if BT_FOR_APP_EN
-c_SRC_FILES += \
-	apps/common/third_party_profile/common/3th_profile_api.c
-#endif
 
 #if RCSP_ADV_EN || RCSP_BTMATE_EN || (RCSP_MODE || SMART_BOX_EN) || APP_PROTOCOL_READ_CFG_EN
 c_SRC_FILES += \
 	apps/common/third_party_profile/common/custom_cfg.c
-#endif
-
-
-#if EXPORT_FNMA_ENABLE
-#if (THIRD_PARTY_PROTOCOLS_SEL & FMNA_EN)
-c_SRC_FILES += \
-    apps/common/third_party_profile/bt_fmy/ble_fmy.c \
-    apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.c \
-    apps/common/third_party_profile/bt_fmy/ble_fmy_ota.c
-#endif
 #endif
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)
@@ -928,11 +905,6 @@ c_SRC_FILES += \
     apps/common/third_party_profile/realme_protocol/realme_protocol.c \
 
 #endif
-
-
-
-
-
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)
 c_SRC_FILES += \
@@ -1229,11 +1201,6 @@ c_SRC_FILES += \
 #endif
 
 
-
-
-
-
-
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE && (THIRD_PARTY_PROTOCOLS_SEL & TRANS_DATA_EN)
 c_SRC_FILES += \
 	apps/common/third_party_profile/jieli/trans_data_demo/le_trans_data.c \
@@ -1247,7 +1214,7 @@ c_SRC_FILES += \
 	apps/common/third_party_profile/jieli/online_db/online_db_deal.c
 #endif
 
-
+#if (THIRD_PARTY_PROTOCOLS_SEL & AURACAST_APP_EN)
 c_SRC_FILES += \
     apps/common/third_party_profile/auracast_app/auracast_app_protocol.c \
     apps/common/third_party_profile/auracast_app/auracast_app_ble.c \
@@ -1255,12 +1222,20 @@ c_SRC_FILES += \
     apps/common/third_party_profile/auracast_app/auracast_app_source_api.c \
     apps/common/third_party_profile/auracast_app/auracast_app_sink_api.c \
 
+#endif
+
+#if EXPORT_FNMA_ENABLE
+#if (THIRD_PARTY_PROTOCOLS_SEL & FMNA_EN)
 c_SRC_FILES += \
     apps/common/third_party_profile/bt_fmy/ble_fmy.c \
     apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.c \
     apps/common/third_party_profile/bt_fmy/ble_fmy_ota.c \
     apps/common/third_party_profile/bt_fmy/ble_fmy_modet.c \
 
+#endif
+#endif
+
+#if (THIRD_PARTY_PROTOCOLS_SEL & DMA_EN)
 c_SRC_FILES += \
     apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_le_port.c \
     apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_setting.c \
@@ -1268,12 +1243,18 @@ c_SRC_FILES += \
     apps/common/third_party_profile/dma_protocol/dma_use_lib/platform_template.c \
     apps/common/third_party_profile/dma_protocol/dma_protocol.c \
 
+#endif
 
+#if (THIRD_PARTY_PROTOCOLS_SEL & XIMALAYA_EN)
 c_SRC_FILES += \
     apps/common/third_party_profile/ximalaya_protocol/xmly_protocol.c \
     apps/common/third_party_profile/ximalaya_protocol/xmly_platform_api.c \
     apps/common/third_party_profile/ximalaya_protocol/xmly_config.c \
     apps/common/third_party_profile/ximalaya_protocol/xmly_ble.c \
+
+#endif
+
+
 
 // *INDENT-OFF*
 

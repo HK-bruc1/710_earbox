@@ -556,7 +556,7 @@ objs += \
 objs += \
 	$(ROOT)/apps/common/third_party_profile/multi_protocol_common.o \
 	$(ROOT)/apps/common/third_party_profile/multi_protocol_event.o \
-	$(ROOT)/apps/common/third_party_profile/multi_protocol_main.o
+
 
 
 objs += \
@@ -582,13 +582,6 @@ objs += \
 
 objs += \
     $(ROOT)/apps/common/third_party_profile/swift_pair/swift_pair_protocol.o
-
-objs += \
-    $(ROOT)/apps/common/third_party_profile/dma_protocol/dma_protocol.o \
-
-objs += \
-	$(ROOT)/apps/common/third_party_profile/interface/app_protocol_dma.o \
-
 
 
 objs += \
@@ -675,29 +668,14 @@ objs += \
 objs += \
 	$(ROOT)/apps/common/third_party_profile/common/mic_rec.o
 
-objs += \
-	$(ROOT)/apps/common/third_party_profile/common/3th_profile_api.o
 
 objs += \
 	$(ROOT)/apps/common/third_party_profile/common/custom_cfg.o
-
-
-#if EXPORT_FNMA_ENABLE
-objs += \
-    $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy.o \
-    $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.o \
-    $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy_ota.o
-#endif
 
 objs += \
     $(ROOT)/apps/common/third_party_profile/realme_protocol/realme_config.o \
     $(ROOT)/apps/common/third_party_profile/realme_protocol/realme_platform_api.o \
     $(ROOT)/apps/common/third_party_profile/realme_protocol/realme_protocol.o \
-
-
-
-
-
 
 
 objs += \
@@ -913,11 +891,6 @@ objs += \
 
 
 
-
-
-
-
-
 objs += \
 	$(ROOT)/apps/common/third_party_profile/jieli/trans_data_demo/le_trans_data.o \
 	$(ROOT)/apps/common/third_party_profile/jieli/trans_data_demo/spp_trans_data.o
@@ -927,7 +900,6 @@ objs += \
 	$(ROOT)/apps/common/third_party_profile/jieli/online_db/spp_online_db.o \
 	$(ROOT)/apps/common/third_party_profile/jieli/online_db/online_db_deal.o
 
-
 objs += \
     $(ROOT)/apps/common/third_party_profile/auracast_app/auracast_app_protocol.o \
     $(ROOT)/apps/common/third_party_profile/auracast_app/auracast_app_ble.o \
@@ -935,11 +907,15 @@ objs += \
     $(ROOT)/apps/common/third_party_profile/auracast_app/auracast_app_source_api.o \
     $(ROOT)/apps/common/third_party_profile/auracast_app/auracast_app_sink_api.o \
 
+
+#if EXPORT_FNMA_ENABLE
 objs += \
     $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy.o \
     $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.o \
     $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy_ota.o \
     $(ROOT)/apps/common/third_party_profile/bt_fmy/ble_fmy_modet.o \
+
+#endif
 
 objs += \
     $(ROOT)/apps/common/third_party_profile/dma_protocol/dma_use_lib/dma_le_port.o \
@@ -954,6 +930,9 @@ objs += \
     $(ROOT)/apps/common/third_party_profile/ximalaya_protocol/xmly_platform_api.o \
     $(ROOT)/apps/common/third_party_profile/ximalaya_protocol/xmly_config.o \
     $(ROOT)/apps/common/third_party_profile/ximalaya_protocol/xmly_ble.o \
+
+
+
 
 
 #ifdef CONFIG_SOUNDBOX_CASE

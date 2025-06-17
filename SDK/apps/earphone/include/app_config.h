@@ -86,6 +86,11 @@
 // 三方协议简化版本，目前仅适用于RCSP
 #define TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED				0
 #endif
+
+#if THIRD_PARTY_PROTOCOLS_SEL && TCFG_RCSP_DUAL_CONN_ENABLE
+#error "开启RCSP简化宏不支持两路rcsp"
+#endif
+
 //代码放RAM压缩宏，在RAM资源足够的情况下将代码放RAM进行压缩
 #define TCFG_CODE_TO_RAM_COMPRESS_ENABLE					0
 

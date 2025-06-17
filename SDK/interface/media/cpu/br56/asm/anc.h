@@ -178,6 +178,20 @@ enum ANC_IIR_TYPE {
     ANC_TRANS_TYPE = BIT(3),	//TRANS
 };
 
+//6组滤波器组合(FF/FB/SZ), 无缝切换需要用到双倍滤波器，大于3组需使用96M 时钟
+enum ANC_CORE_MDOE {
+    ANC_MONO_HYBRID = 0,
+    ANC_MONO_HYBRID_ADJ,
+    ANC_MONO_FFX1,
+    ANC_MONO_FFX2,
+    ANC_STEREO_FF,
+    ANC_MONO_FBX1,
+    ANC_MONO_FBX2,
+    ANC_STEREO_FB,
+    ANC_MONO_FB_ADJ,
+};
+
+
 /*ANC模式使能位*/
 #define ANC_OFF_BIT				BIT(1)	/*降噪关闭使能*/
 #define ANC_ON_BIT				BIT(2)	/*降噪模式使能*/
