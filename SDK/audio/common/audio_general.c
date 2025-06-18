@@ -455,6 +455,13 @@ const char log_tag_const_i_ALINK  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_d_ALINK  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_e_ALINK  = CONFIG_DEBUG_LIB(TRUE);
 
+/*vbass noisegate 参数配置*/
+const int virtualbass_noisegate_attack_time = 50;
+const int virtualbass_noisegate_release_time = 30;
+const int virtualbass_noisegate_hold_time = 15;
+const float virtualbass_noisegate_threshold = -85.0f;
+
+
 __attribute__((weak))
 int get_system_stream_bit_width(void *par)
 {

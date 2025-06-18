@@ -108,6 +108,10 @@ extern const int dynamic_eq_run_mode;
 extern const int drc_detect_run_mode;
 extern const int virtual_bass_pro_soft_crossover;
 
+extern const int virtualbass_noisegate_attack_time;
+extern const int virtualbass_noisegate_release_time;
+extern const int virtualbass_noisegate_hold_time;
+extern const float virtualbass_noisegate_threshold;
 /*
  *******************************************************************
  *						Audio Codec Configs

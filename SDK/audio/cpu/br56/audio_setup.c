@@ -218,7 +218,7 @@ static void audio_dac_trim_init()
             //vcmo模式offset 为 diff模式的两倍
             int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (trim_offset_value) : (trim_offset_value * 2);
             int trimr_offset = triml_offset;
-            int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (100) : (300);
+            int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (375) : (750); // DIFF:-1250±375(30%), VCMO:-2500±750(30%)
             if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
                 trimr_offset = 0;
             }
@@ -226,9 +226,10 @@ static void audio_dac_trim_init()
                 triml_offset = 0;
             }
             if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
-                /* puts("dac_trim_succ"); */
+                puts("DAC_trim_verify:Succ");
                 syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
             } else {
+                puts("[Error]DAC_trim_verify:Error!!!");
                 dac_trim.left = -trim_offset_value;
                 dac_trim.right = -trim_offset_value;
             }
