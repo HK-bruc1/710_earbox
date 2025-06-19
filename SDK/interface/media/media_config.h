@@ -38,12 +38,30 @@ extern const int config_audio_dac_mix_enable;
 extern const int config_audio_dac_noisefloor_optimize_enable;
 extern const char config_audio_dac_trim_enable;
 extern const int config_audio_dac_mute_timeout;
+extern const int config_audio_dac_pa_mode;
+extern const int config_audio_dac_power_mode;
 
 /*
  *******************************************************************
  *						ADC Configs
  *******************************************************************
  */
+extern const int config_audio_adc0_enable;
+extern const int config_audio_adc1_enable;
+extern const int config_audio_adc2_enable;
+extern const int config_audio_adc3_enable;
+extern const int config_audio_adc4_enable;
+extern const int config_audio_adc5_enable;
+extern const int config_audio_adc6_enable;
+extern const int config_audio_adc7_enable;
+extern const int config_audio_adc0_input_mode;
+extern const int config_audio_adc1_input_mode;
+extern const int config_audio_adc2_input_mode;
+extern const int config_audio_adc3_input_mode;
+extern const int config_audio_adc4_input_mode;
+extern const int config_audio_adc5_input_mode;
+extern const int config_audio_adc6_input_mode;
+extern const int config_audio_adc7_input_mode;
 extern const u8 const_mic_capless_open_delay_debug;
 extern const u8 const_mic_capless_trim_delay_debug;
 extern const u8 const_adc_async_en;						//是否支持多个ADC异步打开
@@ -87,8 +105,13 @@ extern const int  stereo_phaser_run_mode;
 extern const int  stereo_flanger_run_mode;
 extern const int  stereo_chorus_run_mode;
 extern const int dynamic_eq_run_mode;
-extern const  int drc_detect_run_mode;
+extern const int drc_detect_run_mode;
+extern const int virtual_bass_pro_soft_crossover;
 
+extern const int virtualbass_noisegate_attack_time;
+extern const int virtualbass_noisegate_release_time;
+extern const int virtualbass_noisegate_hold_time;
+extern const float virtualbass_noisegate_threshold;
 /*
  *******************************************************************
  *						Audio Codec Configs

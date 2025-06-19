@@ -13,6 +13,24 @@
 #include "audio_config.h"
 #include "clock_manager/clock_manager.h"
 
+const u16 dac_digital_gain_tab_version_c[7] = {
+    16384,  // 20mW
+    16384,  // 30mW
+    16766,  // 50mW
+    17156,  // 80mW
+    17156,  // 100mW
+    16766,  // 2Vrms
+    17156   // 2Vrms
+};
+const int config_audio_dac_mute_timeout = 70;   //单位：ms
+
+/*
+ *******************************************************************
+ *						Audio Dac Config
+ *******************************************************************
+ */
+const int config_audio_dac_trim_fade_enable = AUD_DAC_TRIM_FADE_ENABLE;
+
 /*
  *******************************************************************
  *						Audio Codec Config
@@ -48,6 +66,17 @@ void audio_linein_param_fill(struct linein_open_param *linein_param, const struc
     linein_param->linein_mode    = platform_cfg->mic_mode;
     linein_param->linein_ain_sel = platform_cfg->mic_ain_sel;
     linein_param->linein_dcc     = platform_cfg->mic_dcc;
+}
+
+/*param:dvol*/
+u16 dac_dvol_max_query(void)
+{
+    u16 DAC_0dB = 16100;
+    if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版以后才做DAC TRIM
+        DAC_0dB = dac_digital_gain_tab_version_c[TCFG_DAC_POWER_MODE];
+    }
+    //printf("dac_dvol_max_query:%d",DAC_0dB);
+    return DAC_0dB;
 }
 
 //***********************

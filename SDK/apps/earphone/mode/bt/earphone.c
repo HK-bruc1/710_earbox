@@ -92,8 +92,8 @@
 
 #if TCFG_APP_BT_EN
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
-
+#if ((THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || \
+		(TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN | LE_AUDIO_AURACAST_SOURCE_EN | LE_AUDIO_JL_AURACAST_SOURCE_EN)))
 #include "multi_protocol_main.h"
 #endif
 
@@ -350,6 +350,11 @@ void test_set_dual_config()
 
 void user_read_remote_name_handle(u8 status, u8 *addr, u8 *name)
 {
+    //字符串名字，添加结束符
+    name[31] = 0;   //earphone类的SDK，默认配置名字长度32byte
+    //void set_bt_full_name_event(u8 en);
+    //name[47] = 0;   //set_bt_full_name_event配置名字长度48byte
+
     log_info("\nuser_read_remote_name_handle:\n");
     put_buf(addr, 6);
     log_info("name=%s\n", name);
@@ -551,7 +556,8 @@ static int bt_connction_status_event_handler(struct bt_event *bt)
         }
 #endif
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+#if ((THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || \
+		(TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN | LE_AUDIO_AURACAST_SOURCE_EN | LE_AUDIO_JL_AURACAST_SOURCE_EN)))
         multi_protocol_bt_init();
 #endif
 
@@ -865,9 +871,17 @@ void bt_get_time_date()
 void phone_date_and_time_feedback(u8 *data, u16 len)
 {
     log_info("time：%s ", data);
+
+#if TCFG_IFLYTEK_ENABLE
+    extern void get_time_from_bt(u8 * data);
+    get_time_from_bt(data);
+    extern void ifly_vad_demo(void);
+    ifly_vad_demo();
+#endif
 }
 void map_get_time_data(char *time, int status)
 {
+    printf("[zwz info] func %s line %d \n", __func__, __LINE__);
     if (status == 0) {
         log_info("time：%s ", time);
     } else {
@@ -932,7 +946,8 @@ static void bt_no_background_exit_check(void *priv)
     bt_ble_exit();
 #endif
 
-#if (THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | TUYA_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN))
+#if ((THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN)) || \
+		(TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN)))
     multi_protocol_bt_exit();
 #endif
 
@@ -1099,6 +1114,19 @@ int bt_mode_try_exit()
 
 int bt_mode_exit()
 {
+    /*~~~~~~~~~~~~ start: 临时修改，库内没关OCH，库内改好请删除~~~~~~~~~~~~~~~~~~*/
+#if OPTIMIZATION_CONN_NOISE
+#ifdef BT_RF_CURRENT_BALANCE_SUPPORT_NOT_PORT
+#else
+#if CONFIG_CPU_BR50 || CONFIG_CPU_BR52
+#if (BT_RF_CURRENT_BALANCE_SUPPORT_ONLY_ONE_PORT == 0)
+    gpio_och_disable_output_signal(RF_RXTX_STATE_PROT, 16);
+#endif
+    gpio_och_disable_output_signal(RF_RXTX_STATE_PROT, 17);
+#endif
+#endif
+#endif
+    /*~~~~~~~~~~~~ end: 临时修改~~~~~~~~~~~~~~~~~~*/
     app_send_message(APP_MSG_EXIT_MODE, APP_MODE_BT);
     return 0;
 }

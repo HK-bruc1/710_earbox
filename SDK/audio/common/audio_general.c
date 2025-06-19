@@ -58,10 +58,89 @@ const int config_audio_cfg_online_enable = 0;
 #endif
 
 const int config_audio_dac_dma_buf_realloc_enable = 1;
+#ifdef TCFG_DAC_POWER_MODE
+const int config_audio_dac_power_mode = TCFG_DAC_POWER_MODE;
+#endif
 
 const int config_audio_gain_enable = TCFG_GAIN_NODE_ENABLE;
 const int config_audio_split_gain_enable = TCFG_SPLIT_GAIN_NODE_ENABLE;
 const int config_audio_stereomix_enable = TCFG_STEROMIX_NODE_ENABLE;
+
+//ADC Enable Config
+const int config_audio_adc0_enable = TCFG_ADC0_ENABLE;
+#ifdef TCFG_ADC1_ENABLE
+const int config_audio_adc1_enable = TCFG_ADC1_ENABLE;
+#else
+const int config_audio_adc1_enable = 0;
+#endif
+#ifdef TCFG_ADC2_ENABLE
+const int config_audio_adc2_enable = TCFG_ADC2_ENABLE;
+#else
+const int config_audio_adc2_enable = 0;
+#endif
+#ifdef TCFG_ADC3_ENABLE
+const int config_audio_adc3_enable = TCFG_ADC3_ENABLE;
+#else
+const int config_audio_adc3_enable = 0;
+#endif
+#ifdef TCFG_ADC4_ENABLE
+const int config_audio_adc4_enable = TCFG_ADC4_ENABLE;
+#else
+const int config_audio_adc4_enable = 0;
+#endif
+#ifdef TCFG_ADC5_ENABLE
+const int config_audio_adc5_enable = TCFG_ADC5_ENABLE;
+#else
+const int config_audio_adc5_enable = 0;
+#endif
+#ifdef TCFG_ADC6_ENABLE
+const int config_audio_adc6_enable = TCFG_ADC6_ENABLE;
+#else
+const int config_audio_adc6_enable = 0;
+#endif
+const int config_audio_adc7_enable = 0;
+
+//ADC input Mode:Single-Ended/Differential/Single-Ended Capless
+const int config_audio_adc0_input_mode = TCFG_ADC0_MODE;
+#ifdef TCFG_ADC1_MODE
+const int config_audio_adc1_input_mode = TCFG_ADC1_MODE;
+#else
+const int config_audio_adc1_input_mode = 0;
+#endif
+#ifdef TCFG_ADC2_MODE
+const int config_audio_adc2_input_mode = TCFG_ADC2_MODE;
+#else
+const int config_audio_adc2_input_mode = 0;
+#endif
+#ifdef TCFG_ADC3_MODE
+const int config_audio_adc3_input_mode = TCFG_ADC3_MODE;
+#else
+const int config_audio_adc3_input_mode = 0;
+#endif
+#ifdef TCFG_ADC4_MODE
+const int config_audio_adc4_input_mode = TCFG_ADC4_MODE;
+#else
+const int config_audio_adc4_input_mode = 0;
+#endif
+#ifdef TCFG_ADC5_MODE
+const int config_audio_adc5_input_mode = TCFG_ADC5_MODE;
+#else
+const int config_audio_adc5_input_mode = 0;
+#endif
+#ifdef TCFG_ADC6_MODE
+const int config_audio_adc6_input_mode = TCFG_ADC6_MODE;
+#else
+const int config_audio_adc6_input_mode = 0;
+#endif
+const int config_audio_adc7_input_mode = 0;
+
+/*
+ *******************************************************************
+ *						Audio CVP Config
+ *******************************************************************
+ */
+const int config_audio_cvp_ref_source = 1;/*0:DAC Internal 1:External*/
+
 /*
  *******************************************************************
  *						Audio Codec Config
@@ -79,6 +158,13 @@ const int const_audio_codec_wma_dec_supoort_POS_play = 1; //是否支持指定�
 
 /////////////////////wav codec/////////////////
 const int const_audio_codec_wav_dec_bitDepth_set_en = 0;
+
+/////////////////////mp3 codec/////////////////
+const int mp3encode_input_mode =  1 ;//0x01--short输入 0x02--float输入,使用mp3浮点数输入编码需要把config_mp3_enc_use_layer_3置1
+
+/////////////////////mty codec/////////////////
+const int config_mty_repeat_enable = 1; //mty 支持循环播放
+
 
 /*
  *******************************************************************
@@ -108,6 +194,12 @@ const int butterworth_iir_filter_coeff_type_select = 0;//虚拟低音根据此�
 #else
 const int butterworth_iir_filter_coeff_type_select = 1;//虚拟低音根据此变量使用相应的滤波器设计函数 0:float  1:int
 #endif
+
+const int virtual_bass_pro_soft_crossover = 0;//控制虚拟低音pro 中的分频器是用软件运行或者硬件运行  1 软件EQ  0 硬件EQ 默认硬件EQ
+const int virtual_bass_pro_soft_eq = 1;       //控制虚拟低音pro 中的EQ是用软件运行或者硬件运行 1软件 0硬件 默认1
+
+
+
 
 const int limiter_run_mode = EFx_PRECISION_PRO
 #if defined(TCFG_AUDIO_EFX_4E5B_RUN_MODE)
@@ -186,11 +278,17 @@ const  int virtual_bass_run_mode         = TCFG_AUDIO_EFX_B0D5_RUN_MODE;
 const  int virtual_bass_run_mode         = EFx_BW_16t16 | EFx_BW_16t32 | EFx_BW_32t32;
 #endif
 
-#ifdef TCFG_AUDIO_EFX_55C9_RUN_MODE
-const  int virtual_bass_classic_run_mode = TCFG_AUDIO_EFX_55C9_RUN_MODE;
-#else
-const  int virtual_bass_classic_run_mode = EFx_BW_16t16 | EFx_BW_32t32;
+const  int virtual_bass_classic_run_mode = 0
+#if defined(TCFG_AUDIO_EFX_55C9_RUN_MODE)
+        | TCFG_AUDIO_EFX_55C9_RUN_MODE
 #endif
+#if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+        | TCFG_AUDIO_EFX_02E6_RUN_MODE
+#endif
+#if defined(TCFG_AUDIO_EFX_55C9_RUN_MODE) || defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+        | EFx_BW_16t16 | EFx_BW_32t32
+#endif
+        ;
 
 const  int drc_advance_run_mode          = EFx_PRECISION_NOR
 #if defined(TCFG_AUDIO_EFX_4250_RUN_MODE)
@@ -199,7 +297,10 @@ const  int drc_advance_run_mode          = EFx_PRECISION_NOR
 #if defined(TCFG_AUDIO_EFX_74CB_RUN_MODE)
         | TCFG_AUDIO_EFX_74CB_RUN_MODE
 #endif
-#if !defined(TCFG_AUDIO_EFX_4250_RUN_MODE) && !defined(TCFG_AUDIO_EFX_74CB_RUN_MODE)
+#if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+        | TCFG_AUDIO_EFX_02E6_RUN_MODE
+#endif
+#if !defined(TCFG_AUDIO_EFX_4250_RUN_MODE) && !defined(TCFG_AUDIO_EFX_74CB_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
         | EFx_BW_16t16 | EFx_BW_32t16 | EFx_BW_32t32
 #endif
         ;
@@ -282,7 +383,10 @@ const int iir_filter_run_mode = 0  //不支持32进16出
 #if defined(TCFG_AUDIO_EFX_6700_RUN_MODE)
                                 | TCFG_AUDIO_EFX_6700_RUN_MODE
 #endif
-#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE)
+#if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+                                | TCFG_AUDIO_EFX_02E6_RUN_MODE
+#endif
+#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
                                 | EFx_BW_16t16 | EFx_BW_16t32 | EFx_BW_32t32  //不支持32进16出
 #endif
                                 ;
@@ -351,6 +455,13 @@ const char log_tag_const_i_ALINK  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_d_ALINK  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_e_ALINK  = CONFIG_DEBUG_LIB(TRUE);
 
+/*vbass noisegate 参数配置*/
+const int virtualbass_noisegate_attack_time = 50;
+const int virtualbass_noisegate_release_time = 30;
+const int virtualbass_noisegate_hold_time = 15;
+const float virtualbass_noisegate_threshold = -85.0f;
+
+
 __attribute__((weak))
 int get_system_stream_bit_width(void *par)
 {
@@ -407,6 +518,7 @@ int audio_general_in_dev_bit_width()
     return DATA_BIT_WIDE_16BIT;
 }
 
+__AUDIO_INIT_BANK_CODE
 int audio_general_init()
 {
 #if defined(TCFG_SCENE_UPDATE_ENABLE) && TCFG_SCENE_UPDATE_ENABLE

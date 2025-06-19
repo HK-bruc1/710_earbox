@@ -5,9 +5,40 @@
     {
 		.overlay_init
 		{
-#if (!TCFG_APP_LINEIN_EN && !TCFG_APP_PC_EN && !TCFG_APP_MUSIC_EN) || TCFG_BT_BACKGROUND_ENABLE
-            *(.rf_init.text.cache.L2)
-#endif
+            _initcall_begin = .;
+            PROVIDE(initcall_begin = .);
+            KEEP(*(.initcall))
+            _initcall_end = .;
+            PROVIDE(initcall_end = .);
+
+            _early_initcall_begin = .;
+            PROVIDE(early_initcall_begin = .);
+            KEEP(*(.early.initcall))
+            _early_initcall_end = .;
+            PROVIDE(early_initcall_end = .);
+
+            _late_initcall_begin = .;
+            PROVIDE(late_initcall_begin = .);
+            KEEP(*(.late.initcall))
+            _late_initcall_end = .;
+            PROVIDE(late_initcall_end = .);
+
+            _platform_initcall_begin = .;
+            PROVIDE(platform_initcall_begin = .);
+            KEEP(*(.platform.initcall))
+            _platform_initcall_end = .;
+            PROVIDE(platform_initcall_end = .);
+
+            _module_initcall_begin = .;
+            PROVIDE(module_initcall_begin = .);
+            KEEP(*(.module.initcall))
+            _module_initcall_end = .;
+            PROVIDE(module_initcall_end = .);
+
+            *(.initcall.bank.text)
+            *(.rf_init.bank1.text)
+            *(.rf_init.bank1.text.const)
+            *(.rf_init.bank2.text)
         }
 		.overlay_aec
 		{

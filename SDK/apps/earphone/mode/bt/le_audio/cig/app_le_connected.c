@@ -154,7 +154,7 @@ static int app_connected_conn_status_event_handler(int *msg)
 
     switch (event[0]) {
     case CIG_EVENT_PERIP_CONNECT:
-        g_printf("CIG_EVENT_PERIP_CONNECT");
+
 #if TCFG_USER_TWS_ENABLE
         tws_api_tx_unsniff_req();
 #endif
@@ -163,22 +163,40 @@ static int app_connected_conn_status_event_handler(int *msg)
         app_connected_mutex_pend(&mutex, __LINE__);
 
         hdl = (cig_hdl_t *)&event[1];
+        g_printf("CIG_EVENT_PERIP_CONNECT 0x%x", hdl->cig_hdl);
 
         //记录设备的cig_hdl等信息
         for (i = 0; i < CIG_MAX_NUMS; i++) {
-            if (app_cig_conn_info[i].used && (app_cig_conn_info[i].cig_hdl == 0xFF)) {
-                app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
-                for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
-                    if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
-                        app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
-                        app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
-                        app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
-                        app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
-                        app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
-                        find = 1;
+            if (app_cig_conn_info[i].used) {
+                if (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl) {
+                    app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
+                    for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                        if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
+                            find = 0;
 
-                        log_info("Record acl hangle:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
-                        break;
+                            log_info("Record acl hangle:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
+                            break;
+                        }
+                    }
+                } else if (app_cig_conn_info[i].cig_hdl == 0xFF) {
+                    app_cig_conn_info[i].cig_hdl = hdl->cig_hdl;
+                    for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                        if (!app_cig_conn_info[i].cis_conn_info[j].cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = hdl->cis_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].acl_hdl = hdl->acl_hdl;
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_CONNECT;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
+                            app_cig_conn_info[i].cis_conn_info[j].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
+                            find = 1;
+
+                            log_info("Record acl hangleFF:0x%x", app_cig_conn_info[i].cis_conn_info[j].acl_hdl);
+                            break;
+                        }
                     }
                 }
             }
@@ -217,26 +235,30 @@ static int app_connected_conn_status_event_handler(int *msg)
         break;
 
     case CIG_EVENT_PERIP_DISCONNECT:
-        log_info("CIG_EVENT_PERIP_DISCONNECT");
         //由于是异步操作需要加互斥量保护，避免connected_close的代码与其同时运行,添加的流程请放在互斥量保护区里面
         app_connected_mutex_pend(&mutex, __LINE__);
 
         hdl = (cig_hdl_t *)&event[1];
+        g_printf("CIG_EVENT_PERIP_DISCONNECT 0x%x", hdl->cig_hdl);
         u8  dis_reason = hdl->flush_timeout_C_to_P;     //  复用了flush_timeout_C_to_P参数上传断开错误码
         u16 acl_handle_for_disconnect_cis = 0;
         for (i = 0; i < CIG_MAX_NUMS; i++) {
             if (app_cig_conn_info[i].used && (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl)) {
-                for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
-                    if (app_cig_conn_info[i].cis_conn_info[j].cis_hdl == hdl->cis_hdl) {
-                        app_cig_conn_info[i].cis_conn_info[j].cis_hdl = 0;
-                        acl_handle_for_disconnect_cis = app_cig_conn_info[i].cis_conn_info[j].acl_hdl;
-                        /* app_cig_conn_info[i].cis_conn_info[j].acl_hdl = 0; */
-                        app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_DISCONNECT;
-                        app_cig_conn_info[i].cig_hdl = 0xFF;
-                        break;
+                if (app_cig_conn_info[i].used) {
+                    if (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl) {
+                        for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
+                            // if (app_cig_conn_info[i].cis_conn_info[j].cis_hdl == hdl->cis_hdl) {
+                            app_cig_conn_info[i].cis_conn_info[j].cis_hdl = 0;
+                            acl_handle_for_disconnect_cis = app_cig_conn_info[i].cis_conn_info[j].acl_hdl;
+                            /* app_cig_conn_info[i].cis_conn_info[j].acl_hdl = 0; */
+                            app_cig_conn_info[i].cis_conn_info[j].cis_status = APP_CONNECTED_STATUS_DISCONNECT;
+                            app_cig_conn_info[i].cig_hdl = 0xFF;
+                            //break;
+                            // }
+                        }
+                        find = 1;
                     }
                 }
-                find = 1;
             }
         }
 
@@ -293,6 +315,25 @@ static int app_connected_conn_status_event_handler(int *msg)
         ble_op_latency_close(acl_info->acl_hdl);
         log_info("remote device addr:");
         put_buf((u8 *)&acl_info->pri_ch, sizeof(acl_info->pri_ch));
+#if TCFG_JL_UNICAST_BOUND_PAIR_EN
+        u8 le_com_addr_new[6];
+        int ret = syscfg_read(CFG_TWS_CONNECT_AA, le_com_addr_new, 6);
+        log_info("read binding common addr\n");
+        put_buf(le_com_addr_new, 6);
+
+        if (le_com_addr_new != NULL && memcmp(le_com_addr_new, "\0\0\0\0\0\0", 6) != 0) { //防止空地址触发读零异常
+            if (memcmp(&acl_info->pri_ch, le_com_addr_new, 6) != 0) { //地址不匹配
+                log_info("Device mismatched, connection denied!!!\n");
+                ll_hci_disconnect(acl_info->acl_hdl, 0x13);
+                break;
+            }
+            log_info("Bind information error!!!\n");
+            break;
+        } else {
+            log_info("Never bind information!!!\n");
+            break;
+        }
+#endif
         acl_connected_nums++;
         ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
 
@@ -306,7 +347,7 @@ static int app_connected_conn_status_event_handler(int *msg)
         }
 #endif
         int connect_device      = bt_get_total_connect_dev();
-        log_info("connect_device=%d\n", connect_device);
+        log_info("app_le_connected connect_device=%d\n", connect_device);
         if (connect_device == 0) {
             bt_cmd_prepare(USER_CTRL_WRITE_SCAN_DISABLE, 0, NULL);
             bt_cmd_prepare(USER_CTRL_WRITE_CONN_DISABLE, 0, NULL);
@@ -319,9 +360,13 @@ static int app_connected_conn_status_event_handler(int *msg)
     case CIG_EVENT_ACL_DISCONNECT:
         log_info("CIG_EVENT_ACL_DISCONNECT");
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)
+#if TCFG_USER_TWS_ENABLE
         if (tws_api_get_role() != TWS_ROLE_SLAVE) {
             rcsp_bt_ble_adv_enable(1);
         }
+#else
+        rcsp_bt_ble_adv_enable(1);
+#endif
 #endif
         g_le_audio_hdl.cig_phone_conn_status = 0;
         acl_info = (cis_acl_info_t *)&event[1];
@@ -338,7 +383,6 @@ static int app_connected_conn_status_event_handler(int *msg)
 #if ((TCFG_LE_AUDIO_APP_CONFIG & ( LE_AUDIO_JL_UNICAST_SINK_EN)))
         if (get_le_audio_jl_dongle_device_type()) {
             cig_event_to_user(CIG_EVENT_JL_DONGLE_DISCONNECT, (void *)&acl_info->acl_hdl, 2);
-
         }
 #endif
         set_le_audio_jl_dongle_device_type(0);
@@ -350,8 +394,10 @@ static int app_connected_conn_status_event_handler(int *msg)
         //由于是异步操作需要加互斥量保护，避免connected_close的代码与其同时运行,添加的流程请放在互斥量保护区里面
         app_connected_mutex_pend(&mutex, __LINE__);
 
-        acl_connected_nums--;
-        ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
+        if (acl_connected_nums > 0) { // TCFG_JL_UNICAST_BOUND_PAIR_EN拒绝连接，会导致实际还没设备连接就触发断言
+            acl_connected_nums--;
+            ASSERT(acl_connected_nums <= CIG_MAX_CIS_NUMS && acl_connected_nums >= 0, "acl_connected_nums:%d", acl_connected_nums);
+        }
 
         //释放互斥量
         app_connected_mutex_post(&mutex, __LINE__);
@@ -386,6 +432,8 @@ static int app_connected_conn_status_event_handler(int *msg)
 #if TCFG_USER_TWS_ENABLE
         tws_sync_le_audio_conn_info();
         tws_dual_conn_state_handler();
+#else
+        dual_conn_state_handler();
 #endif
 #if TCFG_USER_TWS_ENABLE
         if (tws_api_get_role() == TWS_ROLE_SLAVE) {
@@ -401,9 +449,13 @@ static int app_connected_conn_status_event_handler(int *msg)
 #endif
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)
+#if TCFG_USER_TWS_ENABLE
         if (tws_api_get_role() != TWS_ROLE_SLAVE) {
             rcsp_bt_ble_adv_enable(1);
         }
+#else
+        rcsp_bt_ble_adv_enable(1);
+#endif
 #endif
 
         break;
@@ -579,15 +631,46 @@ int tws_check_user_conn_open_quick_type()
 
 /* ----------------------------------------------------------------------------*/
 /**
+ * @brief 判断cig acl是否已被连接
+ *
+ * @return 1:已连接 0:未连接
+ */
+/* ----------------------------------------------------------------------------*/
+u8 is_cig_acl_conn()
+{
+    /* log_debug("is_cig_acl_conn=%x\n", g_le_audio_hdl.cig_phone_conn_status); */
+    if (g_le_audio_hdl.cig_phone_conn_status & APP_CONNECTED_STATUS_START) {
+        return 1;
+    }
+    return 0;
+}
+
+/* ----------------------------------------------------------------------------*/
+/**
+ * @brief 判断tws另一端cig acl是否已被连接
+ *
+ * @return 1:已连接 0:未连接
+ */
+/* ----------------------------------------------------------------------------*/
+u8 is_cig_other_acl_conn()
+{
+    /* log_debug("is_cig_other_acl_conn=%x\n", g_le_audio_hdl.cig_phone_other_conn_status); */
+    if (g_le_audio_hdl.cig_phone_other_conn_status & APP_CONNECTED_STATUS_START) {
+        return 1;
+    }
+    return 0;
+}
+
+/* ----------------------------------------------------------------------------*/
+/**
  * @brief 判断cig是否已被连接
  *
- * @return 1:已连接 2:未连接
+ * @return 1:已连接 0:未连接
  */
 /* ----------------------------------------------------------------------------*/
 u8 is_cig_phone_conn()
 {
-    log_debug("is_cig_phone_conn=%d,%x\n", bt_get_total_connect_dev(), g_le_audio_hdl.cig_phone_conn_status);
-
+    log_debug("is_cig_phone_conn=%d, %x\n", bt_get_total_connect_dev(), g_le_audio_hdl.cig_phone_conn_status);
     if (g_le_audio_hdl.cig_phone_conn_status & APP_CONNECTED_STATUS_CONNECT) {
         return 1;
     }
@@ -598,12 +681,12 @@ u8 is_cig_phone_conn()
 /**
  * @brief 判断tws另一端cig是否已被连接
  *
- * @return 1:已连接 2:未连接
+ * @return 1:已连接 0:未连接
  */
 /* ----------------------------------------------------------------------------*/
 u8 is_cig_other_phone_conn()
 {
-    log_debug("is_cig_other_phone_conn=%d,%x\n", bt_get_total_connect_dev(), g_le_audio_hdl.cig_phone_other_conn_status);
+    log_debug("is_cig_other_phone_conn=%d, %x\n", bt_get_total_connect_dev(), g_le_audio_hdl.cig_phone_other_conn_status);
     if (g_le_audio_hdl.cig_phone_other_conn_status & APP_CONNECTED_STATUS_CONNECT) {
         return 1;
     }
@@ -715,12 +798,11 @@ void app_connected_close(u8 cig_hdl, u8 status)
 /* ----------------------------------------------------------------------------*/
 void app_connected_close_all(u8 status)
 {
-    u8 i;
     log_info("connected_close");
     //由于是异步操作需要加互斥量保护，避免和开启的流程同时运行,添加的流程请放在互斥量保护区里面
     app_connected_mutex_pend(&mutex, __LINE__);
 
-    for (i = 0; i < CIG_MAX_NUMS; i++) {
+    for (u8 i = 0; i < CIG_MAX_NUMS; i++) {
         if (app_cig_conn_info[i].used && app_cig_conn_info[i].cig_hdl) {
             connected_close(app_cig_conn_info[i].cig_hdl);
             memset(&app_cig_conn_info[i], 0, sizeof(struct app_cig_conn_info));
@@ -1079,8 +1161,9 @@ void le_audio_profile_init()
  * */
 void le_audio_profile_exit()
 {
+    le_audio_adv_api_enable(0);
     g_le_audio_hdl.le_audio_profile_ok = 0;
-    if (!is_cig_phone_conn()) {
+    if (!is_cig_phone_conn()) { // 有连接就卸载否则会异常
         app_connected_close_in_other_mode();
     }
 }
@@ -1097,7 +1180,7 @@ static int le_audio_app_msg_handler(int *msg)
         log_info("APP_MSG_STATUS_INIT_OK");
 #if (TCFG_USER_TWS_ENABLE==0)
         le_audio_profile_init();
-        le_audio_adv_open_discover_mode(1);
+        le_audio_adv_open_discover_mode();
 #endif
         break;
     case APP_MSG_ENTER_MODE://1

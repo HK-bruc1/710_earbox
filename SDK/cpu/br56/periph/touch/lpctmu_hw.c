@@ -206,6 +206,8 @@ void lpctmu_isel_trim(u32 ch)
     u8 aim_cur_level;
     if (__this->pdata->aim_charge_khz < 8) {
         aim_cur_level = __this->pdata->aim_charge_khz;
+    } else if (__this->ch_fixed_isel[ch]) {
+        aim_cur_level = __this->ch_fixed_isel[ch];
     } else {
         for (u8 cur_level = 0; cur_level < 8; cur_level ++) {
             SFR(P11_LPCTM0->ANA0, 1, 3, cur_level);

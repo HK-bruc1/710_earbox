@@ -18,6 +18,7 @@
 //**************************************
 #define MEDIA_24BIT_ENABLE					TCFG_AUDIO_BIT_WIDTH
 #define AUD_DAC_TRIM_ENABLE					1
+#define AUD_DAC_TRIM_FADE_ENABLE            1 //A/B版芯片建议开启，C版及以后芯片可关闭，节省代码空间
 #define TCFG_AUDIO_DAC_NOISEGATE_ENABLE     1
 #define AUDIO_DAC_MAX_SAMPLE_RATE           48000
 #define TCFG_AUDIO_DAC_CLASSH_EN            1
@@ -33,6 +34,11 @@
 #error "Hi-Res Audio：请将全局采样率TCFG_AUDIO_GLOBAL_SAMPLE_RATE设置到至少96000，或Disable！"
 #endif
 #endif
+
+#if (TCFG_AUDIO_GLOBAL_SAMPLE_RATE && (TCFG_AUDIO_GLOBAL_SAMPLE_RATE > AUDIO_DAC_MAX_SAMPLE_RATE))
+#undef AUDIO_DAC_MAX_SAMPLE_RATE
+#define AUDIO_DAC_MAX_SAMPLE_RATE           TCFG_AUDIO_GLOBAL_SAMPLE_RATE
+#endif
 //**************************************
 // 		    场景参数更新使能
 //**************************************
@@ -41,10 +47,8 @@
 //**************************************
 // 			音频模块链接配置
 //**************************************
-#if TCFG_USER_BLE_ENABLE
-// br36启动ble功能则音频算法不放到ram
-
-/*音效处理链接配置*/
+#if 0
+/*音频模块代码全部不放RAM*/
 #define AFx_VBASS_AT_RAM				    0	//虚拟低音
 #define AFx_REVERB_AT_RAM				    0	//混响
 #define AFx_ECHO_AT_RAM				        0	//回声
@@ -311,6 +315,10 @@
 #define ANC_EXT_V2			2	//支持入耳、半入耳
 //ANC耳道自适应版本
 #define TCFG_AUDIO_ANC_EAR_ADAPTIVE_VERSION 	ANC_EXT_V2
+#if TCFG_AUDIO_ANC_MULT_ORDER_ENABLE || TCFG_AUDIO_ANC_EXT_EN
 #define TCFG_AUDIO_ANC_EXT_VERSION 				ANC_EXT_V2
+#else
+#define TCFG_AUDIO_ANC_EXT_VERSION 				0
+#endif
 
 #endif/*_AUDIO_CONFIG_DEF_H_*/

@@ -27,9 +27,15 @@ bt_audio_sync_node_adapter
 adc_file_plug
 #endif
 
+#if TCFG_TONE_NODE_ENABLE
 tone_file_plug
+#endif
+#if TCFG_RING_TONE_NODE_ENABLE
 ring_file_plug
+#endif
+#if TCFG_KEY_TONE_NODE_ENABLE
 key_tone_file_plug
+#endif
 msbc_decoder_plug
 
 #if 0
@@ -530,4 +536,16 @@ frequency_compressor_node_adapter
 #endif
 #if TCFG_SPATIAL_ADV_NODE_ENABLE
 spatial_adv_node_adapter
+#endif
+
+#if TCFG_VIRTUAL_BASS_PRO_MODULE_NODE_ENABLE
+virtual_bass_pro_node_adapter
+#endif
+
+#if TCFG_ENC_AAC_ENABLE
+aac_enc_plug
+#endif
+
+#if TCFG_LHDC_X_NODE_ENABLE
+lhdc_x_node_adapter
 #endif

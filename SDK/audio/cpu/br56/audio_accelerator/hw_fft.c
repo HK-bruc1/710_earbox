@@ -46,23 +46,23 @@ static volatile u8 fft_init = 0;
  * ***************************/
 #define NUMFFTR 22
 
-static int NFFT_R[NUMFFTR] = {
+static short NFFT_R[NUMFFTR] = {
     16, 20, 30, 40, 60, 64, 80, 90, 120, 128, 160, 180, 240, 256, 320, 360, 480, 512, 720, 960, 1024, 2048, // NFFT
 };
 
-static int FFT5N_R[NUMFFTR * 2] = {
+static char FFT5N_R[NUMFFTR * 2] = {
     0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, // FFT
 };
 
-static int FFT3N_R[NUMFFTR * 2] = {
+static char FFT3N_R[NUMFFTR * 2] = {
     0, 0, 1, 0, 1, 0, 0, 2, 1, 0, 0, 2, 1, 0, 0, 2, 1, 0, 2, 1, 0, 0, // FFT
 };
 
-static int FFT2N_R[NUMFFTR * 2] = {
+static char FFT2N_R[NUMFFTR * 2] = {
     1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, // FFT
 };
 
-static int FFT4N_R[NUMFFTR * 2] = {
+static char FFT4N_R[NUMFFTR * 2] = {
     1, 0, 0, 1, 0, 2, 1, 0, 1, 3, 2, 0, 1, 3, 2, 1, 2, 4, 1, 2, 4, 5, // FFT
 };
 
@@ -77,23 +77,23 @@ static float Result_Amplitude_R[NUMFFTR * 2] = {
  * ***************************/
 #define NUMFFTC 26
 
-static int NFFT_C[NUMFFTC] = {
+static short NFFT_C[NUMFFTC] = {
     8, 10, 15, 20, 30, 32, 40, 45, 60, 64, 80, 90, 120, 128, 160, 180, 240, 256, 320, 360, 480, 512, 720, 960, 1024, 2048, // FFT
 };
 
-static int FFT5N_C[NUMFFTC] = {
+static char FFT5N_C[NUMFFTC] = {
     0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, // FFT
 };
 
-static int FFT3N_C[NUMFFTC] = {
+static char FFT3N_C[NUMFFTC] = {
     0, 0, 1, 0, 1, 0, 0, 2, 1, 0, 0, 2, 1, 0, 0, 2, 1, 0, 0, 2, 1, 0, 2, 1, 0, 0, // FFT
 };
 
-static int FFT2N_C[NUMFFTC] = {
+static char FFT2N_C[NUMFFTC] = {
     1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, // FFT
 };
 
-static int FFT4N_C[NUMFFTC] = {
+static char FFT4N_C[NUMFFTC] = {
     1, 0, 0, 1, 0, 2, 1, 0, 1, 3, 2, 0, 1, 3, 2, 1, 2, 4, 3, 1, 2, 4, 2, 3, 5, 5, // FFT
 };
 
@@ -108,7 +108,7 @@ static float Result_Amplitude_C[NUMFFTC * 2] = {
  * 点数对应索引值查找，找到元素返回索引值，否则返回-1
  *
  * *********************************************************************/
-static int binarySearch(int arr[], int len, int target)
+static int binarySearch(short arr[], int len, int target)
 {
     int low = 0, high = len - 1, mid;
     while (low <= high) {

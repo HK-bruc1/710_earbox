@@ -85,9 +85,6 @@ SECTIONS
 	{
 		*(.boot_info)
         . = ALIGN(128);
-        // 需要避免与uboot和maskrom冲突
-        *(.debug_record)
-        . = ALIGN(4);
 	} > ram0
 
 	.irq_stack ALIGN(32):
@@ -192,18 +189,49 @@ SECTIONS
 		/* *(.baseband_manger.text) */
 		/* *(.lmp_rxtx_v2.text) */
 		/* *(.baseband.text) */
-		*(.dac_node.text)
-		*(.jlstream.text)
-		*(.jlstream.text*)
-		*(.a2dp_streamctrl.text)
-		*(.a2dp_player.text)
-		*(.volume_node.text)
-		*(.bt_audio_timestamp.text)
-		*(.audio_src_coef.text)
-		*(.media.audio_libutils.text)
-		*(.dac_node.text)
-		*(.a2dp_streamctrl.text)
+        *(.tws_lmp_sync.text)
+        *(.tws_conn_edr.text)
+        *(.tws_esco.text)
 
+        *(.jlstream.text.cache.L2)
+		//*(.dac_node.text)
+		//*(.jlstream.text)
+		//*(.jlstream.text*)
+		//*(.a2dp_streamctrl.text)
+		//*(.a2dp_player.text)
+		//*(.volume_node.text)
+		//*(.bt_audio_timestamp.text)
+		//*(.audio_src_coef.text)
+		//*(.media.audio_libutils.text)
+		//*(.dac_node.text)
+		//*(.a2dp_streamctrl.text)
+
+#if  TCFG_CODE_TO_RAM_COMPRESS_ENABLE
+		*(.sbc_hwaccel.text)
+		*(.eq_coeff_design.text)
+		*(.aac.text)
+		*(.media_analysis.text)
+		*(.bt_audio_sync_node.text)
+		*(.esco_audio_plc.text.cache.L2.run)
+		*(.audio_cfifo.text.cache.L2.run)
+		*(.node.eq.text.cache.L2)
+		*(.node.source.text.cache.L2)
+		*(.node.dac.text.cache.L2)
+		*(.encoder_node.text)
+		*(.decoder_node.text)
+		*(.eq.text)
+		*(.hw_eq.text)
+		*(.audio_sync.text)
+		*(.jlstream.text.cache.L2)
+		*(.audio_anc_fade_ctr.text)
+		*(.tone_player.text)
+		*(.tws_tone_player.text)
+		*(.media.media_cpu.text)
+		*(.jlstream_fade.text)
+		/* *(.anc.text) */
+		/* *(.anc_core.text) */
+		/* *(.anc_user.text) */
+#endif
 
 		. = ALIGN(4);
         _SPI_CODE_START = . ;
@@ -230,6 +258,17 @@ SECTIONS
 
 	data_code_pc_limit_end = .;
 	__report_overlay_end = .;
+
+#if TCFG_CONFIG_DEBUG_RECORD_ENABLE
+    // 需要避免与uboot和maskrom冲突
+    .debug_record_ram ALIGN(4):
+    {
+        /* . = . + 0x1000; */
+        . = ALIGN(4);
+        *(.debug_record)
+        . = ALIGN(4);
+    } > ram0
+#endif
 
 	_HEAP_BEGIN = . ;
 	_HEAP_END = RAM0_END;

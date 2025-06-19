@@ -22,9 +22,15 @@
 #define	AUDIO_COMMON_DACLDO_CAPLESS_LEVEL4	(8)	// VCM-capless, 要求VDDIO >= 3.3v
 
 typedef struct {
+    u8 src_sel;         //VCM电源来源
     u8 pmu_vbg_value;
     u8 aud_vbg_value;
 } audio_vbg_trim_t;
+
+typedef struct {
+    u8 power_mode;      //DAC功率模式
+    u8 dacldo_vsel;
+} audio_dacldo_trim_t;
 
 typedef struct {
     u8 en;				// DAC走ANC Sz通路(CIC)通路使能，一般存在ANC场景时默认要置1开启；若没有ANC场景，则可选择置0节省功耗
@@ -48,7 +54,8 @@ typedef struct {
     u8 vbg_trim_value;
     u8 audio_vbg_value;
     u8 pmu_vbg_value;
-    u8 vcm0d5_mode;             // 0:vcm = 0.6v  1:vcm = 0.5v  跟trim电压相关，默认选0.5v
+    u8 audio_trim_flag;
+    u8 vcm0d5_mode;         // 0:vcm = 0.6v  1:vcm = 0.5v  跟trim电压相关，默认选0.5v
     u8 vcm_cap_en;
     u8 clk_mode;			// 音频时钟模式选择, 0: 数字单端时钟		1: 差分晶振时钟
     u8 aud_en;				// ADDA总使能开关
@@ -95,7 +102,7 @@ int audio_dac_analog_status_add_check(int add);
 u16 audio_hpvdd_hw_sel_check(void);
 
 int audio_common_power_trim(audio_vbg_trim_t *vbg_trim, u8 vcm_level);
-int audio_dac_ldo_trim(u8 *dacldo_vsel);
+int audio_dac_ldo_trim(u8 *dacldo_vsel, u8 power_mode);
 
 void audio_adc_dmic_clock_open(u8 dmic_cken, u8 dmic_div);
 #endif // _AUDIO_COMMON_H_

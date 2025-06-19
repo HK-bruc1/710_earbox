@@ -11,6 +11,7 @@
 #include "device/device.h"
 #include "asm/power_interface.h"
 #include "system/event.h"
+#include "system/init.h"
 #include "asm/efuse.h"
 #include "gpio.h"
 #include "clock.h"
@@ -56,6 +57,10 @@
  * 充电推屏开启后,VIN将被拉低,系统会把VIN的电压扯到低于4V,充电电流会降低至0mA,VIN会继续下降,
  * 一旦下降到低于VBAT电压,电池就会给系统供电,这种模式称为补电模式,在改模式下,VPWR和VBAT同时为系统供电
  */
+
+#ifndef TCFG_CHARGE_NVDC_EN
+#define TCFG_CHARGE_NVDC_EN 0 // NVDC架构使能
+#endif
 
 #define CHARGE_VILOOP1_ENABLE       1//默认开启
 #define CHARGE_VILOOP2_ENABLE       TCFG_CHARGE_NVDC_EN//默认关闭
@@ -696,6 +701,7 @@ u16 get_charge_full_value(void)
     return __this->full_voltage;
 }
 
+__INITCALL_BANK_CODE
 static void charge_config(void)
 {
     u8 charge_trim_val;
@@ -780,6 +786,7 @@ static void charge_config(void)
     set_charge_mA(__this->data->charge_trickle_mA);
 }
 
+__INITCALL_BANK_CODE
 int charge_init(const struct charge_platform_data *data)
 {
     log_info("%s\n", __func__);
@@ -802,6 +809,7 @@ int charge_init(const struct charge_platform_data *data)
     CHG_VILOOP_EN(0);
     CHG_VILOOP2_EN(0);
     PMU_NVDC_EN(0);
+    L5V_IO_MODE(0);
 
     //消除vbat到vpwr的漏电再判断ldo5v状态
     u8 temp = 10;

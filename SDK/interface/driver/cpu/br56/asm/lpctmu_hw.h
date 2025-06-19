@@ -97,6 +97,7 @@ struct lpctmu_platform_data {
 struct lpctmu_config_data {
     u8 ch_num;
     u8 ch_list[LPCTMU_CHANNEL_SIZE];
+    u8 ch_fixed_isel[LPCTMU_CHANNEL_SIZE];
     u8 ch_en;
     u8 ch_wkp_en;
     u8 softoff_wakeup_cfg;
