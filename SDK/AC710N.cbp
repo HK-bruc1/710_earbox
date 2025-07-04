@@ -338,6 +338,7 @@
 <Add option="cpu/br56/liba/lib_point360_td.a" />
 <Add option="cpu/br56/liba/SensorCalib.a" />
 <Add option="cpu/br56/liba/SpatialAudio.a" />
+<Add option="cpu/br56/liba/spatial_imp.a" />
 <Add option="cpu/br56/liba/SomatosensoryControl.a" />
 <Add option="cpu/br56/liba/3DSpatial.a" />
 <Add option="cpu/br56/liba/lib_plateReverb_adv.a" />
@@ -1814,6 +1815,7 @@
 <Unit filename="interface/media/tech_lib/jlsp_kws.h" />
 <Unit filename="interface/media/tech_lib/jlsp_vad.h" />
 <Unit filename="interface/media/tech_lib/sensor_common_parm.h" />
+<Unit filename="interface/media/tech_lib/spatial_imp_ctrl.h" />
 <Unit filename="interface/media/tws/jl_tws.h" />
 <Unit filename="interface/system/bank_switch.h" />
 <Unit filename="interface/system/boot.h" />

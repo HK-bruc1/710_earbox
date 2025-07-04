@@ -295,12 +295,6 @@
 #define ANC_CLIPPING_MODE_MUSIC_LIMIT		1	//ANC防破音-限制音乐幅度，牺牲音乐
 #define ANC_CLIPPING_MODE_DYNAMIC_ANC_GAIN	2	//ANC防破音-ANC音乐动态增益，牺牲ANC性能
 
-//ANC防破音-限制音乐幅度时, BR52默认不限制
-#if TCFG_AUDIO_ANC_ENABLE
-#define ANC_MODE_DIG_VOL_LIMIT	(0.0f)
-#endif/*TCFG_AUDIO_ANC_ENABLE*/
-
-
 #define BT_MUSIC_VOL_LEAVE_MAX	16		/*高级音频音量等级*/
 #define BT_CALL_VOL_LEAVE_MAX	15		/*通话音量等级*/
 // #define BT_CALL_VOL_STEP		(-2.0f)	[>通话音量等级衰减步进<]

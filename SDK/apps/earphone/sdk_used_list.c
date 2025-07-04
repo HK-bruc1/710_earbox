@@ -549,3 +549,8 @@ aac_enc_plug
 #if TCFG_LHDC_X_NODE_ENABLE
 lhdc_x_node_adapter
 #endif
+
+#if TCFG_MUTE_NODE_ENABLE
+mute_node_adapter
+#endif
+

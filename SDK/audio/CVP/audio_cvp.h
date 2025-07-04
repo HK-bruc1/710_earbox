@@ -14,7 +14,7 @@
 
 extern const u8 CONST_AEC_EXPORT;
 extern const u8 CONST_REF_SRC;
-
+extern const u8 CONST_SMS_DNS_VERSION;
 /*
  *CVP(清晰语音模式定义)
  */

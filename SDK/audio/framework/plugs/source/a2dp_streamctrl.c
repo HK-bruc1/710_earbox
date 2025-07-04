@@ -631,7 +631,7 @@ void *a2dp_stream_control_plan_select(void *stream, int low_latency, u32 codec_t
             }
         }
         ctrl->adaptive_max_latency = low_latency ? (ctrl->initial_latency + MAX_DELAY_INCREMENT) : CONFIG_A2DP_ADAPTIVE_MAX_LATENCY;
-        ctrl->initial_compensation = bt_get_total_connect_dev() > 1 ? DUAL_CONN_COMPENSATION_LATENCY : 0;
+        ctrl->initial_compensation = 0;//bt_get_total_connect_dev() > 1 ? DUAL_CONN_COMPENSATION_LATENCY : 0;
         ctrl->adaptive_latency = ctrl->initial_latency + ctrl->initial_compensation;
         break;
     }

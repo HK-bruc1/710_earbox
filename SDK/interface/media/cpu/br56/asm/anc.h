@@ -263,7 +263,7 @@ enum ANC_CORE_MDOE {
 #define ANC_TEST_TYPE_FFT			1	//SZ数据累加FFT导出
 
 /*ANC芯片版本定义(只读)*/
-#define ANC_CHIP_VERSION			ANC_VERSION_BR50
+#define ANC_CHIP_VERSION			ANC_VERSION_BR56
 
 /*ANC CFG读写标志*/
 #define ANC_CFG_READ		 		0x01
@@ -357,7 +357,7 @@ typedef struct {
     void (*dma_done_cb)(void);
 } anc_adt_param_t;
 
-#define ANC_GAINS_VERSION 		0X7081	//结构体版本号信息
+#define ANC_GAINS_VERSION 		0X7100  //结构体版本号信息
 //DCC结构
 typedef struct {
     u8  norm_dc_par; 	// range 0-15;    default 0
@@ -388,10 +388,10 @@ typedef struct {
 //cfg
     u16 version;		//当前结构体版本号
     u8 dac_gain;		//dac模拟增益 			range 0-3;   default 3
-    u8 l_ffmic_gain;	//ANCL FFmic增益 		range 0-4;   default 0
-    u8 l_fbmic_gain;	//ANCL FBmic增益		range 0-4;   default 0
-    u8 r_ffmic_gain;	//ANCR FFmic增益		range 0-4;	 default 0;
-    u8 r_fbmic_gain;	//ANCR FBmic增益		range 0-4;	 default 0;
+    u8 l_ffmic_gain;	//ANCL FFmic增益 		range 0-7;   default 2
+    u8 l_fbmic_gain;	//ANCL FBmic增益		range 0-7;   default 2
+    u8 r_ffmic_gain;	//ANCR FFmic增益		range 0-7;	 default 2
+    u8 r_fbmic_gain;	//ANCR FBmic增益		range 0-7;	 default 2
     u8 cmp_en;			//音乐补偿使能			range 0-1;   default 1
 
     u8 drc_en;		    //DRC使能				range 0-7;   default 0

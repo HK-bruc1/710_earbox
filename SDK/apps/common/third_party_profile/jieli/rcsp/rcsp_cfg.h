@@ -252,7 +252,7 @@ RCSP_BTMATE_EN
 #define RCSP_ADV_ASSISTED_HEARING								0		// 辅听，注意开启辅听后，需要关闭ANC相关功能
 
 #if !RCSP_ADV_ASSISTED_HEARING
-#define RCSP_ADV_ANC_VOICE     					CONFIG_ANC_ENABLE		// 主动降噪
+#define RCSP_ADV_ANC_VOICE     					                0		// 主动降噪
 #if RCSP_ADV_ANC_VOICE
 #define RCSP_ADV_ADAPTIVE_NOISE_REDUCTION 						0		// 自适应降噪
 #define RCSP_ADV_SCENE_NOISE_REDUCTION							0		// 场景降噪

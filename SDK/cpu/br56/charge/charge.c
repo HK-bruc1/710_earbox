@@ -472,7 +472,7 @@ void charge_close(void)
     CHGGO_EN(0);
     CHG_VILOOP_EN(0);
     CHG_VILOOP2_EN(0);
-    PMU_NVDC_EN(0);
+    PMU_NVDC_EN(1);
 
     charge_event_to_user(CHARGE_EVENT_CHARGE_CLOSE);
 
@@ -808,7 +808,7 @@ int charge_init(const struct charge_platform_data *data)
     CHG_CCLOOP_EN(1);
     CHG_VILOOP_EN(0);
     CHG_VILOOP2_EN(0);
-    PMU_NVDC_EN(0);
+    PMU_NVDC_EN(1);
     L5V_IO_MODE(0);
 
     //消除vbat到vpwr的漏电再判断ldo5v状态

@@ -40,6 +40,7 @@ extern const char config_audio_dac_trim_enable;
 extern const int config_audio_dac_mute_timeout;
 extern const int config_audio_dac_pa_mode;
 extern const int config_audio_dac_power_mode;
+extern const int config_audio_dac_ng_debug;
 
 /*
  *******************************************************************
@@ -112,6 +113,8 @@ extern const int virtualbass_noisegate_attack_time;
 extern const int virtualbass_noisegate_release_time;
 extern const int virtualbass_noisegate_hold_time;
 extern const float virtualbass_noisegate_threshold;
+extern const int spatial_imp_run_points;
+extern const int CONFIG_SPATIAL_EFFECT_VERSION;
 /*
  *******************************************************************
  *						Audio Codec Configs

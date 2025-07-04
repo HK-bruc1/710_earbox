@@ -86,16 +86,6 @@ static void board_charge_uninit()
 platform_initcall(board_charge_init);
 
 platform_uninitcall(board_charge_uninit);
-#else
-
-//没开启充电时,关闭漏电寄存器(约2uA)
-int board_charge_init()
-{
-    CHG_VILOOP_EN(0);
-    CHG_VILOOP2_EN(0);
-    return 0;
-}
-platform_initcall(board_charge_init);
 
 #endif
 

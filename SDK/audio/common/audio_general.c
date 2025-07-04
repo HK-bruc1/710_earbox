@@ -25,6 +25,8 @@ const int config_media_tws_en = 1;
 const int config_media_tws_en = 0;
 #endif
 
+const int config_audio_dac_ng_debug = 0;
+
 /* 16bit数据流中也存在32bit位宽数据的处理 */
 const int config_ch_adapter_32bit_enable = 1;
 const int config_mixer_32bit_enable = 1;
@@ -427,6 +429,15 @@ const int mb_limiter_3band_run_en       = 1;
 const int audio_vocal_remover_low_cut_enable = 1;
 const int audio_vocal_remover_high_cut_enable = 1;
 const int audio_vocal_remover_preset_mode = 0; //预设参数模式[0/1]，0：预设关，使用工具节点配置 1：使用预设模式1
+
+/* 空间音效V300 */
+#ifdef TCFG_AUDIO_EFX_83E1_RUN_MODE
+const int spatial_imp_run_mode = TCFG_AUDIO_EFX_83E1_RUN_MODE;
+#else
+const int spatial_imp_run_mode = EFx_BW_16t16 | EFx_BW_32t32;
+#endif
+const int spatial_imp_fft_mode = 2;     //1软件fft(浮点输入输出) 2硬件fft(定点输入输出)
+const int spatial_imp_run_points = 128; //运算点数
 
 /*
  *******************************************************************
