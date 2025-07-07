@@ -15,6 +15,7 @@
 #include "system/includes.h"
 #include "btcontroller_config.h"
 #include "bt_common.h"
+#include "classic/tws_api.h"
 
 // *INDENT-OFF*
 /**
@@ -191,12 +192,13 @@ u32 get_a2dp_max_buf_size(u8 codec_type)
     } else if (codec_type == 0xE || codec_type == 0xC) {
         a2dp_max_buf_size = CONFIG_A2DP_LHDC_MAX_BUF_SIZE;
     }
-	
-    extern int tws_api_get_role_async();
+
+#if TCFG_USER_TWS_ENABLE
     if (tws_api_get_role_async() == TWS_ROLE_SLAVE) {
         a2dp_max_buf_size = 1024;
     }
-	
+#endif
+
     return a2dp_max_buf_size;
 }
 
@@ -751,4 +753,3 @@ const char log_tag_const_i_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_d_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_w_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_e_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
-
