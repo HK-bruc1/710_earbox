@@ -191,6 +191,12 @@ u32 get_a2dp_max_buf_size(u8 codec_type)
     } else if (codec_type == 0xE || codec_type == 0xC) {
         a2dp_max_buf_size = CONFIG_A2DP_LHDC_MAX_BUF_SIZE;
     }
+	
+	extern int tws_api_get_role_async();
+	if (tws_api_get_role_async() == TWS_ROLE_SLAVE) {
+		a2dp_max_buf_size = 1024;
+	}
+	
     return a2dp_max_buf_size;
 }
 
