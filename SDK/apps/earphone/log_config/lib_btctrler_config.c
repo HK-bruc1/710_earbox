@@ -195,7 +195,7 @@ u32 get_a2dp_max_buf_size(u8 codec_type)
 
 #if TCFG_USER_TWS_ENABLE
     if (tws_api_get_role_async() == TWS_ROLE_SLAVE) {
-        a2dp_max_buf_size = 1024;
+        a2dp_max_buf_size += 1024;
     }
 #endif
 
