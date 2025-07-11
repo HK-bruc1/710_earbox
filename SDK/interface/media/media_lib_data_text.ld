@@ -76,6 +76,13 @@
 #endif
 #endif /*CONFIG_CODE_MOVABLE_ENABLE*/ 
 
+#if AUDIO_LLNS_DNS_CODEC_AT_RAM
+    *(.llns_dns.const)
+    *(.llns_dns.code)
+    *(.conv_params)
+    *(.seq_params)
+#endif
+
 #if (AFx_SPATIAL_EFFECT_AT_RAM)
     . = ALIGN(4);
     *(.pSOUND360TD_cal_sparse_code)
@@ -187,10 +194,8 @@
 #endif
 
 #if AUDIO_LC3_CODEC_AT_RAM
-	    *(.lc3_dec.text.const)
-	    *(.lc3_dec.text)
-	    *(.lc3_enc.text.const)
-	    *(.lc3_enc.text)
+		*(.lc3_enc.text.cache.L2.run)
+		*(.lc3_dec.text.cache.L2.run)
 	    *(.lc3_codec_c_const)
 	    *(.lc3_codec_c_code)
 	    *(.lc3_codec_c_sparse_code)
@@ -227,6 +232,21 @@
 		*(.jl_codec_const) 
 #endif
 
+#if AUDIO_JLA_V2_CODEC_AT_RAM
+	*(.jla_v2_enc_const)
+	*(.jla_v2_enc_code)
+	*(.jla_v2_dec_const)
+	*(.jla_v2_dec_code)
+	*(.jla_v2_codec_c_const)
+	*(.jla_v2_codec_c_code)
+	*(.jla_v2_codec_ari_c_const)
+	*(.jla_v2_codec_ari_c_code)
+	*(.jla_v2_codec_c_sparse_code)
+	*(.jla_v2_codec_e_code)
+	*(.jla_v2_decoder_const)
+	*(.jla_v2_decoder_code)
+	*(.jla_v2_codec_d_code)
+#endif
 
 #if AFx_VBASS_AT_RAM
     *(.vbss.text.cache.L2.code)	

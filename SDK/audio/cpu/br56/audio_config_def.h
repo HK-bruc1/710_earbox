@@ -47,7 +47,7 @@
 //**************************************
 // 			音频模块链接配置
 //**************************************
-#if 0
+#if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
 /*音频模块代码全部不放RAM*/
 #define AFx_VBASS_AT_RAM				    0	//虚拟低音
 #define AFx_REVERB_AT_RAM				    0	//混响
@@ -156,6 +156,7 @@
 #else
 #define AUDIO_LC3_CODEC_AT_RAM		        0	//LC3 编解码
 #endif
+#define AUDIO_JLA_V2_CODEC_AT_RAM	0	//JLA_V2 编解码
 
 /*语音识别算法编译链接配置*/
 #define AUDIO_KWS_COMMON_AT_RAM             0   //kws公共部分 ，0:放flash，1:放ram

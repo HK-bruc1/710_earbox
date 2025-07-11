@@ -106,6 +106,45 @@ static const struct norflash_dev_platform_data spi_flash_platform_data = {
     .size           = 512 * 1024,
 };
 #endif
+
+//重写弱函数
+#ifdef CONFIG_CPU_BR56
+const struct spi_platform_data spix_p_data[HW_SPI_MAX_NUM] = {
+    {
+        //spi0
+    },
+    {
+        //spi1
+        .port = {
+            IO_PORTA_04, //clk any io
+            IO_PORTA_05, //do any io
+            IO_PORTC_00, //di any io
+            0xff, //d2 any io
+            0xff, //d3 any io
+            0xff, //cs any io(主机不操作cs)
+        },
+        .role = 0,//SPI_ROLE_MASTER,
+        .clk  = 1000000,
+        .mode = 0,//SPI_MODE_BIDIR_1BIT,//SPI_MODE_UNIDIR_2BIT,
+        .bit_mode = 0, //SPI_FIRST_BIT_MSB
+        .cpol = 0,//clk level in idle state:0:low,  1:high
+        .cpha = 0,//sampling edge:0:first,  1:second
+        .ie_en = 0, //ie enbale:0:disable,  1:enable
+        .irq_priority = 3,
+        .spi_isr_callback = NULL,  //spi isr callback
+    },
+};
+
+static const struct norflash_dev_platform_data spi_flash_platform_data = {
+    .spi_hw_num     = 1,
+    .spi_cs_port    = IO_PORTA_06,
+    .spi_read_width = 0,
+    .start_addr     = 0,
+    .size           = 512 * 1024,
+};
+#endif
+
+
 #ifdef CONFIG_CPU_BR52
 const struct spi_platform_data spix_p_data[HW_SPI_MAX_NUM] = {
     {
@@ -183,7 +222,7 @@ static int dlog_ex_flash_zone_erase(u16 erase_sector, u16 sector_num)
 
     if (dlog_use_ex_flash) {
         for (int i = 0; i < sector_num; i++) {
-            _norflash_eraser(FLASH_SECTOR_ERASER, (erase_sector + i) * LOG_BASE_UNIT_SIZE);
+            _norflash_eraser(FLASH_SECTOR_ERASER, (erase_sector + i) * LOG_BASE_UNIT_SIZE + spi_flash_platform_data.start_addr);
         }
     }
     return 0;
@@ -244,6 +283,9 @@ static int dlog_ex_flash_init(void)
 #endif
 #ifdef CONFIG_CPU_BR52
     gpio_set_mode(IO_PORT_SPILT(IO_PORTB_04), PORT_OUTPUT_HIGH);
+#endif
+#ifdef CONFIG_CPU_BR56
+    gpio_set_mode(IO_PORT_SPILT(IO_PORTA_03), PORT_OUTPUT_HIGH);
 #endif
     os_time_dly(1);
     _norflash_init("flash1", (struct norflash_dev_platform_data *)&spi_flash_platform_data);

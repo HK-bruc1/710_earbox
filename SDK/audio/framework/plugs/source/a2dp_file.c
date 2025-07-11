@@ -905,6 +905,7 @@ static int a2dp_ioctl(void *_hdl, int cmd, int arg)
         break;
     case NODE_IOC_GET_FMT:
         err = a2dp_ioc_get_fmt(hdl, (struct stream_fmt *)arg);
+        stream_node_ioctl(hdl->node, NODE_UUID_BT_AUDIO_SYNC, NODE_IOC_SET_SYNC_NETWORK, hdl->edr_to_local_time ? AUDIO_NETWORK_LOCAL : AUDIO_NETWORK_BT2_1);
         break;
     case NODE_IOC_GET_FMT_EX:
         err = a2dp_ioc_get_fmt_ex(hdl, (struct stream_fmt_ex *)arg);
@@ -934,7 +935,7 @@ static void a2dp_release(void *_hdl)
     free(hdl);
 }
 
-
+#if TCFG_BT_SUPPORT_A2DP
 REGISTER_SOURCE_NODE_PLUG(a2dp_file_plug) = {
     .uuid       = NODE_UUID_A2DP_RX,
     .frame_size = 1024,
@@ -943,6 +944,7 @@ REGISTER_SOURCE_NODE_PLUG(a2dp_file_plug) = {
     .ioctl      = a2dp_ioctl,
     .release    = a2dp_release,
 };
+#endif
 
 
 

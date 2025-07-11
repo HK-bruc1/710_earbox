@@ -25,6 +25,7 @@
 #include "bt_common.h"
 #include "boot.h"
 #include "asm/sfc_norflash_api.h"
+#include "db_updata_api.h"
 
 #if TCFG_MIC_EFFECT_ENABLE
 #include "mic_effect.h"
@@ -137,7 +138,10 @@ void update_result_set(u16 result)
 {
     if (CONFIG_UPDATE_ENABLE) {
         UPDATA_PARM *p = UPDATA_FLAG_ADDR;
-
+        if (p->parm_type == UPDIFF_FLASH_UPDATA || p->parm_type == COMBAK_FLASH_UPDATA) {
+            log_info("update updiff/combak\n");
+            return;
+        }
         memset(p, 0x00, sizeof(UPDATA_PARM));
         p->parm_result = result;
         p->parm_crc = CRC16(((u8 *)p) + 2, sizeof(UPDATA_PARM) - 2);
@@ -222,6 +226,7 @@ int update_result_deal()
 
     u8 key_voice_cnt = 0;
     u16 result = 0;
+    u16 up_type = (g_updata_flag >> 16) & 0xffff;
     result = (g_updata_flag & 0xffff);
     log_info("<--------update_result_deal=0x%x %x--------->\n", result, g_updata_flag >> 16);
 #if CONFIG_DEBUG_ENABLE
@@ -287,6 +292,10 @@ int update_result_deal()
             //注:关机要慎重,要设置开机键
             //enter_sys_soft_poweroff();
         }
+    }
+
+    if (up_type == UPDIFF_FLASH_UPDATA || up_type == COMBAK_FLASH_UPDATA) {
+        db_update_break_last_update_param();
     }
 
     return 1;

@@ -25,6 +25,13 @@ const int config_media_tws_en = 1;
 const int config_media_tws_en = 0;
 #endif
 
+/*蓝牙音频关联的使能配置，不含蓝牙的系统配置为0*/
+#if TCFG_APP_BT_EN
+const int config_bt_audio_enable = 1;
+#else
+const int config_bt_audio_enable = 0;
+#endif
+
 const int config_audio_dac_ng_debug = 0;
 
 /* 16bit数据流中也存在32bit位宽数据的处理 */
@@ -69,7 +76,11 @@ const int config_audio_split_gain_enable = TCFG_SPLIT_GAIN_NODE_ENABLE;
 const int config_audio_stereomix_enable = TCFG_STEROMIX_NODE_ENABLE;
 
 //ADC Enable Config
+#ifdef TCFG_ADC0_ENABLE
 const int config_audio_adc0_enable = TCFG_ADC0_ENABLE;
+#else
+const int config_audio_adc0_enable = 0;
+#endif
 #ifdef TCFG_ADC1_ENABLE
 const int config_audio_adc1_enable = TCFG_ADC1_ENABLE;
 #else
@@ -103,7 +114,11 @@ const int config_audio_adc6_enable = 0;
 const int config_audio_adc7_enable = 0;
 
 //ADC input Mode:Single-Ended/Differential/Single-Ended Capless
+#ifdef TCFG_ADC0_MODE
 const int config_audio_adc0_input_mode = TCFG_ADC0_MODE;
+#else
+const int config_audio_adc0_input_mode = 0;
+#endif
 #ifdef TCFG_ADC1_MODE
 const int config_audio_adc1_input_mode = TCFG_ADC1_MODE;
 #else
@@ -208,7 +223,8 @@ const int limiter_run_mode = EFx_PRECISION_PRO
                              | TCFG_AUDIO_EFX_4E5B_RUN_MODE
 #endif
 #if defined(TCFG_AUDIO_EFX_F58A_RUN_MODE)
-                             | TCFG_AUDIO_EFX_F58A_RUN_MODE
+                             | ((TCFG_AUDIO_EFX_F58A_RUN_MODE & (EFx_BW_32t16 | EFx_BW_32t32)) ? EFx_BW_32t32 : 0)
+                             | ((TCFG_AUDIO_EFX_F58A_RUN_MODE &EFx_BW_16t16) ? EFx_BW_16t16 : 0)
 #endif
 #if !defined(TCFG_AUDIO_EFX_4E5B_RUN_MODE) && !defined(TCFG_AUDIO_EFX_F58A_RUN_MODE)
                              | 0xFFFF
@@ -297,7 +313,8 @@ const  int drc_advance_run_mode          = EFx_PRECISION_NOR
         | TCFG_AUDIO_EFX_4250_RUN_MODE
 #endif
 #if defined(TCFG_AUDIO_EFX_74CB_RUN_MODE)
-        | TCFG_AUDIO_EFX_74CB_RUN_MODE
+        | ((TCFG_AUDIO_EFX_74CB_RUN_MODE & (EFx_BW_32t16 | EFx_BW_32t32)) ? EFx_BW_32t32 : 0)
+        | ((TCFG_AUDIO_EFX_74CB_RUN_MODE &EFx_BW_16t16) ? EFx_BW_16t16 : 0)
 #endif
 #if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
         | TCFG_AUDIO_EFX_02E6_RUN_MODE

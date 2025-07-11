@@ -16,6 +16,7 @@
 #include "audio_base.h"
 #include "le_connected.h"
 #include "wireless_trans.h"
+#include "media_config.h"
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 
@@ -74,7 +75,16 @@ static struct connected_platform_data platform_data;
 /* 如果码率超过96K,即帧长超过122,就需要将每次传输数据大小 修改为一帧编码长度 */
 static u32 calcul_cig_enc_output_frame_len(u16 frame_len, u32 bit_rate)
 {
-    return (frame_len * bit_rate / 1000 / 8 / 10 + 2);
+    int len = 0;
+    if (LE_AUDIO_CODEC_TYPE == AUDIO_CODING_LC3) {
+        len = (frame_len * bit_rate / 1000 / 8 / 10);
+    } else if (LE_AUDIO_CODEC_TYPE == AUDIO_CODING_JLA_V2) {
+        len = (frame_len * bit_rate / 1000 / 8 / 10 + (JLA_V2_CODEC_WITH_FRAME_HEADER == 0 ? 0 : 2));
+    } else {
+        printf("calcul_cig_enc_output_frame_len  error !!!  \n  unsupport this coding_type\n");
+    }
+    return len;
+
 }
 
 u32 get_cig_enc_output_frame_len(void)
@@ -221,7 +231,7 @@ void get_encoder_params_fmt(struct le_audio_stream_format *fmt)
     fmt->frame_dms = lc3_encoder_info.frame_duration;
     fmt->sdu_period = platform_data.args[platform_data_index].sdu_interval;
     fmt->bit_rate =  lc3_encoder_info.octets_per_frame * 8 * 1000 * 10 / fmt->frame_dms;
-    enc_output_frame_len = calcul_cig_enc_output_frame_len(fmt->frame_dms, fmt->bit_rate) - 2;
+    enc_output_frame_len = calcul_cig_enc_output_frame_len(fmt->frame_dms, fmt->bit_rate);
     cig_transmit_data_len = calcul_cig_transmit_data_len(enc_output_frame_len, fmt->sdu_period, fmt->frame_dms);
     printf("get_encoder_params_fmt=%d,%d,%d,%d,%d %d\n", fmt->nch, fmt->sample_rate, fmt->frame_dms, fmt->sdu_period, fmt->bit_rate, lc3_encoder_info.octets_per_frame);
 
@@ -247,7 +257,7 @@ void lea_profile_set_unicast_lc3_decoder_param(void *lc3_info)
 
     //计算并配置编码输出长度，配置相应的buf_len;
     //这里默认编解码参数相同，如果遇到不同的情况需要分开处理;
-    enc_output_frame_len = calcul_cig_enc_output_frame_len(platform_data.frame_len, platform_data.args[platform_data_index].bitrate) - 2;
+    enc_output_frame_len = calcul_cig_enc_output_frame_len(platform_data.frame_len, platform_data.args[platform_data_index].bitrate);
     cig_transmit_data_len = calcul_cig_transmit_data_len(enc_output_frame_len, get_cig_sdu_period_us(), platform_data.frame_len);
     dec_input_buf_len = calcul_cig_dec_input_buf_len(cig_transmit_data_len);
 

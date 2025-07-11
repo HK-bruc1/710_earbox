@@ -382,7 +382,7 @@ const int config_delete_link_key          = 1;           //配置是否连接失
  */
 
 #if (TCFG_USER_BLE_ENABLE)
-	#define DEFAULT_LE_FEATURES (LE_ENCRYPTION | LE_DATA_PACKET_LENGTH_EXTENSION | LL_FEAT_LE_EXT_ADV)
+	#define DEFAULT_LE_FEATURES (LE_ENCRYPTION | LE_DATA_PACKET_LENGTH_EXTENSION | LL_FEAT_LE_EXT_ADV | LL_FEAT_CHANNEL_CLASSIFICATION)
 
 	#if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 	    #define LE_AUDIO_CIS_LE_FEATURES (LE_ENCRYPTION | LE_FEATURES_CIS | LE_2M_PHY|CHANNEL_SELECTION_ALGORITHM_2|LL_FEAT_LE_EXT_ADV)
@@ -408,12 +408,20 @@ const int config_delete_link_key          = 1;           //配置是否连接失
        #define LE_AUDIO_BIS_RX_LE_ROLE     0
 	#endif
 
+    #if (THIRD_PARTY_PROTOCOLS_SEL & MULTI_CLIENT_EN)
+        #define MULTI_CLIENT_LE_ROLE (LE_MASTER | LE_SCAN | LE_INIT)
+        #define MULTI_CLIENT_LE_FEATURES (LE_ENCRYPTION | LE_DATA_PACKET_LENGTH_EXTENSION | LE_2M_PHY)
+    #else
+        #define MULTI_CLIENT_LE_ROLE 0
+        #define MULTI_CLIENT_LE_FEATURES 0
+    #endif
+
 #if TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
 	const int config_btctler_le_roles    = (LE_SLAVE | LE_ADV);
 	const uint64_t config_btctler_le_features = LE_ENCRYPTION;
 #else
-	const int config_btctler_le_roles    = (LE_SLAVE  | LE_ADV|LE_AUDIO_BIS_RX_LE_ROLE);
-	const uint64_t config_btctler_le_features = LE_AUDIO_CIS_LE_FEATURES|DEFAULT_LE_FEATURES|RCSP_MODE_LE_FEATURES|LE_AUDIO_BIS_RX_LE_FEATURES;
+	const int config_btctler_le_roles    = (LE_SLAVE  | LE_ADV|LE_AUDIO_BIS_RX_LE_ROLE | MULTI_CLIENT_LE_ROLE);
+	const uint64_t config_btctler_le_features = LE_AUDIO_CIS_LE_FEATURES|DEFAULT_LE_FEATURES|RCSP_MODE_LE_FEATURES|LE_AUDIO_BIS_RX_LE_FEATURES|MULTI_CLIENT_LE_FEATURES;
 #endif
 
 #else /* TCFG_USER_BLE_ENABLE */
@@ -450,7 +458,12 @@ const int config_btctler_le_master_multilink = 0;
 
 
 const int config_btctler_le_slave_conn_update_winden = 2500;//range:100 to 2500
-const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;//BIT(7);//|BIT(8);
+#if (defined CONFIG_CPU_BR50 || defined CONFIG_CPU_BR52)
+//br50 br52 默认开启频道监测
+const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH | BIT(11) | BIT(12) | BIT(13);
+#else
+const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;
+#endif
 
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
@@ -753,3 +766,4 @@ const char log_tag_const_i_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_d_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_w_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_e_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
+

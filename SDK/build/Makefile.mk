@@ -223,6 +223,7 @@ LFLAGS := \
 	cpu/br56/liba/howling.a \
 	cpu/br56/liba/lib_HarmonicExciter.a \
 	cpu/br56/liba/libllns.a \
+	cpu/br56/liba/lib_llns_dns.a \
 	cpu/br56/liba/lib_icsd_common_v2.a \
 	cpu/br56/liba/lib_icsd_anc_v2.a \
 	cpu/br56/liba/lib_icsd_rt_anc.a \

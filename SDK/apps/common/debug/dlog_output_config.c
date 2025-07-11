@@ -4,7 +4,7 @@
 
 #if TCFG_DEBUG_DLOG_ENABLE
 
-#define DLOG_OUTPUT_LBUF_MAX_SIZE       (1 * 1024)
+#define DLOG_OUTPUT_LBUF_MAX_SIZE       (2 * 1024)
 
 #define DLOG_OUTPUT_BY_UART     (1 << 0)
 #define DLOG_OUTPUT_BY_SPP      (1 << 1)
@@ -277,7 +277,6 @@ __dlog_exit_type_set:
 #include "chargestore/chargestore.h"
 #include "asm/charge.h"
 
-#define DLOG_UART_TX_PIN        IO_PORTA_04//IO_PORT_DP //IO_PORT_LDOIN
 #define DLOG_UART_NUM           -1
 
 struct dlog_uart_s {
@@ -327,15 +326,15 @@ void dlog_uart_init()
     struct uart_dma_config dma = {0};
     int ret = 0;
 
-    if (DLOG_UART_TX_PIN == TCFG_CHARGESTORE_PORT) {
+    if (TCFG_DEBUG_DLOG_UART_TX_PIN == TCFG_CHARGESTORE_PORT) {
         chargestore_api_stop();
     }
-    if (DLOG_UART_TX_PIN == IO_PORT_LDOIN) {
+    if (TCFG_DEBUG_DLOG_UART_TX_PIN == IO_PORT_LDOIN) {
         charge_module_stop();
     }
 
     config.baud_rate = 2000000;
-    config.tx_pin = DLOG_UART_TX_PIN;
+    config.tx_pin = TCFG_DEBUG_DLOG_UART_TX_PIN;
     config.rx_pin = 0xFFFF;
     config.tx_wait_mutex = 0;
     /* dlog_uart.uart_num = uart_init(-1, &config); */
@@ -363,10 +362,10 @@ void dlog_uart_deinit()
     uart_deinit(dlog_uart.uart_num);
     dlog_uart.uart_num = -1;
 
-    if (DLOG_UART_TX_PIN == TCFG_CHARGESTORE_PORT) {
+    if (TCFG_DEBUG_DLOG_UART_TX_PIN == TCFG_CHARGESTORE_PORT) {
         chargestore_api_restart();
     }
-    if (DLOG_UART_TX_PIN == IO_PORT_LDOIN) {
+    if (TCFG_DEBUG_DLOG_UART_TX_PIN == IO_PORT_LDOIN) {
         charge_module_restart();
     }
 }
@@ -406,7 +405,7 @@ static void dlog_uart_gpio_task_callback(void)
 static void dlog_uart_gpio_irq_callback(enum gpio_port port, u32 pin, enum gpio_irq_edge edge)
 {
     printf("gpio port%d.%d:%d-cb2\n", port, pin, edge);
-    gpio_irq_disable(IO_PORT_SPILT(DLOG_UART_TX_PIN));
+    gpio_irq_disable(IO_PORT_SPILT(TCFG_DEBUG_DLOG_UART_TX_PIN));
     int msg[3];
     msg[0] = (int)dlog_uart_gpio_task_callback;
     msg[1] = 1;
@@ -417,15 +416,15 @@ static void dlog_uart_gpio_irq_callback(enum gpio_port port, u32 pin, enum gpio_
 // 需要在dlog_init之后调用
 void dlog_uart_auto_enable_init(void)
 {
-    gpio_set_mode(IO_PORT_SPILT(DLOG_UART_TX_PIN), PORT_INPUT_PULLDOWN_1M);
-    int val = gpio_read(DLOG_UART_TX_PIN);
+    gpio_set_mode(IO_PORT_SPILT(TCFG_DEBUG_DLOG_UART_TX_PIN), PORT_INPUT_PULLDOWN_1M);
+    int val = gpio_read(TCFG_DEBUG_DLOG_UART_TX_PIN);
     printf("gpio_read %d\n", val);
 
     if (val) { // 开机时已经接上了串口线,直接打开串口
         dlog_uart_output_set(dlog_output_type_get() | DLOG_OUTPUT_2_UART);
     } else { // 开机时未接上串口线
 #if 1
-        u32 port_pin[2] = {IO_PORT_SPILT(DLOG_UART_TX_PIN)};
+        u32 port_pin[2] = {IO_PORT_SPILT(TCFG_DEBUG_DLOG_UART_TX_PIN)};
         struct gpio_irq_config_st dlog_uart_gpio_irq_config = {
             .pin = port_pin[1],
             .irq_edge = PORT_IRQ_EDGE_RISE,

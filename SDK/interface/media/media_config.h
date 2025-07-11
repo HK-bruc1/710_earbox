@@ -126,7 +126,7 @@ extern const u8 config_m4a_id3_enable;
 extern const u8 config_wav_id3_enable;
 extern const u8 config_wma_id3_enable;
 
-
+extern const int JLA_V2_CODEC_WITH_FRAME_HEADER ;
 
 
 

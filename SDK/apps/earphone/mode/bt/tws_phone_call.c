@@ -916,7 +916,7 @@ static int bt_phone_status_event_handler(int *msg)
         if (bt->value != 0xff) {
 #if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
             if (le_audio_player_is_playing()) {
-                le_auracast_stop();
+                le_auracast_stop(1);
             }
 #endif
             u8 call_vol = 15;
@@ -981,6 +981,12 @@ static int bt_phone_status_event_handler(int *msg)
 
             /* bt_phone_esco_stop(bt->args); */ //主机这里不直接停止，通过收到下面的命令在停止，避免主从停止不同步
             tws_phone_call_send_cmd(CMD_CLOSE_ESCO_PLAYER, bt->args, 0, 1);
+
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_AURACAST_SINK_EN)
+            if (!le_audio_player_is_playing()) {
+                le_auracast_audio_recover();
+            }
+#endif
 
 #if SECONDE_PHONE_IN_RING_COEXIST
             u8 device_a_call = bt_get_call_status_for_addr(bt->args);

@@ -31,7 +31,6 @@
 #define mbedtls_time_t     time_t
 #define mbedtls_fprintf    fprintf
 #define mbedtls_printf     printf
-#define ALIGNE(x)	    __attribute__((aligned(x)))
 
 /**
  * This is an optional version symbol that enables compatibility handling of
@@ -323,17 +322,17 @@
  *            digests and ciphers instead.
  *
  */
-//#define MBEDTLS_AES_ALT
+// #define MBEDTLS_AES_ALT
 //#define MBEDTLS_ARIA_ALT
 //#define MBEDTLS_CAMELLIA_ALT
-//#define MBEDTLS_CCM_ALT
+// #define MBEDTLS_CCM_ALT
 //#define MBEDTLS_CHACHA20_ALT
 //#define MBEDTLS_CHACHAPOLY_ALT
 //#define MBEDTLS_CMAC_ALT
 //#define MBEDTLS_DES_ALT
 //#define MBEDTLS_DHM_ALT
 //#define MBEDTLS_ECJPAKE_ALT
-//#define MBEDTLS_GCM_ALT
+// #define MBEDTLS_GCM_ALT
 //#define MBEDTLS_NIST_KW_ALT
 //#define MBEDTLS_MD5_ALT
 //#define MBEDTLS_POLY1305_ALT
@@ -393,16 +392,16 @@
  */
 //#define MBEDTLS_MD5_PROCESS_ALT
 //#define MBEDTLS_RIPEMD160_PROCESS_ALT
-//#define MBEDTLS_SHA1_PROCESS_ALT
-//#define MBEDTLS_SHA256_PROCESS_ALT
+// #define MBEDTLS_SHA1_PROCESS_ALT
+// #define MBEDTLS_SHA256_PROCESS_ALT
 //#define MBEDTLS_SHA512_PROCESS_ALT
 //#define MBEDTLS_DES_SETKEY_ALT
 //#define MBEDTLS_DES_CRYPT_ECB_ALT
 //#define MBEDTLS_DES3_CRYPT_ECB_ALT
-//#define MBEDTLS_AES_SETKEY_ENC_ALT
-//#define MBEDTLS_AES_SETKEY_DEC_ALT
-//#define MBEDTLS_AES_ENCRYPT_ALT
-//#define MBEDTLS_AES_DECRYPT_ALT
+// #define MBEDTLS_AES_SETKEY_ENC_ALT
+// #define MBEDTLS_AES_SETKEY_DEC_ALT
+// #define MBEDTLS_AES_ENCRYPT_ALT
+// #define MBEDTLS_AES_DECRYPT_ALT
 //#define MBEDTLS_ECDH_GEN_PUBLIC_ALT
 //#define MBEDTLS_ECDH_COMPUTE_SHARED_ALT
 //#define MBEDTLS_ECDSA_VERIFY_ALT
@@ -1324,7 +1323,7 @@
  *
  * Enable the checkup functions (*_self_test).
  */
-#define MBEDTLS_SELF_TEST
+// #define MBEDTLS_SELF_TEST
 
 /**
  * \def MBEDTLS_SHA256_SMALLER
@@ -2344,7 +2343,7 @@
  * This module enables the AES-CCM ciphersuites, if other requisites are
  * enabled as well.
  */
-#define MBEDTLS_CCM_C
+// #define MBEDTLS_CCM_C
 
 /**
  * \def MBEDTLS_CHACHA20_C
@@ -2787,7 +2786,7 @@
  *
  * This modules adds support for the VIA PadLock on x86.
  */
-#define MBEDTLS_PADLOCK_C
+// #define MBEDTLS_PADLOCK_C
 
 /**
  * \def MBEDTLS_PEM_PARSE_C
@@ -3749,21 +3748,21 @@
  *
  * Uncomment to set the maximum plaintext size of the incoming I/O buffer.
  */
-#define MBEDTLS_SSL_IN_CONTENT_LEN              16384
+// #define MBEDTLS_SSL_IN_CONTENT_LEN              16384
 
 /** \def MBEDTLS_SSL_CID_IN_LEN_MAX
  *
  * The maximum length of CIDs used for incoming DTLS messages.
  *
  */
-#define MBEDTLS_SSL_CID_IN_LEN_MAX 32
+// #define MBEDTLS_SSL_CID_IN_LEN_MAX 32
 
 /** \def MBEDTLS_SSL_CID_OUT_LEN_MAX
  *
  * The maximum length of CIDs used for outgoing DTLS messages.
  *
  */
-#define MBEDTLS_SSL_CID_OUT_LEN_MAX 32
+// #define MBEDTLS_SSL_CID_OUT_LEN_MAX 32
 
 /** \def MBEDTLS_SSL_CID_TLS1_3_PADDING_GRANULARITY
  *
@@ -3799,7 +3798,7 @@
  *
  * Uncomment to set the maximum plaintext size of the outgoing I/O buffer.
  */
-#define MBEDTLS_SSL_OUT_CONTENT_LEN             16384
+// #define MBEDTLS_SSL_OUT_CONTENT_LEN             16384
 
 /** \def MBEDTLS_SSL_DTLS_MAX_BUFFERING
  *

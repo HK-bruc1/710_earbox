@@ -211,29 +211,34 @@ static void audio_dac_trim_init()
             dac_trim.left = -trim_offset_value;
             dac_trim.right = -trim_offset_value;
         } else {
-            struct trim_init_param_t trim_init = {0};
-            trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
-            trim_init.trim_speed = 0.5f; //DAC trim的收敛速度(不建议修改)
-            int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
-            //vcmo模式offset 为 diff模式的两倍
-            int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (trim_offset_value) : (trim_offset_value * 2);
-            int trimr_offset = triml_offset;
-            int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (375) : (750); // DIFF:-1250±375(30%), VCMO:-2500±750(30%)
-            if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
-                trimr_offset = 0;
-            }
-            if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_R) {
-                triml_offset = 0;
-            }
-            if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
-                puts("DAC_trim_verify:Succ");
-                syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
+            if (dac_hdl.pd->power_mode > DAC_POWER_MODE_100mW) {// POWER_MODE > 100mW
+                dac_trim.left  = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (-trim_offset_value) : (-trim_offset_value * 2);
+                dac_trim.right = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (-trim_offset_value) : (-trim_offset_value * 2);
             } else {
-                puts("[Error]DAC_trim_verify:Error!!!");
-                dac_trim.left = -trim_offset_value;
-                dac_trim.right = -trim_offset_value;
+                struct trim_init_param_t trim_init = {0};
+                trim_init.precision = 1; //DAC trim的收敛精度(-precision, +precision)
+                trim_init.trim_speed = 0.5f; //DAC trim的收敛速度(不建议修改)
+                int ret = audio_dac_do_trim(&dac_hdl, &dac_trim, &trim_init);
+                //vcmo模式offset 为 diff模式的两倍
+                int triml_offset = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (trim_offset_value) : (trim_offset_value * 2);
+                int trimr_offset = triml_offset;
+                int trim_limit = (config_audio_dac_output_mode == DAC_MODE_DIFF) ? (375) : (750); // DIFF:-1250±375(30%), VCMO:-2500±750(30%)
+                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_L) {
+                    trimr_offset = 0;
+                }
+                if (config_audio_dac_output_channel == DAC_OUTPUT_MONO_R) {
+                    triml_offset = 0;
+                }
+                if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
+                    puts("DAC_trim_verify:Succ");
+                    syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
+                } else {
+                    puts("[Error]DAC_trim_verify:Error!!!");
+                    dac_trim.left = -trim_offset_value;
+                    dac_trim.right = -trim_offset_value;
+                }
+                audio_dac_close(&dac_hdl);
             }
-            audio_dac_close(&dac_hdl);
         }
     }
     audio_dac_set_trim_value(&dac_hdl, &dac_trim);
@@ -313,10 +318,12 @@ void audio_fast_mode_test()
     audio_dac_set_volume(&dac_hdl, app_audio_get_volume(APP_AUDIO_CURRENT_STATE));
     /* dac_analog_power_control(1);////将关闭基带，不开可发现，不可连接 */
     audio_dac_start(&dac_hdl);
+#if TCFG_AUDIO_ADC_ENABLE
     audio_adc_mic_demo_open(AUDIO_ADC_MIC_CH, 10, 16000, 1);
-
+#endif
 }
 
+#if TCFG_AUDIO_ADC_ENABLE
 struct audio_adc_private_param adc_private_param = {
     .performance_mode = TCFG_ADC_PERFORMANCE_MODE,
     .mic_ldo_vsel   = TCFG_AUDIO_MIC_LDO_VSEL,
@@ -326,7 +333,6 @@ struct audio_adc_private_param adc_private_param = {
     .lowpower_lvl = 0,
 };
 
-#if TCFG_AUDIO_ADC_ENABLE
 struct adc_platform_cfg adc_platform_cfg_table[AUDIO_ADC_MAX_NUM] = {
 #if TCFG_ADC0_ENABLE
     [0] = {
@@ -356,6 +362,7 @@ struct adc_platform_cfg adc_platform_cfg_table[AUDIO_ADC_MAX_NUM] = {
 __AUDIO_INIT_BANK_CODE
 void audio_input_initcall(void)
 {
+#if TCFG_AUDIO_ADC_ENABLE
     printf("audio_input_initcall\n");
 #if TCFG_MC_BIAS_AUTO_ADJUST
     /* extern u8 mic_ldo_vsel_use_save; */
@@ -416,6 +423,7 @@ void audio_input_initcall(void)
 #if TCFG_AUDIO_LINEIN_ENABLE
     audio_linein_file_init();
 #endif/*TCFG_AUDIO_LINEIN_ENABLE*/
+#endif
 }
 
 struct dac_platform_data dac_data = {//临时处理
@@ -461,8 +469,11 @@ static int audio_init()
 #if TCFG_AUDIO_ANC_ENABLE
     anc_init();
 #endif
+
+#if TCFG_DAC_NODE_ENABLE
     //DAC输出初始化
     audio_dac_initcall();
+#endif
 
 #if TCFG_SMART_VOICE_ENABLE
     audio_smart_voice_detect_init(NULL);

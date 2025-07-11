@@ -10,6 +10,8 @@
 
 extern void *rcsp_server_ble_hdl;		// ble连接handle
 extern void *rcsp_server_ble_hdl1;		// ble连接handle，rcsp双连的时候有效
+extern void *rcsp_server_edr_att_hdl;   // att连接handle
+extern void *rcsp_server_edr_att_hdl1;  // att连接handle，rcsp双连的时候有效
 
 /**
  * @brief rcsp ble/spp handle初始化
@@ -39,6 +41,12 @@ u8 bt_rcsp_ble_conn_num(void);
  * @result 返回连接的spp手机设备数
  */
 u8 bt_rcsp_spp_conn_num(void);
+/**
+ * @brief 获取当前已连接att数目
+ *
+ * @result 返回连接的att手机设备数
+ */
+u8 bt_rcsp_edr_att_conn_num(void);
 
 /**
  * @brief 在连接或断开的时候，设置rcsp蓝牙连接信息
