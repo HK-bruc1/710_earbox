@@ -691,7 +691,7 @@ c_SRC_FILES += \
 // 防止出现兼容性问题导致客户SDK无法维护
 //
 
-// $(info make project ---> $(CPU) $(APP_CASE))
+// $(info make project ---> $(CPU) earphone)
 
 
 #if TCFG_PWMLED_ENABLE
@@ -1777,23 +1777,23 @@ c_SRC_FILES += \
 
 #if TCFG_LE_AUDIO_APP_CONFIG
 c_SRC_FILES += \
-	apps/$(APP_CASE)/mode/bt/le_audio/le_audio_common.c \
+	apps/earphone/mode/bt/le_audio/le_audio_common.c \
 
 #endif
 
 #if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SOURCE_EN | LE_AUDIO_JL_UNICAST_SOURCE_EN | LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN))
 c_SRC_FILES += \
-	apps/$(APP_CASE)/mode/bt/le_audio/cig/app_le_connected.c \
-	apps/$(APP_CASE)/mode/bt/le_audio/cig/le_connected.c \
-	apps/$(APP_CASE)/mode/bt/le_audio/cig/le_connected_config.c \
+	apps/earphone/mode/bt/le_audio/cig/app_le_connected.c \
+	apps/earphone/mode/bt/le_audio/cig/le_connected.c \
+	apps/earphone/mode/bt/le_audio/cig/le_connected_config.c \
 
 #endif
 
 #if (TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_AURACAST_SOURCE_EN | LE_AUDIO_JL_AURACAST_SOURCE_EN | LE_AUDIO_AURACAST_SINK_EN | LE_AUDIO_JL_AURACAST_SINK_EN))
 c_SRC_FILES += \
-	apps/$(APP_CASE)/mode/bt/le_audio/big/app_le_auracast.c \
-	apps/$(APP_CASE)/mode/bt/le_audio/big/le_broadcast.c \
-	apps/$(APP_CASE)/mode/bt/le_audio/big/le_broadcast_config.c \
+	apps/earphone/mode/bt/le_audio/big/app_le_auracast.c \
+	apps/earphone/mode/bt/le_audio/big/le_broadcast.c \
+	apps/earphone/mode/bt/le_audio/big/le_broadcast_config.c \
 
 #endif
 
