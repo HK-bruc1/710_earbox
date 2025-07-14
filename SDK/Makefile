@@ -95,7 +95,6 @@ DEFINES := \
 	-DCONFIG_RELEASE_ENABLE \
 	-DCONFIG_EARPHONE_CASE \
 	-DCONFIG_CPU_BR56 \
-	-DCONFIG_USB_SUPPORT_MRX_TX \
 	-DCONFIG_IIC_VERSION2 \
 	-DLWIP_USE_BT \
 	-DCONFIG_SUPPORT_AES_CCM_FOR_EDR \
@@ -175,15 +174,19 @@ INCLUDES := \
 	-Iinterface/btstack/third_party/common \
 	-Iinterface/btstack/third_party \
 	-Iinterface/utils \
+	-Iinterface/utils/generic \
 	-Iinterface/utils/device \
 	-Iinterface/utils/fs \
-	-Iinterface/utils/generic \
 	-Iinterface/utils/math/cpu/br56 \
+	-Iinterface/net/mbedtls_3_4_0 \
 	-Iinterface/btstack/third_party/rcsp \
 	-Iinterface/media/media_new \
 	-Iinterface/media/media_new/media \
 	-Iinterface/media/media_new/media/cpu/br56 \
 	-Iinterface/media/media_new/media/cpu/br56/asm \
+	-Iinterface/net/lwip_2_2_0/lwip/src/include \
+	-Iinterface/net/lwip_2_2_0/lwip/port \
+	-Iinterface/net/lwip_2_2_0/lwip/app \
 	-Iapps/earphone \
 	-Iapps/earphone/include \
 	-Iapps/earphone/include/wireless_mic \
@@ -214,6 +217,7 @@ INCLUDES := \
 	-Iaudio/common \
 	-Iaudio/effect \
 	-Iapps/common/device/sensor/imu_sensor \
+	-Iinterface/net/lwip_2_2_0/lwip/src \
 	-Iapps/common/third_party_profile/jieli/rcsp \
 	-Iapps/common/third_party_profile/jieli/rcsp/adv \
 	-Iapps/common/third_party_profile/jieli/rcsp/rcsp_functions \
@@ -230,6 +234,8 @@ INCLUDES := \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt \
 	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/browser \
+	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd \
+	-Iapps/common/third_party_profile/jieli/rcsp/server/functions/mass_data \
 	-Iapps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update \
 	-Iapps/common/third_party_profile/mma_protocol \
 	-Iapps/common/third_party_profile/realme_protocol \
@@ -353,6 +359,7 @@ c_SRC_FILES := \
 	apps/common/device/sensor/ir_sensor/ir_manage.c \
 	apps/common/device/sensor/ir_sensor/jsa1221.c \
 	apps/common/device/sensor/ntc/ntc_det.c \
+	apps/common/device/storage_device/norflash/norflash.c \
 	apps/common/device/storage_device/norflash/norflash_sfc.c \
 	apps/common/device/usb/demo/host/udisk_block_test.c \
 	apps/common/device/usb/device/cdc.c \
@@ -460,6 +467,7 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_manage.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_task.c \
 	apps/common/third_party_profile/jieli/rcsp/rcsp_interface.c \
+	apps/common/third_party_profile/jieli/rcsp/rcsp_simplified/rcsp_interface_simplified.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/browser/rcsp_browser.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_bt_func.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/device_info/device_status_cmd/rcsp_fm_func.c \
@@ -478,6 +486,9 @@ c_SRC_FILES := \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_simple_transfer.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_trans_back.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.c \
+	apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_opt.c \
 	apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_sync.c \
@@ -635,6 +646,7 @@ c_SRC_FILES := \
 	apps/earphone/log_config/lib_btstack_config.c \
 	apps/earphone/log_config/lib_driver_config.c \
 	apps/earphone/log_config/lib_media_config.c \
+	apps/earphone/log_config/lib_net_config.c \
 	apps/earphone/log_config/lib_system_config.c \
 	apps/earphone/log_config/lib_update_config.c \
 	apps/earphone/message/adapter/app_msg.c \
@@ -701,6 +713,7 @@ c_SRC_FILES := \
 	apps/earphone/ui/led/led_config.c \
 	apps/earphone/ui/led/led_ui_msg_handler.c \
 	apps/earphone/user_cfg.c \
+	audio/CVP/audio_aec.c \
 	audio/CVP/audio_cvp.c \
 	audio/CVP/audio_cvp_3mic.c \
 	audio/CVP/audio_cvp_ais_3mic.c \
@@ -742,6 +755,7 @@ c_SRC_FILES := \
 	audio/common/demo/codec_demo/audio_opus_codec_demo.c \
 	audio/common/demo/codec_demo/audio_sbc_codec_demo.c \
 	audio/common/demo/codec_demo/audio_speex_codec_demo.c \
+	audio/common/demo/hw_math_v2_demo.c \
 	audio/common/frame_length_adaptive.c \
 	audio/common/icsd/adjdcc/icsd_adjdcc_config.c \
 	audio/common/icsd/adt/icsd_adt.c \
@@ -825,6 +839,7 @@ c_SRC_FILES := \
 	audio/effect/demo/frequency_shift_howling_demo.c \
 	audio/effect/demo/gain_demo.c \
 	audio/effect/demo/harmonic_exciter_demo.c \
+	audio/effect/demo/lhdc_x_demo.c \
 	audio/effect/demo/multiband_drc_demo.c \
 	audio/effect/demo/noisegate_demo.c \
 	audio/effect/demo/notch_howling_demo.c \
@@ -867,6 +882,7 @@ c_SRC_FILES := \
 	audio/framework/nodes/esco_tx_node.c \
 	audio/framework/nodes/iis_node.c \
 	audio/framework/nodes/le_audio_source.c \
+	audio/framework/nodes/lhdc_x_node.c \
 	audio/framework/nodes/local_tws_source_node.c \
 	audio/framework/nodes/multi_ch_iis_node.c \
 	audio/framework/nodes/ns_node.c \
@@ -925,6 +941,7 @@ c_SRC_FILES := \
 	audio/smart_voice/jl_kws_platform.c \
 	audio/smart_voice/kws_event.c \
 	audio/smart_voice/nn_vad.c \
+	audio/smart_voice/nn_vad_bin.c \
 	audio/smart_voice/smart_voice_config.c \
 	audio/smart_voice/smart_voice_core.c \
 	audio/smart_voice/user_asr.c \
@@ -953,6 +970,8 @@ c_SRC_FILES := \
 	cpu/br56/power/power_gate.c \
 	cpu/br56/power/power_port.c \
 	cpu/br56/setup.c \
+	cpu/br56/ui_driver/led7/led7_driver.c \
+	cpu/br56/ui_driver/ui_common.c \
 	cpu/components/gpadc_battery.c \
 	cpu/components/iic_api.c \
 	cpu/components/iic_soft.c \
@@ -1083,6 +1102,7 @@ LFLAGS := \
 	cpu/br56/liba/lib_voiceChanger.a \
 	cpu/br56/liba/VirtualBass.a \
 	cpu/br56/liba/lib_virtual_bass_classic.a \
+	cpu/br56/liba/lib_virtual_bass_pro.a \
 	cpu/br56/liba/DynamicEQ.a \
 	cpu/br56/liba/DynamicEQPro.a \
 	cpu/br56/liba/lib_point360_td.a \
@@ -1129,10 +1149,12 @@ LFLAGS := \
 	cpu/br56/liba/libdistortion.a \
 	cpu/br56/liba/lib_frequency_compressor.a \
 	cpu/br56/liba/lib_gain_mix.a \
+	cpu/br56/liba/liblhdc_x_edge.a \
 	cpu/br56/liba/libFFT_pi32v2_OnChip.a \
 	cpu/br56/liba/lib_wtg_dec.a \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_opusdec_rom_dec.a \
+	cpu/br56/liba/crypto_toolbox_Osize.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
 	cpu/br56/liba/cbuf.a \

@@ -161,8 +161,23 @@ RCSP_BTMATE_EN
 #define RCSP_ADV_EN												1
 #define RCSP_DEVICE_STATUS_ENABLE								1		//设备状态信息功能
 #define RCSP_BT_CONTROL_ENABLE									0		//bt控制功能
+#define RCSP_TONE_FILE_TRANSFER_ENABLE                          0       //提示音传输至预留区域功能
 
 #define RCSP_UPDATE_EN		         							1		//是否支持rcsp升级
+
+#if RCSP_TONE_FILE_TRANSFER_ENABLE
+#define TONE_FILE_RESERVED_AREA_NAME                            "TONE" // 存放提示音的预留区域名称
+#define TONE_FILE_NUM											1 // 存放到预留区域文件个数
+#define TONE_EATCH_FILE_MAX_SIZE                                (60 * 1024) // 每个存放到预留区域文件的最大大小
+
+#ifdef TONE_FILE_RESERVED_AREA_NAME
+#define TONE_FILE_RESERVED_AREA_CONFIG_NAME                     TONE // 存放提示音的预留区域名称，需要与TONE_FILE_RESERVED_AREA_NAME宏保持一致
+#define TONE_FILE_RESERVED_AREA_CONFIG_SIZE						64K	// 需要写立即数，大小要比TONE_FILE_NUM * TONE_EATCH_FILE_MAX_SIZE值要大
+#define TONE_FILE_RESERVED_AREA_CONFIG_OPT						1
+#endif
+
+#define TONE_FILE_DEFAULT_NAME                                  "tone"
+#endif
 
 #if (defined OTA_TWS_SAME_TIME_NEW)
 #undef OTA_TWS_SAME_TIME_NEW

@@ -27,7 +27,6 @@
 <Add option="-DCONFIG_RELEASE_ENABLE" />
 <Add option="-DCONFIG_EARPHONE_CASE" />
 <Add option="-DCONFIG_CPU_BR56" />
-<Add option="-DCONFIG_USB_SUPPORT_MRX_TX" />
 <Add option="-DCONFIG_IIC_VERSION2" />
 <Add option="-DLWIP_USE_BT" />
 <Add option="-DCONFIG_SUPPORT_AES_CCM_FOR_EDR" />
@@ -101,15 +100,19 @@
 <Add directory="interface/btstack/third_party/common" />
 <Add directory="interface/btstack/third_party" />
 <Add directory="interface/utils" />
+<Add directory="interface/utils/generic" />
 <Add directory="interface/utils/device" />
 <Add directory="interface/utils/fs" />
-<Add directory="interface/utils/generic" />
 <Add directory="interface/utils/math/cpu/br56" />
+<Add directory="interface/net/mbedtls_3_4_0" />
 <Add directory="interface/btstack/third_party/rcsp" />
 <Add directory="interface/media/media_new" />
 <Add directory="interface/media/media_new/media" />
 <Add directory="interface/media/media_new/media/cpu/br56" />
 <Add directory="interface/media/media_new/media/cpu/br56/asm" />
+<Add directory="interface/net/lwip_2_2_0/lwip/src/include" />
+<Add directory="interface/net/lwip_2_2_0/lwip/port" />
+<Add directory="interface/net/lwip_2_2_0/lwip/app" />
 <Add directory="apps/earphone" />
 <Add directory="apps/earphone/include" />
 <Add directory="apps/earphone/include/wireless_mic" />
@@ -140,6 +143,7 @@
 <Add directory="audio/common" />
 <Add directory="audio/effect" />
 <Add directory="apps/common/device/sensor/imu_sensor" />
+<Add directory="interface/net/lwip_2_2_0/lwip/src" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/adv" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/rcsp_functions" />
@@ -156,6 +160,8 @@
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_opt" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/browser" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd" />
+<Add directory="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data" />
 <Add directory="apps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update" />
 <Add directory="apps/common/third_party_profile/mma_protocol" />
 <Add directory="apps/common/third_party_profile/realme_protocol" />
@@ -310,6 +316,7 @@
 <Add option="cpu/br56/liba/lib_voiceChanger.a" />
 <Add option="cpu/br56/liba/VirtualBass.a" />
 <Add option="cpu/br56/liba/lib_virtual_bass_classic.a" />
+<Add option="cpu/br56/liba/lib_virtual_bass_pro.a" />
 <Add option="cpu/br56/liba/DynamicEQ.a" />
 <Add option="cpu/br56/liba/DynamicEQPro.a" />
 <Add option="cpu/br56/liba/lib_point360_td.a" />
@@ -356,10 +363,12 @@
 <Add option="cpu/br56/liba/libdistortion.a" />
 <Add option="cpu/br56/liba/lib_frequency_compressor.a" />
 <Add option="cpu/br56/liba/lib_gain_mix.a" />
+<Add option="cpu/br56/liba/liblhdc_x_edge.a" />
 <Add option="cpu/br56/liba/libFFT_pi32v2_OnChip.a" />
 <Add option="cpu/br56/liba/lib_wtg_dec.a" />
 <Add option="cpu/br56/liba/bfilterfun_lib.a" />
 <Add option="cpu/br56/liba/lib_opusdec_rom_dec.a" />
+<Add option="cpu/br56/liba/crypto_toolbox_Osize.a" />
 <Add option="cpu/br56/liba/lib_dns.a" />
 <Add option="cpu/br56/liba/update.a" />
 <Add option="cpu/br56/liba/cbuf.a" />
@@ -479,6 +488,7 @@
 <Unit filename="apps/common/device/sensor/ir_sensor/jsa1221.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/sensor/ntc/ntc_det_api.h" />
+<Unit filename="apps/common/device/storage_device/norflash/norflash.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/storage_device/norflash/norflash_sfc.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/demo/host/udisk_block_test.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/device/usb/device/cdc.c"><Option compilerVer="CC"/></Unit>
@@ -685,6 +695,7 @@
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_task.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/rcsp_functions/rcsp_task.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/rcsp_interface.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/rcsp_simplified/rcsp_interface_simplified.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/rcsp_user_api.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/browser/rcsp_browser.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/browser/rcsp_browser.h" />
@@ -723,6 +734,12 @@
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_trans_back.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/file_transfer/file_transfer_sync.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/mass_data/mass_data.h" />
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/pub_mutual_set_cmd/pub_mutual_set_cmd_opt.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_adv_bluetooth.h" />
 <Unit filename="apps/common/third_party_profile/jieli/rcsp/server/functions/rcsp_setting_opt/rcsp_setting_opt.c"><Option compilerVer="CC"/></Unit>
@@ -1012,6 +1029,7 @@
 <Unit filename="apps/earphone/include/le_audio/cig/app_le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/cig/le_connected.h" />
 <Unit filename="apps/earphone/include/le_audio/wireless_trans.h" />
+<Unit filename="apps/earphone/include/led7_driver.h" />
 <Unit filename="apps/earphone/include/led_config.h" />
 <Unit filename="apps/earphone/include/linein.h" />
 <Unit filename="apps/earphone/include/linein_dev.h" />
@@ -1027,6 +1045,7 @@
 <Unit filename="apps/earphone/include/tws_a2dp_play.h" />
 <Unit filename="apps/earphone/include/tws_dual_conn.h" />
 <Unit filename="apps/earphone/include/tws_dual_share.h" />
+<Unit filename="apps/earphone/include/ui_common.h" />
 <Unit filename="apps/earphone/include/undef_func.h" />
 <Unit filename="apps/earphone/include/user_cfg_id.h" />
 <Unit filename="apps/earphone/include/vol_sync.h" />
@@ -1035,6 +1054,7 @@
 <Unit filename="apps/earphone/log_config/lib_btstack_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/log_config/lib_driver_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/log_config/lib_media_config.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/log_config/lib_net_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/log_config/lib_system_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/log_config/lib_update_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/message/adapter/app_msg.c"><Option compilerVer="CC"/></Unit>
@@ -1102,6 +1122,8 @@
 <Unit filename="apps/earphone/ui/led/led_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/ui/led/led_ui_msg_handler.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/user_cfg.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/CVP/audio_aec.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/CVP/audio_aec.h" />
 <Unit filename="audio/CVP/audio_cvp.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/CVP/audio_cvp.h" />
 <Unit filename="audio/CVP/audio_cvp_3mic.c"><Option compilerVer="CC"/></Unit>
@@ -1148,6 +1170,7 @@
 <Unit filename="audio/common/audio_utils.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/audio_utils.h" />
 <Unit filename="audio/common/audio_volume_mixer.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/common/audio_volume_mixer.h" />
 <Unit filename="audio/common/bt_audio_energy_detection.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/bt_audio_energy_detection.h" />
 <Unit filename="audio/common/debug/audio_debug.c"><Option compilerVer="CC"/></Unit>
@@ -1162,6 +1185,7 @@
 <Unit filename="audio/common/demo/codec_demo/audio_opus_codec_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/demo/codec_demo/audio_sbc_codec_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/demo/codec_demo/audio_speex_codec_demo.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/common/demo/hw_math_v2_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/frame_length_adaptive.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/common/frame_length_adaptive.h" />
 <Unit filename="audio/common/icsd/adjdcc/icsd_adjdcc_config.c"><Option compilerVer="CC"/></Unit>
@@ -1275,6 +1299,7 @@
 <Unit filename="audio/effect/demo/frequency_shift_howling_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/gain_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/harmonic_exciter_demo.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/effect/demo/lhdc_x_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/multiband_drc_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/noisegate_demo.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/effect/demo/notch_howling_demo.c"><Option compilerVer="CC"/></Unit>
@@ -1331,6 +1356,8 @@
 <Unit filename="audio/framework/nodes/esco_tx_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/iis_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/le_audio_source.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/framework/nodes/lhdc_x_node.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="audio/framework/nodes/lhdc_x_node.h" />
 <Unit filename="audio/framework/nodes/local_tws_source_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/multi_ch_iis_node.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/framework/nodes/ns_node.c"><Option compilerVer="CC"/></Unit>
@@ -1417,6 +1444,7 @@
 <Unit filename="audio/smart_voice/kws_event.h" />
 <Unit filename="audio/smart_voice/nn_vad.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/nn_vad.h" />
+<Unit filename="audio/smart_voice/nn_vad_bin.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/smart_voice.h" />
 <Unit filename="audio/smart_voice/smart_voice_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/smart_voice/smart_voice_core.c"><Option compilerVer="CC"/></Unit>
@@ -1452,6 +1480,9 @@
 <Unit filename="cpu/br56/power/power_gate.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/power/power_port.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/setup.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="cpu/br56/ui_driver/led7/led7_driver.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="cpu/br56/ui_driver/led7/led7_driver_cfg.h" />
+<Unit filename="cpu/br56/ui_driver/ui_common.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/gpadc_battery.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/iic_soft.c"><Option compilerVer="CC"/></Unit>
@@ -1709,6 +1740,7 @@
 <Unit filename="interface/media/effects/audio_surround.h" />
 <Unit filename="interface/media/effects/audio_vbass.h" />
 <Unit filename="interface/media/effects/audio_virtual_bass_classic.h" />
+<Unit filename="interface/media/effects/audio_virtual_bass_pro.h" />
 <Unit filename="interface/media/effects/audio_virtual_surround_pro.h" />
 <Unit filename="interface/media/effects/audio_vocal_remove.h" />
 <Unit filename="interface/media/effects/audio_voice_changer.h" />
@@ -1717,6 +1749,7 @@
 <Unit filename="interface/media/effects/channel_adapter.h" />
 <Unit filename="interface/media/effects/chorus_api.h" />
 <Unit filename="interface/media/effects/convert_data.h" />
+<Unit filename="interface/media/effects/crossOver.h" />
 <Unit filename="interface/media/effects/distortion_api.h" />
 <Unit filename="interface/media/effects/drc_advance_api.h" />
 <Unit filename="interface/media/effects/drc_api.h" />
@@ -1754,6 +1787,7 @@
 <Unit filename="interface/media/effects/stereo_spatialwider.h" />
 <Unit filename="interface/media/effects/stereo_widen_api.h" />
 <Unit filename="interface/media/effects/virtual_bass_classic_api.h" />
+<Unit filename="interface/media/effects/virtual_bass_pro_api.h" />
 <Unit filename="interface/media/effects/voiceChanger_api.h" />
 <Unit filename="interface/media/framework/include/dac_node.h" />
 <Unit filename="interface/media/framework/include/decoder_node.h" />
@@ -1766,6 +1800,7 @@
 <Unit filename="interface/media/hw_fft_ext_v2.h" />
 <Unit filename="interface/media/includes.h" />
 <Unit filename="interface/media/limiter_noiseGate_api.h" />
+<Unit filename="interface/media/media_bank.h" />
 <Unit filename="interface/media/media_config.h" />
 <Unit filename="interface/media/media_memory.h" />
 <Unit filename="interface/media/mixer.h" />

@@ -434,10 +434,10 @@ void jl_kws_audio_close(void)
             __kws_audio->kws_adc = NULL;
         }
         /* audio_codec_clock_del(AUDIO_KWS_MODE); */
-        extern u8 audio_aec_status(void);
-        if (audio_aec_status()) {
+        /* extern u8 acoustic_echo_cancel_status_query(void);
+        if (acoustic_echo_cancel_status_query()) {
             audio_aec_update(0);
-        }
+        } */
         free(__kws_audio);
         __kws_audio = NULL;
     }

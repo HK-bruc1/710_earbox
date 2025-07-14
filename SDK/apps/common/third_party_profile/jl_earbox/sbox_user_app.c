@@ -231,7 +231,10 @@ void custom_sync_lyric_info(void *data)
     memcpy(music_buf+offset,my_musics->album_name,my_musics->album_len);offset+=my_musics->album_len;
     memcpy(music_buf+offset,my_musics->title,my_musics->title_len);offset+=my_musics->title_len;
     // sbox_ble_att_send_data(CUSTOM_CALL_STATEE_CMD, music_buf, offset);
-    sbox_demo_ble_send(music_buf, offset);
+     ble_user_cmd_prepare(BLE_CMD_ATT_SEND_DATA, 4, sbox_func_hdl.sbox_ble_send_handle, music_buf, offset, sbox_func_hdl.sbox_handle_type);
+  //  sbox_demo_ble_send(music_buf, offset);
+  //custom_send_data_to_box(music_buf, offset);
+  //app_ble_att_send_data(sbox_demo_ble_hdl, ATT_CHARACTERISTIC_ae99_01_CLIENT_CONFIGURATION_HANDLE, data, len, ATT_OP_NOTIFY);
 } 
 
 
@@ -326,8 +329,8 @@ void custom_control_music_state(void *data)
             }
     #else
         if (*datas == 0x01) { // 播放bt_cmd_prepare
-            // bt_cmd_prepare(USER_CTRL_AVCTP_OPID_PLAY, 0, NULL);
-            bt_cmd_prepare_for_addr(bt_addr, USER_CTRL_AVCTP_OPID_PLAY, 0, NULL);
+             bt_cmd_prepare(USER_CTRL_AVCTP_OPID_PLAY, 0, NULL);
+           // bt_cmd_prepare_for_addr(bt_addr, USER_CTRL_AVCTP_OPID_PLAY, 0, NULL);
         } else if (*datas == 0x02) { // 暂停
             bt_cmd_prepare(USER_CTRL_AVCTP_OPID_PLAY, 0, NULL);
         } else if (*datas == 0x03) { // 上一曲
@@ -354,7 +357,9 @@ void custom_control_tiltok(void *datas)
 {
     log_info("%s \n",__func__);
     u8 * data =(u8*)datas;
+#if TCFG_USER_EDR_ENABLE
     sbox_ctrl_tiktok(data[0]);//抖音点赞操作接口
+#endif
 }
 
 //仓设置手机是否拍照
@@ -362,8 +367,10 @@ __attribute__((weak))
 void custom_control_photo(void *data)
 {
     log_info("%s \n",__func__);
+#if TCFG_USER_EDR_ENABLE
     extern void key_take_photo();
     key_take_photo();
+#endif
 }
 
 // //仓设置耳机进出低延时模式 
@@ -514,9 +521,9 @@ void find_ear_tone_play(u8 tws)
     u8 i = 0;
     ring_player_stop();
     if(tws){
-        tws_play_ring_file_alone(get_tone_files()->power_on,400);
+        tws_play_ring_file_alone(get_tone_files()->find_ear,400);
     }else{
-        play_ring_file_alone(get_tone_files()->power_on);
+        play_ring_file_alone(get_tone_files()->find_ear);
     }
 
 }
@@ -532,52 +539,75 @@ void real_alarm_tone_play(u8 tws)
         play_ring_file_alone(get_tone_files()->power_on);
     }
 }
+
+static u8 sbox_tone_ctrl_l_en =0;
+static u8 sbox_tone_ctrl_r_en =0;
+
+#define VOLUME_NODE_CMD_SET_VOL     (1<<4)      
+static void sbox_tone_set_volume()
+{
+    printf("func:%s:%d", __FUNCTION__, app_audio_volume_max_query(SysVol_TONE));
+    u32 param = VOLUME_NODE_CMD_SET_VOL | app_audio_volume_max_query(SysVol_TONE);
+    jlstream_set_node_param(NODE_UUID_VOLUME_CTRLER, "Vol_BtcRing", &param, sizeof(param));
+}
+
+static void tws_sbox_tone_callback(int priv, enum stream_event event)
+{
+    printf("func:%s, event:%d", __FUNCTION__, event);
+    if (event == STREAM_EVENT_START) {
+        int msg[] = {(int)sbox_tone_set_volume, 0};
+        os_taskq_post_type("app_core", Q_CALLBACK, ARRAY_SIZE(msg), msg);
+    }
+}
+REGISTER_TWS_TONE_CALLBACK(tws_sbox_tone_stub) = {
+    .func_uuid  = 0x2EC850AF,
+    .callback   = tws_sbox_tone_callback,
+};
+
+static int sbox_tone_play_callback(void *priv, enum stream_event event)
+{
+    printf("func:%s, event:%d", __FUNCTION__, event);
+    if (event == STREAM_EVENT_START) {
+        int msg[] = {(int)sbox_tone_set_volume, 0};
+        os_taskq_post_type("app_core", Q_CALLBACK, ARRAY_SIZE(msg), msg);
+    }
+    return 0;
+}
+
+
 void smartbox_ring_set(u8 en, u8 ch)
 {
-    log_info("%s en: %d ch: %d tws_state %d role %d\n",__func__,en,ch,get_tws_sibling_connect_state(),tws_api_get_role()); 
-    if (!en) {  
-        if (((ch & RING_CH_L) && tws_api_get_local_channel() == 'L')
-            || ((ch & RING_CH_R) && tws_api_get_local_channel() == 'R')) {
-            // if (!tone_name_compare(TONE_RING)) {
-                ring_player_stop();
-            // }
-        }
+    if (strcmp(os_current_task(), "app_core")) {
+        printf("%s, task:%s", __func__, os_current_task());
+        int msg[] = {(int)smartbox_ring_set, 0};
+        os_taskq_post_type("app_core", Q_CALLBACK, ARRAY_SIZE(msg), msg);
         return;
     }
 
-     if (ch == RING_CH_LR_ALARM) {
-#if TCFG_USER_TWS_ENABLE
+    // if(sbox_tone_ctrl_l_en ==0 && sbox_tone_ctrl_r_en ==0 && tws_api_get_role()==1)
+    // {   
+    //     printf("all tone stop slave\n");
+    //     return;
+    // }
+    /* tone_player_stop(); */
+    ring_player_stop();
+
+    u8 l_en = sbox_tone_ctrl_l_en;
+    u8 r_en = sbox_tone_ctrl_r_en;
+
+    printf("%s, l_en:%d, r_en:%d", __func__,l_en,r_en);
+
+    if (l_en && r_en) {
         if (get_tws_sibling_connect_state()) {
-            if (tws_api_get_role() == 0) { //从机发起同步
-                tws_api_sync_call_by_uuid(0x23081717, 2, 300);
+            if (tws_api_get_role() == TWS_ROLE_SLAVE) { //对耳连上后，从机同步播。主机同步播的话，由于从机收到响铃慢，导致停止了提示音
+                tws_play_ring_file_alone_callback("tone_en/find_ear.*", 300, 0x2EC850AF);
             }
-        } else
-#endif
-        {
-            real_alarm_tone_play(0);
+        } else {
+            play_ring_file_alone_with_callback("tone_en/find_ear.*", NULL, sbox_tone_play_callback);
         }
-        return;
-    }
-
-    if (ch == RING_CH_LR) {
-#if TCFG_USER_TWS_ENABLE
-        if (get_tws_sibling_connect_state()) {
-            if (tws_api_get_role() == 0) { //从机发起同步
-                tws_api_sync_call_by_uuid(0x23081717, 1, 300);
-               
-            }
-        } else
-#endif
-        {
-            find_ear_tone_play(0);
-
-        }
-        return;
-    }
-    if (((ch & RING_CH_L) && tws_api_get_local_channel() == 'L')
-        || ((ch & RING_CH_R) && tws_api_get_local_channel() == 'R')) {
-        find_ear_tone_play(0);
-
+    } else if ((l_en && tws_api_get_local_channel() == 'L') ||
+               (r_en && tws_api_get_local_channel() == 'R')) {
+        play_ring_file_alone_with_callback("tone_en/find_ear.*", NULL, sbox_tone_play_callback);
     }
 }
 
@@ -586,24 +616,34 @@ int smartbox_tone_app_message_deal(u8 opcode)
     switch (opcode) {
     case RING_CH_LR_ALARM:
         log_info("SMARTBOX_RING_ALL");
+        sbox_tone_ctrl_l_en=1;
+        sbox_tone_ctrl_r_en=1;
         smartbox_ring_set(1, RING_CH_LR_ALARM);
         break;
     case RING_CH_LR:
         log_info("SMARTBOX_RING_ALL");
+        sbox_tone_ctrl_l_en=1;
+        sbox_tone_ctrl_r_en=1;
         smartbox_ring_set(1, RING_CH_LR);
         break;
     case RING_CH_R:
         log_info("SMARTBOX_RING_RIGHT");
+        sbox_tone_ctrl_l_en=0;
+        sbox_tone_ctrl_r_en=1;
         smartbox_ring_set(1, RING_CH_R);
-        smartbox_ring_set(0, RING_CH_L);
+        // smartbox_ring_set(0, RING_CH_L);
         break;                 
     case RING_CH_L:
         log_info("SMARTBOX_RING_LEFT");
+        sbox_tone_ctrl_l_en=1;
+        sbox_tone_ctrl_r_en=0;
         smartbox_ring_set(1, RING_CH_L);
-        smartbox_ring_set(0, RING_CH_R);
+        // smartbox_ring_set(0, RING_CH_R);
         break;
     case RING_CH_LR_ALL_OFF:
         printf("GFPS_RING_STOP_ALL");
+        sbox_tone_ctrl_l_en=0;
+        sbox_tone_ctrl_r_en=0;
         smartbox_ring_set(0, RING_CH_LR);
         break;
     }
@@ -955,12 +995,15 @@ static int sbox_btstack_event_handler(int *_event)
         break;
     case BT_STATUS_CONN_A2DP_CH:
     case BT_STATUS_CONN_HFP_CH:
-        sbox_cb_func.sbox_sync_all_info();
+    if(tws_api_get_role() == 0)
+        sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
+      //  sbox_cb_func.sbox_sync_all_info();
         break;
     case BT_STATUS_FIRST_DISCONNECT:
         sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
     case BT_STATUS_SECOND_DISCONNECT:
-
+    if(tws_api_get_role() == 0)
+     sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
         break;
     case BT_STATUS_AVRCP_INCOME_OPID:
         u8 connect_num = bt_get_total_connect_dev();

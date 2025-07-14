@@ -303,10 +303,7 @@ static int sbox_att_write_callback(void *hdl, hci_con_handle_t connection_handle
         break;
     case ATT_CHARACTERISTIC_ae99_01_CLIENT_CONFIGURATION_HANDLE:
         printf("\nwrite ccc:%04x, %02x\n", handle, buffer[0]);
-        check_connetion_updata_deal(connection_handle);
         att_set_ccc_config(handle, buffer[0]);
-        sbox_cb_func.sbox_sync_all_info();
-
         break;
     default:
         break;

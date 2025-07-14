@@ -22,9 +22,15 @@
 #define	AUDIO_COMMON_DACLDO_CAPLESS_LEVEL4	(8)	// VCM-capless, 要求VDDIO >= 3.3v
 
 typedef struct {
+    u8 src_sel;         //VCM电源来源
     u8 pmu_vbg_value;
     u8 aud_vbg_value;
 } audio_vbg_trim_t;
+
+typedef struct {
+    u8 power_mode;      //DAC功率模式
+    u8 dacldo_vsel;
+} audio_dacldo_trim_t;
 
 typedef struct {
     u8 en;				// DAC走ANC Sz通路(CIC)通路使能，一般存在ANC场景时默认要置1开启；若没有ANC场景，则可选择置0节省功耗

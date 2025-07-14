@@ -228,10 +228,11 @@ static int dual_conn_try_open_inquiry_page_scan()
     }
 #if TCFG_DUAL_CONN_INQUIRY_SCAN_TIME
     int connect_device      = bt_get_total_connect_dev();
+    //y_printf("connect_device=%d,need_keep_scan=%d,device_num_recorded=%d,inquiry_scan_disable=%d\n",connect_device,g_dual_conn.need_keep_scan,g_dual_conn.device_num_recorded,g_dual_conn.inquiry_scan_disable);
     if (connect_device == 0) {
         write_scan_conn_enable(1, 1);
     } else {
-        write_scan_conn_enable(g_dual_conn.inquiry_scan_disable ? 0 : 1, 1);
+        write_scan_conn_enable(g_dual_conn.inquiry_scan_disable ? 0 : 1, g_dual_conn.inquiry_scan_disable ? 0 : 1);
     }
 #else
     if (g_dual_conn.need_keep_scan) {

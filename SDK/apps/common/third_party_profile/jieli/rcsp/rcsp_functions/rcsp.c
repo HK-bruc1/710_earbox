@@ -84,7 +84,7 @@ void JL_rcsp_resume_do(void)
 
 bool JL_rcsp_protocol_can_send(void)
 {
-#if TCFG_USER_TWS_ENABLE
+#if TCFG_USER_TWS_ENABLE && !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
     if (get_bt_tws_connect_status() && (tws_api_get_role() == TWS_ROLE_SLAVE)) {
         // 从机不允许发rcsp数据
         /* printf("rcsp slave cant send data!\n"); */
@@ -220,7 +220,6 @@ static void rcsp_exit_in_app_core_task(void)
     JL_protocol_exit();
     task_kill(RCSP_TASK_NAME);
 
-#if !TCFG_THIRD_PARTY_PROTOCOLS_SIMPLIFIED
     // rcsp代码简化
     if (__this->rcsp_buf) {
         free(__this->rcsp_buf);
@@ -231,7 +230,6 @@ static void rcsp_exit_in_app_core_task(void)
         __this = NULL;
     }
     rcsp_opt_release();
-#endif
 #if RCSP_UPDATE_EN
     rcsp_update_resume();
 #endif

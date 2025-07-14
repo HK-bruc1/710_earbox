@@ -211,169 +211,6 @@
           },
           {
             "__config__": {
-              "label": "性能模式",
-              "showLabel": true,
-              "labelWidth": "",
-              "tag": "el-select",
-              "tagIcon": "select",
-              "layout": "colFormItem",
-              "span": 6,
-              "required": false,
-              "defaultValue": "DAC_MODE_LOW_POWER",
-              "regList": [],
-              "changeTag": true,
-              "searchSource": false,
-              "status": 0,
-              "dataType": [
-                "macro"
-              ],
-              "formId": 165,
-              "renderKey": "1651696937723189",
-              "eventField": [],
-              "uuid": "TCFG_DAC_PERFORMANCE_MODE",
-              "saveWay": "macro",
-              "originValue": "DAC_MODE_LOW_POWER"
-            },
-            "__slot__": {
-              "options": [
-                {
-                  "label": "标准模式",
-                  "value": "DAC_MODE_LOW_POWER",
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "高性能模式",
-                  "value": "DAC_MODE_HIGH_PERFORMANCE",
-                  "hide": false,
-                  "disabled": false
-                }
-              ]
-            },
-            "placeholder": "请选择性能模式",
-            "style": {
-              "width": "100%"
-            },
-            "clearable": true,
-            "disabled": false,
-            "filterable": false,
-            "multiple": false,
-            "id": "id_1696937723189_2",
-            "__vModel__": "field165"
-          },
-          {
-            "__config__": {
-              "label": "输出功率",
-              "showLabel": true,
-              "labelWidth": null,
-              "tag": "el-select",
-              "tagIcon": "select",
-              "layout": "colFormItem",
-              "span": 6,
-              "required": false,
-              "defaultValue": 0,
-              "regList": [],
-              "changeTag": true,
-              "searchSource": false,
-              "status": 0,
-              "dataType": [
-                "macro"
-              ],
-              "formId": 217,
-              "renderKey": "2171732627740706",
-              "saveWay": "macro",
-              "uuid": "TCFG_DAC_POWER_MODE",
-              "originValue": 0,
-              "eventField": []
-            },
-            "__slot__": {
-              "options": [
-                {
-                  "label": "20mW",
-                  "value": 0,
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "30mW",
-                  "value": 1,
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "50mW",
-                  "value": 2,
-                  "hide": false,
-                  "disabled": false
-                },
-                {
-                  "label": "80mW",
-                  "value": 3,
-                  "hide": false,
-                  "disabled": false
-                }
-              ]
-            },
-            "placeholder": "请选择输出功率",
-            "style": {
-              "width": "100%"
-            },
-            "clearable": false,
-            "disabled": false,
-            "filterable": false,
-            "multiple": false,
-            "id": "id_1732627740706_1",
-            "__vModel__": "field217"
-          },
-          {
-            "__config__": {
-              "label": "VCM电容",
-              "showLabel": true,
-              "labelWidth": null,
-              "tag": "el-select",
-              "tagIcon": "select",
-              "layout": "colFormItem",
-              "span": 6,
-              "required": false,
-              "regList": [],
-              "changeTag": true,
-              "searchSource": false,
-              "dataType": [
-                "macro"
-              ],
-              "formId": 102,
-              "renderKey": "1021675927562235",
-              "eventField": [],
-              "saveWay": "macro",
-              "defaultValue": "0X0",
-              "originValue": "0X0",
-              "uuid": "TCFG_AUDIO_VCM_CAP_EN"
-            },
-            "__slot__": {
-              "options": [
-                {
-                  "label": "不带电容",
-                  "value": "0X0"
-                },
-                {
-                  "label": "带电容",
-                  "value": "0x1"
-                }
-              ]
-            },
-            "placeholder": "请选择VCM电容",
-            "style": {
-              "width": "100%"
-            },
-            "clearable": true,
-            "disabled": false,
-            "filterable": false,
-            "multiple": false,
-            "id": "id_1675927562235_4",
-            "__vModel__": "field105"
-          },
-          {
-            "__config__": {
               "label": "缓冲长度(ms)",
               "showLabel": true,
               "changeTag": true,
@@ -408,104 +245,208 @@
           },
           {
             "__config__": {
-              "layout": "rowFormItem",
-              "tag": "group",
-              "tagIcon": "row",
-              "layoutTree": true,
-              "componentName": "高性能模式电流配置",
-              "enableUuid": "",
-              "showComponentName": true,
+              "label": "性能模式",
+              "showLabel": true,
+              "labelWidth": "",
+              "tag": "el-select",
+              "tagIcon": "select",
+              "layout": "colFormItem",
+              "span": 24,
+              "required": false,
+              "defaultValue": "DAC_MODE_LOW_POWER",
+              "regList": [],
+              "changeTag": true,
+              "searchSource": false,
+              "status": 0,
               "dataType": [
                 "macro"
               ],
-              "status": 0,
-              "template": "",
-              "hideAddTemplate": false,
-              "span": 24,
-              "formId": 101,
-              "renderKey": "1011733542697454",
-              "children": [
-                {
-                  "__config__": {
-                    "label": "PA_ISEL0",
-                    "showLabel": true,
-                    "labelWidth": null,
-                    "tag": "el-select",
-                    "tagIcon": "select",
-                    "layout": "colFormItem",
-                    "span": 8,
-                    "required": false,
-                    "defaultValue": 5,
-                    "regList": [],
-                    "changeTag": true,
-                    "searchSource": false,
-                    "status": 0,
-                    "dataType": [
-                      "macro"
-                    ],
-                    "formId": 102,
-                    "renderKey": "1021733542758247",
-                    "uuid": "TCFG_AUDIO_DAC_HP_PA_ISEL0",
-                    "saveWay": "macro",
-                    "originValue": 5
-                  },
-                  "__slot__": {
-                    "options": [
-                      {
-                        "label": "LEVEL2",
-                        "value": 2,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL3",
-                        "value": 3,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL4",
-                        "value": 4,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL5",
-                        "value": 5,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL6",
-                        "value": 6,
-                        "hide": false,
-                        "disabled": false
-                      }
-                    ]
-                  },
-                  "placeholder": "请选择PA_ISEL0",
-                  "style": {
-                    "width": "100%"
-                  },
-                  "clearable": false,
-                  "disabled": false,
-                  "filterable": false,
-                  "multiple": false,
-                  "id": "id_1733542758247_1",
-                  "__vModel__": "field102"
-                }
-              ],
+              "formId": 165,
+              "renderKey": "1651696937723189",
+              "eventField": [],
+              "uuid": "TCFG_DAC_PERFORMANCE_MODE",
               "saveWay": "macro",
-              "eventField": []
+              "originValue": "DAC_MODE_LOW_POWER",
+              "tipAlways": true,
+              "tip": "该配置仅对AB版芯片有效"
             },
-            "type": "default",
-            "justify": "start",
-            "align": "top",
+            "__slot__": {
+              "options": [
+                {
+                  "label": "标准模式",
+                  "value": "DAC_MODE_LOW_POWER",
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "高性能模式",
+                  "value": "DAC_MODE_HIGH_PERFORMANCE",
+                  "hide": false,
+                  "disabled": false
+                }
+              ]
+            },
+            "placeholder": "请选择性能模式",
             "style": {
-              "height": "70px",
-              "paddingLeft": "0px"
+              "width": "18%"
             },
-            "id": "id_1733542697454_0"
+            "clearable": true,
+            "disabled": false,
+            "filterable": false,
+            "multiple": false,
+            "id": "id_1696937723189_2",
+            "__vModel__": "field165"
+          },
+          {
+            "__config__": {
+              "label": "PA_ISEL0",
+              "showLabel": true,
+              "labelWidth": null,
+              "tag": "el-select",
+              "tagIcon": "select",
+              "layout": "colFormItem",
+              "span": 24,
+              "required": false,
+              "defaultValue": 5,
+              "regList": [],
+              "changeTag": true,
+              "searchSource": false,
+              "status": 0,
+              "dataType": [
+                "macro"
+              ],
+              "formId": 102,
+              "renderKey": "1021733542758247",
+              "uuid": "TCFG_AUDIO_DAC_PA_ISEL0",
+              "saveWay": "macro",
+              "originValue": 5,
+              "eventField": [],
+              "formItemWidth": "",
+              "tipAlways": true,
+              "tip": "该配置仅对C版及C版以后芯片有效"
+            },
+            "__slot__": {
+              "options": [
+                {
+                  "label": "LEVEL2",
+                  "value": 2,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL3",
+                  "value": 3,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL4",
+                  "value": 4,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL5",
+                  "value": 5,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL6",
+                  "value": 6,
+                  "hide": false,
+                  "disabled": false
+                }
+              ]
+            },
+            "placeholder": "请选择PA_ISEL0",
+            "style": {
+              "width": "18%"
+            },
+            "clearable": false,
+            "disabled": false,
+            "filterable": false,
+            "multiple": false,
+            "id": "id_1733542758247_1",
+            "__vModel__": "field102"
+          },
+          {
+            "__config__": {
+              "label": "PA_ISEL1",
+              "showLabel": true,
+              "labelWidth": null,
+              "tag": "el-select",
+              "tagIcon": "select",
+              "layout": "colFormItem",
+              "span": 24,
+              "required": false,
+              "defaultValue": 6,
+              "regList": [],
+              "changeTag": true,
+              "searchSource": false,
+              "status": 0,
+              "dataType": [
+                "macro"
+              ],
+              "formId": 105,
+              "renderKey": "1051733542986665",
+              "saveWay": "macro",
+              "uuid": "TCFG_AUDIO_DAC_PA_ISEL1",
+              "originValue": 6,
+              "eventField": [],
+              "tip": "该配置仅对C版及C版以后芯片有效",
+              "tipAlways": true
+            },
+            "__slot__": {
+              "options": [
+                {
+                  "label": "LEVEL2",
+                  "value": 2,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL3",
+                  "value": 3,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL4",
+                  "value": 4,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL5",
+                  "value": 5,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL6",
+                  "value": 6,
+                  "hide": false,
+                  "disabled": false
+                },
+                {
+                  "label": "LEVEL7",
+                  "value": 7,
+                  "hide": false,
+                  "disabled": false
+                }
+              ]
+            },
+            "placeholder": "请选择PA_ISEL1",
+            "style": {
+              "width": "18%"
+            },
+            "clearable": false,
+            "disabled": false,
+            "filterable": false,
+            "multiple": false,
+            "id": "id_1733542986665_4",
+            "__vModel__": "field105"
           },
           {
             "__config__": {
@@ -513,30 +454,80 @@
               "tag": "group",
               "tagIcon": "row",
               "layoutTree": true,
-              "componentName": "标准模式电流配置",
+              "componentName": "以下配置修改后需要擦除FLASH",
               "enableUuid": "",
               "showComponentName": true,
               "dataType": [
-                "macro"
+                "8",
+                "1"
               ],
               "status": 0,
               "template": "",
               "hideAddTemplate": false,
               "span": 24,
-              "formId": 104,
-              "renderKey": "1041733542947305",
+              "formId": 232,
+              "renderKey": "2321747885675474",
               "children": [
                 {
                   "__config__": {
-                    "label": "PA_ISEL0",
+                    "label": "VCM电容",
                     "showLabel": true,
-                    "labelWidth": null,
+                    "labelWidth": "",
                     "tag": "el-select",
                     "tagIcon": "select",
                     "layout": "colFormItem",
-                    "span": 8,
+                    "span": 12,
                     "required": false,
-                    "defaultValue": 2,
+                    "regList": [],
+                    "changeTag": true,
+                    "searchSource": false,
+                    "dataType": [
+                      "macro"
+                    ],
+                    "formId": 102,
+                    "renderKey": "1021675927562235",
+                    "eventField": [],
+                    "saveWay": "macro",
+                    "defaultValue": "0x1",
+                    "originValue": "0x1",
+                    "uuid": "TCFG_AUDIO_VCM_CAP_EN",
+                    "tip": "需要根据芯片方案是否带VCM电容配置",
+                    "tipAlways": true
+                  },
+                  "__slot__": {
+                    "options": [
+                      {
+                        "label": "不带电容",
+                        "value": "0X0"
+                      },
+                      {
+                        "label": "带电容",
+                        "value": "0x1"
+                      }
+                    ]
+                  },
+                  "placeholder": "请选择VCM电容",
+                  "style": {
+                    "width": "40%"
+                  },
+                  "clearable": true,
+                  "disabled": false,
+                  "filterable": false,
+                  "multiple": false,
+                  "id": "id_1675927562235_4",
+                  "__vModel__": "field105"
+                },
+                {
+                  "__config__": {
+                    "label": "输出功率",
+                    "showLabel": true,
+                    "labelWidth": "",
+                    "tag": "el-select",
+                    "tagIcon": "select",
+                    "layout": "colFormItem",
+                    "span": 12,
+                    "required": false,
+                    "defaultValue": 1,
                     "regList": [],
                     "changeTag": true,
                     "searchSource": false,
@@ -544,59 +535,56 @@
                     "dataType": [
                       "macro"
                     ],
-                    "formId": 105,
-                    "renderKey": "1051733542986665",
+                    "formId": 217,
+                    "renderKey": "2171732627740706",
                     "saveWay": "macro",
-                    "uuid": "TCFG_AUDIO_DAC_LP_PA_ISEL0",
-                    "originValue": 2
+                    "uuid": "TCFG_DAC_POWER_MODE",
+                    "originValue": 1,
+                    "eventField": [],
+                    "tipAlways": false,
+                    "tip": "",
+                    "formItemWidth": ""
                   },
                   "__slot__": {
                     "options": [
                       {
-                        "label": "LEVEL2",
+                        "label": "30mW",
+                        "value": 1,
+                        "hide": false,
+                        "disabled": false
+                      },
+                      {
+                        "label": "50mW",
                         "value": 2,
                         "hide": false,
                         "disabled": false
                       },
                       {
-                        "label": "LEVEL3",
+                        "label": "80mW(HPVDD>2.1v,接IOVDD或外供)",
                         "value": 3,
                         "hide": false,
                         "disabled": false
                       },
                       {
-                        "label": "LEVEL4",
+                        "label": "100mW(HPVDD>3.0v,接IOVDD或外供)",
                         "value": 4,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL5",
-                        "value": 5,
-                        "hide": false,
-                        "disabled": false
-                      },
-                      {
-                        "label": "LEVEL6",
-                        "value": 6,
                         "hide": false,
                         "disabled": false
                       }
                     ]
                   },
-                  "placeholder": "请选择PA_ISEL0",
+                  "placeholder": "请选择输出功率",
                   "style": {
-                    "width": "100%"
+                    "width": "40%"
                   },
                   "clearable": false,
                   "disabled": false,
                   "filterable": false,
                   "multiple": false,
-                  "id": "id_1733542986665_4",
-                  "__vModel__": "field105"
+                  "id": "id_1732627740706_1",
+                  "__vModel__": "field217"
                 }
               ],
-              "saveWay": "macro",
               "eventField": []
             },
             "type": "default",
@@ -606,7 +594,7 @@
               "height": "70px",
               "paddingLeft": "0px"
             },
-            "id": "id_1733542947305_3"
+            "id": "id_1747885675474_0"
           },
           {
             "__config__": {
@@ -1230,7 +1218,7 @@
                     "formId": 127,
                     "renderKey": "1271671073751470",
                     "saveWay": "macro",
-                    "defaultValue": 0,
+                    "defaultValue": 1,
                     "formItemWidth": "",
                     "originValue": 1,
                     "eventField": [],
@@ -1245,10 +1233,6 @@
                       {
                         "label": "MIC_LDO (PA0)",
                         "value": 33
-                      },
-                      {
-                        "label": "MIC_LDO (PB11)",
-                        "value": 34
                       },
                       {
                         "label": "MIC_BIAS (PA0)",
@@ -1362,12 +1346,6 @@
                       {
                         "label": "0.5k",
                         "value": 1
-                      },
-                      {
-                        "label": "0.3k",
-                        "value": 0,
-                        "hide": false,
-                        "disabled": false
                       }
                     ]
                   },
@@ -1407,7 +1385,7 @@
                     ],
                     "saveWay": "macro",
                     "formItemWidth": "",
-                    "defaultValue": "id_1647485267192_83",
+                    "defaultValue": "",
                     "emptyValue": "0",
                     "uuid": "TCFG_ADC0_POWER_IO",
                     "originValue": ""
@@ -1463,34 +1441,6 @@
                         "value": "id_1647485267192_78"
                       },
                       {
-                        "label": "IO_PORTB_05",
-                        "value": "id_1722236756636_0"
-                      },
-                      {
-                        "label": "IO_PORTB_06",
-                        "value": "id_1722236772403_1"
-                      },
-                      {
-                        "label": "IO_PORTB_07",
-                        "value": "id_1722236798635_2"
-                      },
-                      {
-                        "label": "IO_PORTB_08",
-                        "value": "id_1733143332567_7"
-                      },
-                      {
-                        "label": "IO_PORTB_09",
-                        "value": "id_1733143333374_8"
-                      },
-                      {
-                        "label": "IO_PORTB_10",
-                        "value": "id_1733143334192_9"
-                      },
-                      {
-                        "label": "IO_PORTB_11",
-                        "value": "id_1733143336438_10"
-                      },
-                      {
                         "label": "IO_PORTC_00",
                         "value": "id_1647485267192_82"
                       },
@@ -1511,16 +1461,84 @@
                         "value": "id_1647485267192_86"
                       },
                       {
+                        "label": "IO_PORTC_05",
+                        "value": "id_1647485267192_87"
+                      },
+                      {
+                        "label": "IO_PORTC_06",
+                        "value": "id_1647485267192_88"
+                      },
+                      {
+                        "label": "IO_PORTC_07",
+                        "value": "id_1647485267192_89"
+                      },
+                      {
+                        "label": "IO_PORTD_00",
+                        "value": "id_1651200719084_10"
+                      },
+                      {
+                        "label": "IO_PORTD_01",
+                        "value": "id_1651200755336_11"
+                      },
+                      {
+                        "label": "IO_PORTD_02",
+                        "value": "id_1651200759198_12"
+                      },
+                      {
+                        "label": "IO_PORTD_03",
+                        "value": "id_1651200760502_13"
+                      },
+                      {
+                        "label": "IO_PORTD_04",
+                        "value": "id_1651200761897_14"
+                      },
+                      {
+                        "label": "IO_PORTD_05",
+                        "value": "id_1651200763262_15"
+                      },
+                      {
+                        "label": "IO_PORTD_06",
+                        "value": "id_1651200764534_16"
+                      },
+                      {
+                        "label": "IO_PORTD_07",
+                        "value": "id_1693531000542_0"
+                      },
+                      {
+                        "label": "IO_PORTD_08",
+                        "value": "id_1693531023340_1"
+                      },
+                      {
+                        "label": "IO_PORTD_09",
+                        "value": "id_1693531033243_2"
+                      },
+                      {
+                        "label": "IO_PORTF_00",
+                        "value": "id_1685018728435_3"
+                      },
+                      {
+                        "label": "IO_PORTF_01",
+                        "value": "id_1685018728931_4"
+                      },
+                      {
+                        "label": "IO_PORTF_02",
+                        "value": "id_1685018729499_5"
+                      },
+                      {
+                        "label": "IO_PORTF_03",
+                        "value": "id_1685018729987_6"
+                      },
+                      {
+                        "label": "IO_PORTF_04",
+                        "value": "id_1685018730475_7"
+                      },
+                      {
+                        "label": "IO_PORTF_05",
+                        "value": "id_1685018826466_8"
+                      },
+                      {
                         "label": "IO_PORTP_00",
                         "value": "id_1685018828649_12"
-                      },
-                      {
-                        "label": "IO_PORTP_01",
-                        "value": "id_1741315964779_0"
-                      },
-                      {
-                        "label": "IO_PORTP_02",
-                        "value": "id_1741315965932_1"
                       },
                       {
                         "label": "IO_PORT_LDOIN",
@@ -1757,7 +1775,7 @@
                     "label": "使能",
                     "tag": "el-switch",
                     "tagIcon": "switch",
-                    "defaultValue": 0,
+                    "defaultValue": 1,
                     "span": 24,
                     "showLabel": true,
                     "labelWidth": null,
@@ -1917,7 +1935,7 @@
                     "formId": 130,
                     "renderKey": "1301671176268890",
                     "saveWay": "macro",
-                    "defaultValue": 0,
+                    "defaultValue": 1,
                     "formItemWidth": "",
                     "originValue": 1,
                     "uuid": "TCFG_ADC1_BIAS_SEL"
@@ -1931,10 +1949,6 @@
                       {
                         "label": "MIC_LDO (PA0)",
                         "value": 33
-                      },
-                      {
-                        "label": "MIC_LDO (PB11)",
-                        "value": 34
                       },
                       {
                         "label": "MIC_BIAS (PA0)",
@@ -2048,12 +2062,6 @@
                       {
                         "label": "0.5k",
                         "value": 1
-                      },
-                      {
-                        "label": "0.3k",
-                        "value": 0,
-                        "hide": false,
-                        "disabled": false
                       }
                     ]
                   },
@@ -2093,7 +2101,7 @@
                     ],
                     "saveWay": "macro",
                     "formItemWidth": "",
-                    "defaultValue": "id_1647485267192_83",
+                    "defaultValue": "",
                     "emptyValue": "0",
                     "uuid": "TCFG_ADC1_POWER_IO",
                     "originValue": ""
@@ -2149,34 +2157,6 @@
                         "value": "id_1647485267192_78"
                       },
                       {
-                        "label": "IO_PORTB_05",
-                        "value": "id_1722236756636_0"
-                      },
-                      {
-                        "label": "IO_PORTB_06",
-                        "value": "id_1722236772403_1"
-                      },
-                      {
-                        "label": "IO_PORTB_07",
-                        "value": "id_1722236798635_2"
-                      },
-                      {
-                        "label": "IO_PORTB_08",
-                        "value": "id_1733143332567_7"
-                      },
-                      {
-                        "label": "IO_PORTB_09",
-                        "value": "id_1733143333374_8"
-                      },
-                      {
-                        "label": "IO_PORTB_10",
-                        "value": "id_1733143334192_9"
-                      },
-                      {
-                        "label": "IO_PORTB_11",
-                        "value": "id_1733143336438_10"
-                      },
-                      {
                         "label": "IO_PORTC_00",
                         "value": "id_1647485267192_82"
                       },
@@ -2197,16 +2177,84 @@
                         "value": "id_1647485267192_86"
                       },
                       {
+                        "label": "IO_PORTC_05",
+                        "value": "id_1647485267192_87"
+                      },
+                      {
+                        "label": "IO_PORTC_06",
+                        "value": "id_1647485267192_88"
+                      },
+                      {
+                        "label": "IO_PORTC_07",
+                        "value": "id_1647485267192_89"
+                      },
+                      {
+                        "label": "IO_PORTD_00",
+                        "value": "id_1651200719084_10"
+                      },
+                      {
+                        "label": "IO_PORTD_01",
+                        "value": "id_1651200755336_11"
+                      },
+                      {
+                        "label": "IO_PORTD_02",
+                        "value": "id_1651200759198_12"
+                      },
+                      {
+                        "label": "IO_PORTD_03",
+                        "value": "id_1651200760502_13"
+                      },
+                      {
+                        "label": "IO_PORTD_04",
+                        "value": "id_1651200761897_14"
+                      },
+                      {
+                        "label": "IO_PORTD_05",
+                        "value": "id_1651200763262_15"
+                      },
+                      {
+                        "label": "IO_PORTD_06",
+                        "value": "id_1651200764534_16"
+                      },
+                      {
+                        "label": "IO_PORTD_07",
+                        "value": "id_1693531000542_0"
+                      },
+                      {
+                        "label": "IO_PORTD_08",
+                        "value": "id_1693531023340_1"
+                      },
+                      {
+                        "label": "IO_PORTD_09",
+                        "value": "id_1693531033243_2"
+                      },
+                      {
+                        "label": "IO_PORTF_00",
+                        "value": "id_1685018728435_3"
+                      },
+                      {
+                        "label": "IO_PORTF_01",
+                        "value": "id_1685018728931_4"
+                      },
+                      {
+                        "label": "IO_PORTF_02",
+                        "value": "id_1685018729499_5"
+                      },
+                      {
+                        "label": "IO_PORTF_03",
+                        "value": "id_1685018729987_6"
+                      },
+                      {
+                        "label": "IO_PORTF_04",
+                        "value": "id_1685018730475_7"
+                      },
+                      {
+                        "label": "IO_PORTF_05",
+                        "value": "id_1685018826466_8"
+                      },
+                      {
                         "label": "IO_PORTP_00",
                         "value": "id_1685018828649_12"
-                      },
-                      {
-                        "label": "IO_PORTP_01",
-                        "value": "id_1741315964779_0"
-                      },
-                      {
-                        "label": "IO_PORTP_02",
-                        "value": "id_1741315965932_1"
                       },
                       {
                         "label": "IO_PORT_LDOIN",
@@ -2871,6 +2919,48 @@
               "children": [
                 {
                   "__config__": {
+                    "label": "",
+                    "labelWidth": null,
+                    "showLabel": false,
+                    "tag": "el-input",
+                    "tagIcon": "textarea",
+                    "defaultValue": "TWS 单声道输出 HYBRID方案：请配置 \"FFMIC\"、\"FBMIC\"\nHEADSET 立体声输出 FB方案：请配置 \"FBMIC\"、\"右声道FBMIC\"",
+                    "required": false,
+                    "layout": "colFormItem",
+                    "span": 24,
+                    "regList": [],
+                    "changeTag": true,
+                    "dataType": [
+                      "string"
+                    ],
+                    "file": "",
+                    "status": 0,
+                    "filetype": 1,
+                    "formId": 294,
+                    "renderKey": "2941747385849750",
+                    "eventField": [],
+                    "originValue": "TWS 单声道输出 HYBRID方案：请配置 \"FFMIC\"、\"FBMIC\"\nHEADSET 立体声输出 FB方案：请配置 \"FBMIC\"、\"右声道FBMIC\"",
+                    "dataAlignLen": "",
+                    "paddingLeft": ""
+                  },
+                  "type": "textarea",
+                  "placeholder": "请输入",
+                  "autosize": {
+                    "minRows": 2,
+                    "maxRows": 2
+                  },
+                  "style": {
+                    "width": "100%"
+                  },
+                  "maxlength": null,
+                  "show-word-limit": false,
+                  "readonly": false,
+                  "disabled": false,
+                  "id": "id_1747385849750_0",
+                  "__vModel__": "field294"
+                },
+                {
+                  "__config__": {
                     "label": "FFMIC",
                     "showLabel": true,
                     "labelWidth": null,
@@ -2997,7 +3087,7 @@
                     "uuid": "TCFG_AUDIO_ANCR_FF_MIC",
                     "saveWay": "macro",
                     "originValue": "0XFF",
-                    "status": 1
+                    "status": ""
                   },
                   "__slot__": {
                     "options": [
@@ -3020,7 +3110,7 @@
                     "width": "100%"
                   },
                   "clearable": true,
-                  "disabled": true,
+                  "disabled": false,
                   "filterable": false,
                   "multiple": false,
                   "id": "id_1676877021711_1",
@@ -3049,7 +3139,7 @@
                     "uuid": "TCFG_AUDIO_ANCR_FB_MIC",
                     "saveWay": "macro",
                     "originValue": "0XFF",
-                    "status": 1
+                    "status": ""
                   },
                   "__slot__": {
                     "options": [
@@ -3074,7 +3164,7 @@
                     "width": "100%"
                   },
                   "clearable": true,
-                  "disabled": true,
+                  "disabled": false,
                   "filterable": false,
                   "multiple": false,
                   "id": "id_1676877022399_2",
@@ -3368,7 +3458,7 @@
           }
         ],
         "eventField": [],
-        "disable": false,
+        "disable": true,
         "saveWay": "macro",
         "tip": "",
         "tipAlways": false,
@@ -4168,7 +4258,7 @@
               "label": "音频/通话产测",
               "tag": "el-switch",
               "tagIcon": "switch",
-              "defaultValue": 1,
+              "defaultValue": 0,
               "span": 6,
               "showLabel": true,
               "labelWidth": 140,
@@ -5697,7 +5787,7 @@
         "showResetBtn": false,
         "tipAlways": true,
         "enableUuid": "TCFG_AUDIO_HEARING_AID_ENABLE",
-        "disable": false,
+        "disable": true,
         "tip": "开辅听需要固定全局输出采样率"
       },
       "type": "default",
@@ -5878,128 +5968,7 @@
               "tipAlways": false
             },
             "__slot__": {
-              "options": [
-                {
-                  "label": "IO_PORTA_00",
-                  "value": "id_1647485267192_66"
-                },
-                {
-                  "label": "IO_PORTA_01",
-                  "value": "id_1647485267192_67"
-                },
-                {
-                  "label": "IO_PORTA_02",
-                  "value": "id_1647485267192_68"
-                },
-                {
-                  "label": "IO_PORTA_03",
-                  "value": "id_1647485267192_69"
-                },
-                {
-                  "label": "IO_PORTA_04",
-                  "value": "id_1647485267192_70"
-                },
-                {
-                  "label": "IO_PORTA_05",
-                  "value": "id_1647485267192_71"
-                },
-                {
-                  "label": "IO_PORTA_06",
-                  "value": "id_1647485267192_72"
-                },
-                {
-                  "label": "IO_PORTB_00",
-                  "value": "id_1647485267192_74"
-                },
-                {
-                  "label": "IO_PORTB_01",
-                  "value": "id_1647485267192_75"
-                },
-                {
-                  "label": "IO_PORTB_02",
-                  "value": "id_1647485267192_76"
-                },
-                {
-                  "label": "IO_PORTB_03",
-                  "value": "id_1647485267192_77"
-                },
-                {
-                  "label": "IO_PORTB_04",
-                  "value": "id_1647485267192_78"
-                },
-                {
-                  "label": "IO_PORTB_05",
-                  "value": "id_1722236756636_0"
-                },
-                {
-                  "label": "IO_PORTB_06",
-                  "value": "id_1722236772403_1"
-                },
-                {
-                  "label": "IO_PORTB_07",
-                  "value": "id_1722236798635_2"
-                },
-                {
-                  "label": "IO_PORTB_08",
-                  "value": "id_1733143332567_7"
-                },
-                {
-                  "label": "IO_PORTB_09",
-                  "value": "id_1733143333374_8"
-                },
-                {
-                  "label": "IO_PORTB_10",
-                  "value": "id_1733143334192_9"
-                },
-                {
-                  "label": "IO_PORTB_11",
-                  "value": "id_1733143336438_10"
-                },
-                {
-                  "label": "IO_PORTC_00",
-                  "value": "id_1647485267192_82"
-                },
-                {
-                  "label": "IO_PORTC_01",
-                  "value": "id_1647485267192_83"
-                },
-                {
-                  "label": "IO_PORTC_02",
-                  "value": "id_1647485267192_84"
-                },
-                {
-                  "label": "IO_PORTC_03",
-                  "value": "id_1647485267192_85"
-                },
-                {
-                  "label": "IO_PORTC_04",
-                  "value": "id_1647485267192_86"
-                },
-                {
-                  "label": "IO_PORTP_00",
-                  "value": "id_1685018828649_12"
-                },
-                {
-                  "label": "IO_PORTP_01",
-                  "value": "id_1741315964779_0"
-                },
-                {
-                  "label": "IO_PORTP_02",
-                  "value": "id_1741315965932_1"
-                },
-                {
-                  "label": "IO_PORT_LDOIN",
-                  "value": "id_1685018828937_13"
-                },
-                {
-                  "label": "IO_PORT_DP",
-                  "value": "id_1685018829257_14"
-                },
-                {
-                  "label": "IO_PORT_DM",
-                  "value": "id_1685018829513_15"
-                }
-              ]
+              "options": []
             },
             "placeholder": "请选择串口发送引脚",
             "style": {
@@ -6137,7 +6106,7 @@
   "formRules": "rules",
   "gutter": 15,
   "disabled": false,
-  "span": 23,
+  "span": 24,
   "formBtns": false,
   "maxFormId": 300
 }

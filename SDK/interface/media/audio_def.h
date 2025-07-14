@@ -69,6 +69,10 @@
 
 #define DAC_UNMUTE                         (0)
 #define DAC_MUTE                           (1)
+
+#define DAC_NG_THRESHOLD_CLEAR		  	   (1)	//BIT(0)：信号小于等于噪声门阈值，清0
+#define DAC_NG_THRESHOLD_MUTE			   (5) 	//BIT(0)|BIT(2)：信号小于等于噪声门阈值，清0并mute
+#define DAC_NG_SILENCE_MUTE				   (2)	//BIT(1)：信号静音(全0)时候mute
 /*
  *******************************************************************
  *						Class-D Driver Definitions
@@ -135,6 +139,10 @@
 #define MIC_CAPLESS_VER1					(1)	//697N 897N 698N
 #define MIC_CAPLESS_VER2					(2)	//700N 701N
 #define MIC_CAPLESS_VER3					(3)	//703N 706N AW32N
+
+/*ADC性能模式*/
+#define	ADC_MODE_HIGH_PERFORMANCE           (0) //高性能模式
+#define	ADC_MODE_LOW_POWER		            (1)	//低功耗模式
 /*
  *******************************************************************
  *						FFT Definitions

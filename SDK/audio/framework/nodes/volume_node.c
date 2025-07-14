@@ -79,6 +79,7 @@ static void volume_open_iport(struct stream_iport *iport)
 }
 
 
+__VOLUME_BANK_CODE
 static void volume_ioc_start(struct volume_hdl *hdl)
 {
     struct audio_vol_params params = {0};
@@ -232,6 +233,7 @@ static void volume_ioc_start(struct volume_hdl *hdl)
 #endif
 }
 
+__VOLUME_BANK_CODE
 static void volume_ioc_stop(struct volume_hdl *hdl)
 {
     if ((hdl->scene != STREAM_SCENE_MIC_EFFECT) && (hdl->scene != STREAM_SCENE_MIC_EFFECT2)) {
@@ -245,6 +247,7 @@ static void volume_ioc_stop(struct volume_hdl *hdl)
     hdl->dvol_hdl = NULL;
 }
 
+__STREAM_BANK_CODE
 int volume_ioc_get_cfg(const char *name, struct volume_cfg *vol_cfg)
 {
     struct cfg_info info;

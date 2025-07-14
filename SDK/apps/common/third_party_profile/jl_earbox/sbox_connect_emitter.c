@@ -108,7 +108,9 @@ static void earphone_sync_sbox_setting_receive(void *_data, u16 len, bool rx)
             clear_last_info();
             break;
         case SYNC_CMD_REMOTE_TYPE:
+    #if TCFG_USER_EDR_ENABLE
             usr_set_remote_type(data[1]);
+    #endif
             break;
         // case SYNC_CMD_REMOTE_ADDR:
         //     set_save_remote_addr(&data[1]);

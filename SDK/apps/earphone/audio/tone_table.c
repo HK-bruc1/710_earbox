@@ -112,6 +112,7 @@ static const struct tone_files english_tone_files = {
     .share_conn_master = "tone_en/sharemaster.*",
     .share_conn_slave = "tone_en/shareslaver.*",
     .share_disconnect = "tone_en/share_dconn.*",
+	.find_ear         = "tone_en/find_ear.*",
 };
 
 #if TCFG_TONE_EN_ENABLE

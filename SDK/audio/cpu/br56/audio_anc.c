@@ -125,7 +125,6 @@ static void anc_timer_deal(void *priv);
 static anc_coeff_t *anc_cfg_test(u8 coeff_en, u8 gains_en);
 static void anc_fade_in_timer_add(audio_anc_t *param);
 void anc_dmic_io_init(audio_anc_t *param, u8 en);
-u8 anc_btspp_train_again(u8 mode, u32 dat);
 static void anc_tone_play_and_mode_switch(u8 mode, u8 preemption, u8 cb_sel);
 void anc_mode_enable_set(u8 mode_enable);
 void audio_anc_post_msg_drc(void);
@@ -920,6 +919,7 @@ int audio_anc_db_cfg_read(void)
 }
 
 /*ANC初始化*/
+__AUDIO_INIT_BANK_CODE
 void anc_init(void)
 {
     anc_hdl = zalloc(sizeof(anc_t));
@@ -2692,7 +2692,8 @@ void audio_anc_adc_ch_set(void)
 void audio_anc_coeff_smooth_update(void)
 {
     if ((anc_hdl->param.mode != ANC_OFF) && !anc_hdl->mode_switch_lock) {
-        os_taskq_post_msg("anc", 1, ANC_MSG_COEFF_UPDATE);	//无缝切换滤波器
+        /* os_taskq_post_msg("anc", 1, ANC_MSG_COEFF_UPDATE);	//无缝切换滤波器 */
+        os_taskq_post_msg("anc", 2, ANC_MSG_RESET, 1);
     }
 }
 

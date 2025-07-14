@@ -33,6 +33,11 @@
 #error "Hi-Res Audio：请将全局采样率TCFG_AUDIO_GLOBAL_SAMPLE_RATE设置到至少96000，或Disable！"
 #endif
 #endif
+
+#if (TCFG_AUDIO_GLOBAL_SAMPLE_RATE && (TCFG_AUDIO_GLOBAL_SAMPLE_RATE > AUDIO_DAC_MAX_SAMPLE_RATE))
+#undef AUDIO_DAC_MAX_SAMPLE_RATE
+#define AUDIO_DAC_MAX_SAMPLE_RATE           TCFG_AUDIO_GLOBAL_SAMPLE_RATE
+#endif
 //**************************************
 // 		    场景参数更新使能
 //**************************************

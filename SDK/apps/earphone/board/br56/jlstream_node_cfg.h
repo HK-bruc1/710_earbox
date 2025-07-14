@@ -116,6 +116,7 @@
 #define TCFG_STEROMIX_NODE_ENABLE 0 // SteroMix
 #define TCFG_SURROUND_DEMO_NODE_ENABLE 0 // Surround Demo、环绕音demo
 #define TCFG_SURROUND_NODE_ENABLE 0 // Surround Effect
+#define TCFG_SWITCH_NODE_ENABLE 0 // Switch
 #define TCFG_THREE_D_EFFECT_NODE_ENABLE 0 // ThreeD
 #define TCFG_TONE_NODE_ENABLE 1 // 提示音
 #define TCFG_UART_NODE_ENABLE 0 // 串口打印
@@ -131,8 +132,12 @@
 #define TCFG_VOICE_CHANGER_NODE_ENABLE 1 // Voice Changer
 #define TCFG_WDRC_ADVANCE_NODE_ENABLE 0 // DRC Advance
 #define TCFG_WDRC_NODE_ENABLE 0 // DRC
+#define TCFG_LHDC_X_NODE_ENABLE 0
 #define EQ_SECTION_MAX 0xc // EQ_SECTION_MAX
+<<<<<<< HEAD
 #define TCFG_SWITCH_NODE_ENABLE 0 // Switch
+=======
+>>>>>>> patch_02.11
 #define TCFG_STREAM_BIN_ENC_ENABLE 0 // stream.bin加密使能
 // ------------流程图宏定义------------
 
@@ -269,6 +274,22 @@
 #define TCFG_AUDIO_EFX_A64E_RUN_MODE EFx_BW_UNUSED // Spatial Adv
 #define TCFG_AUDIO_EFX_6FEC_RUN_MODE EFx_BW_UNUSED // 本地音乐
 // ------------流程图节点位宽定义------------
+<<<<<<< HEAD
+=======
+
+// ------------流程图EQ节点类型宏定义------------
+#define EQ_CFG_TYPE_HIGH_PASS 0 // High Pass
+#define EQ_CFG_TYPE_LOW_PASS 0 // Low Pass
+#define EQ_CFG_TYPE_PEAKING 1 // Peaking
+#define EQ_CFG_TYPE_HIGH_SHELF 0 // High Shelf
+#define EQ_CFG_TYPE_LOW_SHELF 0 // Low Shelf
+#define EQ_CFG_TYPE_HIGH_SHELF_Q 0 // High Shelf Q
+#define EQ_CFG_TYPE_LOW_SHELF_Q 0 // Low Shelf Q
+#define EQ_CFG_TYPE_HP 0 // Hp
+#define EQ_CFG_TYPE_LP 0 // Lp
+// ------------流程图EQ节点类型宏定义------------
+#endif
+>>>>>>> patch_02.11
 
 
 // ------------流程图EQ节点类型宏定义------------

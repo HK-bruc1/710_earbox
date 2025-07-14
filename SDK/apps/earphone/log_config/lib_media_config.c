@@ -117,9 +117,13 @@ const int config_audio_dac_output_mode    = 0;
 
 
 
-//<DAC NoiseGate>
+/*DAC NoiseGate Config:
+  DAC_NG_THRESHOLD_CLEAR 	= BIT(0)：信号小于等于噪声门阈值，清0
+  DAC_NG_THRESHOLD_MUTE		= BIT(0)|BIT(2)：信号小于等于噪声门阈值，清0并mute
+  DAC_NG_SILENCE_MUTE		= BIT(1)：信号静音(全0)时候mute
+*/
 #if (defined(TCFG_AUDIO_DAC_NOISEGATE_ENABLE) && TCFG_AUDIO_DAC_NOISEGATE_ENABLE)
-const int config_audio_dac_noisefloor_optimize_enable = BIT(0) | BIT(2);
+const int config_audio_dac_noisefloor_optimize_enable = DAC_NG_THRESHOLD_MUTE;
 #else
 const int config_audio_dac_noisefloor_optimize_enable = 0;
 #endif

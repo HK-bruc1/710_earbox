@@ -116,3 +116,6 @@
 	*(.anc_btspp_data)
 	*(.anc_debug_data)
 
+#if (AUDIO_CVP_COMMON_AT_RAM == 0)
+	*(.aec_mem)
+#endif

@@ -174,6 +174,9 @@ void setup_arch()
 
     efuse_init();
 
+    sdfile_init();
+    syscfg_tools_init();
+
 #if (TCFG_DAC_POWER_MODE == 0)      // power_mode: 20mW
     clk_set_vdc_lowest_voltage(DCVDD_VOL_115V);
 #elif (TCFG_DAC_POWER_MODE == 1)    // power_mode: 30mW
@@ -185,7 +188,6 @@ void setup_arch()
     clk_set_vdc_lowest_voltage(DCVDD_VOL_155V);
 #endif
 #endif
-    clk_set_osc_cap(0b0111, 0b0111); //br56适配负载电容9PF，控制频偏在正负10以内
 #if (TCFG_MAX_LIMIT_SYS_CLOCK==MAX_LIMIT_SYS_CLOCK_160M)
     clk_early_init(PLL_REF_XOSC_DIFF, TCFG_CLOCK_OSC_HZ, 240 * MHz);//  240:max clock 160
 #else
@@ -210,11 +212,6 @@ void setup_arch()
     power_early_flowing();
 
     clock_dump();
-
-    void mvbg_current_trim();        //pmu used
-    mvbg_current_trim();
-    void audio_vbg_current_trim();        //audio used
-    audio_vbg_current_trim();
 
     //Register debugger interrupt
     request_irq(0, 2, exception_irq_handler, 0);

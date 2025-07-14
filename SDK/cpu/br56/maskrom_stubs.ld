@@ -57,7 +57,7 @@
   os_task_coreaffinityset = ABSOLUTE(0xff834);
   os_task_create_affinity_core = ABSOLUTE(0xff838);
   os_task_create = ABSOLUTE(0xff83c);
-  os_time_dly = ABSOLUTE(0xff840);
+  rom_os_time_dly = ABSOLUTE(0xff840);
   os_task_del_req = ABSOLUTE(0xff844);
   os_task_del_res = ABSOLUTE(0xff848);
   os_task_del = ABSOLUTE(0xff84c);
@@ -272,10 +272,16 @@
   uECC_vli_sub = ABSOLUTE(0xffa90);
   uECC_vli_cmp_unsafe = ABSOLUTE(0xffa94);
   uECC_set_rng = ABSOLUTE(0xffa98);
+
+  /* SHA256，直接到函数体，非entry模式 */
+  sha256Init = ABSOLUTE(0xf0340);
+  sha256Update = ABSOLUTE(0xef9a0);
+  sha256Final = ABSOLUTE(0xefa00);
+
   get_cvsd_codec_ops = ABSOLUTE(0xffa9c);
   dns_16k_data = ABSOLUTE(0xe0270);
- 
-#if CONFIG_BT_CTRLER_IN_MASK
+
+#ifndef CONFIG_BT_CTRLER_USE_SDK
   bt_mask_cb_init = ABSOLUTE(0xffaa0);
   bt_lmp_varible_init = ABSOLUTE(0xffaa4);
   set_config_lmp_connection_num = ABSOLUTE(0xffaa8);

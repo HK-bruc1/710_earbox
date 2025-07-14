@@ -39,7 +39,7 @@
 #define CONFIG_ONLY_GRENERATE_ALIGN_4K_CODE     0    	//ufw只生成1份4K对齐的代码
 
 //config for supported chip version
-#define CONFIG_SUPPORTED_CHIP_VERSION			N,M
+#define CONFIG_SUPPORTED_CHIP_VERSION			N,M,C
 
 //DON'T MODIFY THIS CONFIG EXCEPT SDK PUBLISHER
 #define CONFIG_CHIP_NAME                        AC710N              //除了SDK发布者,请不要修改
@@ -112,12 +112,6 @@
 #define CONFIG_RESERVED_AREA2_LEN				0x1000
 #define CONFIG_RESERVED_AREA2_OPT				1
 //#define CONFIG_RESERVED_AREA2_FILE				anc_gains.bin
-#endif
-
-#if (defined TCFG_CONFIG_DEBUG_RECORD_ENABLE && TCFG_CONFIG_DEBUG_RECORD_ENABLE)
-#define CONFIG_DEBUG_ADDR                                              AUTO
-#define CONFIG_DEBUG_LEN                                               0x1000
-#define CONFIG_DEBUG_OPT                                               0 //0: 擦除, 1:不操作
 #endif
 
 /* Above Macros Only For Post Bulid Configuaration */

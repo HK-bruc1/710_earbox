@@ -1,8 +1,9 @@
 #include "asm/power_interface.h"
 #include "app_config.h"
 #include "gpio_config.h"
+#include "system/init.h"
 
-const u32 dcdc_L = DCDC_L_4p7uH;
+const u32 dcdc_L = DCDC_L_10uH;//DCDC_L_4p7uH;
 
 //-----------------------------------------------------------------------------------------------------------------------
 /* power_param
@@ -25,6 +26,7 @@ struct _power_pdata power_pdata = {
 //----------------------------------------------------------------------------------------------------------------------
 void key_wakeup_init();
 
+__INITCALL_BANK_CODE
 void board_power_init()
 {
     //gpio_config_init();
