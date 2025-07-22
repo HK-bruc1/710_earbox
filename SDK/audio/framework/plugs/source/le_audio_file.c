@@ -74,7 +74,7 @@ static void *le_audio_file_init(void *priv, struct stream_node *node)
     struct le_audio_file_handle *hdl = (struct le_audio_file_handle *)zalloc(sizeof(struct le_audio_file_handle));
 
     hdl->node = node;
-    node->type |= NODE_TYPE_IRQ | NODE_TYPE_FLOW_CTRL;
+    node->type |= NODE_TYPE_FLOW_CTRL ;
 
     return hdl;
 }

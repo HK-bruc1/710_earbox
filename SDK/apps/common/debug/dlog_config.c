@@ -7,6 +7,9 @@
 #include "norflash.h"
 #include "system/includes.h"
 
+#if TCFG_DEBUG_DLOG_ENABLE
+extern u32 __attribute__((weak)) dlog_log_data_start_addr[];
+
 __attribute__((weak))
 int dlog_output_direct(void *buf, u16 len)
 {
@@ -102,8 +105,8 @@ static const struct norflash_dev_platform_data spi_flash_platform_data = {
     .spi_hw_num     = 1,
     .spi_cs_port    = IO_PORTA_04,
     .spi_read_width = 0,
-    .start_addr     = 0,
-    .size           = 512 * 1024,
+    .start_addr     = TCFG_NORFLASH_START_ADDR,
+    .size           = TCFG_NORFLASH_SIZE,
 };
 #endif
 
@@ -139,8 +142,8 @@ static const struct norflash_dev_platform_data spi_flash_platform_data = {
     .spi_hw_num     = 1,
     .spi_cs_port    = IO_PORTA_06,
     .spi_read_width = 0,
-    .start_addr     = 0,
-    .size           = 512 * 1024,
+    .start_addr     = TCFG_NORFLASH_START_ADDR,
+    .size           = TCFG_NORFLASH_SIZE,
 };
 #endif
 
@@ -179,8 +182,8 @@ static const struct norflash_dev_platform_data spi_flash_platform_data = {
     .spi_hw_num     = 1,
     .spi_cs_port    = IO_PORTC_05,
     .spi_read_width = 0,
-    .start_addr     = 0,
-    .size           = 512 * 1024,
+    .start_addr     = TCFG_NORFLASH_START_ADDR,
+    .size           = TCFG_NORFLASH_SIZE,
 };
 #endif
 
@@ -197,10 +200,10 @@ static int dlog_get_ex_flash_zone(u32 *addr, u32 *len)
 {
     // 需要实现
     if (addr) {
-        *addr = spi_flash_platform_data.start_addr;
+        *addr = TCFG_DLOG_FLASH_START_ADDR + (u32)dlog_log_data_start_addr;
     }
     if (len) {
-        *len = spi_flash_platform_data.size;
+        *len = TCFG_DLOG_FLASH_REGION_SIZE - (u32)dlog_log_data_start_addr;
     }
 
     return 0;
@@ -222,7 +225,7 @@ static int dlog_ex_flash_zone_erase(u16 erase_sector, u16 sector_num)
 
     if (dlog_use_ex_flash) {
         for (int i = 0; i < sector_num; i++) {
-            _norflash_eraser(FLASH_SECTOR_ERASER, (erase_sector + i) * LOG_BASE_UNIT_SIZE + spi_flash_platform_data.start_addr);
+            _norflash_eraser(FLASH_SECTOR_ERASER, (erase_sector + i) * LOG_BASE_UNIT_SIZE + TCFG_DLOG_FLASH_START_ADDR + (u32)dlog_log_data_start_addr);
         }
     }
     return 0;
@@ -420,5 +423,116 @@ REGISTER_DLOG_OPS(ex_flash_op, 0) = {
     .dlog_output_read       = dlog_inside_flash_read,
     .dlog_output_direct     = dlog_output_direct,
 };
+
+#endif
+
+
+u16 dlog_read_log_data(u8 *buf, u16 len, u32 offset)
+{
+    u16 ret = -1;
+    if ((offset + len) <= (u32)dlog_log_data_start_addr) {
+        memset(buf, 0xFF, len);
+        return len;
+    } else {
+        int remain_len = (int)((u32)dlog_log_data_start_addr - offset);
+        remain_len = remain_len > 0 ? remain_len : 0;
+        if (remain_len) {
+            memset(buf, 0xFF, remain_len);
+        }
+        ret = dlog_read_from_flash(buf + remain_len, len - remain_len, (offset + remain_len) - (u32)dlog_log_data_start_addr);
+        if ((len - remain_len) == ret) {
+            return len;
+        }
+    }
+
+    return ret;
+}
+
+
+#if 0  // dlog demo
+// 以下是部分离线log接口的使用示例
+
+void dlog_demo(void)
+{
+    int ret;
+    // 1,刷新将离线log数据从ram保存到flash
+    // 仅仅只发送一个刷新消息后退出, 可以用于中断和任务
+    ret = dlog_flush2flash(0);
+    // 一直等待刷新成功, 若返回成功, 从函数返回后已经刷新到flash, 仅可用于任务
+    ret = dlog_flush2flash(-1);
+    // 等待1000ms, 若返回成功, 从函数返回后已经刷新到flash, 仅可用于任务
+    ret = dlog_flush2flash(100);
+
+
+    // 2,设置log的等级, 主要用于 log_xxx 类接口
+    // 设置为 info 等级, 更多等级见 debug.h
+    dlog_level_set(LOG_INFO);
+
+
+    // 3,设置log输出的方式
+    // 设置为仅串口输出离线log
+    if (dlog_output_type_get() & DLOG_OUTPUT_2_FLASH) {
+        // 如果之前有使能flash输出, 那么关闭flash输出前需要刷新ram的log到flash
+        ret = dlog_flush2flash(100);
+    }
+    dlog_output_type_set(DLOG_OUTPUT_2_UART);
+    // 离线log输出加上flash输出(如原本是仅输出到串口,设置后log同时输出到串口和flash)
+    dlog_output_type_set(dlog_output_type_get() | DLOG_OUTPUT_2_FLASH);
+
+
+    // 4,离线log的时间、日期、序号进行同步(当收到手机下发的日期、时间后需要同步一次, 以校准离线log时间)
+    dlog_info_sync();
+
+
+    // 5,读取离线log数据
+#define TMP_BUF_SIZE         501
+    u8 *tmp_buf = malloc(TMP_BUF_SIZE);
+    u32 offset = 0;
+    int ret;
+    u8 flash_log_en = (dlog_output_type_get() & DLOG_OUTPUT_2_FLASH);  // 获取是否有使能log输出到flash
+    if (flash_log_en) {
+        dlog_output_type_set(dlog_output_type_get() & (~DLOG_OUTPUT_2_FLASH));  // 禁止log输出到flash
+    }
+    while (1) {
+        // 建议使用dlog_read_log_data接口, 而不是dlog_read_from_flash接口
+        ret = dlog_read_log_data(tmp_buf, TMP_BUF_SIZE, offset);  // 读取flash中的log, 返回0表示已读取完flash的全部log
+        if (0 == ret) {
+            // 已经全部读取
+            break;
+        }
+        offset += ret;
+        put_buf(tmp_buf, ret > 16 ? 16 : ret);  // 将读取的log数据前16Byte打印出来
+    }
+    if (flash_log_en) {
+        dlog_output_type_set(dlog_output_type_get() | DLOG_OUTPUT_2_FLASH);  // 恢复log输出到flash
+    }
+    free(tmp_buf);
+}
+
+// 重写弱函数的实现示例
+int dlog_get_rtc_time(void *time_p)
+{
+    // 仅需返回年月日
+    struct sys_time *time = time_p;
+    u32 year  = get_sys_year();  // get_sys_year函数需要自行实现,此处仅示例
+    u32 month = get_sys_month(); // get_sys_month函数需要自行实现,此处仅示例
+    u32 day   = get_sys_day();   // get_sys_day函数需要自行实现,此处仅示例
+    time->year = year;
+    time->month = month;
+    time->day = day;
+
+    return 0;  // 返回大于等于0表示成功
+}
+
+// 重写弱函数的实现示例
+u32 dlog_get_rtc_time_ms(void)
+{
+    // dlog会多次调用这个接口获取系统时间戳, 需要应用层维护一个全局时间戳, 要处理好网络时间和本地时间的同步
+    // 返回的时间单位是毫秒, 24小时制
+    //如当前时间为 20:13:30.100, 则返回 ((21 * 60 + 13) * 60) + 30) * 1000 + 100 = 76410100毫秒
+    u32 time_ms = get_sys_time_ms();  // get_sys_time_ms函数需要自行实现, 此处仅示例
+    return time_ms;
+}
+#endif
 
 #endif

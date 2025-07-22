@@ -381,7 +381,7 @@ void try_play_preempted_a2dp(void *p)
         memset(a2dp_preempted_addr, 0xff, 6);
         return;
     }
-    if (bt_get_call_status() != BT_CALL_HANGUP) {
+    if (esco_player_runing()) {
         sys_timeout_add(NULL, try_play_preempted_a2dp, 500);
         return;
     }
@@ -695,9 +695,6 @@ static int a2dp_bt_status_event_handler(int *event)
                (bt->value >> 16), (bt->value & 0x0000ffff));
         if (bt->value != 0xff) {
             a2dp_suspend_by_call(addr_b, device_b);
-#if (TCFG_LE_AUDIO_APP_CONFIG&LE_AUDIO_JL_UNICAST_SINK_EN)
-            le_audio_unicast_play_remove_by_phone_call(1);
-#endif
         } else {
 #if (TCFG_LE_AUDIO_APP_CONFIG&LE_AUDIO_JL_UNICAST_SINK_EN)
             le_audio_unicast_try_resume_play_by_phone_call_remove();

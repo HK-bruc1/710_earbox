@@ -496,6 +496,9 @@ objs += \
 objs += \
 	$(ROOT)/apps/common/update/update_tws_new.o
 
+objs += \
+	$(ROOT)/apps/common/update/update_tws_new_less.o
+
 #ifdef CONFIG_UPDATE_MUTIL_CPU_UART
 objs += \
 	$(ROOT)/apps/common/update/uart_update_driver.o \
@@ -1213,6 +1216,7 @@ objs += \
   	  $(ROOT)/audio/cpu/br56/audio_config.o \
       $(ROOT)/audio/cpu/br56/audio_anc.o \
 	  $(ROOT)/audio/cpu/br56/icsd_anc_user.o \
+	  $(ROOT)/audio/cpu/br56/audio_configs_dump.o \
 
 objs += \
 	  $(ROOT)/audio/cpu/br56/audio_dai/audio_pdm.o \
@@ -1303,18 +1307,18 @@ objs += \
 
 
 objs += \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/le_audio_common.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/le_audio_common.o \
 
 
 objs += \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/cig/app_le_connected.o \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/cig/le_connected.o \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/cig/le_connected_config.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/cig/app_le_connected.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/cig/le_connected.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/cig/le_connected_config.o \
 
 
 objs += \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/big/app_le_auracast.o \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/big/le_broadcast.o \
-	$(ROOT)/apps/$(APP_CASE)/mode/bt/le_audio/big/le_broadcast_config.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/big/app_le_auracast.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/big/le_broadcast.o \
+	$(ROOT)/apps/earphone/mode/bt/le_audio/big/le_broadcast_config.o \
 
 

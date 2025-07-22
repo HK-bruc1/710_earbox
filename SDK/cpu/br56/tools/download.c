@@ -124,6 +124,12 @@ set TONE_ZH_ENABLE=0
 set RCSP_EN=1
 #endif
 
+#if TCFG_UPDATE_COMPRESS
+set UPDATE_COMPRESS_ENABLE=1
+#else
+set UPDATE_COMPRESS_ENABLE=0
+#endif
+
 #if TCFG_AUDIO_ANC_EAR_ADAPTIVE_EN
 copy anc_ext.bin download\earphone\ALIGN_DIR\.
 #else

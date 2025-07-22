@@ -398,6 +398,7 @@
 <Add option="cpu/br56/liba/ascii.a" />
 <Add option="cpu/br56/liba/cfg_tool.a" />
 <Add option="cpu/br56/liba/vm.a" />
+<Add option="cpu/br56/liba/ftl.a" />
 <Add option="cpu/br56/liba/debug_record.a" />
 <Add option="cpu/br56/liba/lzma_dec.a" />
 <Add option="cpu/br56/liba/chargestore.a" />
@@ -971,6 +972,7 @@
 <Unit filename="apps/common/update/update.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/update/update_tws.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/update/update_tws_new.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/update/update_tws_new_less.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/app_main.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/jlstream_event_handler.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/scene_switch.c"><Option compilerVer="CC"/></Unit>
@@ -1276,6 +1278,7 @@
 <Unit filename="audio/cpu/br56/audio_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_config.h" />
 <Unit filename="audio/cpu/br56/audio_config_def.h" />
+<Unit filename="audio/cpu/br56/audio_configs_dump.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_dai/audio_pdm.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_dai/audio_pdm.h" />
 <Unit filename="audio/cpu/br56/audio_demo/audio_adc_demo.c"><Option compilerVer="CC"/></Unit>
@@ -1669,6 +1672,8 @@
 <Unit filename="interface/media/audio_general.h" />
 <Unit filename="interface/media/audio_iis.h" />
 <Unit filename="interface/media/audio_splicing.h" />
+<Unit filename="interface/media/audio_src.h" />
+<Unit filename="interface/media/audio_src_base.h" />
 <Unit filename="interface/media/audio_time.h" />
 <Unit filename="interface/media/automute.h" />
 <Unit filename="interface/media/bt_audio_timestamp.h" />
@@ -1685,9 +1690,6 @@
 <Unit filename="interface/media/cpu/br56/asm/anc.h" />
 <Unit filename="interface/media/cpu/br56/asm/audio_common.h" />
 <Unit filename="interface/media/cpu/br56/asm/audio_link.h" />
-<Unit filename="interface/media/cpu/br56/asm/audio_src.h" />
-<Unit filename="interface/media/cpu/br56/asm/audio_src_base.h" />
-<Unit filename="interface/media/cpu/br56/asm/audio_sync_resample.h" />
 <Unit filename="interface/media/cpu/br56/asm/cpu_includes.h" />
 <Unit filename="interface/media/cpu/br56/asm/dac.h" />
 <Unit filename="interface/media/cpu/br56/asm/hw_eq.h" />

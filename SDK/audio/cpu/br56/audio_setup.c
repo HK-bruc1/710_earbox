@@ -140,7 +140,12 @@ static void audio_common_initcall()
     common_param.audio_vbg_value = 4;
 
     /* common_param.clock_mode = AUDIO_COMMON_CLK_DIG_SINGLE; */
+#if((defined TCFG_CLOCK_SYS_SRC) && (TCFG_CLOCK_SYS_SRC == SYS_CLOCK_INPUT_PLL_RCL))
+    common_param.clock_mode = AUDIO_COMMON_CLK_DIG_SINGLE;
+#else
     common_param.clock_mode = AUDIO_COMMON_CLK_DIF_XOSC;
+#endif
+
     /* common_param.clock_mode = AUDIO_COMMON_CLK_DIG_XOSC; //低功耗配置时钟 */
     common_param.vcm_cap_en = TCFG_AUDIO_VCM_CAP_EN;
     audio_common_init(&common_param);
@@ -249,9 +254,6 @@ void audio_dac_initcall(void)
 {
     printf("audio_dac_initcall\n");
 
-#if (SYS_VOL_TYPE == VOL_TYPE_DIGITAL)
-    audio_digital_vol_init(NULL, 0);
-#endif
     dac_data.max_sample_rate    = AUDIO_DAC_MAX_SAMPLE_RATE;
     dac_data.hpvdd_sel = audio_dac_hpvdd_check();
     dac_data.bit_width = audio_general_out_dev_bit_width();
@@ -311,17 +313,6 @@ REGISTER_LP_TARGET(audio_init_lp_target) = {
     .name = "audio_init",
     .is_idle = audio_init_complete,
 };
-
-extern void dac_analog_power_control(u8 en);
-void audio_fast_mode_test()
-{
-    audio_dac_set_volume(&dac_hdl, app_audio_get_volume(APP_AUDIO_CURRENT_STATE));
-    /* dac_analog_power_control(1);////将关闭基带，不开可发现，不可连接 */
-    audio_dac_start(&dac_hdl);
-#if TCFG_AUDIO_ADC_ENABLE
-    audio_adc_mic_demo_open(AUDIO_ADC_MIC_CH, 10, 16000, 1);
-#endif
-}
 
 #if TCFG_AUDIO_ADC_ENABLE
 struct audio_adc_private_param adc_private_param = {
@@ -458,7 +449,11 @@ static int audio_init()
         .hw_dvol_max = dac_dvol_max_query,
     };
     audio_volume_mixer_init(&vol_mixer);
+
+#if (TCFG_DAC_NODE_ENABLE || TCFG_AUDIO_ADC_ENABLE)
     audio_common_initcall();
+#endif
+
 #ifndef CONFIG_FPGA_ENABLE
     wl_audio_clk_on();
 #endif
@@ -468,6 +463,10 @@ static int audio_init()
     audio_input_initcall();
 #if TCFG_AUDIO_ANC_ENABLE
     anc_init();
+#endif
+
+#if (SYS_VOL_TYPE == VOL_TYPE_DIGITAL)
+    audio_digital_vol_init(NULL, 0);
 #endif
 
 #if TCFG_DAC_NODE_ENABLE
@@ -485,7 +484,9 @@ platform_initcall(audio_init);
 
 static void audio_uninit()
 {
-    dac_power_off();
+#if TCFG_DAC_NODE_ENABLE
+    audio_dac_close(&dac_hdl);
+#endif
 }
 platform_uninitcall(audio_uninit);
 
@@ -515,21 +516,4 @@ REGISTER_UPDATE_TARGET(audio_update_target) = {
     .name = "audio",
     .driver_close = audio_disable_all,
 };
-
-void dac_power_on(void)
-{
-    /* log_info(">>>dac_power_on:%d", __this->ref.counter); */
-    if (atomic_inc_return(&__this->ref) == 1) {
-        audio_dac_open(&dac_hdl);
-    }
-}
-
-void dac_power_off(void)
-{
-    /*log_info(">>>dac_power_off:%d", __this->ref.counter);*/
-    if (atomic_read(&__this->ref) != 0 && atomic_dec_return(&__this->ref)) {
-        return;
-    }
-    audio_dac_close(&dac_hdl);
-}
 

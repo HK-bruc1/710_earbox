@@ -264,6 +264,7 @@ LFLAGS := \
 	cpu/br56/liba/ascii.a \
 	cpu/br56/liba/cfg_tool.a \
 	cpu/br56/liba/vm.a \
+	cpu/br56/liba/ftl.a \
 	cpu/br56/liba/debug_record.a \
 	cpu/br56/liba/lzma_dec.a \
 	cpu/br56/liba/chargestore.a \

@@ -653,9 +653,14 @@ c_SRC_FILES += \
 	apps/common/update/update_tws.c
 #endif
 
-#if (OTA_TWS_SAME_TIME_ENABLE && OTA_TWS_SAME_TIME_NEW)
+#if (OTA_TWS_SAME_TIME_ENABLE && OTA_TWS_SAME_TIME_NEW && !OTA_TWS_SAME_TIME_NEW_LESS)
 c_SRC_FILES += \
 	apps/common/update/update_tws_new.c
+#endif
+
+#if (OTA_TWS_SAME_TIME_ENABLE && OTA_TWS_SAME_TIME_NEW && OTA_TWS_SAME_TIME_NEW_LESS)
+c_SRC_FILES += \
+	apps/common/update/update_tws_new_less.c
 #endif
 
 #ifdef CONFIG_UPDATE_MUTIL_CPU_UART
@@ -691,7 +696,7 @@ c_SRC_FILES += \
 // 防止出现兼容性问题导致客户SDK无法维护
 //
 
-// $(info make project ---> $(CPU) earphone)
+// $(info make project ---> $(CPU) $(APP_CASE))
 
 
 #if TCFG_PWMLED_ENABLE
@@ -1664,6 +1669,7 @@ c_SRC_FILES += \
   	  audio/cpu/br56/audio_config.c \
       audio/cpu/br56/audio_anc.c \
 	  audio/cpu/br56/icsd_anc_user.c \
+	  audio/cpu/br56/audio_configs_dump.c \
 
 c_SRC_FILES += \
 	  audio/cpu/br56/audio_dai/audio_pdm.c \
@@ -1677,7 +1683,7 @@ c_SRC_FILES += \
 	  audio/cpu/br56/audio_demo/audio_adc_demo.c \
 
 
-#if 0
+#if 1
 c_SRC_FILES += \
 	  audio/cpu/br56/audio_demo/audio_dac_demo.c \
 	  audio/cpu/br56/audio_demo/audio_fft_demo.c \

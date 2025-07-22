@@ -597,7 +597,11 @@ int app_auracast_sink_scan_start(void)
     printf("app_auracast_sink_scan_start\n");
 #if TCFG_USER_TWS_ENABLE
     g_cur_auracast_is_scanning = 1;
-    return tws_api_send_data_to_sibling((void *)&g_cur_auracast_is_scanning, sizeof(u8), 0x23482C5D);
+    int err = tws_api_send_data_to_sibling((void *)&g_cur_auracast_is_scanning, sizeof(u8), 0x23482C5D);
+    if (err) {
+        err = __app_auracast_sink_scan_start();
+    }
+    return err;
 #else
     return __app_auracast_sink_scan_start();
 #endif
@@ -681,7 +685,7 @@ void le_auracast_audio_recover()
 {
     printf("le_auracast_audio_recover\n");
 #if TCFG_USER_TWS_ENABLE
-    if (role != TWS_ROLE_SLAVE) {
+    if (tws_api_get_role() != TWS_ROLE_SLAVE) {
         tws_api_send_data_to_sibling(NULL, 0, 0x23482C5E);
     }
 #else
@@ -967,7 +971,7 @@ static void le_auracast_audio_recover_tws_sync_in_irq(void *_data, u16 len, bool
     }
 }
 
-REGISTER_TWS_FUNC_STUB(le_auracast_scan_state_sync) = {
+REGISTER_TWS_FUNC_STUB(le_auracast_audio_recover_sync) = {
     .func_id = 0x23482C5E,
     .func = le_auracast_audio_recover_tws_sync_in_irq,
 };

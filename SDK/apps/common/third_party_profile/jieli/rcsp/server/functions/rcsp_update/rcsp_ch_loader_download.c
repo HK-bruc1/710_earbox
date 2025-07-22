@@ -547,7 +547,7 @@ void cis_rcsp_recv_handle(u16 conn_handle, const void *const buf, size_t length,
 int bt_rcsp_data_send_filter(u16 ble_con_hdl, u8 *remote_addr, u8 *buf, u16 len)
 {
     int ret = 0;
-    if (ble_con_hdl == g_cis_conn_handle) {
+    if (g_cis_conn_handle && ble_con_hdl == g_cis_conn_handle) {
         if (!JL_rcsp_get_auth_flag_with_bthdl(ble_con_hdl, NULL)) {
             if (!rcsp_protocol_head_check(buf, len)) {
                 connected_send_acl_data(ble_con_hdl, buf, len);

@@ -23,6 +23,7 @@
 #include "le_audio_stream.h"
 #include "le_audio_player.h"
 #include "le_audio_recorder.h"
+#include "btstack/le/ble_api.h"
 
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 
@@ -65,6 +66,7 @@ typedef struct {
     u16 cis_hdl;								// cis连接句柄
     u16 acl_hdl;								// acl连接句柄
     u16 Max_PDU_P_To_C;
+    u16 Max_PDU_C_To_P;
     u8 flush_timeout;
     u8 BN_C_To_P;								// 一个iso interval里面有多少个包
     u8 BN_P_To_C;								// 一个iso interval里面有多少个包
@@ -91,6 +93,7 @@ static u16 multi_cis_rx_temp_buf_len = 0;
 static u8 *multi_cis_rx_buf = NULL;
 static u16 multi_cis_data_offect = {0};
 static bool multi_cis_plc_flag = false;
+static bool rcsp_update_flag  = false;
 
 /**************************************************************************************************
   Static Prototypes
@@ -99,6 +102,7 @@ static int connected_dec_data_receive_handler(void *_hdl, void *data, int len);
 static void connected_iso_callback(const void *const buf, size_t length, void *priv);
 static void connected_perip_event_callback(const CIG_EVENT event, void *priv);
 static void connected_free_cig_hdl(u8 cig_hdl);
+extern void set_aclMaxPduPToC_test(uint8_t aclMaxPduPToC);
 
 /**************************************************************************************************
   Global Variables
@@ -331,6 +335,8 @@ int connected_perip_connect_deal(void *priv)
     connected_hdl->cis_hdl_info[index].BN_C_To_P = hdl->BN_C_To_P;
     connected_hdl->cis_hdl_info[index].BN_P_To_C = hdl->BN_P_To_C;
     connected_hdl->cis_hdl_info[index].Max_PDU_P_To_C = hdl->Max_PDU_P_To_C;
+    connected_hdl->cis_hdl_info[index].Max_PDU_C_To_P = hdl->Max_PDU_C_To_P;
+
 
     log_info("rx_cis_num:%d, hdl->flush_timeout:%d, hdl->isoIntervalUs:%d\n", connected_hdl->rx_cis_num, hdl->flush_timeout_C_to_P, hdl->isoIntervalUs);
 
@@ -748,12 +754,23 @@ int connected_iso_recv_handle_register(void *priv, void (*recv_handle)(u16 conn_
         item->recv_handle = recv_handle;
         list_add_tail(&item->entry, &acl_data_recv_list_head);
     }
+
+    rcsp_update_flag = 1;
     return 0;
 }
 
 static void connected_iso_recv_handle(u16 conn_handle, const void *const buf, size_t length, void *priv)
 {
     struct acl_recv_hdl *item = NULL;
+
+    if (rcsp_update_flag) {
+        //set rcsp acl param
+        printf("Set rcsp acl param:0x%x", conn_handle);
+        set_aclMaxPduPToC_test(255);
+        ble_op_set_rxmaxbuf(conn_handle, 255);
+        rcsp_update_flag = 0;
+    }
+
     list_for_each_entry(item, &acl_data_recv_list_head, entry) {
         item->recv_handle(conn_handle, buf, length, priv);
     }
@@ -835,8 +852,18 @@ static void connected_iso_callback(const void *const buf, size_t length, void *p
                 }
             } else {
                 /* putchar('r'); */
+
                 /* printf("r:%d, %d\n", (int)length, (int)param->ts); */
-                le_audio_stream_rx_frame(hdl->rx_player.rx_stream, (void *)errpacket, 2, param->ts);
+                int frame_num = 1;
+                if (get_le_audio_jl_dongle_device_type()) {
+                    frame_num = hdl->cis_hdl_info[i].Max_PDU_C_To_P / get_lc3_decoder_info_octets_per_frame();
+                }
+                u32 timestamp = 0;
+                for (int k = 0; k < frame_num; k++) {
+                    le_audio_stream_rx_frame(hdl->rx_player.rx_stream, (void *)errpacket, 2, param->ts + timestamp);
+                    timestamp += get_cig_audio_coding_frame_duration() * 100;
+                }
+                /* r_printf("r=%d,%d\n",get_lc3_decoder_info_octets_per_frame(),frame_num ); */
             }
         } else {
             if (multi_cis_rx_buf) {

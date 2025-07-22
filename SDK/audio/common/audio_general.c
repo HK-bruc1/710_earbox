@@ -33,6 +33,7 @@ const int config_bt_audio_enable = 0;
 #endif
 
 const int config_audio_dac_ng_debug = 0;
+const int config_audio_dac_enable = TCFG_DAC_NODE_ENABLE;
 
 /* 16bit数据流中也存在32bit位宽数据的处理 */
 const int config_ch_adapter_32bit_enable = 1;
@@ -439,8 +440,8 @@ const int voicechanger_effect_v_config = (0
         /* | BIT(EFFECT_VOICECHANGE_FEEDBACK) */
                                          );
 
-/*mb limiter 3带使能(1.2k) */
-const int mb_limiter_3band_run_en       = 1;
+/*mb drc/limiter 3带使能(1.2k) */
+const int audio_crossover_3band_enable       = 1;
 
 /*Vocal Remover Configs*/
 const int audio_vocal_remover_low_cut_enable = 1;

@@ -52,7 +52,7 @@ static cig_parameter_t cig_perip_param = {
     .vdr = {
         .tx_delay   = 1500,
         .aclMaxPduCToP = 36,
-        .aclMaxPduPToC = 9,
+        .aclMaxPduPToC = 11,
     },
 };
 #endif
@@ -182,17 +182,23 @@ typedef struct {
     uint16_t octets_per_frame;
     uint8_t  num_bis;
     uint8_t  num_channels;
-
 } lc3_codec_config_t;
 
 lc3_codec_config_t lc3_decoder_info;
 lc3_codec_config_t lc3_encoder_info;
 
-void set_unicast_lc3_info(u8 *date)
+void set_unicast_lc3_info(u8 *date, u8 len)
 {
     int info_len = sizeof(lc3_codec_config_t);
     memcpy(&lc3_decoder_info, date, info_len);
     memcpy(&lc3_encoder_info, date + info_len, info_len);
+    if (len <= (info_len * 2)) {
+        platform_data.args[platform_data_index].sdu_interval = 100 * lc3_decoder_info.frame_duration;
+        /* ASSERT(0,"update dongle,add new sdu_interval");	 */
+    } else {
+        memcpy(&platform_data.args[platform_data_index].sdu_interval, date + (2 * info_len), 2);
+
+    }
     /* printf("dec sampling=%d,frame_duration%d,octets_per_frame=%d,num_channels=%d\n", */
     /* lc3_decoder_info.sampling_frequency_hz, */
     /* lc3_decoder_info.frame_duration, */
@@ -215,13 +221,17 @@ void get_decoder_params_fmt(struct le_audio_stream_format *fmt)
     fmt->sample_rate = lc3_decoder_info.sampling_frequency_hz;
     platform_data.sample_rate = fmt->sample_rate;
     fmt->frame_dms = lc3_decoder_info.frame_duration;
-    platform_data.args[platform_data_index].sdu_interval = fmt->frame_dms * 100;
+    /* platform_data.args[platform_data_index].sdu_interval = 100*lc3_decoder_info.frame_duration; */
     platform_data.frame_len = lc3_decoder_info.frame_duration;
     fmt->sdu_period = platform_data.args[platform_data_index].sdu_interval;
     fmt->bit_rate = lc3_decoder_info.octets_per_frame * 8 * 1000 * 10 / fmt->frame_dms;
     platform_data.args[platform_data_index].bitrate = fmt->bit_rate;
-    printf("get_decoder_params_fmt=%d,%d,%d,%d,%d,%d\n", fmt->nch, fmt->sample_rate, fmt->frame_dms, fmt->sdu_period, fmt->bit_rate, lc3_decoder_info.octets_per_frame);
+    printf("get_decoder_params_fmt=%d,%d,%d,%d,%d,%d,%d\n", fmt->nch, fmt->sample_rate, fmt->frame_dms, fmt->sdu_period, fmt->bit_rate, lc3_decoder_info.octets_per_frame, platform_data.args[platform_data_index].sdu_interval);
 
+}
+u16 get_lc3_decoder_info_octets_per_frame()
+{
+    return lc3_decoder_info.octets_per_frame;
 }
 void get_encoder_params_fmt(struct le_audio_stream_format *fmt)
 {

@@ -2,7 +2,6 @@
 #define LIB_MEDIA_CONFIG_H
 
 
-extern const int CONFIG_DAC_CACHE_MSEC;
 extern const int CONFIG_JLSTREAM_MULTI_THREAD_ENABLE;
 extern const int CONFIG_MULTI_THREAD_SELF_ADAPTION_ENABLE;
 extern const int config_media_24bit_enable;
@@ -18,9 +17,9 @@ extern const int config_audio_vocal_track_synthesis_32bit_enable;
 extern const int CONFIG_MAX_ENC_DATA_CACHE_SIZE;
 extern const int CONFIG_LOG_OUTPUT_ENABLE;
 extern const int config_audio_cfg_online_enable;
-extern const int config_audio_dac_dma_buf_realloc_enable;
 extern const int config_audio_dac_delay_off_ms;
 extern const int CONFIG_MEDIA_MEM_DEBUG;
+extern const int config_media_tws_en;
 
 
 /*
@@ -41,6 +40,9 @@ extern const int config_audio_dac_mute_timeout;
 extern const int config_audio_dac_pa_mode;
 extern const int config_audio_dac_power_mode;
 extern const int config_audio_dac_ng_debug;
+extern const int config_audio_dac_enable;
+extern const int config_audio_dac_dma_buf_realloc_enable;
+extern const int CONFIG_DAC_CACHE_MSEC;
 
 /*
  *******************************************************************
@@ -98,7 +100,7 @@ extern const int config_audio_gain_enable;
 extern const int config_audio_split_gain_enable;
 extern const int config_audio_stereomix_enable;
 extern const int voicechanger_effect_v_config;
-extern const int mb_limiter_3band_run_en;
+extern const int audio_crossover_3band_enable;
 extern const int limiter_run_mode;
 extern const int drc_advance_run_mode;
 extern const int drc_run_mode;

@@ -61,7 +61,7 @@ struct le_audio_var {
     u8 le_audio_adv_connected;			// leaudio广播连接状态，0xAA:已连上，0:已断开
 };
 static struct le_audio_var g_le_audio_hdl;
-extern void ble_vendor_priv_cmd_handle_register(u16(*handle)(u16 hdl, u8 *cmd, u8 *rsp));
+extern void ble_vendor_priv_cmd_handle_register(u16(*handle)(u16 hdl, u8 *cmd, u8 len, u8 *rsp));
 extern int ll_hci_vendor_send_priv_cmd(u16 conn_handle, u8 *data, u16 size); //通过hci命令发
 extern void le_audio_adv_api_enable(u8 en);
 extern u8 lmp_get_esco_conn_statu(void);
@@ -114,33 +114,36 @@ static struct app_cig_conn_info app_cig_conn_info[CIG_MAX_NUMS];		// cig对象
 /**
  * @brief 申请互斥量，用于保护临界区代码，与app_connected_mutex_post成对使用
  *
- * @param mutex:已创建的互斥量指针变量
+ * @param _mutex:已创建的互斥量指针变量
  */
 /* ----------------------------------------------------------------------------*/
-static inline void app_connected_mutex_pend(OS_MUTEX *mutex, u32 line)
+static inline void app_connected_mutex_pend(OS_MUTEX *_mutex, u32 line)
 {
     int os_ret;
-    os_ret = os_mutex_pend(mutex, 0);
+    os_ret = os_mutex_pend(_mutex, 0);
     if (os_ret != OS_NO_ERR) {
         log_error("%s err, os_ret:0x%x", __FUNCTION__, os_ret);
         ASSERT(os_ret != OS_ERR_PEND_ISR, "line:%d err, os_ret:0x%x", line, os_ret);
     }
 }
 enum {
-    REMOVE_CIS_REASON_BY_ESCO = 1,
+    REMOVE_CIS_REASON_BY_ESCO = 1,//1:耳机端手机通话中，dongle不建立cis
+    REMOVE_CIS_ESCO_MIX,  //2://手机通话声音和dongle 音乐声音叠加，dongle需要重新换新的参数播放
 };
+
+
 
 /* --------------------------------------------------------------------------*/
 /**
  * @brief 释放互斥量，用于保护临界区代码，与app_connected_mutex_pend成对使用
  *
- * @param mutex:已创建的互斥量指针变量
+ * @param _mutex:已创建的互斥量指针变量
  */
 /* ----------------------------------------------------------------------------*/
-static inline void app_connected_mutex_post(OS_MUTEX *mutex, u32 line)
+static inline void app_connected_mutex_post(OS_MUTEX *_mutex, u32 line)
 {
     int os_ret;
-    os_ret = os_mutex_post(mutex);
+    os_ret = os_mutex_post(_mutex);
     if (os_ret != OS_NO_ERR) {
         log_error("%s err, os_ret:0x%x", __FUNCTION__, os_ret);
         ASSERT(os_ret != OS_ERR_PEND_ISR, "line:%d err, os_ret:0x%x", line, os_ret);
@@ -209,7 +212,15 @@ void le_audio_unicast_play_remove_by_phone_call()
                 }
             }
             data[0] = CIG_EVENT_OPID_REQ_REMOVE_CIS;//fix dongle must remove cis
+#if (LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG&LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
+            data[1] = REMOVE_CIS_ESCO_MIX;
+#if (TCFG_BLE_HIGH_PRIORITY_ENABLE==0)
+#error "waring TCFG_BLE_HIGH_PRIORITY_ENABLE=1"
+#endif
+#else
+
             data[1] = REMOVE_CIS_REASON_BY_ESCO;
+#endif
             le_audio_media_control_cmd(data, 2);
         }
     }
@@ -225,12 +236,54 @@ void le_audio_unicast_try_resume_play_by_phone_call_remove()
             if (app_cig_conn_info[i].used) {
                 r_printf("le_audio_unicast_try_resume_play_by_phone_call_remove");
                 data[0] = CIG_EVENT_OPID_REQ_CREAT_CIS;
+#if (LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG&LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
+                data[1] = REMOVE_CIS_ESCO_MIX;
+#else
                 data[1] = REMOVE_CIS_REASON_BY_ESCO;
+#endif
                 le_audio_media_control_cmd(data, 2);
             }
 
         }
     }
+#endif
+}
+int le_audio_unicast_play_stop_by_esco()
+{
+    int ret = 0;
+#if (TCFG_LE_AUDIO_APP_CONFIG&LE_AUDIO_JL_UNICAST_SINK_EN)
+    if (is_cig_music_play()) {
+        for (u8 i = 0; i < CIG_MAX_NUMS; i++) {
+            if (app_cig_conn_info[i].used && app_cig_conn_info[i].cig_hdl != 0xff) {
+                r_printf("le_audio_unicast_play_stop_by_esco");
+                if (cis_audio_player_close(app_cig_conn_info[i].cig_hdl)) {
+                    app_cig_conn_info[i].break_cig_hdl = app_cig_conn_info[i].cig_hdl;
+                    ret = 1;
+                }
+            }
+        }
+    }
+#endif
+    return ret;
+
+}
+void le_audio_unicast_play_resume_by_esco()
+{
+#if (TCFG_LE_AUDIO_APP_CONFIG&LE_AUDIO_JL_UNICAST_SINK_EN)
+    u8 data[2];
+    if (is_cig_music_play()) {
+        for (u8 i = 0; i < CIG_MAX_NUMS; i++) {
+            if (app_cig_conn_info[i].used && app_cig_conn_info[i].cig_hdl != 0xff && app_cig_conn_info[i].break_cig_hdl != 0xff) {
+                r_printf("le_audio_unicast_play_esco_resume");
+                if (cis_audio_player_resume(app_cig_conn_info[i].break_cig_hdl, is_cig_phone_call_play())) {
+
+                    app_cig_conn_info[i].break_cig_hdl = 0xff;
+                }
+
+            }
+        }
+    }
+
 #endif
 }
 
@@ -374,11 +427,13 @@ static int app_connected_conn_status_event_handler(int *msg)
             if (app_cig_conn_info[i].used && (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl)) {
                 if (app_cig_conn_info[i].used) {
                     if (app_cig_conn_info[i].cig_hdl == hdl->cig_hdl) {
+#if TCFG_BT_DUAL_CONN_ENABLE
 #if (LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG&LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
                         if (app_cig_conn_info[i].break_a2dp_by_le_audio_call) {
                             app_cig_conn_info[i].break_a2dp_by_le_audio_call = 0;
                             try_a2dp_resume_by_le_audio_preempted();
                         }
+#endif
 #endif
                         for (j = 0; j < CIG_MAX_CIS_NUMS; j++) {
                             // if (app_cig_conn_info[i].cis_conn_info[j].cis_hdl == hdl->cis_hdl) {
@@ -413,8 +468,10 @@ static int app_connected_conn_status_event_handler(int *msg)
 #if TCFG_USER_TWS_ENABLE
         tws_sync_le_audio_conn_info();
 #endif
+#if TCFG_BT_DUAL_CONN_ENABLE
 #if (LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG&LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PALY_PREEMPTEDK)
         try_a2dp_resume_by_le_audio_preempted();
+#endif
 #endif
         if (ret < 0) {
             log_debug("connected_perip_disconnect_deal fail");
@@ -1301,7 +1358,7 @@ void le_audio_media_control_cmd(u8 *data, u8 len)
     }
 }
 
-static u16 ble_user_priv_cmd_handle(u16 handle, u8 *cmd, u8 *rsp)
+static u16 ble_user_priv_cmd_handle(u16 handle, u8 *cmd, u8 len, u8 *rsp)
 {
     u8 cmd_opcode = cmd[0];
     u16 rsp_len = 0;
@@ -1340,7 +1397,7 @@ static u16 ble_user_priv_cmd_handle(u16 handle, u8 *cmd, u8 *rsp)
 
         break;
     case VENDOR_PRIV_LC3_INFO:
-        set_unicast_lc3_info(&cmd[1]);
+        set_unicast_lc3_info(&cmd[1], len);
         break;
     case VENDOR_PRIV_OPEN_MIC:
         app_send_message(APP_MSG_LE_AUDIO_CALL_OPEN, handle);
@@ -1364,6 +1421,7 @@ static u16 ble_user_priv_cmd_handle(u16 handle, u8 *cmd, u8 *rsp)
  * */
 void le_audio_profile_init()
 {
+    printf("le_audio_profile_init:%d\n", g_le_audio_hdl.le_audio_profile_ok);
     if (get_bt_le_audio_config() && g_le_audio_hdl.le_audio_profile_ok == 0) {
 #if (THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN)
         le_audio_user_server_profile_init(rcsp_profile_data);
@@ -1391,9 +1449,13 @@ void le_audio_profile_init()
  * */
 void le_audio_profile_exit()
 {
+    printf("le_audio_profile_exit:%d\n", g_le_audio_hdl.le_audio_profile_ok);
+    if (g_le_audio_hdl.le_audio_profile_ok == 0) {
+        return;
+    }
     le_audio_adv_api_enable(0);
     g_le_audio_hdl.le_audio_profile_ok = 0;
-    if (!is_cig_phone_conn()) { // 有连接就卸载否则会异常
+    if (!is_cig_phone_conn()) { // 有连接先不卸载，等cis断开再卸载
         app_connected_close_in_other_mode();
     } else {
         local_irq_disable();
@@ -1491,6 +1553,7 @@ static int le_audio_app_msg_handler(int *msg)
     case APP_MSG_LE_AUDIO_CALL_CLOSE:
         g_le_audio_hdl.cig_phone_conn_status &= ~APP_CONNECTED_STATUS_PHONE_CALL;
         connected_perip_connect_recoder(0, msg[1]);
+#if TCFG_BT_DUAL_CONN_ENABLE
 #if (LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG&LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
         for (int i = 0; i < CIG_MAX_NUMS; i++) {
             if (app_cig_conn_info[i].used && app_cig_conn_info[i].break_a2dp_by_le_audio_call) {
@@ -1498,6 +1561,7 @@ static int le_audio_app_msg_handler(int *msg)
                 try_a2dp_resume_by_le_audio_preempted();
             }
         }
+#endif
 #endif
         break;
 #endif
