@@ -129,6 +129,8 @@ void audio_cvp_ref_start(u8 en);
 void audio_cvp_set_output_way(u8 en);
 /*可写长度*/
 int get_audio_cvp_output_way_writable_len();
+void audio_cvp_develop_lock();
+void audio_cvp_develop_unlock();
 
 /*
 *********************************************************************

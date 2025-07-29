@@ -66,13 +66,6 @@ c_SRC_FILES := \
 	apps/earphone/mode/bt/earphone.c \
 	apps/earphone/mode/bt/eartch_event_deal.c \
 	apps/earphone/mode/bt/kws_voice_event_deal.c \
-	apps/earphone/mode/bt/le_audio/big/app_le_auracast.c \
-	apps/earphone/mode/bt/le_audio/big/le_broadcast.c \
-	apps/earphone/mode/bt/le_audio/big/le_broadcast_config.c \
-	apps/earphone/mode/bt/le_audio/cig/app_le_connected.c \
-	apps/earphone/mode/bt/le_audio/cig/le_connected.c \
-	apps/earphone/mode/bt/le_audio/cig/le_connected_config.c \
-	apps/earphone/mode/bt/le_audio/le_audio_common.c \
 	apps/earphone/mode/bt/low_latency.c \
 	apps/earphone/mode/bt/phone_call.c \
 	apps/earphone/mode/bt/poweroff.c \
@@ -223,6 +216,7 @@ LFLAGS := \
 	cpu/br56/liba/howling.a \
 	cpu/br56/liba/lib_HarmonicExciter.a \
 	cpu/br56/liba/libllns.a \
+	cpu/br56/liba/lib_llns_dns.a \
 	cpu/br56/liba/lib_icsd_common_v2.a \
 	cpu/br56/liba/lib_icsd_anc_v2.a \
 	cpu/br56/liba/lib_icsd_rt_anc.a \
@@ -260,6 +254,7 @@ LFLAGS := \
 	cpu/br56/liba/bfilterfun_lib.a \
 	cpu/br56/liba/lib_opusdec_rom_dec.a \
 	cpu/br56/liba/crypto_toolbox_Osize.a \
+	cpu/br56/liba/btctrler_rom.a \
 	cpu/br56/liba/lib_dns.a \
 	cpu/br56/liba/update.a \
 	cpu/br56/liba/cbuf.a \
@@ -270,6 +265,7 @@ LFLAGS := \
 	cpu/br56/liba/ascii.a \
 	cpu/br56/liba/cfg_tool.a \
 	cpu/br56/liba/vm.a \
+	cpu/br56/liba/ftl.a \
 	cpu/br56/liba/debug_record.a \
 	cpu/br56/liba/lzma_dec.a \
 	cpu/br56/liba/chargestore.a \

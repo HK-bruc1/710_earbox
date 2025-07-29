@@ -24,8 +24,9 @@ void audio_mic_pwr_ctl(audio_mic_pwr_t state)
         /*mic供电IO配置：输出0*/
         for (i = 0; i < AUDIO_ADC_MIC_MAX_NUM; i++) {
             if (cfg->mic_en_map & BIT(i)) {
-                if ((platform_cfg[i].mic_bias_sel == 0) && (platform_cfg[i].power_io != 0)) {
-                    u32 gpio = uuid2gpio(platform_cfg[i].power_io);
+                if (platform_cfg[i].mic_bias_sel == 0) {
+                    /* u32 gpio = uuid2gpio(platform_cfg[i].power_io); */
+                    u32 gpio = platform_cfg[i].power_io;
                     gpio_set_mode(IO_PORT_SPILT(gpio), PORT_OUTPUT_LOW);
                 }
             }
@@ -44,8 +45,9 @@ void audio_mic_pwr_ctl(audio_mic_pwr_t state)
         /*mic供电IO配置：输出1*/
         for (i = 0; i < AUDIO_ADC_MIC_MAX_NUM; i++) {
             if (cfg->mic_en_map & BIT(i)) {
-                if ((platform_cfg[i].mic_bias_sel == 0) && (platform_cfg[i].power_io != 0)) {
-                    u32 gpio = uuid2gpio(platform_cfg[i].power_io);
+                if (platform_cfg[i].mic_bias_sel == 0) {
+                    /* u32 gpio = uuid2gpio(platform_cfg[i].power_io); */
+                    u32 gpio = platform_cfg[i].power_io;
                     gpio_set_mode(IO_PORT_SPILT(gpio), PORT_OUTPUT_HIGH);
                 }
             }

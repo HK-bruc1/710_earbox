@@ -247,6 +247,12 @@ static int audio_aec_probe(short *talk_mic, short *talk_ref_mic, short *mic3, sh
         audio_dc_offset_remove_run(cvp_dms->dcc_hdl, (void *)talk_mic, len);
     }
 #endif
+    if (cvp_dms->inbuf_clear_cnt) {
+        cvp_dms->inbuf_clear_cnt--;
+        memset(talk_mic, 0, len);
+        memset(talk_ref_mic, 0, len);
+    }
+
     return 0;
 }
 
@@ -1020,9 +1026,11 @@ int audio_aec_open(struct audio_aec_init_param_t *init_param, s16 enablebit, int
 #endif
         break;
     default:
+#if (TCFG_AUDIO_CVP_DMS_ANS_MODE || TCFG_AUDIO_CVP_DMS_DNS_MODE)
         printf("CVP 2mic Algo:Beamfroming");
         audio_aec_param_init(aec_param, init_param->node_uuid);
         cvp_dms->adapter = cvp_2mic_beamforming_adapter();
+#endif
         break;
     }
 
@@ -1272,10 +1280,6 @@ void audio_aec_inbuf(s16 *buf, u16 len)
             memset(buf, 0, len);
         }
 #if CVP_TOGGLE
-        if (cvp_dms->inbuf_clear_cnt) {
-            cvp_dms->inbuf_clear_cnt--;
-            memset(buf, 0, len);
-        }
         int ret = cvp_dms->adapter->push_mic0_data(buf, len);
         if (ret == -1) {
         } else if (ret == -2) {

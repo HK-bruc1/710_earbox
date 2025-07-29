@@ -15,6 +15,11 @@
  *						Audio Common Definitions
  *******************************************************************
  */
+#define INT16MAX_P						(32767)		//16bit正最大值
+#define INT16MAX_N						(-32768)	//16bit负最大值
+#define INT24MAX_P						(8388607)	//24bit正最大值
+#define INT24MAX_N						(-8388608)	//24bit负最大值
+
 //Audio I/O Mode
 #define AUDIO_IO_SINGLE_ENDED			0	//单端:Single-Ended
 #define AUDIO_IO_DIFFERENTIAL			1	//差分:Differential
@@ -74,6 +79,11 @@
 #define DAC_NG_THRESHOLD_MUTE			   (5) 	//BIT(0)|BIT(2)：信号小于等于噪声门阈值，清0并mute
 #define DAC_NG_SILENCE_MUTE				   (2)	//BIT(1)：信号静音(全0)时候mute
 #define DAC_NG_POST_ENABLE				   (1UL << 15)	//BIT(15)：NoiseGate后处理使能
+
+//DAC输出模式定义
+#define DAC_MODE_SINGLE                    (0)	//单端
+#define DAC_MODE_DIFF                      (1)	//差分
+#define DAC_MODE_VCMO                      (2)	//共模VCOMO
 /*
  *******************************************************************
  *						Class-D Driver Definitions
@@ -144,6 +154,11 @@
 /*ADC性能模式*/
 #define	ADC_MODE_HIGH_PERFORMANCE           (0) //高性能模式
 #define	ADC_MODE_LOW_POWER		            (1)	//低功耗模式
+
+/*MIC输入工作模式定义*/
+#define AUDIO_MIC_CAP_MODE                  0   //单端隔直电容模式
+#define AUDIO_MIC_CAP_DIFF_MODE             1   //差分隔直电容模式
+#define AUDIO_MIC_CAPLESS_MODE              2   //单端省电容模式
 /*
  *******************************************************************
  *						FFT Definitions
@@ -201,6 +216,7 @@
 #define AUDIO_CODING_ALAC         0x02000000
 #define AUDIO_CODING_SINE         0x04000000
 #define AUDIO_CODING_F2A          0x08000000
+#define AUDIO_CODING_JLA_V2       0x0A000000
 #define AUDIO_CODING_AIFF         0x10000000
 #define AUDIO_CODING_JLA          0x20000000
 #define AUDIO_CODING_OGG          0x40000000

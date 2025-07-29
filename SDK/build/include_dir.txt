@@ -56,6 +56,13 @@
 -Iaudio/common
 -Iaudio/effect
 -Iapps/common/device/sensor/imu_sensor
+-Iaudio/le_audio
+-Iapps/earphone/include/le_audio
+-Iapps/earphone/include/le_audio/big
+-Iapps/earphone/include/le_audio/cig
+-Iinterface/btstack/third_party/le_audio
+-Iinterface/btstack/third_party/broadcast
+-Iapps/common/le_audio
 -Iinterface/utils/ui/ui/cpu/br56
 -Iapps/common/third_party_profile
 -Iapps/common/third_party_profile/common
@@ -99,14 +106,12 @@
 -Iapps/common/third_party_profile/jieli/rcsp/server/functions/sensors/sport_data_info_opt
 -Iapps/common/third_party_profile/jieli/rcsp/server/functions/browser
 -Iapps/common/third_party_profile/jieli/rcsp/server/functions/mass_data
+-Iapps/common/third_party_profile/jieli/rcsp/server/functions/translator
 -Iapps/common/third_party_profile/jieli/rcsp/client/rcsp_m_update
 -Iapps/common/third_party_profile/ximalaya_protocol
 -Iapps/common/third_party_profile/auracast_app
--Iinterface/btstack/third_party/le_audio
--Iinterface/btstack/third_party/broadcast
--Iinterface/btstack
--Iaudio/le_audio
 -Iapps/common/third_party_profile/bt_fmy
+-Iinterface/btstack
 -Iapps/common/device/usb
 -Iapps/common/device/usb/device
 -Iapps/common/device/usb/host
@@ -140,9 +145,5 @@
 -Iaudio/effect/spatial_effect
 -Iaudio/effect/somatosensory
 -Iinterface/media/aispeech/enc
--Iapps/common/le_audio
--Iapps/earphone/include/le_audio
--Iapps/earphone/include/le_audio/big
--Iapps/earphone/include/le_audio/cig
 -Iinterface/system/math/cpu/br56
 

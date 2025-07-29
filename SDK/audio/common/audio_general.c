@@ -25,7 +25,15 @@ const int config_media_tws_en = 1;
 const int config_media_tws_en = 0;
 #endif
 
+/*蓝牙音频关联的使能配置，不含蓝牙的系统配置为0*/
+#if TCFG_APP_BT_EN
+const int config_bt_audio_enable = 1;
+#else
+const int config_bt_audio_enable = 0;
+#endif
+
 const int config_audio_dac_ng_debug = 0;
+const int config_audio_dac_enable = TCFG_DAC_NODE_ENABLE;
 
 /* 16bit数据流中也存在32bit位宽数据的处理 */
 const int config_ch_adapter_32bit_enable = 1;
@@ -69,7 +77,11 @@ const int config_audio_split_gain_enable = TCFG_SPLIT_GAIN_NODE_ENABLE;
 const int config_audio_stereomix_enable = TCFG_STEROMIX_NODE_ENABLE;
 
 //ADC Enable Config
+#ifdef TCFG_ADC0_ENABLE
 const int config_audio_adc0_enable = TCFG_ADC0_ENABLE;
+#else
+const int config_audio_adc0_enable = 0;
+#endif
 #ifdef TCFG_ADC1_ENABLE
 const int config_audio_adc1_enable = TCFG_ADC1_ENABLE;
 #else
@@ -103,7 +115,11 @@ const int config_audio_adc6_enable = 0;
 const int config_audio_adc7_enable = 0;
 
 //ADC input Mode:Single-Ended/Differential/Single-Ended Capless
+#ifdef TCFG_ADC0_MODE
 const int config_audio_adc0_input_mode = TCFG_ADC0_MODE;
+#else
+const int config_audio_adc0_input_mode = 0;
+#endif
 #ifdef TCFG_ADC1_MODE
 const int config_audio_adc1_input_mode = TCFG_ADC1_MODE;
 #else
@@ -208,7 +224,8 @@ const int limiter_run_mode = EFx_PRECISION_PRO
                              | TCFG_AUDIO_EFX_4E5B_RUN_MODE
 #endif
 #if defined(TCFG_AUDIO_EFX_F58A_RUN_MODE)
-                             | TCFG_AUDIO_EFX_F58A_RUN_MODE
+                             | ((TCFG_AUDIO_EFX_F58A_RUN_MODE & (EFx_BW_32t16 | EFx_BW_32t32)) ? EFx_BW_32t32 : 0)
+                             | ((TCFG_AUDIO_EFX_F58A_RUN_MODE &EFx_BW_16t16) ? EFx_BW_16t16 : 0)
 #endif
 #if !defined(TCFG_AUDIO_EFX_4E5B_RUN_MODE) && !defined(TCFG_AUDIO_EFX_F58A_RUN_MODE)
                              | 0xFFFF
@@ -297,7 +314,8 @@ const  int drc_advance_run_mode          = EFx_PRECISION_NOR
         | TCFG_AUDIO_EFX_4250_RUN_MODE
 #endif
 #if defined(TCFG_AUDIO_EFX_74CB_RUN_MODE)
-        | TCFG_AUDIO_EFX_74CB_RUN_MODE
+        | ((TCFG_AUDIO_EFX_74CB_RUN_MODE & (EFx_BW_32t16 | EFx_BW_32t32)) ? EFx_BW_32t32 : 0)
+        | ((TCFG_AUDIO_EFX_74CB_RUN_MODE &EFx_BW_16t16) ? EFx_BW_16t16 : 0)
 #endif
 #if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
         | TCFG_AUDIO_EFX_02E6_RUN_MODE
@@ -422,8 +440,8 @@ const int voicechanger_effect_v_config = (0
         /* | BIT(EFFECT_VOICECHANGE_FEEDBACK) */
                                          );
 
-/*mb limiter 3带使能(1.2k) */
-const int mb_limiter_3band_run_en       = 1;
+/*mb drc/limiter 3带使能(1.2k) */
+const int audio_crossover_3band_enable       = 1;
 
 /*Vocal Remover Configs*/
 const int audio_vocal_remover_low_cut_enable = 1;
@@ -438,6 +456,17 @@ const int spatial_imp_run_mode = EFx_BW_16t16 | EFx_BW_32t32;
 #endif
 const int spatial_imp_fft_mode = 2;     //1软件fft(浮点输入输出) 2硬件fft(定点输入输出)
 const int spatial_imp_run_points = 128; //运算点数
+
+/*
+ * 若使能陀螺仪跟踪模式：azi_group 需要配置为-1，使能所有方向角/俯仰角信息表。此时 ele_group 配置无效。
+ * 仅使能固定模式时，azi_group、ele_group 可根据调试情况配置，固定方位角/俯仰角，节省代码量。
+ * 注：当 azi_group 设定为-1之外的值时，可视化参数界面"Bias Angle","Azimuth Angle","Elevation Angle"固化，配置无效。
+ */
+const int spatial_imp_active_azi_group = -1; //方位角控制。范围：-1~359。
+const int spatial_imp_active_ele_group = 0;  //俯仰角控制。范围：0~359。
+
+/* 双耳压强差使能控制，关闭可节省代码量（关闭后可视化界面参数"ildenable"调试无效）。范围：0关，1开。*/
+const int spatial_imp_active_ild_group = 0;
 
 /*
  *******************************************************************

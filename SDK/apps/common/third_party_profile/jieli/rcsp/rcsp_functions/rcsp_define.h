@@ -69,6 +69,8 @@
 #define    JL_OPCODE_MASS_DATA                                      0x30
 
 #define    JL_OPCODE_1T2_DEVICE_EDR_INFO_LIST						0x31
+#define    JL_OPCODE_TRANSLATOR                                     0x34//翻译功能
+#define    JL_OPCODE_PUBLIC_SET_CMD                                 0x33
 
 #define    JL_OPCODE_PUBLIC_SET_CMD                                 0x33
 

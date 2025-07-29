@@ -32,6 +32,7 @@
 #include "rcsp_command.h"
 #include "adv_1t2_setting.h"
 #include "rcsp_rtc_func.h"
+#include "rcsp_translator.h"
 #include "pub_mutual_set_cmd_opt.h"
 #include "file_transfer_sync.h"
 
@@ -356,10 +357,33 @@ static void find_device_handle(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u1
 
 static void get_device_config_info(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 len, u16 ble_con_handle, u8 *spp_remote_addr)
 {
-#if (TCFG_DEV_MANAGER_ENABLE || RCSP_TONE_FILE_TRANSFER_ENABLE) //传音大文件传输提示音方案
-    u8 device_info[] = {0x01, 0x00, 0x01};
-    JL_CMD_response_send(OpCode, JL_PRO_STATUS_SUCCESS, OpCode_SN, device_info, sizeof(device_info), ble_con_handle, spp_remote_addr);
+    struct RcspModel *rcspModel = (struct RcspModel *)priv;
+    u8 resp_buf[3] = {0};
+    if (rcspModel == NULL) {
+        return ;
+    }
+    if (!rcspModel->find_dev_en) {
+        return;
+    }
+    //产品标识
+#if RCSP_MODE == RCSP_MODE_EARPHONE
+    resp_buf[0] = 1;
+#elif RCSP_MODE == RCSP_MODE_WATCH
+    resp_buf[0] = 0;
 #endif
+    //版本号
+    resp_buf[1] = 0x01;
+#if RCSP_ADV_TRANSLATOR
+    resp_buf[2] |= BIT(1);
+    if (!JL_rcsp_translator_whether_play_by_ai_rx()) {
+        resp_buf[2] |= BIT(2);
+    }
+#endif
+    JL_CMD_response_send(OpCode, JL_PRO_STATUS_SUCCESS, OpCode_SN, resp_buf, sizeof(resp_buf), ble_con_handle, spp_remote_addr);
+    /* #if (TCFG_DEV_MANAGER_ENABLE || RCSP_TONE_FILE_TRANSFER_ENABLE) 传音大文件传输提示音方案 */
+    /*     u8 device_info[] = {0x01, 0x00, 0x01}; */
+    /*     JL_CMD_response_send(OpCode, JL_PRO_STATUS_SUCCESS, OpCode_SN, device_info, sizeof(device_info), ble_con_handle, spp_remote_addr); */
+    /* #endif */
 }
 
 #define RES_MD5_FILE	FLASH_RES_PATH"md5.bin"
@@ -654,6 +678,11 @@ void rcsp_cmd_recieve(void *priv, u8 OpCode, u8 OpCode_SN, u8 *data, u16 len, u1
 #endif
 #if RCSP_UPDATE_EN
         if (0 == JL_rcsp_update_cmd_resp(priv, OpCode, OpCode_SN, data, len, ble_con_handle, spp_remote_addr)) {
+            break;
+        }
+#endif
+#if RCSP_ADV_TRANSLATOR
+        if (0 == JL_rcsp_translator_functions(priv, OpCode, OpCode_SN, data, len, ble_con_handle, spp_remote_addr)) {
             break;
         }
 #endif

@@ -43,6 +43,12 @@
 	*(.lc3_codec_c_data)
 #endif
 
+	*(.jla_v2_dec_data)
+	*(.jla_v2_enc_data)
+	*(.jla_v2_codec_c_data)
+	*(.jla_v2_codec_ari_c_data)
+
+
 	*(.mp3_dec.data)
 	*(.mp3.data)
     *(.mp3tsy_dec.data)
@@ -95,6 +101,7 @@
 	*(.ape.data)
 	*(.ape_dec_data)
 	*(.ape_data)
+	*(.llns_dns.data)
 
 	*(.audio_track_data)
 	*(.audio_eq_data)

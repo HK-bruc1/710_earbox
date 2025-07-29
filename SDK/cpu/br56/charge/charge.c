@@ -901,6 +901,10 @@ void charge_enter_lowpower(enum LOW_POWER_LEVEL lp_mode)
             p33_or_1byte(P3_ANA_KEEP0, BIT(7) | BIT(6) | BIT(5));
             //KEEP MVIO_VLMT MVIO_IFULL
             p33_or_1byte(P3_ANA_KEEP1, BIT(4) | BIT(3));
+            //KEEP NVDC STATUS
+            p33_fast_access(P3_ANA_KEEP2, BIT(4), 1);
+        } else {
+            p33_fast_access(P3_ANA_KEEP2, BIT(4), 0);
         }
     }
 }

@@ -202,6 +202,7 @@ const struct task_info task_info_table[] = {
     {"dlog",                1,     0,  256,   128 },
 #endif
     {"aud_adc_demo",        1,     0,  512,   128 },
+    {"aud_dac_demo",        1,     0,  512,   128 },
     {0, 0},
 };
 
@@ -369,7 +370,7 @@ static struct app_mode *app_task_init()
     app_var_init();
     app_version_check();
 
-#ifndef CONFIG_CPU_BR56
+#if !(defined(CONFIG_CPU_BR56) || defined(CONFIG_CPU_BR50))
     sdfile_init();
     syscfg_tools_init();
 #endif
@@ -403,7 +404,7 @@ static struct app_mode *app_task_init()
     if (CONFIG_UPDATE_ENABLE) {
         update = update_result_deal();
     }
-#if TCFG_MC_BIAS_AUTO_ADJUST
+#if (TCFG_MC_BIAS_AUTO_ADJUST && TCFG_AUDIO_ADC_ENABLE)
     mic_capless_trim_init(update);
 #endif
 

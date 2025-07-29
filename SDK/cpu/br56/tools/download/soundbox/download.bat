@@ -7,7 +7,7 @@ copy ..\..\tone.cfg .
 copy ..\..\p11_code.bin .
 copy ..\..\br28loader.bin .
 
-..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br28 -boot 0x120000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin -res tone.cfg ..\..\cfg_tool.bin ..\..\eq_cfg_hw.bin p11_code.bin -uboot_compress
+..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br28 -boot 0x120000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin -res tone.cfg ..\..\cfg_tool.bin ..\..\eq_cfg_hw.bin -uboot_compress
 
 :: -format all
 ::-reboot 2500

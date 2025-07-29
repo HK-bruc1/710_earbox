@@ -73,6 +73,7 @@ MEMORY
 {
 	code0(rx)    	  : ORIGIN = CODE_BEG,  LENGTH = CONFIG_FLASH_SIZE
 	ram0(rwx)         : ORIGIN = RAM0_BEG,  LENGTH = RAM0_SIZE
+    dlog0(r)     	  : ORIGIN = 0x20000000, LENGTH = 0x100000
 }
 
 
@@ -171,7 +172,6 @@ SECTIONS
 	.data_code_z ALIGN(32):SUBALIGN(4)
 	{
 		. = ALIGN(4);
-		#include "media/media_lib_data_text.ld"
 
         *(.os_critical_code)
         *(.os.text*)
@@ -239,6 +239,8 @@ SECTIONS
 		. = ALIGN(4);
         _SPI_CODE_END = . ;
 
+		. = ALIGN(4);
+		#include "media/media_lib_data_text.ld"
 		. = ALIGN(4);
 	} > ram0
 
@@ -406,6 +408,80 @@ SECTIONS
 
 		. = ALIGN(32);
 	  } > code0
+
+    . = ORIGIN(dlog0);
+    /* .dlog_data (NOLOAD):SUBALIGN(4) */
+    .dlog_data :SUBALIGN(4)
+    {
+        dlog_seg_begin = .;
+        // 头部的0x100空间
+        KEEP(*(.dlog.rodata.head))
+        /* . = 0x100 + ORIGIN(dlog0); */
+		. = ALIGN(0x100);
+
+        dlog_str_tab_seg_begin = .;
+        dlog_str_tab_seg0_begin = .;
+        *(.dlog.rodata.str_tab.0)
+
+        dlog_str_tab_seg1_begin = .;
+        *(.dlog.rodata.str_tab.1)
+
+        dlog_str_tab_seg2_begin = .;
+        *(.dlog.rodata.str_tab.2)
+
+        dlog_str_tab_seg3_begin = .;
+        *(.dlog.rodata.str_tab.3)
+
+        dlog_str_tab_seg4_begin = .;
+        *(.dlog.rodata.str_tab.4)
+
+        dlog_str_tab_seg5_begin = .;
+        *(.dlog.rodata.str_tab.5)
+
+        dlog_str_tab_seg6_begin = .;
+        *(.dlog.rodata.str_tab.6)
+
+        dlog_str_tab_seg7_begin = .;
+        *(.dlog.rodata.str_tab.7)
+
+        dlog_str_tab_segAll_begin = .;
+        *(.dlog.rodata.str_tab*)
+        dlog_str_tab_segAll_end = .;
+        dlog_str_tab_seg_end = .;
+
+		. = ALIGN(32);
+        dlog_str_seg_begin = .;
+        dlog_str_seg0_begin = .;
+        *(.dlog.rodata.string.0)
+
+        dlog_str_seg1_begin = .;
+        *(.dlog.rodata.string.1)
+
+        dlog_str_seg2_begin = .;
+        *(.dlog.rodata.string.2)
+
+        dlog_str_seg3_begin = .;
+        *(.dlog.rodata.string.3)
+
+        dlog_str_seg4_begin = .;
+        *(.dlog.rodata.string.4)
+
+        dlog_str_seg5_begin = .;
+        *(.dlog.rodata.string.5)
+
+        dlog_str_seg6_begin = .;
+        *(.dlog.rodata.string.6)
+
+        dlog_str_seg7_begin = .;
+        *(.dlog.rodata.string.7)
+
+        dlog_str_segAll_begin = .;
+        *(.dlog.rodata.string*)
+        dlog_str_segAll_end = .;
+        dlog_str_seg_end = .;
+
+        dlog_seg_end = .;
+    } > dlog0
 }
 
 #include "app.ld"
@@ -481,6 +557,19 @@ PROVIDE(MALLOC_SIZE = _HEAP_END - _HEAP_BEGIN);
 ASSERT(MALLOC_SIZE  >= 0x8000, "heap space too small !")
 //ASSERT(MMU_TBL_BEG_CHECK == 0x102000, "MMU table begin MUST at 0x102000") //by Gw
 
+//===================== dlog check =====================//
+// 宏DLOG_STR_TAB_STRUCT_SIZE = 16 (即 dlog_str_tab_s 结构体的大小), 0xFFFF是支持的最大log index数
+STR_TAB_SIZE = 16;
+ASSERT((dlog_str_tab_seg_end - dlog_str_tab_seg_begin) <= (STR_TAB_SIZE * 0xFFFF), "err: log index out of range, only 0x0000 ~ 0xFFFF !!!");
+ASSERT((dlog_str_tab_seg_begin - ADDR(.dlog_data)) <= 0x100, "err: .dlog.rodata.head out of range, only less than 0x100 !!!");
+// 定义异常信息和dlog打印数据在保存dlog数据区域的起始地址
+#if TCFG_CONFIG_DEBUG_RECORD_ENABLE
+dlog_exception_data_start_addr = 0x0FFF;   // 这个地址是相对于保存dlog数据起始地址的偏移
+dlog_log_data_start_addr = 0x1000;         // 这个地址是相对于保存dlog数据起始地址的偏移
+#else
+dlog_exception_data_start_addr = 0;
+dlog_log_data_start_addr = 0;
+#endif
 
 //============================================================//
 //=== report section info begin:

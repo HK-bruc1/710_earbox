@@ -1,4 +1,4 @@
-#include "asm/includes.h"
+#include "cpu/includes.h"
 #include "system/includes.h"
 #include "app_config.h"
 #include "audio_config_def.h"
@@ -172,6 +172,7 @@ void setup_arch()
     wdt_init(WDT_16S);
     /* wdt_close(); */
 
+    gpadc_mem_init(8);
     efuse_init();
 
     sdfile_init();

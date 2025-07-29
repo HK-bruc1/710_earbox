@@ -70,6 +70,7 @@
 #define    CUSTOM_DEMO_EN           (1 << 15)   // 第三方协议的demo，用于示例客户开发自定义协议
 #define    XIMALAYA_EN              (1 << 16)
 #define    AURACAST_APP_EN          (1 << 17)
+#define    MULTI_CLIENT_EN          (1 << 18)
 
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
 #define THIRD_PARTY_PROTOCOLS_SEL  TCFG_THIRD_PARTY_PROTOCOLS_SEL
@@ -132,6 +133,15 @@
 
 // #undef TCFG_LOWPOWER_LOWPOWER_SEL
 // #define  TCFG_LOWPOWER_LOWPOWER_SEL 0x0//低功耗连接还有问题
+#endif
+
+#define LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PALY_PREEMPTEDK           BIT(1) //支持dongle和手机保持连接,声音互抢
+#define LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX                  BIT(2) //支持dongle和手机保持连接,声音叠加
+
+#if (TCFG_LE_AUDIO_APP_CONFIG & LE_AUDIO_JL_UNICAST_SINK_EN)
+#define LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG  LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PALY_PREEMPTEDK
+#else
+#define LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_CONFIG  0
 #endif
 
 
@@ -250,6 +260,10 @@
 #define	   RCSP_MODE			     RCSP_MODE_EARPHONE
 #include "rcsp_cfg.h"
 // 详细功能参考rcsp_cfg.h
+#if RCSP_ADV_TRANSLATOR
+#define    BT_MIC_EN                 1
+#define    TCFG_ENC_SPEEX_ENABLE     0
+#endif
 
 #elif ((THIRD_PARTY_PROTOCOLS_SEL & (TME_EN | DMA_EN | GMA_EN | XIMALAYA_EN)))
 #define    BT_MIC_EN                 1
@@ -899,6 +913,8 @@
 		|| TCFG_AUDIO_TRIPLE_MIC_ENABLE || (TCFG_USB_SLAVE_AUDIO_MIC_ENABLE && (TCFG_AUDIO_CVP_DMS_DNS_MODE)) \
 		|| TCFG_AUDIO_FIT_DET_ENABLE)
 #define TCFG_LOWPOWER_RAM_SIZE				2	                // 低功耗掉电ram大小，单位：128K，可设置值：0、2、3
+#elif ((THIRD_PARTY_PROTOCOLS_SEL & RCSP_MODE_EN) && RCSP_ADV_TRANSLATOR)
+#define TCFG_LOWPOWER_RAM_SIZE              2	                // 低功耗掉电ram大小，单位：128K，可设置值：0、2、3
 #else
 #define TCFG_LOWPOWER_RAM_SIZE				3	                // 低功耗掉电ram大小，单位：128K，可设置值：0、2、3
 
@@ -958,7 +974,7 @@
 
 #if APP_ONLINE_DEBUG
 #undef THIRD_PARTY_PROTOCOLS_SEL
-#if (TCFG_THIRD_PARTY_PROTOCOLS_ENABLE && (TCFG_THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN))) || ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
+#if (TCFG_THIRD_PARTY_PROTOCOLS_ENABLE && (TCFG_THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN | MULTI_CLIENT_EN))) || ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
 #define THIRD_PARTY_PROTOCOLS_SEL  (TCFG_THIRD_PARTY_PROTOCOLS_SEL | ONLINE_DEBUG_EN)
 #else
 #define THIRD_PARTY_PROTOCOLS_SEL  (ONLINE_DEBUG_EN)
@@ -1033,15 +1049,26 @@
 
 #if !TCFG_DEBUG_UART_ENABLE
 #define TCFG_DEBUG_DLOG_ENABLE             0      // 离线log功能
-#define TCFG_DEBUG_DLOG_FLASH_SEL          0      // 选择log保存到内置flash还是外置flash; 0:内置flash; 1:外置flash
-#if TCFG_DEBUG_DLOG_FLASH_SEL
+#define TCFG_DEBUG_DLOG_FLASH_SEL          1      // 选择log保存到内置flash还是外置flash; 0:内置flash; 1:外置flash
+#define TCFG_DLOG_FLASH_START_ADDR         (0x00)         // 配置外置flash用于存储dlog和异常数据的区域起始地址
+#define TCFG_DLOG_FLASH_REGION_SIZE        (512 * 1024)   // 配置外置flash用于存储dlog和异常数据的区域大小
+#if (TCFG_DEBUG_DLOG_ENABLE && TCFG_DEBUG_DLOG_FLASH_SEL)
 #if (!defined(TCFG_NORFLASH_DEV_ENABLE) || (TCFG_NORFLASH_DEV_ENABLE == 0))
 #undef TCFG_NORFLASH_DEV_ENABLE
-#define TCFG_NORFLASH_DEV_ENABLE           1
+#define TCFG_NORFLASH_DEV_ENABLE           1              // 使能外置flash驱动
+#define TCFG_NORFLASH_START_ADDR           (0x00)         // 配置外置flash起始地址
+#define TCFG_NORFLASH_SIZE                 (512 * 1024)   // 配置外置flash大小
 #endif
 #endif
 #define TCFG_DEBUG_DLOG_RESET_ERASE        0      // 开机擦除flash的log数据
 #define TCFG_DEBUG_DLOG_AUTO_FLUSH_TIMEOUT (30)   // 主动刷新的超时时间(当指定时间没有刷新过缓存数据到flash, 则主动刷新)(单位秒)
+#define TCFG_DEBUG_DLOG_UART_TX_PIN        IO_PORT_DP  // dlog串口打印的引脚
+#if (defined(LIB_DEBUG) && TCFG_DEBUG_DLOG_ENABLE)
+#undef LIB_DEBUG
+#define LIB_DEBUG    1
+#undef CONFIG_DEBUG_LIB
+#define CONFIG_DEBUG_LIB(x)         (x & LIB_DEBUG)
+#endif
 #if ((TCFG_DEBUG_DLOG_ENABLE) && (!defined(DLOG_PRINT_FUNC_USE_MACRO) || (DLOG_PRINT_FUNC_USE_MACRO == 0)))
 #error "DLOG_PRINT_FUNC_USE_MACRO must be enable"
 #endif

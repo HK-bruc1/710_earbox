@@ -80,6 +80,16 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_HPVDD_18V              (0)
 #define DAC_HPVDD_12V              (1)
 
+/************************************
+             DAC输出功率档位
+************************************/
+#define DAC_POWER_MODE_20mW			0
+#define DAC_POWER_MODE_30mW			1
+#define DAC_POWER_MODE_50mW			2
+#define DAC_POWER_MODE_80mW			3
+#define DAC_POWER_MODE_100mW		4
+#define DAC_POWER_MODE_2Vrms_THD	5
+#define DAC_POWER_MODE_2Vrms_SNR	6
 
 #define DAC_ANALOG_OPEN_PREPARE         (1) //DAC打开前，即准备打开
 #define DAC_ANALOG_OPEN_FINISH          (2)	//DAC打开后，即打开完成

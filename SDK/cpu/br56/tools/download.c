@@ -13,6 +13,7 @@ ${OBJCOPY} -O binary -j .data_code_z $1.elf data_code_z.bin
 ${OBJCOPY} -O binary -j .overlay_init $1.elf init.bin
 ${OBJCOPY} -O binary -j .overlay_aec $1.elf aec.bin
 ${OBJCOPY} -O binary -j .overlay_aac $1.elf aac.bin
+${OBJCOPY} -O binary -j .dlog_data $1.elf dlog.bin
 
 bank_files=
 for i in $(seq 0 20)
@@ -54,7 +55,7 @@ cat segment_list.txt
 
 /opt/utils/strip-ini -i isd_config.ini -o isd_config.ini
 
-files="app.bin  br56loader.uart br56loader.bin uboot.boot ota*.bin p11_code.bin  isd_config.ini"
+files="app.bin  br56loader.uart br56loader.bin uboot.boot ota*.bin isd_config.ini dlog.bin"
 /* files="app.bin ota*.bin  p11_code.bin isd_config.ini " */
 //files="app.bin isd_config.ini"
 
@@ -90,6 +91,7 @@ REM %OBJDUMP% -D -address-mask=0x1ffffff -print-dbg $1.elf > $1.lst
 %OBJCOPY% -O binary -j .overlay_init %ELFFILE% init.bin
 %OBJCOPY% -O binary -j .overlay_aec %ELFFILE% aec.bin
 %OBJCOPY% -O binary -j .overlay_aac %ELFFILE% aac.bin
+%OBJCOPY% -O binary -j .dlog_data %ELFFILE% dlog.bin
 
 for /L %%i in (0,1,20) do (
             %OBJCOPY% -O binary -j .overlay_bank%%i %ELFFILE% bank%%i.bin
@@ -120,6 +122,12 @@ set TONE_ZH_ENABLE=0
 
 #if RCSP_MODE
 set RCSP_EN=1
+#endif
+
+#if TCFG_UPDATE_COMPRESS
+set UPDATE_COMPRESS_ENABLE=1
+#else
+set UPDATE_COMPRESS_ENABLE=0
 #endif
 
 #if TCFG_AUDIO_ANC_EAR_ADAPTIVE_EN
