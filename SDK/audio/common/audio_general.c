@@ -388,7 +388,10 @@ const int iir_filter_run_mode = 0  //不支持32进16出
 #if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
                                 | TCFG_AUDIO_EFX_02E6_RUN_MODE
 #endif
-#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+#if defined(TCFG_AUDIO_EFX_A64E_RUN_MODE)
+                                | EFx_BW_16t32 | EFx_BW_32t32
+#endif
+#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE) && !defined(TCFG_AUDIO_EFX_A64E_RUN_MODE)
                                 | EFx_BW_16t16 | EFx_BW_16t32 | EFx_BW_32t32  //不支持32进16出
 #endif
                                 ;
@@ -438,6 +441,17 @@ const int spatial_imp_run_mode = EFx_BW_16t16 | EFx_BW_32t32;
 #endif
 const int spatial_imp_fft_mode = 2;     //1软件fft(浮点输入输出) 2硬件fft(定点输入输出)
 const int spatial_imp_run_points = 128; //运算点数
+
+/*
+ * 若使能陀螺仪跟踪模式：azi_group 需要配置为-1，使能所有方向角/俯仰角信息表。此时 ele_group 配置无效。
+ * 仅使能固定模式时，azi_group、ele_group 可根据调试情况配置，固定方位角/俯仰角，节省代码量。
+ * 注：当 azi_group 设定为-1之外的值时，可视化参数界面"Bias Angle","Azimuth Angle","Elevation Angle"固化，配置无效。
+ */
+const int spatial_imp_active_azi_group = -1; //方位角控制。范围：-1~359。
+const int spatial_imp_active_ele_group = 0;  //俯仰角控制。范围：0~359。
+
+/* 双耳压强差使能控制，关闭可节省代码量（关闭后可视化界面参数"ildenable"调试无效）。范围：0关，1开。*/
+const int spatial_imp_active_ild_group = 0;
 
 /*
  *******************************************************************

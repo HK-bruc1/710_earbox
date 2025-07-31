@@ -587,6 +587,14 @@ static void ldo5v_detect(void *priv)
         log_char('X');
         if (ldo5v_on_cnt < __this->data->ldo5v_on_filter) {
             ldo5v_on_cnt++;
+            if (ldo5v_off_cnt >= (__this->data->ldo5v_off_filter + 4)) {
+                ldo5v_off_cnt = __this->data->ldo5v_off_filter + 4;
+            }
+            if (__this->data->ldo5v_keep_filter <= 16) {
+                ldo5v_keep_cnt = 0;
+            } else if (ldo5v_keep_cnt >= (__this->data->ldo5v_keep_filter - 16)) {
+                ldo5v_keep_cnt = __this->data->ldo5v_keep_filter - 16;
+            }
         } else {
             log_debug("ldo5V_IN\n");
             set_charge_online_flag(1);
@@ -616,6 +624,16 @@ static void ldo5v_detect(void *priv)
         log_char('Q');
         if (ldo5v_off_cnt < (__this->data->ldo5v_off_filter + 20)) {
             ldo5v_off_cnt++;
+            if (__this->data->ldo5v_on_filter <= 16) {
+                ldo5v_on_cnt = 0;
+            } else if (ldo5v_on_cnt >= (__this->data->ldo5v_on_filter - 16)) {
+                ldo5v_on_cnt = __this->data->ldo5v_on_filter - 16;
+            }
+            if (__this->data->ldo5v_keep_filter <= 16) {
+                ldo5v_keep_cnt = 0;
+            } else if (ldo5v_keep_cnt >= (__this->data->ldo5v_keep_filter - 16)) {
+                ldo5v_keep_cnt = __this->data->ldo5v_keep_filter - 16;
+            }
         } else {
             log_debug("ldo5V_OFF\n");
             set_charge_online_flag(0);
@@ -639,6 +657,14 @@ static void ldo5v_detect(void *priv)
         log_char('E');
         if (ldo5v_keep_cnt < __this->data->ldo5v_keep_filter) {
             ldo5v_keep_cnt++;
+            if (ldo5v_off_cnt >= (__this->data->ldo5v_off_filter + 4)) {
+                ldo5v_off_cnt = __this->data->ldo5v_off_filter + 4;
+            }
+            if (__this->data->ldo5v_on_filter <= 16) {
+                ldo5v_on_cnt = 0;
+            } else if (ldo5v_on_cnt >= (__this->data->ldo5v_on_filter - 16)) {
+                ldo5v_on_cnt = __this->data->ldo5v_on_filter - 16;
+            }
         } else {
             log_debug("ldo5V_ERR\n");
             set_charge_online_flag(1);
@@ -878,6 +904,23 @@ void charge_module_restart(void)
     p33_io_wakeup_enable(IO_VBTCH_DET, 1);
 }
 
+// 开机激活锂保退船运
+void charge_exit_shipping(void)
+{
+    if (LVCMP_DET_GET()) {
+        CHARGE_FULL_V_SEL(CHARGE_FULL_V_MIN_4040);
+        set_charge_mA(CHARGE_mA_30 | CHARGE_DIV_10);
+        L5V_IO_MODE(0);
+        CHG_CCLOOP_EN(1);
+        PMU_NVDC_EN(CHARGE_VILOOP2_ENABLE);
+        CHG_VILOOP_EN(CHARGE_VILOOP1_ENABLE);
+        CHG_VILOOP2_EN(CHARGE_VILOOP2_ENABLE);
+        CHG_CCLOOP_EN(1);
+        CHARGE_EN(1);
+        CHGGO_EN(1);
+    }
+}
+
 //系统进入低功耗时会调用
 void charge_enter_lowpower(enum LOW_POWER_LEVEL lp_mode)
 {
@@ -901,6 +944,10 @@ void charge_enter_lowpower(enum LOW_POWER_LEVEL lp_mode)
             p33_or_1byte(P3_ANA_KEEP0, BIT(7) | BIT(6) | BIT(5));
             //KEEP MVIO_VLMT MVIO_IFULL
             p33_or_1byte(P3_ANA_KEEP1, BIT(4) | BIT(3));
+            //KEEP NVDC STATUS
+            p33_fast_access(P3_ANA_KEEP2, BIT(4), 1);
+        } else {
+            p33_fast_access(P3_ANA_KEEP2, BIT(4), 0);
         }
     }
 }
