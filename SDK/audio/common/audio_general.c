@@ -39,7 +39,6 @@ const int config_audio_dac_enable = TCFG_DAC_NODE_ENABLE;
 const int config_ch_adapter_32bit_enable = 1;
 const int config_mixer_32bit_enable = 1;
 const int config_jlstream_fade_32bit_enable = 1;
-const int config_audio_eq_xfade_enable = 1;
 const int config_peak_rms_32bit_enable = 1;
 const int config_audio_vocal_track_synthesis_32bit_enable = 1;
 
@@ -217,6 +216,8 @@ const int virtual_bass_pro_soft_crossover = 0;//控制虚拟低音pro 中的分�
 const int virtual_bass_pro_soft_eq = 1;       //控制虚拟低音pro 中的EQ是用软件运行或者硬件运行 1软件 0硬件 默认1
 
 
+const int config_audio_eq_xfade_enable = 1;
+const float config_audio_eq_xfade_time = 0;//0.4f;//0：一帧fade完成 非0：连续多帧fade，过度更加平滑，fade过程算力会相应增加(fade时间 范围(0~1)单位:秒)
 
 
 const int limiter_run_mode = EFx_PRECISION_PRO
@@ -406,7 +407,10 @@ const int iir_filter_run_mode = 0  //不支持32进16出
 #if defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
                                 | TCFG_AUDIO_EFX_02E6_RUN_MODE
 #endif
-#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE)
+#if defined(TCFG_AUDIO_EFX_A64E_RUN_MODE)
+                                | EFx_BW_16t32 | EFx_BW_32t32
+#endif
+#if !defined(TCFG_AUDIO_EFX_3845_RUN_MODE) && !defined(TCFG_AUDIO_EFX_6700_RUN_MODE) && !defined(TCFG_AUDIO_EFX_02E6_RUN_MODE) && !defined(TCFG_AUDIO_EFX_A64E_RUN_MODE)
                                 | EFx_BW_16t16 | EFx_BW_16t32 | EFx_BW_32t32  //不支持32进16出
 #endif
                                 ;
@@ -456,6 +460,12 @@ const int spatial_imp_run_mode = EFx_BW_16t16 | EFx_BW_32t32;
 #endif
 const int spatial_imp_fft_mode = 2;     //1软件fft(浮点输入输出) 2硬件fft(定点输入输出)
 const int spatial_imp_run_points = 128; //运算点数
+
+const int spatial_imp_active_azi_group = -1;
+const int spatial_imp_active_ele_group = 0;
+
+/* 双耳压强差使能控制，关闭可节省代码量（关闭后可视化界面参数"ildenable"调试无效）。范围：0关，1开。*/
+const int spatial_imp_active_ild_group = 0;
 
 /*
  *******************************************************************

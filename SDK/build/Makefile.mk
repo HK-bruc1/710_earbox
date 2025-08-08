@@ -148,6 +148,8 @@ LFLAGS := \
 	cpu/br56/liba/media.a \
 	cpu/br56/liba/libdma-protocol.a \
 	cpu/br56/liba/libdma-device-ota.a \
+	cpu/br56/liba/fmna_stack.a \
+	cpu/br56/liba/lib_fmy_auth_br56.a \
 	cpu/br56/liba/google_fps.a \
 	cpu/br56/liba/swift_pair.a \
 	cpu/br56/liba/ximalaya_lib.a \

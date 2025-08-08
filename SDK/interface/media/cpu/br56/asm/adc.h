@@ -128,7 +128,10 @@ struct mic_capless_trim_result {
 };
 
 struct mic_capless_trim_param {
+    u8 triming_flag;
     u8 mic_trim_ch;
+    u8 mic_online_detect;
+    u8 mic_online_threshold;
     u16 trigger_threshold;
     u16 open_delay_ms; //adc上电等待稳定延时
     u16 trim_delay_ms; //偏置调整等待稳定延时
@@ -149,6 +152,7 @@ struct audio_adc_private_param {
     u8 lowpower_lvl;
     u8 dvol_441k;
     u8 dvol_48k;
+    u8 capless_mic_power_mode;      //省电容MIC供电电压，0：1.4V，1：1.5V
 };
 
 struct mic_open_param {

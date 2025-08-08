@@ -56,7 +56,7 @@
 <Add option="-DCONFIG_SUPPORT_EX_TWS_ADJUST" />
 <Add option="-D__GCC_PI32V2__" />
 <Add option="-DCONFIG_NEW_ECC_ENABLE" />
-<Add option="-DEXPORT_FNMA_ENABLE=0" />
+<Add option="-DEXPORT_FNMA_ENABLE=1" />
 <Add option="-DEXPORT_TENCENT_LL_ENABLE=1" />
 <Add option="-DCONFIG_EFFECT_CORE_V2_ENABLE" />
 <Add option="-DEXPORT_CONFIG_USB_ENABLE=1" />
@@ -282,6 +282,8 @@
 <Add option="cpu/br56/liba/media.a" />
 <Add option="cpu/br56/liba/libdma-protocol.a" />
 <Add option="cpu/br56/liba/libdma-device-ota.a" />
+<Add option="cpu/br56/liba/fmna_stack.a" />
+<Add option="cpu/br56/liba/lib_fmy_auth_br56.a" />
 <Add option="cpu/br56/liba/google_fps.a" />
 <Add option="cpu/br56/liba/swift_pair.a" />
 <Add option="cpu/br56/liba/ximalaya_lib.a" />
@@ -631,6 +633,7 @@
 <Unit filename="apps/common/third_party_profile/Tencent_LL/tencent_protocol/ble_qiot_utils_sha1.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/ancs_client_demo/le_ancs_client.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/ancs_client_demo/le_ancs_client.h" />
+<Unit filename="apps/common/third_party_profile/app_ble_ancs_ams/app_ble_ancs_ams.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_ble.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_ble.h" />
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_gatt_over_edr.c"><Option compilerVer="CC"/></Unit>
@@ -641,6 +644,16 @@
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_sink_api.h" />
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_source_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/auracast_app/auracast_app_source_api.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_cfg.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_fmna.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_modet.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_modet.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_ota.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_ota.h" />
+<Unit filename="apps/common/third_party_profile/bt_fmy/ble_fmy_profile.h" />
 <Unit filename="apps/common/third_party_profile/common/3th_profile_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/common/3th_profile_api.h" />
 <Unit filename="apps/common/third_party_profile/common/custom_cfg.c"><Option compilerVer="CC"/></Unit>
@@ -669,6 +682,7 @@
 <Unit filename="apps/common/third_party_profile/interface/app_protocol_ota.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/interface/app_protocol_ota.h" />
 <Unit filename="apps/common/third_party_profile/interface/app_protocol_tme.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/jieli/gatt_common/le_gatt_common.h" />
 <Unit filename="apps/common/third_party_profile/jieli/le_client_demo.h" />
 <Unit filename="apps/common/third_party_profile/jieli/le_common.h" />
 <Unit filename="apps/common/third_party_profile/jieli/online_db/online_db_deal.c"><Option compilerVer="CC"/></Unit>
@@ -878,6 +892,8 @@
 <Unit filename="apps/common/third_party_profile/mma_protocol/mma_platform_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/mma_protocol/mma_platform_api.h" />
 <Unit filename="apps/common/third_party_profile/mma_protocol/mma_protocol.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/multi_ble_client/ble_multi_client.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/common/third_party_profile/multi_ble_client/ble_multi_client.h" />
 <Unit filename="apps/common/third_party_profile/multi_protocol_common.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/multi_protocol_event.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/common/third_party_profile/multi_protocol_main.c"><Option compilerVer="CC"/></Unit>
@@ -975,6 +991,7 @@
 <Unit filename="apps/common/update/update_tws_new_less.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/app_main.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/jlstream_event_handler.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="apps/earphone/audio/mix_record_api.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/scene_switch.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/tone_table.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="apps/earphone/audio/vol_sync.c"><Option compilerVer="CC"/></Unit>
@@ -1046,6 +1063,7 @@
 <Unit filename="apps/earphone/include/linein_dev.h" />
 <Unit filename="apps/earphone/include/low_latency.h" />
 <Unit filename="apps/earphone/include/mic_effect.h" />
+<Unit filename="apps/earphone/include/mix_record_api.h" />
 <Unit filename="apps/earphone/include/pbg_user.h" />
 <Unit filename="apps/earphone/include/pc.h" />
 <Unit filename="apps/earphone/include/phone_call.h" />
@@ -1483,7 +1501,6 @@
 <Unit filename="cpu/br56/charge/chargestore_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/overlay_code.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/overlay_code.h" />
-<Unit filename="cpu/br56/periph/led/pwm_led.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/periph/mcpwm.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/periph/rdec.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/br56/periph/touch/lp_touch_key.c"><Option compilerVer="CC"/></Unit>
@@ -1502,6 +1519,7 @@
 <Unit filename="cpu/components/ir_decoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/ir_encoder.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/led_api.c"><Option compilerVer="CC"/></Unit>
+<Unit filename="cpu/components/pwm_led_v2.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/rdec_soft.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/touch/lp_touch_key_tool.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="cpu/components/two_io_led.c"><Option compilerVer="CC"/></Unit>
@@ -1553,6 +1571,7 @@
 <Unit filename="interface/btstack/third_party/common/spp_config.h" />
 <Unit filename="interface/btstack/third_party/common/spp_user.h" />
 <Unit filename="interface/btstack/third_party/dma/dma_api.h" />
+<Unit filename="interface/btstack/third_party/fmna/fmna_api.h" />
 <Unit filename="interface/btstack/third_party/le_audio/big.h" />
 <Unit filename="interface/btstack/third_party/le_audio/cig.h" />
 <Unit filename="interface/btstack/third_party/rcsp/JL_rcsp_api.h" />
@@ -1627,6 +1646,7 @@
 <Unit filename="interface/driver/cpu/periph/two_io_led.h" />
 <Unit filename="interface/driver/cpu/periph/uart.h" />
 <Unit filename="interface/driver/device/inside_flash.h" />
+<Unit filename="interface/driver/device/rtc/rtc_dev.h" />
 <Unit filename="interface/driver/device/sdmmc/sdmmc.h" />
 <Unit filename="interface/driver/device/usb/ch9.h" />
 <Unit filename="interface/driver/device/usb/device/custom_hid.h" />
@@ -1805,6 +1825,7 @@
 <Unit filename="interface/media/framework/include/encoder_node.h" />
 <Unit filename="interface/media/framework/include/jldemuxer.h" />
 <Unit filename="interface/media/framework/include/jlstream.h" />
+<Unit filename="interface/media/framework/include/jlstream_report.h" />
 <Unit filename="interface/media/framework/include/node_uuid.h" />
 <Unit filename="interface/media/framework/include/source_node.h" />
 <Unit filename="interface/media/hw_fft.h" />

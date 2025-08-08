@@ -84,6 +84,10 @@
 #define DAC_MODE_SINGLE                    (0)	//单端
 #define DAC_MODE_DIFF                      (1)	//差分
 #define DAC_MODE_VCMO                      (2)	//共模VCOMO
+
+//DAC性能模式定义
+#define	DAC_MODE_HIGH_PERFORMANCE          (0)
+#define	DAC_MODE_LOW_POWER		           (1)
 /*
  *******************************************************************
  *						Class-D Driver Definitions

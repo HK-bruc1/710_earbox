@@ -136,6 +136,7 @@ copy anc_ext.bin download\earphone\ALIGN_DIR\.
 del download\earphone\ALIGN_DIR\anc_ext.bin
 #endif
 
+call elf_to_lst.bat
 call download/earphone/download.bat
 
 #endif

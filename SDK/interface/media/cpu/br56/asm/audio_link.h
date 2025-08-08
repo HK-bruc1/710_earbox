@@ -3,6 +3,9 @@
 
 #include "generic/typedef.h"
 
+#define ALINK_MODULE_NUM_MAX    1//iis模块数量
+#define ALINK_CH_NUM_MAX        4//iis通道数量
+
 //只有一个ALINK模块，module*0消除module未引用的警告
 #define ALINK_SEL(module, reg)             (((JL_ALNK_TypeDef    *)(((u8 *)JL_ALNK0) + module*(0)))->reg)
 
@@ -190,6 +193,7 @@ typedef struct _ALINK_PARM {
     u32 init_cnt; 						//buf长度: byte
     u16 rx_pns;
     u8 da2sync_ch;             //与蓝牙同步关联的目标通道
+    u8 clk_close;         //0：模块关闭后，保持时钟继续输出。 1：模块关闭后，关闭时钟输出
     u8 chx_sw[4];     //记录哪些通道需要作模式切换
     u32 timestamp[4];
     u32 timestamp_gap[4];

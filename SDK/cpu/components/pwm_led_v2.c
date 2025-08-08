@@ -57,9 +57,12 @@ extern u32 __get_lrc_hz();
 #define PWM_LED_CLK (__get_lrc_hz() / 10)
 
 
+volatile u8 pwm_led_active = 0;
+
+
 void pwm_led_wkup_to_switch_io(void *priv)
 {
-    os_time_dly(1);
+    pwm_led_active = 1;
 }
 
 /*
@@ -424,6 +427,19 @@ void pwm_led_dump(void)
 #endif
 }
 
+void pwm_led_lrc_clk_init(void)
+{
+#if defined(CONFIG_CPU_BR56)
+    SFR(P11_SYSTEM->P2M_CLK_CON0, 6, 3, 3);
+#endif
+}
+
+void pwm_led_lrc_clk_close(void)
+{
+#if defined(CONFIG_CPU_BR56)
+    SFR(P11_SYSTEM->P2M_CLK_CON0, 6, 3, 0);
+#endif
+}
 
 /*
  * @brief  PWM_LED模块初始化函数
@@ -434,6 +450,9 @@ void pwm_led_hw_init(void *pdata)
     if (!pdata) {
         return;
     }
+
+    pwm_led_hw_close();
+
     memset((u8 *)JL_PLED, 0, sizeof(JL_PLED_TypeDef));
     memcpy((u8 *)__this, (u8 *)pdata, sizeof(struct pwm_led_platform_data));
     pwm_led_data_init = 1;
@@ -441,11 +460,6 @@ void pwm_led_hw_init(void *pdata)
 
     //初始化引脚
     pwm_led_io_mount();
-
-    SFR(P11_SYSTEM->P2M_CLK_CON0, 6, 3, 3);
-    //SFR(P11_SYSTEM->P2M_CLK_CON0, 0, 5, BIT(3));
-    JL_PLED->CON0 &= ~(0b11 << 2);      //PWM_LED选择LRD_200K做时钟源
-    JL_PLED->CON0 &= ~(0b1111 << 4);    //时钟源不分频
 
     if (__this->first_logic == 0) {
         JL_PLED->CON0 |=  BIT(23);
@@ -465,6 +479,10 @@ void pwm_led_hw_init(void *pdata)
         request_irq(IRQ_LED_IDX, 1, pwm_led_isr, 0);
     }
 
+    pwm_led_lrc_clk_init();
+    JL_PLED->CON0 &= ~(0b11 << 2);      //PWM_LED选择LRD_200K做时钟源
+    JL_PLED->CON0 &= ~(0b1111 << 4);    //时钟源不分频
+
     JL_PLED->CON0 |= BIT(0);
 
     /* pwm_led_dump(); */
@@ -476,6 +494,7 @@ void pwm_led_hw_init(void *pdata)
 void pwm_led_hw_close(void)
 {
     JL_PLED->CON0 &= ~BIT(0);
+    pwm_led_lrc_clk_close();
     pwm_led_io_unmount();
     pwm_led_data_init = 0;
 }
@@ -674,4 +693,25 @@ u32 pwm_led_set_sync(struct pwm_led_status_t *status, u32 how_long_ago, u32 *syn
     return 0;
 }
 
+static enum LOW_POWER_LEVEL pwm_led_level_query()
+{
+    if (pwm_led_is_working()) {
+        return LOW_POWER_MODE_LIGHT_SLEEP;
+    }
+    return LOW_POWER_MODE_DEEP_SLEEP;
+}
+
+static u8 pwm_led_idle_query(void)
+{
+    if (pwm_led_active) {
+        return 0;
+    }
+    return 1;
+}
+
+REGISTER_LP_TARGET(pwm_led_lp_target) = {
+    .name       = "pwm_led",
+    .level      = pwm_led_level_query,
+    .is_idle    = pwm_led_idle_query,
+};
 

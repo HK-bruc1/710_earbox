@@ -259,7 +259,7 @@ void audio_dac_initcall(void)
     dac_data.bit_width = audio_general_out_dev_bit_width();
     dac_data.mute_delay_isel = 2;
     dac_data.mute_delay_time = 50;
-    dac_data.miller_en = 0;
+    dac_data.miller_en = 1;
     if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版及C版以后支持工具配置电流档位
         dac_data.pa_isel0 = TCFG_AUDIO_DAC_PA_ISEL0;
         dac_data.pa_isel1 = TCFG_AUDIO_DAC_PA_ISEL1;
@@ -367,6 +367,11 @@ void audio_input_initcall(void)
     u16 dvol_48k  = (u16)(35 * eq_db2mag(TCFG_ADC_DIGITAL_GAIN));
     adc_private_param.dvol_441k = (dvol_441k >= AUDIO_ADC_DVOL_LIMIT) ? AUDIO_ADC_DVOL_LIMIT : dvol_441k;
     adc_private_param.dvol_48k = (dvol_48k >= AUDIO_ADC_DVOL_LIMIT) ? AUDIO_ADC_DVOL_LIMIT : dvol_48k;
+#if TCFG_SUPPORT_MIC_CAPLESS
+    adc_private_param.capless_mic_power_mode = TCFG_CAPLESS_MIC_POWER_MODE;
+#else
+    adc_private_param.capless_mic_power_mode = 0;
+#endif
     audio_adc_init(&adc_hdl, &adc_private_param);
     /* adc_hdl.bit_width = audio_general_in_dev_bit_width(); */
 
@@ -374,6 +379,8 @@ void audio_input_initcall(void)
     adc_hdl.capless_trim.bias_rsel0 = TCFG_ADC0_BIAS_RSEL;
     adc_hdl.capless_trim.bias_rsel1 = TCFG_ADC1_BIAS_RSEL;
     adc_hdl.capless_param.trigger_threshold = 50; //电压差校准触发阈值(单位:mV)
+    adc_hdl.capless_param.mic_online_detect = 1;   //是否使能省电容mic的检测在线功能
+    adc_hdl.capless_param.mic_online_threshold = 50; //检测省电容mic两次校准电压小于多少mv就认为是不在线
     /*
      * 以下两个delay需要根据
      * const_mic_capless_open_delay_debug、const_mic_capless_trim_delay_debug 的结果配置

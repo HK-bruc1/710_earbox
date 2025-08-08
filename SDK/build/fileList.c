@@ -586,6 +586,11 @@ objs += \
 objs += \
     $(ROOT)/apps/common/third_party_profile/custom_protocol_demo/custom_protocol.o
 
+objs += \
+    $(ROOT)/apps/common/third_party_profile/app_ble_ancs_ams/app_ble_ancs_ams.o
+
+objs += \
+    $(ROOT)/apps/common/third_party_profile/multi_ble_client/ble_multi_client.o
 
 objs += \
     $(ROOT)/apps/common/third_party_profile/swift_pair/swift_pair_protocol.o
@@ -1267,7 +1272,7 @@ objs += \
 
 
 objs += \
-	  $(ROOT)/cpu/br56/periph/led/pwm_led.o
+	  $(ROOT)/cpu/components/pwm_led_v2.o
 
 objs += \
 		$(ROOT)/cpu/br56/power/power_port.o \
@@ -1284,12 +1289,15 @@ objs += \
 objs += \
 	$(ROOT)/apps/common/dev_manager/dev_reg.o \
 	$(ROOT)/apps/common/dev_manager/dev_update.o \
+	$(ROOT)/apps/earphone/mode/common/dev_status.o \
+
+
+objs += \
 	$(ROOT)/apps/common/music/breakpoint.o \
 	$(ROOT)/apps/common/music/music_decrypt.o \
 	$(ROOT)/apps/common/music/music_id3.o \
 	$(ROOT)/apps/common/music/music_player.o \
 	$(ROOT)/apps/common/file_operate/file_manager.o \
-	$(ROOT)/apps/earphone/mode/common/dev_status.o \
 	$(ROOT)/apps/earphone/mode/music/music.o \
 	$(ROOT)/apps/earphone/mode/music/music_key_msg_table.o \
 	$(ROOT)/apps/earphone/mode/music/music_app_msg_handler.o \
@@ -1304,6 +1312,10 @@ objs += \
 objs += \
 	$(ROOT)/apps/earphone/mode/pc/pc.o \
 	$(ROOT)/apps/earphone/mode/pc/pc_key_msg_table.o \
+
+
+objs += \
+	$(ROOT)/apps/earphone/audio/mix_record_api.o \
 
 
 objs += \

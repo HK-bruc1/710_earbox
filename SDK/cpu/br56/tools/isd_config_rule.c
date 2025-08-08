@@ -387,6 +387,29 @@ CAT2(TONE_FILE_RESERVED_AREA_CONFIG_NAME, ADR) = AUTO;
 CAT2(TONE_FILE_RESERVED_AREA_CONFIG_NAME, LEN) = TONE_FILE_RESERVED_AREA_CONFIG_SIZE;
 CAT2(TONE_FILE_RESERVED_AREA_CONFIG_NAME, OPT) = TONE_FILE_RESERVED_AREA_CONFIG_OPT;
 #endif
+
+
+[RESERVED_EXPAND_CONFIG]
+#if CONFIG_FINDMY_INFO_ENABLE
+
+#if (CONFIG_FLASH_SIZE == 0x100000)
+#define CONFIG_FINDMY_INFO_ADDR	                0xFC000 //config user space
+#else
+#define CONFIG_FINDMY_INFO_ADDR	                0x1FC000 //config user space
+#endif
+
+#define CONFIG_FINDMY_INFO_LEN	                0x2000  //need 8K
+#define CONFIG_FINDMY_INFO_OPT	                1
+FINDMY_ADR = CONFIG_FINDMY_INFO_ADDR;
+FINDMY_LEN = CONFIG_FINDMY_INFO_LEN;
+FINDMY_OPT = CONFIG_FINDMY_INFO_OPT;
+#endif
+
+#if CONFIG_FINDMY_INFO_ENABLE
+[FW_ADDITIONAL]
+FILE_LIST = (file = file_authrunFindmy.tkn: type = 0xec);
+#endif
+
 /*
  ****************************************************************************
  *								ANC配置区
