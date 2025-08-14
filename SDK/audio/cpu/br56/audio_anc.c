@@ -181,7 +181,7 @@ typedef struct {
 #if ANC_EAR_ADAPTIVE_EN
     u8 ear_adaptive;				/*耳道自适应-模式标志*/
 #endif/*ANC_EAR_ADAPTIVE_EN*/
-
+    OS_SEM *sem;
 } anc_t;
 static anc_t *anc_hdl = NULL;
 extern struct audio_dac_hdl dac_hdl;
@@ -467,6 +467,7 @@ static void anc_task(void *p)
                         anc_hdl->param.mode = ANC_OFF;
                         anc_hdl->new_mode = anc_hdl->param.mode;
                         audio_mic_pwr_ctl(MIC_PWR_OFF);
+                        anc_mode_switch_sem_post();
                         break;
                     }
                 } else {
@@ -556,6 +557,7 @@ static void anc_task(void *p)
                     audio_rtanc_adaptive_en((cur_anc_mode == ANC_ON));
                 }
 #endif
+                anc_mode_switch_sem_post();
                 break;
             case ANC_MSG_MODE_SYNC:
                 user_anc_log("anc_mode_sync:%d", msg[2]);
@@ -1620,23 +1622,72 @@ void anc_play_tone_at_same_time(int tone_name, int msec)
 }
 #endif/*TCFG_USER_TWS_ENABLE*/
 
-void anc_mode_switch(u8 mode, u8 tone_play)
+//用于某些需要等anc完全关闭才能开启的场景，如通话与anc的mic复用
+void anc_mode_switch_sem_create()
+{
+    if (!anc_hdl) {
+        return;
+    }
+    if (anc_hdl->sem) {
+        return;
+    }
+    anc_hdl->sem = zalloc(sizeof(OS_SEM));
+    os_sem_create(anc_hdl->sem, 0);
+}
+void anc_mode_switch_sem_post()
+{
+    if (!anc_hdl || !anc_hdl->sem) {
+        return;
+    }
+    os_sem_post(anc_hdl->sem);
+}
+void anc_mode_switch_sem_pend()
+{
+    if (!anc_hdl || !anc_hdl->sem) {
+        return;
+    }
+    os_sem_pend(anc_hdl->sem, 0);
+}
+void anc_mode_switch_sem_del()
+{
+    if (!anc_hdl) {
+        return;
+    }
+    if (!anc_hdl->sem) {
+        return;
+    }
+    os_sem_del(anc_hdl->sem, 0);
+    free(anc_hdl->sem);
+    anc_hdl->sem = NULL;
+}
+
+//阻塞方式等待anc模式切换完成
+void anc_mode_switch_pend(u8 mode, u8 tone_play)
+{
+    anc_mode_switch_sem_create();
+    if (!anc_mode_switch(mode, tone_play)) {
+        anc_mode_switch_sem_pend();
+    }
+    anc_mode_switch_sem_del();
+}
+
+int anc_mode_switch(u8 mode, u8 tone_play)
 {
     if (anc_hdl == NULL) {
-        return;
+        return -1;
     }
     u8 ignore_same_mode = 0;
     u8 tws_sync_en = 1;
     /*模式切换超出范围*/
     if ((mode > (ANC_MODE_NULL - 1)) || (mode < ANC_OFF)) {
         user_anc_log("anc mode switch err:%d", mode);
-        return;
+        return -1;
     }
 #if TCFG_AUDIO_FREQUENCY_GET_ENABLE
     //获取频响时 不允许其他模式切换
     if (audio_icsd_afq_is_running()) {
         user_anc_log("Error :audio_icsd_afq_is_runnin\n");
-        return;
+        return -1;
     }
 #endif
     /*模式切换同一个*/
@@ -1657,12 +1708,12 @@ void anc_mode_switch(u8 mode, u8 tone_play)
     if (anc_hdl->param.mode == mode && (!ignore_same_mode)) {
 
         user_anc_log("anc mode switch err:same mode");
-        return;
+        return -1;
     }
 #if ANC_MODE_EN_MODE_NEXT_SW
     if (anc_hdl->mode_switch_lock) {
         user_anc_log("anc mode switch lock\n");
-        return;
+        return -1;
     }
     anc_hdl->mode_switch_lock = 1;
 #endif/*ANC_MODE_EN_MODE_NEXT_SW*/
@@ -1699,7 +1750,7 @@ void anc_mode_switch(u8 mode, u8 tone_play)
                     anc_play_tone_at_same_time(SYNC_TONE_ANC_TRANS, TWS_ANC_SYNC_TIMEOUT);
                 }
             }
-            return;
+            return -1;
         } else {
             user_anc_log("anc_tone_play");
             anc_tone_play_and_mode_switch(mode, ANC_TONE_PREEMPTION, ANC_TONE_END_MODE_SW);
@@ -1710,6 +1761,7 @@ void anc_mode_switch(u8 mode, u8 tone_play)
     } else {
         anc_mode_switch_deal(mode);
     }
+    return 0;
 }
 
 static void anc_ui_mode_sel_timer(void *priv)
@@ -2682,6 +2734,22 @@ void audio_anc_adc_ch_set(void)
     }
 
 #endif
+#if ANC_MIC_REUSE_ENABLE
+    anc_hdl->param.mic_param[0].mic_p.mic_mode      = ANC_ADC0_MODE;
+    anc_hdl->param.mic_param[0].mic_p.mic_ain_sel   = ANC_ADC0_AIN_SEL;
+    anc_hdl->param.mic_param[0].mic_p.mic_bias_sel  = ANC_ADC0_BIAS_SEL;
+    anc_hdl->param.mic_param[0].mic_p.mic_bias_rsel = ANC_ADC0_BIAS_RSEL;
+    anc_hdl->param.mic_param[0].mic_p.mic_dcc       = ANC_ADC0_DCC_EN;
+    anc_hdl->param.mic_param[0].mic_p.mic_dcc_en    = ANC_ADC0_DCC_LEVEL;
+    anc_hdl->param.mic_param[0].pre_gain    		= 0;
+    anc_hdl->param.mic_param[1].mic_p.mic_mode      = ANC_ADC1_MODE;
+    anc_hdl->param.mic_param[1].mic_p.mic_ain_sel   = ANC_ADC1_AIN_SEL;
+    anc_hdl->param.mic_param[1].mic_p.mic_bias_sel  = ANC_ADC1_BIAS_SEL;
+    anc_hdl->param.mic_param[1].mic_p.mic_bias_rsel = ANC_ADC1_BIAS_RSEL;
+    anc_hdl->param.mic_param[1].mic_p.mic_dcc       = ANC_ADC1_DCC_EN;
+    anc_hdl->param.mic_param[1].mic_p.mic_dcc_en    = ANC_ADC1_DCC_LEVEL;
+    anc_hdl->param.mic_param[1].pre_gain    		= 0;
+#else
     for (int i = 0; i < AUDIO_ADC_MAX_NUM; i++) {
         anc_hdl->param.mic_param[i].mic_p.mic_mode      = platform_cfg[i].mic_mode;
         anc_hdl->param.mic_param[i].mic_p.mic_ain_sel   = platform_cfg[i].mic_ain_sel;
@@ -2691,6 +2759,7 @@ void audio_anc_adc_ch_set(void)
         anc_hdl->param.mic_param[i].mic_p.mic_dcc_en    = platform_cfg[i].mic_dcc_en;
         anc_hdl->param.mic_param[i].pre_gain    		= cfg->param[i].mic_pre_gain;
     }
+#endif
 }
 
 /*

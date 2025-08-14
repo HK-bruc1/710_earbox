@@ -116,6 +116,23 @@ void audio_dac_power_state(u8 state)
 }
 #endif
 
+/*
+ * DAC MUTE/UNMUTE 时防止蓝牙干扰
+ */
+#if 0
+extern void pwr_set_soft(u8 enable);
+void audio_dac_ch_mute_notify(u8 mute_state, u8 step)
+{
+    if (step == 1) {
+        pwr_set_soft(0);
+        udelay(50);
+    } else if (step == 2) {
+        udelay(50);
+        pwr_set_soft(1);
+    }
+}
+#endif
+
 __AUDIO_INIT_BANK_CODE
 static void audio_common_initcall()
 {

@@ -342,7 +342,7 @@ void try_play_preempted_a2dp(void *p)
         memset(a2dp_preempted_addr, 0xff, 6);
         return;
     }
-    if (bt_get_call_status() != BT_CALL_HANGUP) {
+    if (esco_player_runing()) {
         sys_timeout_add(NULL, try_play_preempted_a2dp, 500);
         return;
     }
@@ -521,6 +521,12 @@ static int a2dp_bt_status_event_handler(int *event)
             puts("--mute_a\n");
             a2dp_media_mute(bt->args);
             btstack_device_control(device_a, USER_CTRL_AVCTP_OPID_PAUSE);
+            if (memcmp(a2dp_preempted_addr, bt->args, 6) == 0) {
+                // 手机B通话抢播会记录手机A为a2dp_preempted_addr方便挂断后恢复手机A播歌，
+                // 如果手机A自己点击开始播歌，这里的流程会给A发送USER_CTRL_AVCTP_OPID_PAUSE,
+                // 同时需要把a2dp_preempted_addr给清空，防止后续手机B播歌无声
+                memset(a2dp_preempted_addr, 0xff, 6);
+            }
             break;
         }
         break;

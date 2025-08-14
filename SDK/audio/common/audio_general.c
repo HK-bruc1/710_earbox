@@ -31,7 +31,6 @@ const int config_audio_dac_ng_debug = 0;
 const int config_ch_adapter_32bit_enable = 1;
 const int config_mixer_32bit_enable = 1;
 const int config_jlstream_fade_32bit_enable = 1;
-const int config_audio_eq_xfade_enable = 1;
 const int config_peak_rms_32bit_enable = 1;
 const int config_audio_vocal_track_synthesis_32bit_enable = 1;
 
@@ -103,38 +102,81 @@ const int config_audio_adc6_enable = 0;
 const int config_audio_adc7_enable = 0;
 
 //ADC input Mode:Single-Ended/Differential/Single-Ended Capless
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc0_input_mode = -1;
+#else
 const int config_audio_adc0_input_mode = TCFG_ADC0_MODE;
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc1_input_mode = -1;
+#else
 #ifdef TCFG_ADC1_MODE
 const int config_audio_adc1_input_mode = TCFG_ADC1_MODE;
 #else
 const int config_audio_adc1_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc2_input_mode = -1;
+#else
 #ifdef TCFG_ADC2_MODE
 const int config_audio_adc2_input_mode = TCFG_ADC2_MODE;
 #else
 const int config_audio_adc2_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc3_input_mode = -1;
+#else
 #ifdef TCFG_ADC3_MODE
 const int config_audio_adc3_input_mode = TCFG_ADC3_MODE;
 #else
 const int config_audio_adc3_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc4_input_mode = -1;
+#else
 #ifdef TCFG_ADC4_MODE
 const int config_audio_adc4_input_mode = TCFG_ADC4_MODE;
 #else
 const int config_audio_adc4_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc5_input_mode = -1;
+#else
 #ifdef TCFG_ADC5_MODE
 const int config_audio_adc5_input_mode = TCFG_ADC5_MODE;
 #else
 const int config_audio_adc5_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc6_input_mode = -1;
+#else
 #ifdef TCFG_ADC6_MODE
 const int config_audio_adc6_input_mode = TCFG_ADC6_MODE;
 #else
 const int config_audio_adc6_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc7_input_mode = -1;
+#else
+#ifdef TCFG_ADC7_MODE
+const int config_audio_adc7_input_mode = TCFG_ADC7_MODE;
+#else
 const int config_audio_adc7_input_mode = 0;
+#endif
+#endif
 
 /*
  *******************************************************************
@@ -201,6 +243,8 @@ const int virtual_bass_pro_soft_crossover = 0;//控制虚拟低音pro 中的分�
 const int virtual_bass_pro_soft_eq = 1;       //控制虚拟低音pro 中的EQ是用软件运行或者硬件运行 1软件 0硬件 默认1
 
 
+const int config_audio_eq_xfade_enable = 1;
+const float config_audio_eq_xfade_time = 0;//0.4f;//0：一帧fade完成 非0：连续多帧fade，过度更加平滑，fade过程算力会相应增加(fade时间 范围(0~1)单位:秒)
 
 
 const int limiter_run_mode = EFx_PRECISION_PRO

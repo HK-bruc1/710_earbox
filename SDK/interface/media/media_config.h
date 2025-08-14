@@ -10,7 +10,6 @@ extern const int CONFIG_SEAMLESS_RECORDER_ENABLE;
 extern const int config_ch_adapter_32bit_enable;
 extern const int config_mixer_32bit_enable;
 extern const int config_jlstream_fade_32bit_enable;
-extern const int config_audio_eq_xfade_enable;
 extern const int config_out_dev_limiter_enable;
 extern const int config_peak_rms_32bit_enable;
 extern const int config_audio_vocal_track_synthesis_32bit_enable;
@@ -81,7 +80,8 @@ extern const int config_audio_eq_hs_q_enable;	//High Shelf Q
 extern const int config_audio_eq_ls_q_enable;	//Low Shelf Q
 extern const int config_audio_eq_hp_adv_enable;	//High Pass Advance
 extern const int config_audio_eq_lp_adv_enable;	//Low Pass Advance
-
+extern const int config_audio_eq_xfade_enable;
+extern const float config_audio_eq_xfade_time;//0：一帧fade完成 非0：连续多帧fade，过度更加平滑，fade过程算力会相应增加(fade时间 范围(0~1)单位:秒)
 /*
  *******************************************************************
  *						SRC Configs

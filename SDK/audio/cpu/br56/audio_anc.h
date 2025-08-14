@@ -212,10 +212,6 @@ enum {
 #error "JL710N doesn't support HEADSET ANC HYBRID"
 #endif
 
-#if (TCFG_AUDIO_ANC_TRAIN_MODE == ANC_FF_EN) && (TCFG_AUDIO_ANC_CH == (ANC_L_CH | ANC_R_CH))
-#error "JL710N doesn't support HEADSET ANC FF"
-#endif
-
 /*ANC记忆信息*/
 typedef struct {
     u8 mode;		/*当前模式*/
@@ -306,8 +302,17 @@ u8 audio_anc_fbmic_gain_get(void);
 /*获取anc模式，指定mic的增益, mic_sel:目标MIC通道*/
 u8 audio_anc_mic_gain_get(u8 mic_sel);
 
+/*用于某些需要等anc完全关闭才能开启的场景，如通话与anc的mic复用*/
+void anc_mode_switch_sem_create();
+void anc_mode_switch_sem_post();
+void anc_mode_switch_sem_pend();
+void anc_mode_switch_sem_del();
+
+/*阻塞方式等待anc模式切换完成*/
+void anc_mode_switch_pend(u8 mode, u8 tone_play);
+
 /*ANC模式切换(切换到指定模式)，并配置是否播放提示音*/
-void anc_mode_switch(u8 mode, u8 tone_play);
+int anc_mode_switch(u8 mode, u8 tone_play);
 
 /*在anc任务里面切换anc模式，
  *避免上一次切换没有完成，这次切换被忽略的情况*/

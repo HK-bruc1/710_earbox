@@ -124,6 +124,13 @@ int esco_recoder_open(u8 link_type, void *bt_addr)
 
     jlstream_set_callback(recoder->stream, recoder->stream, esco_recoder_callback);
     jlstream_set_scene(recoder->stream, STREAM_SCENE_ESCO);
+
+#if 0 //通话与ANC互斥demo
+    if (anc_mode_get() != ANC_OFF) {
+        anc_mode_switch_pend(ANC_OFF, 0);
+    }
+#endif
+
     err = jlstream_start(recoder->stream);
     if (err) {
         goto __exit1;
