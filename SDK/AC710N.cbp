@@ -1271,6 +1271,7 @@
 <Unit filename="audio/cpu/br56/audio_config.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_config.h" />
 <Unit filename="audio/cpu/br56/audio_config_def.h" />
+<Unit filename="audio/cpu/br56/audio_configs_dump.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_dai/audio_pdm.c"><Option compilerVer="CC"/></Unit>
 <Unit filename="audio/cpu/br56/audio_dai/audio_pdm.h" />
 <Unit filename="audio/cpu/br56/audio_demo/audio_adc_demo.c"><Option compilerVer="CC"/></Unit>

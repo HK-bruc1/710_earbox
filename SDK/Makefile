@@ -27,7 +27,6 @@ export SYS_INC_DIR := C:/JL/pi32/pi32v2-include
 export EXT_CFLAGS  := # Windows 下不需要 -D__SHELL__
 export PATH:=$(TOOL_DIR);$(PATH)
 
-
 ## 后处理脚本
 export FIXBAT          := tools/utils/fixbat.exe # 用于处理 utf8->gbk 编码问题
 export POST_SCRIPT     := cpu/br56/tools/download.bat

@@ -544,6 +544,10 @@ int bt_phone_esco_stop(u8 *bt_addr)
 {
 
     if (!esco_player_is_playing(bt_addr)) {
+        if (ed_ctl.timer && memcmp(ed_ctl.esco_addr, bt_addr, 6) == 0) {
+            sys_timer_del(ed_ctl.timer);
+            ed_ctl.timer = 0;
+        }
         puts("esco_player_is_close\n");
         return 0;
     }

@@ -753,3 +753,4 @@ const char log_tag_const_i_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_d_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_w_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
 const char log_tag_const_e_QUICK_CONN  = CONFIG_DEBUG_LIB(0);
+

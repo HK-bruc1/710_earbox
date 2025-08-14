@@ -694,14 +694,20 @@ int audio_digital_vol_node_name_get(u8 dvol_idx, char *node_name)
     int i = 0;
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN | LE_AUDIO_AURACAST_SINK_EN)))
     if (le_audio_player_get_stream_scene() == STREAM_SCENE_LE_AUDIO) {
-        sprintf(node_name, "%s%s", "LEA_", "Media");
+        /* sprintf(node_name, "%s%s", "LEA_", "Media"); */
+        strcpy(node_name, "LEA_");
+        strcat(node_name, "Media");
         return 0;
     } else if (le_audio_player_get_stream_scene() == STREAM_SCENE_LEA_CALL) {
-        sprintf(node_name, "%s%s", "LEA_", "Call");
+        /* sprintf(node_name, "%s%s", "LEA_", "Call"); */
+        strcpy(node_name, "LEA_");
+        strcat(node_name, "Call");
         return 0;
     } else {
         if (le_audio_player_is_playing()) {
-            sprintf(node_name, "%s%s", "Vol_LE_", "Audio");
+            /* sprintf(node_name, "%s%s", "Vol_LE_", "Audio"); */
+            strcpy(node_name, "Vol_LE_");
+            strcat(node_name, "Audio");
             return 0;
         }
     }
@@ -713,9 +719,13 @@ int audio_digital_vol_node_name_get(u8 dvol_idx, char *node_name)
 #if !WARNING_TONE_VOL_FIXED
             if (dvol_idx  & TONE_DVOL) {
                 if (tone_player_runing()) {
-                    sprintf(node_name, "%s%s", "Vol_Sys", "Tone");
+                    /* sprintf(node_name, "%s%s", "Vol_Sys", "Tone"); */
+                    strcpy(node_name, "Vol_Sys");
+                    strcat(node_name, "Tone");
                 } else if (ring_player_runing()) {
-                    sprintf(node_name, "%s%s", "Vol_Sys", "Ring");
+                    /* sprintf(node_name, "%s%s", "Vol_Sys", "Ring"); */
+                    strcpy(node_name, "Vol_Sys");
+                    strcat(node_name, "Ring");
                 }
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 continue;
@@ -725,50 +735,68 @@ int audio_digital_vol_node_name_get(u8 dvol_idx, char *node_name)
             case APP_MODE_BT:
 #if TCFG_AUDIO_DUT_ENABLE
                 if (audio_dec_dut_en_get(1)) {
-                    sprintf(node_name, "%s%s", "Vol_Btd", dvol_type[i]);
+                    /* sprintf(node_name, "%s%s", "Vol_Btd", dvol_type[i]); */
+                    strcpy(node_name, "Vol_Btd");
+                    strcat(node_name, dvol_type[i]);
                     log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                     break;
                 }
 #endif/*TCFG_AUDIO_DUT_ENABLE*/
                 if (esco_player_is_playing(NULL)) { //用于区分通话和播歌的提示音
-                    sprintf(node_name, "%s%s", "Vol_Btc", dvol_type[i]);
+                    /* sprintf(node_name, "%s%s", "Vol_Btc", dvol_type[i]); */
+                    strcpy(node_name, "Vol_Btc");
+                    strcat(node_name, dvol_type[i]);
                 } else {
-                    sprintf(node_name, "%s%s", "Vol_Btm", dvol_type[i]);
+                    /* sprintf(node_name, "%s%s", "Vol_Btm", dvol_type[i]); */
+                    strcpy(node_name, "Vol_Btm");
+                    strcat(node_name, dvol_type[i]);
                 }
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #if TCFG_APP_LINEIN_EN
             case APP_MODE_LINEIN:
-                sprintf(node_name, "%s%s", "Vol_Lin", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_Lin", dvol_type[i]); */
+                strcpy(node_name, "Vol_Lin");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #endif
 #if TCFG_APP_MUSIC_EN
             case APP_MODE_MUSIC:
-                sprintf(node_name, "%s%s", "Vol_File", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_File", dvol_type[i]); */
+                strcpy(node_name, "Vol_File");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #endif
 #if TCFG_APP_FM_EN
             case APP_MODE_FM:
-                sprintf(node_name, "%s%s", "Vol_Fm", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_Fm", dvol_type[i]); */
+                strcpy(node_name, "Vol_Fm");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #endif
 #if TCFG_APP_SPDIF_EN
             case APP_MODE_SPDIF:
-                sprintf(node_name, "%s%s", "Vol_Spd", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_Spd", dvol_type[i]); */
+                strcpy(node_name, "Vol_Spd");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #endif
 #if TCFG_APP_PC_EN
             case APP_MODE_PC:
-                sprintf(node_name, "%s%s", "Vol_Pcspk", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_Pcspk", dvol_type[i]); */
+                strcpy(node_name, "Vol_Pcspk");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
 #endif
             case APP_MODE_IDLE:
-                sprintf(node_name, "%s%s", "Vol_Sys", dvol_type[i]);
+                /* sprintf(node_name, "%s%s", "Vol_Sys", dvol_type[i]); */
+                strcpy(node_name, "Vol_Sys");
+                strcat(node_name, dvol_type[i]);
                 log_debug("vol_name:%d,%s\n", __LINE__, node_name);
                 break;
             default:

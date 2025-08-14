@@ -762,5 +762,18 @@ void jlstream_return_frame(struct stream_iport *iport, struct stream_frame *fram
 int jlstream_get_cpu_usage();
 
 void stream_mem_unfree_dump();
+
+struct jlsream_crossfade {
+    struct jlstream_fade fade[2]; //0:fade_out  1:fade_in
+    u32 sample_rate;
+    u16 msec;
+    u8 channel;
+    u8 bit_width;
+    u8 enable;
+};
+
+void jlstream_frames_cross_fade_init(struct jlsream_crossfade *crossfade);
+u8 jlstream_frames_cross_fade_run(struct jlsream_crossfade *crossfade, void *fadein_addr, void *fadeout_addr, void *output_addr, int len);
+
 #endif
 

@@ -116,6 +116,23 @@ void audio_dac_power_state(u8 state)
 }
 #endif
 
+/*
+ * DAC MUTE/UNMUTE 时防止蓝牙干扰
+ */
+#if 0
+extern void pwr_set_soft(u8 enable);
+void audio_dac_ch_mute_notify(u8 mute_state, u8 step)
+{
+    if (step == 1) {
+        pwr_set_soft(0);
+        udelay(50);
+    } else if (step == 2) {
+        udelay(50);
+        pwr_set_soft(1);
+    }
+}
+#endif
+
 __AUDIO_INIT_BANK_CODE
 static void audio_common_initcall()
 {
@@ -252,7 +269,7 @@ void audio_dac_initcall(void)
     dac_data.bit_width = audio_general_out_dev_bit_width();
     dac_data.mute_delay_isel = 2;
     dac_data.mute_delay_time = 50;
-    dac_data.miller_en = 0;
+    dac_data.miller_en = 1;
     if ((JL_SYSTEM->CHIP_VER >= 0xA2) && (JL_SYSTEM->CHIP_VER < 0xAC)) { //C版及C版以后支持工具配置电流档位
         dac_data.pa_isel0 = TCFG_AUDIO_DAC_PA_ISEL0;
         dac_data.pa_isel1 = TCFG_AUDIO_DAC_PA_ISEL1;
