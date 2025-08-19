@@ -467,7 +467,7 @@ const int config_bb_optimized_ctrl = VENDOR_BB_ISO_DIRECT_PUSH;//BIT(7);//|BIT(8
 
 const int config_btctler_le_afh_en = 0;
 const u32 config_vendor_le_bb = 0;
-const bool config_tws_le_role_sw =(TWS_LE_AUDIO_LE_ROLE_SW_EN|TWS_RCSP_LE_ROLE_SW_EN);
+const bool config_tws_le_role_sw =1;//(TWS_LE_AUDIO_LE_ROLE_SW_EN|TWS_RCSP_LE_ROLE_SW_EN);
 const int config_btctler_le_rx_nums = 20;
 const int config_btctler_le_acl_packet_length = 255;
 const int config_btctler_le_acl_total_nums = 15;
@@ -613,19 +613,19 @@ const char log_tag_const_d_LL_TWS_SCAN  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_w_LL_TWS_SCAN  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_e_LL_TWS_SCAN  = CONFIG_DEBUG_LIB(1);
 
-const char log_tag_const_v_LL_S  = CONFIG_DEBUG_LIB(0);
+const char log_tag_const_v_LL_S  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_i_LL_S  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_d_LL_S  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_w_LL_S  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_e_LL_S  = CONFIG_DEBUG_LIB(1);
 
-const char log_tag_const_v_LL_RL  = CONFIG_DEBUG_LIB(0);
+const char log_tag_const_v_LL_RL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_i_LL_RL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_d_LL_RL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_w_LL_RL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_e_LL_RL  = CONFIG_DEBUG_LIB(1);
 
-const char log_tag_const_v_LL_WL  = CONFIG_DEBUG_LIB(0);
+const char log_tag_const_v_LL_WL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_i_LL_WL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_d_LL_WL  = CONFIG_DEBUG_LIB(1);
 const char log_tag_const_w_LL_WL  = CONFIG_DEBUG_LIB(1);

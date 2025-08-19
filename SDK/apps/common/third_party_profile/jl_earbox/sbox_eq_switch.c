@@ -130,29 +130,38 @@ void custom_eq_param_update(void)
 }
 
 
-u8 sbox_get_eq_index(void)
+u8 get_eq_index(void)
 {
     return user_custom_eq_index;
 }
 
 //切换工具内置的EQ参数表
-void sbox_control_eq_mode_switch(void *datas)
+// void sbox_control_eq_mode_switch(void *datas)
+// {
+//     struct eq_sbox_info *data = (struct eq_sbox_info *)datas;
+//     user_custom_eq_index = data->index;
+
+//     if(user_custom_eq_index == EQ_MODE_CUSTOM){
+
+//         for(int i =0 ; i<SBOX_EQ_SECTION_MAX;i++){
+//             custom_eq_tab[i].gain = data->eq_gain[i];
+//         }
+//         custom_eq_param_update();
+
+//     }else{
+//         printf("custom_control_eq_mode_switch %d\n",user_custom_eq_index);
+//         eq_file_cfg_switch("MusicEqBt",user_custom_eq_index);
+//     }
+// }
+
+void custom_control_eq_mode_switch(void *datas)
 {
-    struct eq_sbox_info *data = (struct eq_sbox_info *)datas;
-    user_custom_eq_index = data->index;
-
-    if(user_custom_eq_index == EQ_MODE_CUSTOM){
-
-        for(int i =0 ; i<SBOX_EQ_SECTION_MAX;i++){
-            custom_eq_tab[i].gain = data->eq_gain[i];
-        }
-        custom_eq_param_update();
-
-    }else{
-        printf("custom_control_eq_mode_switch %d\n",user_custom_eq_index);
-        eq_file_cfg_switch("MusicEqBt",user_custom_eq_index);
-    }
+    u8 *data = (u8*)datas;
+    user_custom_eq_index = *data;
+    printf("custom_control_eq_mode_switch %d\n",user_custom_eq_index);
+    eq_file_cfg_switch("MusicEqBt",user_custom_eq_index);
 }
+
 
 
 void sbox_eq_init(void)
@@ -163,7 +172,7 @@ void sbox_eq_init(void)
         printf("%s sbox_eq_init ok  ", __func__);
         printf("\n");
         put_buf(eq_tmp, ret); // 使用返回值作为参数
-        sbox_control_eq_mode_switch(eq_tmp);
+        custom_control_eq_mode_switch(eq_tmp);
     } else {
         printf("%s sbox_eq_init error %d\n", __func__, ret);
 

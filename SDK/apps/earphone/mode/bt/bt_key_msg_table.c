@@ -243,11 +243,14 @@ int bt_key_power_msg_remap(int *msg)
     /* 所有场景下按键流程 */
     switch (key_action) {
     case KEY_ACTION_CLICK:
-        // sbox_ctrl_douyin(1);
-        custom_control_phone_out(number,5);
+        // sbox_ctrl_tiktok(1);
+        // custom_control_phone_out(number,5);
         break;
     case KEY_ACTION_DOUBLE_CLICK:
-        // sbox_ctrl_douyin(2);
+        // sbox_ctrl_tiktok(2);
+        break;
+    case KEY_ACTION_TRIPLE_CLICK:
+        // sbox_ctrl_tiktok(4);
         break;
     case KEY_ACTION_HOLD_1SEC:
         //长按切换ANC模式

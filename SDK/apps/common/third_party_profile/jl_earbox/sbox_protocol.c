@@ -232,6 +232,7 @@ static void sbox_cbk_packet_handler(void *hdl, uint8_t packet_type, uint16_t cha
                 mtu = 23;
             }
             ble_vendor_set_default_att_mtu( mtu);
+            sbox_cb_func.sbox_sync_all_info();
             break;
         default:
             break;
@@ -303,7 +304,14 @@ static int sbox_att_write_callback(void *hdl, hci_con_handle_t connection_handle
         break;
     case ATT_CHARACTERISTIC_ae99_01_CLIENT_CONFIGURATION_HANDLE:
         printf("\nwrite ccc:%04x, %02x\n", handle, buffer[0]);
-        att_set_ccc_config(handle, buffer[0]);
+                check_connetion_updata_deal(connection_handle);
+        att_set_ccc_config(att_handle, buffer[0]);
+
+        if(ble_att_server_get_link_mtu(sbox_demo_ble_hdl) == 23 && buffer[0] ==1){
+            att_server_set_exchange_mtu(sbox_demo_ble_hdl);
+        }
+        sbox_cb_func.sbox_sync_all_info();
+
         break;
     default:
         break;
@@ -408,6 +416,17 @@ int sbox_demo_spp_send(u8 *data, u32 len)
 /*************************************************
                   SPP 相关内容 end
 *************************************************/
+#define SBOX_BLE_HDL_UUID \
+    (((u8)('S' + 'B' + 'O') << (3 * 8)) | \
+     ((u8)('X' + 'O' + 'M') << (2 * 8)) | \
+     ((u8)('B' + 'L' + 'E') << (1 * 8)) | \
+     ((u8)('H' + 'D' + 'L') << (0 * 8)))
+
+#define SBOX_SPP_HDL_UUID \
+    (((u8)('S' + 'B' + 'O') << (3 * 8)) | \
+     ((u8)('X' + 'O' + 'M') << (2 * 8)) | \
+     ((u8)('S' + 'P' + 'P') << (1 * 8)) | \
+     ((u8)('H' + 'D' + 'L') << (0 * 8)))
 
 void sbox_demo_all_init(void)
 {
@@ -423,6 +442,7 @@ void sbox_demo_all_init(void)
             printf("sbox_demo_ble_hdl alloc err !\n");
             return;
         }
+        app_ble_hdl_uuid_set(sbox_demo_ble_hdl, SBOX_BLE_HDL_UUID);
         app_ble_set_mac_addr(sbox_demo_ble_hdl, (void *)edr_addr);
         app_ble_profile_set(sbox_demo_ble_hdl, sbox_profile_data);
         app_ble_att_read_callback_register(sbox_demo_ble_hdl, sbox_att_read_callback);
@@ -442,6 +462,7 @@ void sbox_demo_all_init(void)
             printf("sbox_demo_spp_hdl alloc err !\n");
             return;
         }
+        app_spp_hdl_uuid_set(sbox_demo_ble_hdl, SBOX_SPP_HDL_UUID);
         app_spp_recieve_callback_register(sbox_demo_spp_hdl, sbox_spp_recieve_callback);
         app_spp_state_callback_register(sbox_demo_spp_hdl, sbox_spp_state_callback);
         app_spp_wakeup_callback_register(sbox_demo_spp_hdl, NULL);
@@ -477,15 +498,15 @@ int sbox_ble_disconnect(void)
     return 0;
 }
 
-
 static int sbox_tws_connction_status_event_handler(int *msg)
 {
     struct tws_event *evt = (struct tws_event *)msg;
     switch (evt->event) {
     case TWS_EVENT_CONNECTED:
+
         if (tws_api_get_role() == TWS_ROLE_MASTER) {
             //master enable
-            // sbox_demo_adv_enable(1);
+            sbox_demo_adv_enable(1);
         } else {
             //slave disable
             printf("\nConnect Slave!!!\n\n");
@@ -493,6 +514,7 @@ static int sbox_tws_connction_status_event_handler(int *msg)
             sbox_ble_disconnect();
             sbox_demo_adv_enable(0);
         }
+        
         break;
     default:
         break;

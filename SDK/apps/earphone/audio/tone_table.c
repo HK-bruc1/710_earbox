@@ -1,3 +1,13 @@
+/*
+ * @Author:  shenzihao@zh-jieli.com
+ * @Date: 2025-03-29 10:21:59
+ * @LastEditors:  shenzihao@zh-jieli.com
+ * @LastEditTime: 2025-07-14 17:22:30
+ * @FilePath: \SDK\apps\earphone\audio\tone_table.c
+ * @Description: 
+ * 
+ * Copyright (c) 2025 by zh_jieli, All Rights Reserved. 
+ */
 #ifdef SUPPORT_MS_EXTENSIONS
 #pragma bss_seg(".tone_table.data.bss")
 #pragma data_seg(".tone_table.data")

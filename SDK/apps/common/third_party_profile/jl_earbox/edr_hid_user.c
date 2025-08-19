@@ -12,8 +12,9 @@
 #include "circular_buf.h"
 
 #include "edr_hid_user.h"
-
 #include "sbox_user_app.h"
+#include "sbox_core_config.h"
+
 
 #if TCFG_USER_EDR_ENABLE && (TCFG_BT_SUPPORT_HID ==1) && (!TCFG_BT_DUAL_CONN_ENABLE)
 
@@ -48,8 +49,8 @@ static  u16 report_map_size;
 /* #define MOUSE_REPORT_ID     1 */
 
 static void (*user_hid_send_wakeup)(void) = NULL;
-static u16 hid_channel;//inter_channel
-static u16 hid_ctrl_channel;//ctrl_channel
+u16 hid_channel;//inter_channel
+u16 hid_ctrl_channel;//ctrl_channel
 static volatile u8 hid_run = 0;
 static volatile u8 is_hid_active = 0;
 static volatile u8 hid_s_step = 0;
@@ -74,7 +75,10 @@ extern void hid_diy_regiest_callback(void *cb, void *interrupt_cb);
 extern void hid_sdp_init(const u8 *hid_descriptor, u16 size);
 extern uint16_t little_endian_read_16(const uint8_t *buffer, int pos);
 
-
+void printf_channel_id(void)
+{
+    printf("hid c %d,ctrl c%d\n",hid_channel,hid_ctrl_channel);
+}
 typedef struct {
     u8 report_type;
     u8 report_id;
@@ -147,7 +151,7 @@ void sdp_callback_remote_type(u8 remote_type)
         }    
     }
     usr_set_remote_type(remote_type);
-    // sync_remote_type();
+    sync_remote_type();
     //to do
 }
 
@@ -434,6 +438,7 @@ int user_hid_send_data(u8 *buf, u32 len)
     int ret;
     hid_s_param_t s_par;
     if (!hid_channel) {
+        printf("hid_channel null\n");
         return -1;
     }
 
@@ -794,7 +799,7 @@ static int hid_tws_connction_status_event_handler(int *msg)
     struct tws_event *evt = (struct tws_event *)msg;
     switch (evt->event) {
     case TWS_EVENT_CONNECTED:
-    if(tws_api_get_role() == TWS_ROLE_MASTER){
+    if(tws_api_get_role() == TWS_ROLE_MASTER&&edr_hid_is_connected()){
         sync_remote_type();
         sync_hid_channel_id();
     }
@@ -805,10 +810,37 @@ static int hid_tws_connction_status_event_handler(int *msg)
 }
 
 APP_MSG_HANDLER(hid_tws_msg_handler) = {
-    .owner      = APP_MODE_BT,
+    .owner      = 0xff,
     .from       = MSG_FROM_TWS,
     .handler    = hid_tws_connction_status_event_handler,
 };
+extern void bt_connect_reset_xy(void);
+static int tiktok_bt_connction_status_event_handler(struct bt_event *bt)
+{
+
+    switch (bt->event) {
+    case BT_STATUS_CONN_A2DP_CH:
+        sys_timeout_add(NULL,bt_connect_reset_xy,2000);
+        // bt_connect_reset_xy();
+        break;
+    }
+}
+
+static int tiktok_app_status_event_handler(int *msg)
+{
+    struct bt_event *bt = (struct bt_event *)msg;
+    if (tws_api_get_role() == TWS_ROLE_SLAVE) {
+        return 0;
+    }
+    tiktok_bt_connction_status_event_handler(bt);
+    return 0;
+}
+APP_MSG_HANDLER(tiktok_protocol_msg_handler) = {
+    .owner      = 0xff,
+    .from       = MSG_FROM_BT_STACK,
+    .handler    = tiktok_app_status_event_handler,
+};
+
 
 
 /*
@@ -824,7 +856,7 @@ void edr_hid_config_init(void)
     printf("func:%s ,usr_get_keypage_report_map \n",__func__);
     buf = usr_get_keypage_report_map(1,&len);
     if(buf){
-        user_hid_set_icon(BD_CLASS_KEYBOARD_MOUSE);
+    //    user_hid_set_icon(BD_CLASS_WEARABLE_HEADSET);
         user_hid_set_ReportMap(buf,len);
         user_hid_init(NULL);
     }

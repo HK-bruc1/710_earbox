@@ -2,7 +2,7 @@
  * @Author:  shenzihao@zh-jieli.com
  * @Date: 2025-03-29 11:32:31
  * @LastEditors:  shenzihao@zh-jieli.com
- * @LastEditTime: 2025-05-13 09:54:51
+ * @LastEditTime: 2025-04-01 16:54:16
  * @FilePath: \SDK\apps\common\third_party_profile\jl_earbox\sbox_core_config.h
  * @Description: 
  *      此文件是配置彩屏仓通信协议相关的配置：

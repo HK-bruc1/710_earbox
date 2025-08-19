@@ -48,7 +48,7 @@
 #define TCFG_AUTOTUNE_NODE_ENABLE 0 // Autotune
 #define TCFG_BASS_TREBLE_NODE_ENABLE 0 // Bass Treble
 #define TCFG_CHANNEL_EXPANDER_NODE_ENABLE 0 // Channel Expander
-#define TCFG_CHANNEL_MERGE_NODE_ENABLE 1 // Channel Merge
+#define TCFG_CHANNEL_MERGE_NODE_ENABLE 0 // Channel Merge
 #define TCFG_CHANNEL_SWAP_NODE_ENABLE 0 // 声道交换器
 #define TCFG_CHORUS_NODE_ENABLE 0 // Chorus
 #define TCFG_CONVERT_NODE_ENABLE 1 // Convert
@@ -71,7 +71,7 @@
 #define TCFG_ESCO_TX_NODE_ENABLE 1 // ESCO_TX
 #define TCFG_FADE_NODE_ENABLE 0 // Fade
 #define TCFG_FREQUENCY_COMPRESSOR_NODE_ENABLE 0 // Frequency Compressor
-#define TCFG_FREQUENCY_SHIFT_HOWLING_NODE_ENABLE 1 // Frequency Shift
+#define TCFG_FREQUENCY_SHIFT_HOWLING_NODE_ENABLE 0 // Frequency Shift
 #define TCFG_GAIN_NODE_ENABLE 0 // Gain
 #define TCFG_HARMONIC_EXCITER_NODE_ENABLE 0 // Harmonic Exciter
 #define TCFG_IIS_NODE_ENABLE 0 // IIS0_TX、IIS0_RX
@@ -84,14 +84,14 @@
 #define TCFG_MULTI_BAND_LIMITER_NODE_ENABLE 0 // MB Limiter
 #define TCFG_MULTI_CH_IIS_NODE_ENABLE 0 // MULTI CH IIS0 TX
 #define TCFG_MULTI_CH_IIS_RX_NODE_ENABLE 0 // MULTI CH IIS0 RX
-#define TCFG_NOISEGATE_NODE_ENABLE 1 // NoiseGate
+#define TCFG_NOISEGATE_NODE_ENABLE 0 // NoiseGate
 #define TCFG_NOISEGATE_PRO_NODE_ENABLE 0 // NoiseGate Pro
 #define TCFG_NOTCH_HOWLING_NODE_ENABLE 0 // Howling Suppress
 #define TCFG_NS_NODE_ENABLE 0 // Noise Suppressor
 #define TCFG_PCM_DELAY_NODE_ENABLE 0 // PCM Delay
 #define TCFG_PDM_NODE_ENABLE 0 // PDM MIC
 #define TCFG_PLATE_REVERB_ADVANCE_NODE_ENABLE 0 // Plate Reverb Advance
-#define TCFG_PLATE_REVERB_NODE_ENABLE 1 // Plate Reverb
+#define TCFG_PLATE_REVERB_NODE_ENABLE 0 // Plate Reverb
 #define TCFG_PLC_NODE_ENABLE 1 // 丢包修复PLC
 #define TCFG_REPLACE_NODE_ENABLE 0 // Replace
 #define TCFG_RING_TONE_NODE_ENABLE 1 // 铃声
@@ -129,15 +129,11 @@
 #define TCFG_VOCAL_TRACK_SEPARATION_NODE_ENBALE 0 // 声道拆分
 #define TCFG_VOCAL_TRACK_SYNTHESIS_NODE_ENABLE 0 // 声道组合
 #define TCFG_VOICE_CHANGER_ADV_NODE_ENABLE 0 // Voice Changer Adv
-#define TCFG_VOICE_CHANGER_NODE_ENABLE 1 // Voice Changer
+#define TCFG_VOICE_CHANGER_NODE_ENABLE 0 // Voice Changer
 #define TCFG_WDRC_ADVANCE_NODE_ENABLE 0 // DRC Advance
 #define TCFG_WDRC_NODE_ENABLE 0 // DRC
 #define TCFG_LHDC_X_NODE_ENABLE 0
 #define EQ_SECTION_MAX 0xc // EQ_SECTION_MAX
-<<<<<<< HEAD
-#define TCFG_SWITCH_NODE_ENABLE 0 // Switch
-=======
->>>>>>> patch_02.11
 #define TCFG_STREAM_BIN_ENC_ENABLE 0 // stream.bin加密使能
 // ------------流程图宏定义------------
 
@@ -169,12 +165,12 @@
 #define TCFG_AUDIO_EFX_B0D5_RUN_MODE EFx_BW_UNUSED // Virtual Bass
 #define TCFG_AUDIO_EFX_A904_RUN_MODE EFx_BW_UNUSED // Gain
 #define TCFG_AUDIO_EFX_86B9_RUN_MODE EFx_BW_UNUSED // automute
-#define TCFG_AUDIO_EFX_7293_RUN_MODE EFx_BW_16t16 // Voice Changer
+#define TCFG_AUDIO_EFX_7293_RUN_MODE EFx_BW_UNUSED // Voice Changer
 #define TCFG_AUDIO_EFX_CC8C_RUN_MODE EFx_BW_UNUSED // Bass Treble
 #define TCFG_AUDIO_EFX_76EF_RUN_MODE EFx_BW_UNUSED // 通话第三方算法
 #define TCFG_AUDIO_EFX_1AA6_RUN_MODE EFx_BW_UNUSED // Convert
 #define TCFG_AUDIO_EFX_A09F_RUN_MODE EFx_BW_UNUSED // PDM MIC
-#define TCFG_AUDIO_EFX_B7C4_RUN_MODE EFx_BW_16t16 // NoiseGate
+#define TCFG_AUDIO_EFX_B7C4_RUN_MODE EFx_BW_UNUSED // NoiseGate
 #define TCFG_AUDIO_EFX_3F20_RUN_MODE EFx_BW_UNUSED // 环绕音demo
 #define TCFG_AUDIO_EFX_36D7_RUN_MODE EFx_BW_UNUSED // 声道交换器
 #define TCFG_AUDIO_EFX_D0BC_RUN_MODE EFx_BW_UNUSED // 单MIC通话
@@ -194,15 +190,15 @@
 #define TCFG_AUDIO_EFX_FB00_RUN_MODE EFx_BW_UNUSED // SteroMix
 #define TCFG_AUDIO_EFX_0048_RUN_MODE EFx_BW_UNUSED // 3MIC通话
 #define TCFG_AUDIO_EFX_D0D0_RUN_MODE EFx_BW_UNUSED // AGC
-#define TCFG_AUDIO_EFX_5101_RUN_MODE EFx_BW_16t16 // Plate Reverb
+#define TCFG_AUDIO_EFX_5101_RUN_MODE EFx_BW_UNUSED // Plate Reverb
 #define TCFG_AUDIO_EFX_0753_RUN_MODE EFx_BW_UNUSED // Plate Reverb Advance
 #define TCFG_AUDIO_EFX_98A4_RUN_MODE EFx_BW_UNUSED // Echo
 #define TCFG_AUDIO_EFX_C07A_RUN_MODE EFx_BW_UNUSED // Autotune
 #define TCFG_AUDIO_EFX_2F5E_RUN_MODE EFx_BW_UNUSED // Auto Wah
 #define TCFG_AUDIO_EFX_6DD9_RUN_MODE EFx_BW_UNUSED // Chorus
 #define TCFG_AUDIO_EFX_DA15_RUN_MODE EFx_BW_UNUSED // Channel Expander
-#define TCFG_AUDIO_EFX_BF8E_RUN_MODE EFx_BW_16t16 // Channel Merge
-#define TCFG_AUDIO_EFX_6195_RUN_MODE EFx_BW_16t16 // Frequency Shift
+#define TCFG_AUDIO_EFX_BF8E_RUN_MODE EFx_BW_UNUSED // Channel Merge
+#define TCFG_AUDIO_EFX_6195_RUN_MODE EFx_BW_UNUSED // Frequency Shift
 #define TCFG_AUDIO_EFX_C482_RUN_MODE EFx_BW_UNUSED // Howling Suppress
 #define TCFG_AUDIO_EFX_1B2A_RUN_MODE EFx_BW_UNUSED // Harmonic Exciter
 #define TCFG_AUDIO_EFX_48E2_RUN_MODE EFx_BW_UNUSED // Indicator
@@ -273,23 +269,9 @@
 #define TCFG_AUDIO_EFX_BFE4_RUN_MODE EFx_BW_UNUSED // Frequency Compressor
 #define TCFG_AUDIO_EFX_A64E_RUN_MODE EFx_BW_UNUSED // Spatial Adv
 #define TCFG_AUDIO_EFX_6FEC_RUN_MODE EFx_BW_UNUSED // 本地音乐
+#define TCFG_AUDIO_EFX_65C5_RUN_MODE EFx_BW_UNUSED // LHDC-X
 // ------------流程图节点位宽定义------------
-<<<<<<< HEAD
-=======
 
-// ------------流程图EQ节点类型宏定义------------
-#define EQ_CFG_TYPE_HIGH_PASS 0 // High Pass
-#define EQ_CFG_TYPE_LOW_PASS 0 // Low Pass
-#define EQ_CFG_TYPE_PEAKING 1 // Peaking
-#define EQ_CFG_TYPE_HIGH_SHELF 0 // High Shelf
-#define EQ_CFG_TYPE_LOW_SHELF 0 // Low Shelf
-#define EQ_CFG_TYPE_HIGH_SHELF_Q 0 // High Shelf Q
-#define EQ_CFG_TYPE_LOW_SHELF_Q 0 // Low Shelf Q
-#define EQ_CFG_TYPE_HP 0 // Hp
-#define EQ_CFG_TYPE_LP 0 // Lp
-// ------------流程图EQ节点类型宏定义------------
-#endif
->>>>>>> patch_02.11
 
 
 // ------------流程图EQ节点类型宏定义------------

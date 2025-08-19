@@ -15,7 +15,7 @@
 #include "battery_manager.h"
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & JL_SBOX_EN)
-
+// sbox_core_config
 #if 1
 #define log_info(x, ...)  printf("[sbox_app]" x " ", ## __VA_ARGS__)
 #define log_info_hexdump  put_buf
@@ -88,29 +88,29 @@ extern u8 get_eq_index(void);
 __attribute__((weak))
 void custom_sync_all_info_to_box(void)
 {
-    u8 all_info[25];
+    u8 all_info[7];
     u8 channel = tws_api_get_local_channel();
     
-    all_info[0]=bt_get_total_connect_dev()?1:0;
-
+    all_info[0]=bt_get_total_connect_dev();
+    all_info[1]=get_eq_index();
 #if CONFIG_ANC_ENABLE
-    all_info[1]=anc_mode_get();
+    all_info[2]=anc_mode_get();
 #endif
-    all_info[2]=a2dp_player_runing()?1:2;//user_info.music_states;
-    all_info[3]=app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
+    all_info[3]=a2dp_player_runing()?1:2;//user_info.music_states;
+    all_info[4]=app_audio_get_volume(APP_AUDIO_STATE_MUSIC);
     if ('L' == channel) {
-         all_info[4] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
-        all_info[5] = get_tws_sibling_bat_persent();
+         all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
+        all_info[6] = get_tws_sibling_bat_persent();
     } else if ('R' == channel) {
-        all_info[4] = get_tws_sibling_bat_persent();
-        all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
+        all_info[5] = get_tws_sibling_bat_persent();
+        all_info[6] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
     } else {
-         all_info[4] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
-         all_info[5] = 10*(battery_value_to_phone_level()+1);
+         all_info[5] = 10*(battery_value_to_phone_level()+1);//get_vbat_percent();
+         all_info[6] = 10*(battery_value_to_phone_level()+1);
     }
-    memcpy(all_info+6,&sbox_user_c_info.eq_mode_info,11);
-    memcpy(all_info+17,&sbox_user_c_info.default_key_set,8);
-    log_info("custom_sync_all_info_to_box %c L :%d R:%d\n",channel,all_info[5],all_info[6]);
+    // memcpy(all_info+6,&sbox_user_c_info.eq_mode_info,11);
+    // memcpy(all_info+17,&sbox_user_c_info.default_key_set,8);
+    log_info("custom_sync_all_info_to_box %c L :%d R:%d CON:%d anc:%d a2dp:%d vol:%d\n",channel,all_info[5],all_info[6],all_info[0],all_info[2],all_info[3],all_info[4]);
     sbox_ble_att_send_data(CUSTOM_ALL_INFO_CMD, all_info, sizeof(all_info));
 }
 
@@ -146,7 +146,7 @@ __attribute__((weak))
 void custom_sync_eq_info_to_box(void)
 {
     log_info("%s \n",__func__);
-    u8 eq_info =get_eq_index();
+    u8 eq_info =sbox_get_eq_index();
     sbox_ble_att_send_data(CUSTOM_EQ_DATE_CMD, &eq_info, sizeof(eq_info));
 }
 
@@ -987,23 +987,24 @@ static int sbox_btstack_event_handler(int *_event)
         #endif
         break;
     case BT_STATUS_INIT_OK:
-        // sbox_cfg_init();
+        sbox_app_init();
         break;
     case BT_STATUS_FIRST_CONNECTED:
     case BT_STATUS_SECOND_CONNECTED:
 
         break;
     case BT_STATUS_CONN_A2DP_CH:
+        if(tws_api_get_role() == 0){
+            sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
+        }
+        
     case BT_STATUS_CONN_HFP_CH:
-    if(tws_api_get_role() == 0)
-        sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
+
       //  sbox_cb_func.sbox_sync_all_info();
         break;
     case BT_STATUS_FIRST_DISCONNECT:
         sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
     case BT_STATUS_SECOND_DISCONNECT:
-    if(tws_api_get_role() == 0)
-     sys_timeout_add(NULL, sbox_cb_func.sbox_sync_all_info,1000);
         break;
     case BT_STATUS_AVRCP_INCOME_OPID:
         u8 connect_num = bt_get_total_connect_dev();
@@ -1095,6 +1096,7 @@ void sys_smartstore_event_handle(struct box_info *boxinfo)
     }
 __recmd:
     log_info("sys_smartstore_event_handle %x %d\n",cmd,len);
+    put_buf(sbox_tr_rbuf,len);
     switch (cmd)
     {
         case CUSTOM_ALL_INFO_CMD: 

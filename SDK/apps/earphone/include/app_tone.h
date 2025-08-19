@@ -53,6 +53,7 @@ struct tone_files {
     const char *share_conn_master;
     const char *share_conn_slave;
     const char *share_disconnect;
+    const char *find_ear;
 };
 
 

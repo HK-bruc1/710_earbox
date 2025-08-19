@@ -10,6 +10,9 @@
         "app_main.h": "c",
         "custom_cfg.h": "c",
         "btstack_event.h": "c",
-        "eq_config.h": "c"
+        "eq_config.h": "c",
+        "clock_manager.h": "c",
+        "board_config.h": "c",
+        "includes.h": "c"
     }
 }
