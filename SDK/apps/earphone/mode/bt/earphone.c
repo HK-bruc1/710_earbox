@@ -1341,6 +1341,8 @@ enum bb_irq_edge {
     BB_IRQ_EDGE_DISABLE = 2,
     WL_LNAE = 9,
 };
+
+AT(.volatile_ram_code)
 ___interrupt
 void bt_edge_isr()
 {
@@ -1348,12 +1350,10 @@ void bt_edge_isr()
     if ((BT_TIMER->CON & 0x3) == 0b10) { //rise edge mode
         //raise edge
         SFR(BT_TIMER->CON, 0, 2, 0b11);  //fall edge capture
-        /* putchar('r'); */
         rx_st_ctl();
     } else {
         //fall edge
         SFR(BT_TIMER->CON, 0, 2, 0b10);  //rise edge capture
-        /* putchar('R'); */
         tx_st_ctl();
     }
 }
@@ -1375,9 +1375,11 @@ int btbb_irq_config(u8 btbb_sig, u8 irq_edge)
     BT_TIMER->PRD = 0;
     if (irq_edge == 0) {                                //set tmr cap as fall edge
         request_irq(BT_IRQ_TIME_IDX, 1, bt_edge_isr, 0);
+        irq_unmask_set(BT_IRQ_TIME_IDX, 1, 0);
         SFR(BT_TIMER->CON, 0, 2, 0b11);                //fall edge
     } else if (irq_edge == 1) {                          //set tmr cap as rise edge
         request_irq(BT_IRQ_TIME_IDX, 1, bt_edge_isr, 0);
+        irq_unmask_set(BT_IRQ_TIME_IDX, 1, 0);
         SFR(BT_TIMER->CON, 0, 2, 0b10);                //rise edge
     } else {                                             //disable tmr cap
         unrequest_irq(BT_IRQ_TIME_IDX);

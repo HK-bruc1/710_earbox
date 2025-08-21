@@ -251,22 +251,14 @@ typedef enum {
 } LVD_MODE;
 
 typedef enum {
-    VLVD_SEL_15V = 0,
-    VLVD_SEL_16V,
-    VLVD_SEL_17V,
-    VLVD_SEL_18V,
-    VLVD_SEL_19V,
-    VLVD_SEL_20V,
-    VLVD_SEL_21V,
-    VLVD_SEL_22V,
-    VLVD_SEL_23V,
-    VLVD_SEL_24V,
-    VLVD_SEL_25V,
-    VLVD_SEL_26V,
-    VLVD_SEL_27V,
-    VLVD_SEL_28V,
-    VLVD_SEL_29V,
-    VLVD_SEL_30V,
+    VLVD_SEL_1806MV = 0,
+    VLVD_SEL_1906MV,
+    VLVD_SEL_2006MV,
+    VLVD_SEL_2106MV,
+    VLVD_SEL_2206MV,
+    VLVD_SEL_2306MV,
+    VLVD_SEL_2407MV,
+    VLVD_SEL_2505MV,
 } LVD_VOL;
 
 void lvd_en(u8 en);
