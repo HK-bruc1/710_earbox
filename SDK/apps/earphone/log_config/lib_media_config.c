@@ -655,7 +655,7 @@ const  int  ESCO_PLC_FADE_IN_POINTS = 32; 			//丢包后收到正确包淡入,�
 
 //1:在配置的淡出点数结束之前，根据信号的特征如果认为已经修不好了，提前快速淡出，
 //0:按照实际配置的淡出点数淡出
-const  int  ESCO_PLC_ADV_ENABLE = 1;
+const  int  ESCO_PLC_ADV_ENABLE = 0;
 
 //***********************
 //*   Howling Suppress  *
