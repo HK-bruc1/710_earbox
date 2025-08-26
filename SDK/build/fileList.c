@@ -1219,12 +1219,15 @@ objs += \
 	  $(ROOT)/audio/cpu/br56/audio_setup.o \
 	  $(ROOT)/audio/cpu/br56/audio_mic_capless.o \
   	  $(ROOT)/audio/cpu/br56/audio_config.o \
-      $(ROOT)/audio/cpu/br56/audio_anc.o \
-	  $(ROOT)/audio/cpu/br56/icsd_anc_user.o \
 	  $(ROOT)/audio/cpu/br56/audio_configs_dump.o \
 
 objs += \
 	  $(ROOT)/audio/cpu/br56/audio_dai/audio_pdm.o \
+
+objs += \
+      $(ROOT)/audio/cpu/br56/audio_anc.o \
+	  $(ROOT)/audio/cpu/br56/icsd_anc_user.o \
+
 
 objs += \
 	  $(ROOT)/audio/cpu/br56/audio_accelerator/hw_fft.o \

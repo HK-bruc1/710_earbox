@@ -116,6 +116,23 @@ void audio_dac_power_state(u8 state)
 }
 #endif
 
+/*
+ * DAC MUTE/UNMUTE 回调
+ */
+#if 0
+extern void pwr_set_soft(u8 enable);
+void audio_dac_ch_mute_notify(u8 mute_state, u8 step)
+{
+    if (step == 1) {
+        pwr_set_soft(0);
+        udelay(50);
+    } else if (step == 2) {
+        udelay(50);
+        pwr_set_soft(1);
+    }
+}
+#endif
+
 __AUDIO_INIT_BANK_CODE
 static void audio_common_initcall()
 {
@@ -182,7 +199,7 @@ static void audio_common_initcall()
     if ((len != sizeof(audio_dacldo_trim_t)) || (dacldo_trim.power_mode != dac_data.power_mode) || common->audio_trim_flag) {
         printf("DACLDO trim, power mode:%dmW, power mode(VM):%dmW, audio_trim_flag: %d\n", power_mode[dac_data.power_mode], power_mode[dacldo_trim.power_mode], common->audio_trim_flag);
         dacldo_trim.power_mode = dac_data.power_mode;
-        u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode);
+        u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode, dac_data.dacvcm_sel);
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
         }
@@ -235,10 +252,10 @@ static void audio_dac_trim_init()
                     triml_offset = 0;
                 }
                 if ((ret == 0) && (__builtin_abs(dac_trim.left + triml_offset) < trim_limit) && (__builtin_abs(dac_trim.right + trimr_offset) < trim_limit)) {
-                    puts("DAC_trim_verify:Succ");
+                    AUD_STDLOG_DAC_TRIM_SUCC();
                     syscfg_write(CFG_DAC_TRIM_INFO, (void *)&dac_trim, sizeof(struct audio_dac_trim));
                 } else {
-                    puts("[Error]DAC_trim_verify:Error!!!");
+                    AUD_STDLOG_DAC_TRIM_ERROR();
                     dac_trim.left = -trim_offset_value;
                     dac_trim.right = -trim_offset_value;
                 }
@@ -438,6 +455,13 @@ struct dac_platform_data dac_data = {//临时处理
     .classh_en      = TCFG_AUDIO_DAC_CLASSH_EN,
     .classh_mode    = 0,
     .classh_down_step = 3000000,
+#if (TCFG_AUDIO_DAC_MODE == DAC_MODE_SINGLE)
+    .dacvcm_sel = 0,
+#else
+    // VCM带电容时该配置固定配1，VCM省电容时可改为0降低底噪(功耗增加)
+    .dacvcm_sel = 1,
+#endif
+
 };
 
 static void wl_audio_clk_on(void)

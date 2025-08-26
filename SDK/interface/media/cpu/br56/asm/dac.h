@@ -34,19 +34,9 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define PCM_PHASE_BIT           8
 #endif
 
-#define DA_LEFT        0
-#define DA_RIGHT       1
-
 /************************************
  *              DAC模式
  *************************************/
-// TCFG_AUDIO_DAC_MODE
-#define DAC_MODE_SINGLE                    (0)
-#define DAC_MODE_DIFF                      (1)
-#define DAC_MODE_VCMO                      (2)
-
-#define DACR32_DEFAULT		8192
-
 #define DAC_OFFSET_FADE_OUT             0
 #define DAC_OFFSET_FADE_IN              1
 
@@ -84,10 +74,6 @@ Notes:以下为芯片规格定义，不可修改，仅供引用
 #define DAC_POWER_MODE_2Vrms_THD	5
 #define DAC_POWER_MODE_2Vrms_SNR	6
 
-#define DAC_ANALOG_OPEN_PREPARE         (1) //DAC打开前，即准备打开
-#define DAC_ANALOG_OPEN_FINISH          (2)	//DAC打开后，即打开完成
-#define DAC_ANALOG_CLOSE_PREPARE        (3) //DAC关闭前，即准备关闭
-#define DAC_ANALOG_CLOSE_FINISH         (4) //DAC关闭后，即关闭完成
 //在应用层重定义 audio_dac_power_state 函数可以获取dac模拟开关的状态
 //void audio_dac_power_state(u8 state){}
 
@@ -113,6 +99,7 @@ struct dac_platform_data {
     u8 mute_delay_time;         //开关机延时参数
     u8 mute_delay_isel;         //开关机速度参数
     u8 miller_en;           // miller使能
+    u8 dacvcm_sel;          // DACVCM电源选择, 0:AUDIO内部电源 1:PMU电源
     u16 dma_buf_time_ms;    // DAC dma buf 大小
     s16 *dig_vol_tab;
     u32 digital_gain_limit;
@@ -195,7 +182,6 @@ struct audio_dac_hdl {
     u8 anc_dac_open;
     u8 protect_fadein;
     u8 vol_set_en;
-    u8 dec_channel_num;
     u16 d_volume[2];
     u16 start_ms;
     u16 delay_ms;

@@ -1676,12 +1676,17 @@ c_SRC_FILES += \
 	  audio/cpu/br56/audio_setup.c \
 	  audio/cpu/br56/audio_mic_capless.c \
   	  audio/cpu/br56/audio_config.c \
-      audio/cpu/br56/audio_anc.c \
-	  audio/cpu/br56/icsd_anc_user.c \
 	  audio/cpu/br56/audio_configs_dump.c \
 
 c_SRC_FILES += \
 	  audio/cpu/br56/audio_dai/audio_pdm.c \
+
+#if CONFIG_ANC_ENABLE
+c_SRC_FILES += \
+      audio/cpu/br56/audio_anc.c \
+	  audio/cpu/br56/icsd_anc_user.c \
+
+#endif
 
 //Audio Accelerator
 c_SRC_FILES += \

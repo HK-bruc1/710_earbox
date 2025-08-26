@@ -327,4 +327,29 @@
 #define TCFG_AUDIO_ANC_EXT_VERSION 				0
 #endif
 
+/*
+ * ANC MIC不使用可视化界面配置，单独使用此处配置
+ * 通常用于通话与ANC的MIC复用(使用不同的IO通道)
+ * 获取该配置方法：
+ * (1)在可视化工具界面，配置ANC对应的MIC配置，将其填到下面
+ * (2)还原可视化界面MIC参数
+ */
+#define ANC_MIC_REUSE_ENABLE       0
+
+#define ANC_ADC0_MODE 1 // 模式
+#define ANC_ADC0_AIN_SEL 1 // 输入端口
+#define ANC_ADC0_BIAS_SEL 0 // 供电端口
+#define ANC_ADC0_BIAS_RSEL 3 // MIC BIAS上拉电阻挡位
+#define ANC_ADC0_POWER_IO IO_PORTC_01 // IO供电选择
+#define ANC_ADC0_DCC_EN 1 // DCC使能
+#define ANC_ADC0_DCC_LEVEL 1 // DCC 截止频率
+
+#define ANC_ADC1_MODE 1 // 模式
+#define ANC_ADC1_AIN_SEL 1 // 输入端口
+#define ANC_ADC1_BIAS_SEL 0 // 供电端口
+#define ANC_ADC1_BIAS_RSEL 3 // MIC BIAS上拉电阻挡位
+#define ANC_ADC1_POWER_IO IO_PORTC_01 // IO供电选择
+#define ANC_ADC1_DCC_EN 1 // DCC使能
+#define ANC_ADC1_DCC_LEVEL 1 // DCC 截止频率
+
 #endif/*_AUDIO_CONFIG_DEF_H_*/

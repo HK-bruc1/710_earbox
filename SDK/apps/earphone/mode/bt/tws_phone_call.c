@@ -487,7 +487,7 @@ int bt_phone_esco_play(u8 *bt_addr)
         return 1;
     }
     int ret = 0;
-#if (LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_CONFIG & LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
+#if (LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_CONFIG & LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_PLAY_MIX)
     ret = le_audio_unicast_play_stop_by_esco();
 #endif
     esco_smart_voice_detect_handler();
@@ -541,7 +541,7 @@ int bt_phone_esco_play(u8 *bt_addr)
 #endif
     tws_page_scan_deal_by_esco(1);
     pbg_user_mic_fixed_deal(1);
-#if (LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_CONFIG & LE_AUDIO_JL_DONGLE_UNICAST_WITCH_PHONE_CONN_PLAY_MIX)
+#if (LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_CONFIG & LE_AUDIO_JL_DONGLE_UNICAST_WITH_PHONE_CONN_PLAY_MIX)
     if (ret) {
         le_audio_unicast_play_resume_by_esco();
     }
@@ -903,7 +903,6 @@ static int bt_phone_status_event_handler(int *msg)
         break;
     case BT_STATUS_PHONE_NUMBER:
         log_info("BT_STATUS_PHONE_NUMBER\n");
-#if TCFG_BT_PHONE_NUMBER_ENABLE
         phone_number = (u8 *)bt->value;
         printf("phone_number = %s\n", phone_number);
         if (g_bt_hdl.phone_num_flag == 1) {
@@ -926,7 +925,6 @@ static int bt_phone_status_event_handler(int *msg)
         } else {
             log_info("PHONE_NUMBER len err\n");
         }
-#endif
         break;
     case BT_STATUS_INBAND_RINGTONE:
         log_info("BT_STATUS_INBAND_RINGTONE\n");

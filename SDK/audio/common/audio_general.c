@@ -114,42 +114,85 @@ const int config_audio_adc6_enable = 0;
 const int config_audio_adc7_enable = 0;
 
 //ADC input Mode:Single-Ended/Differential/Single-Ended Capless
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc0_input_mode = -1;
+#else
 #ifdef TCFG_ADC0_MODE
 const int config_audio_adc0_input_mode = TCFG_ADC0_MODE;
 #else
 const int config_audio_adc0_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc1_input_mode = -1;
+#else
 #ifdef TCFG_ADC1_MODE
 const int config_audio_adc1_input_mode = TCFG_ADC1_MODE;
 #else
 const int config_audio_adc1_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc2_input_mode = -1;
+#else
 #ifdef TCFG_ADC2_MODE
 const int config_audio_adc2_input_mode = TCFG_ADC2_MODE;
 #else
 const int config_audio_adc2_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc3_input_mode = -1;
+#else
 #ifdef TCFG_ADC3_MODE
 const int config_audio_adc3_input_mode = TCFG_ADC3_MODE;
 #else
 const int config_audio_adc3_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc4_input_mode = -1;
+#else
 #ifdef TCFG_ADC4_MODE
 const int config_audio_adc4_input_mode = TCFG_ADC4_MODE;
 #else
 const int config_audio_adc4_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc5_input_mode = -1;
+#else
 #ifdef TCFG_ADC5_MODE
 const int config_audio_adc5_input_mode = TCFG_ADC5_MODE;
 #else
 const int config_audio_adc5_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc6_input_mode = -1;
+#else
 #ifdef TCFG_ADC6_MODE
 const int config_audio_adc6_input_mode = TCFG_ADC6_MODE;
 #else
 const int config_audio_adc6_input_mode = 0;
 #endif
+#endif
+
+#if defined(ANC_MIC_REUSE_ENABLE) && ANC_MIC_REUSE_ENABLE
+const int config_audio_adc7_input_mode = -1;
+#else
+#ifdef TCFG_ADC7_MODE
+const int config_audio_adc7_input_mode = TCFG_ADC7_MODE;
+#else
 const int config_audio_adc7_input_mode = 0;
+#endif
+#endif
 
 /*
  *******************************************************************
@@ -446,6 +489,8 @@ const int voicechanger_effect_v_config = (0
 
 /*mb drc/limiter 3带使能(1.2k) */
 const int audio_crossover_3band_enable       = 1;
+const int config_audio_limiter_xfade_enable = 0;
+const int config_audio_mblimiter_xfade_enable = 0;
 
 /*Vocal Remover Configs*/
 const int audio_vocal_remover_low_cut_enable = 1;

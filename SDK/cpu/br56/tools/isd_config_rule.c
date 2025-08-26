@@ -98,16 +98,17 @@
 #endif
 
 [EXTRA_CFG_PARAM]
-OTP_CFG_SIZE = 256
+OTP_CFG_SIZE = 256;
+
 #if CONFIG_DOUBLE_BANK_ENABLE
-               BR22_TWS_DB = YES;	//dual bank flash framework enable
+BR22_TWS_DB = YES;	//dual bank flash framework enable
 FLASH_SIZE = CONFIG_FLASH_SIZE;		//flash_size cfg
 BR22_TWS_VERSION = 0; //default fw version
 #if CONFIG_DB_UPDATE_DATA_GENERATE_EN
 DB_UPDATE_DATA = YES; //generate db_update_data.bin
 #endif
 #else
-               NEW_FLASH_FS = YES;	//enable single bank flash framework
+NEW_FLASH_FS = YES;	//enable single bank flash framework
 #endif 				//CONFIG_DOUBLE_BANK_ENABLE
 
 FORCE_4K_ALIGN = YES; // force aligin with 4k bytes
@@ -388,28 +389,6 @@ CAT2(TONE_FILE_RESERVED_AREA_CONFIG_NAME, LEN) = TONE_FILE_RESERVED_AREA_CONFIG_
 CAT2(TONE_FILE_RESERVED_AREA_CONFIG_NAME, OPT) = TONE_FILE_RESERVED_AREA_CONFIG_OPT;
 #endif
 
-
-[RESERVED_EXPAND_CONFIG]
-#if CONFIG_FINDMY_INFO_ENABLE
-
-#if (CONFIG_FLASH_SIZE == 0x100000)
-#define CONFIG_FINDMY_INFO_ADDR	                0xFC000 //config user space
-#else
-#define CONFIG_FINDMY_INFO_ADDR	                0x1FC000 //config user space
-#endif
-
-#define CONFIG_FINDMY_INFO_LEN	                0x2000  //need 8K
-#define CONFIG_FINDMY_INFO_OPT	                1
-FINDMY_ADR = CONFIG_FINDMY_INFO_ADDR;
-FINDMY_LEN = CONFIG_FINDMY_INFO_LEN;
-FINDMY_OPT = CONFIG_FINDMY_INFO_OPT;
-#endif
-
-#if CONFIG_FINDMY_INFO_ENABLE
-[FW_ADDITIONAL]
-FILE_LIST = (file = file_authrunFindmy.tkn: type = 0xec);
-#endif
-
 /*
  ****************************************************************************
  *								ANC配置区
@@ -505,6 +484,30 @@ ANCIF1_LEN = CONFIG_ANCIF1_LEN;
 ANCIF1_OPT = CONFIG_ANCIF1_OPT;
 /*******************非用户配置区**********************/
 #endif/*CONFIG_ANC_ENABLE*/
+
+#if CONFIG_FINDMY_INFO_ENABLE
+[RESERVED_EXPAND_CONFIG]
+#if (CONFIG_FLASH_SIZE == 0x100000)
+#define CONFIG_FINDMY_INFO_ADDR                 0xFC000 //config user space
+
+#elif (CONFIG_FLASH_SIZE == 0x200000)
+#define CONFIG_FINDMY_INFO_ADDR                 0x1FC000 //config user space
+
+#elif (CONFIG_FLASH_SIZE == 0x400000)
+#define CONFIG_FINDMY_INFO_ADDR                 0x3FC000 //config user space
+#endif
+
+#define CONFIG_FINDMY_INFO_LEN	                0x2000  //need 8K
+#define CONFIG_FINDMY_INFO_OPT	                1
+FINDMY_ADR = CONFIG_FINDMY_INFO_ADDR;
+FINDMY_LEN = CONFIG_FINDMY_INFO_LEN;
+FINDMY_OPT = CONFIG_FINDMY_INFO_OPT;
+#endif
+
+#if CONFIG_FINDMY_INFO_ENABLE
+[FW_ADDITIONAL]
+FILE_LIST = (file = file_authrunFindmy.tkn: type = 0xec);
+#endif
 
 [BURNER_PASSTHROUGH_CFG]
 FLASH_WRITE_PROTECT = YES;
