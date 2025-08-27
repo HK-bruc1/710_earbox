@@ -721,20 +721,22 @@
 #undef TCFG_IMUSENSOR_ENABLE
 #undef TCFG_MPU6887P_ENABLE
 #undef TCFG_ICM42670P_ENABLE
-#undef TCFG_QMI8658_ENABLE
 #undef TCFG_LSM6DSL_ENABLE
-#undef TCFG_TP_MPU9250_ENABLE
-#undef TCFG_SH3001_ENABLE
-#undef TCFG_MPU6050_EN
 #define TCFG_IMUSENSOR_ENABLE              		0
 #define TCFG_MPU6887P_ENABLE                  	0
 #define TCFG_ICM42670P_ENABLE                  	0
-#define TCFG_QMI8658_ENABLE                     0
 #define TCFG_LSM6DSL_ENABLE                     0
+#endif/*TCFG_AUDIO_SPATIAL_EFFECT_ENABLE*/
+
+/*  device NOT supported */
+#undef TCFG_QMI8658_ENABLE
+#undef TCFG_TP_MPU9250_ENABLE
+#undef TCFG_SH3001_ENABLE
+#undef TCFG_MPU6050_EN
+#define TCFG_QMI8658_ENABLE                     0
 #define TCFG_TP_MPU9250_ENABLE                	0
 #define TCFG_SH3001_ENABLE                    	0
 #define TCFG_MPU6050_EN                     	0
-#endif/*TCFG_AUDIO_SPATIAL_EFFECT_ENABLE*/
 
 /*Audio Smart Voice*/
 #ifndef TCFG_SMART_VOICE_ENABLE

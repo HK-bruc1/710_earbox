@@ -19,6 +19,7 @@
 #include "app_charge.h"
 #include "bt_slience_detect.h"
 #include "poweroff.h"
+#include "ble_rcsp_server.h"
 #if TCFG_AUDIO_ANC_ENABLE
 #include "audio_anc.h"
 #endif
@@ -318,6 +319,10 @@ void sys_enter_soft_poweroff(enum poweroff_reason reason)
     app_var.goto_poweroff_flag = 1;
     app_var.goto_poweroff_cnt = 0;
     sys_auto_shut_down_disable();
+
+#if RCSP_MODE
+    rcsp_bt_ble_adv_enable(0);
+#endif
 
 #if (THIRD_PARTY_PROTOCOLS_SEL & GFPS_EN)
     extern void gfps_need_adv_close_icon_set(u8 en);

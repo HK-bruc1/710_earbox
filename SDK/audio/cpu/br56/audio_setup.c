@@ -194,7 +194,7 @@ static void audio_common_initcall()
     if ((len != sizeof(audio_dacldo_trim_t)) || (dacldo_trim.power_mode != dac_data.power_mode) || common->audio_trim_flag) {
         printf("DACLDO trim, power mode:%dmW, power mode(VM):%dmW, audio_trim_flag: %d\n", power_mode[dac_data.power_mode], power_mode[dacldo_trim.power_mode], common->audio_trim_flag);
         dacldo_trim.power_mode = dac_data.power_mode;
-        u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode);
+        u8 ret = audio_dac_ldo_trim(&dacldo_trim.dacldo_vsel, dac_data.power_mode, dac_data.dacvcm_sel);
         if (ret == 0) {
             audio_event_notify(AUDIO_LIB_EVENT_DACLDO_TRIM_WRITE, (void *)&dacldo_trim, sizeof(audio_dacldo_trim_t));
         }
@@ -386,6 +386,11 @@ void audio_input_initcall(void)
     u16 dvol_48k  = (u16)(35 * eq_db2mag(TCFG_ADC_DIGITAL_GAIN));
     adc_private_param.dvol_441k = (dvol_441k >= AUDIO_ADC_DVOL_LIMIT) ? AUDIO_ADC_DVOL_LIMIT : dvol_441k;
     adc_private_param.dvol_48k = (dvol_48k >= AUDIO_ADC_DVOL_LIMIT) ? AUDIO_ADC_DVOL_LIMIT : dvol_48k;
+#if TCFG_SUPPORT_MIC_CAPLESS
+    adc_private_param.capless_mic_power_mode = TCFG_CAPLESS_MIC_POWER_MODE;
+#else
+    adc_private_param.capless_mic_power_mode = 0;
+#endif
     audio_adc_init(&adc_hdl, &adc_private_param);
     /* adc_hdl.bit_width = audio_general_in_dev_bit_width(); */
 
@@ -393,6 +398,8 @@ void audio_input_initcall(void)
     adc_hdl.capless_trim.bias_rsel0 = TCFG_ADC0_BIAS_RSEL;
     adc_hdl.capless_trim.bias_rsel1 = TCFG_ADC1_BIAS_RSEL;
     adc_hdl.capless_param.trigger_threshold = 50; //电压差校准触发阈值(单位:mV)
+    adc_hdl.capless_param.mic_online_detect = 1;   //是否使能省电容mic的检测在线功能
+    adc_hdl.capless_param.mic_online_threshold = 50; //检测省电容mic两次校准电压小于多少mv就认为是不在线
     /*
      * 以下两个delay需要根据
      * const_mic_capless_open_delay_debug、const_mic_capless_trim_delay_debug 的结果配置
@@ -449,6 +456,13 @@ struct dac_platform_data dac_data = {//临时处理
     .classh_en      = TCFG_AUDIO_DAC_CLASSH_EN,
     .classh_mode    = 0,
     .classh_down_step = 3000000,
+#if (TCFG_AUDIO_DAC_MODE == DAC_MODE_SINGLE)
+    .dacvcm_sel = 0,
+#else
+    // VCM带电容时该配置固定配1，VCM省电容时可改为0降低底噪(功耗增加)
+    .dacvcm_sel = 1,
+#endif
+
 };
 
 static void wl_audio_clk_on(void)
