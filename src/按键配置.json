@@ -485,7 +485,7 @@
           "label": "长按复位",
           "tag": "el-switch",
           "tagIcon": "switch",
-          "defaultValue": 1,
+          "defaultValue": 0,
           "span": 3,
           "showLabel": true,
           "labelWidth": 70,
@@ -609,7 +609,7 @@
     "uuid": "",
     "eventField": [],
     "enableUuid": "TCFG_IOKEY_ENABLE",
-    "disable": false,
+    "disable": true,
     "structDef": "const struct iokey_info g_iokey_info"
    },
    "type": "default",
@@ -2983,7 +2983,7 @@
     "uuid": "",
     "saveWay": "",
     "eventField": [],
-    "disable": true,
+    "disable": false,
     "structDef": ""
    },
    "type": "default",

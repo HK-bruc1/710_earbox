@@ -304,7 +304,7 @@
     "uuid": "",
     "saveWay": "",
     "enableUuid": "TCFG_DEBUG_UART_ENABLE",
-    "disable": false,
+    "disable": true,
     "eventField": []
    },
    "type": "default",
@@ -1091,7 +1091,7 @@
            "gpio"
           ],
           "saveWay": "macro",
-          "defaultValue": "id_1647485267192_84",
+          "defaultValue": "id_1733143332567_7",
           "uuid": "TCFG_LED_RED_GPIO"
          },
          "__slot__": {
@@ -1369,7 +1369,7 @@
            "gpio"
           ],
           "saveWay": "macro",
-          "defaultValue": "id_1647485267192_84",
+          "defaultValue": "id_1733143332567_7",
           "uuid": "TCFG_LED_BLUE_GPIO"
          },
          "__slot__": {
