@@ -591,11 +591,14 @@ static void app_testbox_sub_cmd_handle(u8 *send_buf, u8 buf_len, u8 *buf, u8 len
 }
 extern int user_app_chargestore_data_deal(u8 *buf, u8 len);
 //数据执行函数,在串口中断调用
+//当耳机对应引脚有高低电平时触发中断，在中断回调函数中会调用app_testbox_data_handler处理串口数据
 static int app_testbox_data_handler(u8 *buf, u8 len)
 {
     u8 send_buf[36];
     send_buf[0] = buf[0];
+    //优先处理来自982的串口数据包
     user_app_chargestore_data_deal(buf,len);
+    //数据包头不是0XAA的话就会尝试进入下面的case,如果都不是那就不处理
     switch (buf[0]) {
     case CMD_BOX_MODULE:
         app_testbox_sub_cmd_handle(send_buf, sizeof(send_buf), buf, len);

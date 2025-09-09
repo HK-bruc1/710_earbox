@@ -179,7 +179,7 @@ void custom_sync_vbat_percent_state(void)
     }
     bat_state[2]=bt_get_total_connect_dev(); 
     
-    log_info("sscustom_sync_vbat_percent_state bat_states:%x, vbat_percent:%d, tws_vbat_percent:%d", bat_state, get_vbat_percent(), get_tws_sibling_bat_persent());
+    log_info("通过BLE同步耳机电量状态给仓 bat_states:%x, vbat_percent:%d, tws_vbat_percent:%d", bat_state, get_vbat_percent(), get_tws_sibling_bat_persent());
     sbox_ble_att_send_data(CUSTOM_BLE_BATTERY_STATE_CMD, bat_state, sizeof(bat_state)); //将当前电量状态回复给手表
 }
 
@@ -1166,13 +1166,16 @@ __recmd:
 
 static int sbox_app_power_event_handler(int *msg)
 {
-     switch (msg[0]) {
+    //这个处理函数注册进系统了
+    //当耳机有MSG_FROM_BATTERY类型信息时，应该会调用。
+    //从而通过BLE同步到彩屏仓
+    switch (msg[0]) {
     case POWER_EVENT_SYNC_TWS_VBAT_LEVEL:
-        printf("update sbox bat");
+        printf("POWER_EVENT_SYNC_TWS_VBAT_LEVEL----update sbox bat");
         sbox_cb_func.sbox_sync_battery_info();
         break;
     case POWER_EVENT_POWER_CHANGE:
-        printf("update sbox bat");
+        printf("POWER_EVENT_POWER_CHANGE----update sbox bat");
         sbox_cb_func.sbox_sync_battery_info();
         break;
     }

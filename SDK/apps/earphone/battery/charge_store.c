@@ -692,9 +692,14 @@ void chargestore_set_power_status(u8 *buf, u8 len)
 
 static int app_chargestore_data_handler(u8 *buf, u8 len)
 {
+    //这里是充电仓发送过来的指令时对应的回复
+    //发送耳机mac地址单独写在了一个模块中
     u8 send_buf[36];
     /* log_info_hexdump(buf, len); */
     chargestore_shutdown_reset();
+    //取出数据包头，用于回复指令时使用相同数据包头
+    //包头也是指令类型，不是0XAA就说明，终端不是彩屏仓的主控
+    //可能就是普通充电仓中也可以向耳机发指令
     send_buf[0] = buf[0];
 #ifdef CONFIG_CHARGESTORE_REMAP_ENABLE
     if (remap_app_chargestore_data_deal(buf, len)) {
@@ -775,6 +780,7 @@ static int app_chargestore_data_handler(u8 *buf, u8 len)
         chargestore_api_write(send_buf, 1);
         break;
     case CMD_POWER_LEVEL_OPEN:
+        //比如带霍尔的仓就可以检查开盖与合盖
         __this->power_status = 1;
         __this->cover_status = 1;
         __this->close_ing = 0;
@@ -788,7 +794,9 @@ static int app_chargestore_data_handler(u8 *buf, u8 len)
         __this->pre_power_lvl = __this->power_level;
         send_buf[1] = chargestore_get_vbat_percent();
         send_buf[2] = chargestore_get_det_level(__this->chip_type);
+        //通过耳机的两个铜柱以串口数据包形式发送出去
         chargestore_api_write(send_buf, 3);
+        log_info("----------开盖充电舱报告/获取电量\n");
         //切模式过程中不发送消息,防止堆满消息
         if (__this->switch2bt == 0) {
             chargestore_event_to_user(NULL, CMD_POWER_LEVEL_OPEN, 0);
@@ -802,6 +810,7 @@ static int app_chargestore_data_handler(u8 *buf, u8 len)
         send_buf[1] = chargestore_get_vbat_percent();
         send_buf[2] = chargestore_get_det_level(__this->chip_type);
         chargestore_api_write(send_buf, 3);
+        log_info("---------合盖充电舱报告/获取电量\n");
         chargestore_event_to_user(NULL, CMD_POWER_LEVEL_CLOSE, 0);
         break;
     case CMD_SHUT_DOWN:
