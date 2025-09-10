@@ -53,7 +53,8 @@ int user_app_chargestore_data_deal(u8 *buf, u8 len)
 {
     // printf_hexdump(buf, len);
     switch (buf[0]) {
-     case CMD_CUSTOM_DEAL:
+        case CMD_CUSTOM_DEAL:
+            printf("----------------串口接收到来自982的数据包\n");
             printf_hexdump(buf, len);
             u16 sum = 0;
             for(u8 i=0;i<len-1;i++){
@@ -63,14 +64,18 @@ int user_app_chargestore_data_deal(u8 *buf, u8 len)
             printf("sscheck:%d buf[len-1]:%d  %d\n",check,buf[len-1],buf[UART_PROFILE_CMD_INDEX]);
             if(buf[len-1] != check)
             {
-                printf("err check\n");
+                printf("----------err check数据包校验失败\n");
                 return 0;
             }
             switch (buf[UART_PROFILE_CMD_INDEX]){
+                //如果982发送其他的指令的话，添加对应case就行。
                 case 0x10:
+                        printf("----------982的串口数据包的指令码为:%d\n",buf[UART_PROFILE_CMD_INDEX]);
                         extern u8* printf_mac(void);
-                        Send_Mac(EARPHONE_MAC_MSG,bt_get_mac_addr(),6);
-                        printf("充电仓发送mac地址过来\n");
+                        //数据包头为0XAA,接着是0X31是消息类型,再就是mac地址与校验和
+                        //Send_Mac(EARPHONE_MAC_MSG,bt_get_mac_addr(),6);
+                        Send_Mac(EARPHONE_MAC_MSG,printf_mac(),6);
+                        printf("-----------向982发送耳机mac地址\n");
                     return 1;
                 default:
                     break;
