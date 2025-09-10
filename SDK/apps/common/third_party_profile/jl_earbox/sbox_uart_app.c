@@ -73,8 +73,7 @@ int user_app_chargestore_data_deal(u8 *buf, u8 len)
                         printf("----------982的串口数据包的指令码为:%d\n",buf[UART_PROFILE_CMD_INDEX]);
                         extern u8* printf_mac(void);
                         //数据包头为0XAA,接着是0X31是消息类型,再就是mac地址与校验和
-                        //Send_Mac(EARPHONE_MAC_MSG,bt_get_mac_addr(),6);
-                        Send_Mac(EARPHONE_MAC_MSG,printf_mac(),6);
+                        Send_Mac(EARPHONE_MAC_MSG,bt_get_mac_addr(),6);
                         printf("-----------向982发送耳机mac地址\n");
                     return 1;
                 default:

@@ -205,7 +205,7 @@
        "eventField": [],
        "saveWay": "macro",
        "uuid": "TCFG_DEBUG_UART_BAUDRATE",
-       "defaultValue": 2000000
+       "defaultValue": 1000000
       },
       "__slot__": {
        "options": [
@@ -304,7 +304,7 @@
     "uuid": "",
     "saveWay": "",
     "enableUuid": "TCFG_DEBUG_UART_ENABLE",
-    "disable": true,
+    "disable": false,
     "eventField": []
    },
    "type": "default",

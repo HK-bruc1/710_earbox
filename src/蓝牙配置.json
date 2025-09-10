@@ -2176,7 +2176,7 @@
           "document": "https://element.eleme.cn/#/zh-CN/component/select",
           "formId": 121,
           "renderKey": "1211641800464660",
-          "defaultValue": "CONFIG_TWS_PAIR_BY_AUTO",
+          "defaultValue": "CONFIG_TWS_PAIR_BY_BOX",
           "saveWay": "macro",
           "uuid": "TCFG_BT_TWS_PAIR_MODE",
           "eventField": [],
@@ -3382,7 +3382,7 @@
           "label": "广播",
           "tag": "el-switch",
           "tagIcon": "switch",
-          "defaultValue": 1,
+          "defaultValue": 0,
           "span": 4,
           "showLabel": true,
           "labelWidth": null,
@@ -3611,9 +3611,7 @@
        "label": "第三方协议选择",
        "tag": "el-checkbox-group",
        "tagIcon": "checkbox",
-       "defaultValue": [
-        "RCSP_MODE_EN"
-       ],
+       "defaultValue": [],
        "span": 24,
        "showLabel": true,
        "labelWidth": 150,
@@ -3717,7 +3715,7 @@
      }
     ],
     "eventField": [],
-    "disable": false,
+    "disable": true,
     "saveWay": "macro"
    },
    "type": "default",
