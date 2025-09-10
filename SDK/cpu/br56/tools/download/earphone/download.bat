@@ -34,21 +34,21 @@ if not %RCSP_EN%A==A (
 
 
 @echo on
-..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br56 -boot 0x100000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin  -tone %TONE_FILES% -res cfg_tool.bin ..\..\p11_code.bin stream.bin %CONFIG_DATA% %KEY_FILE% %FORMAT% -format all
+..\..\isd_download.exe ..\..\isd_config.ini -tonorflash -dev br56 -boot 0x100000 -div8 -wait 300 -uboot ..\..\uboot.boot -app ..\..\app.bin  -tone %TONE_FILES% -res cfg_tool.bin ..\..\p11_code.bin stream.bin %CONFIG_DATA% %KEY_FILE% -key 141-AMW-AC690X-41C3.key  %FORMAT% -format all
 @echo off
 :: -format all
 ::-reboot 2500
 
-@rem ɾ����ʱ�ļ�-format all
+@rem ɾ    ʱ ļ -format all
 if exist *.mp3 del *.mp3 
 if exist *.PIX del *.PIX
 if exist *.TAB del *.TAB
 if exist *.res del *.res
 if exist *.sty del *.sty
 
-@rem ���ɹ̼������ļ�
+@rem    ɹ̼      ļ 
 ..\..\fw_add.exe -noenc -fw jl_isd.fw -add ..\..\ota.bin -type 100 -out jl_isd.fw
-@rem �������ýű��İ汾��Ϣ�� FW �ļ���
+@rem        ýű  İ汾  Ϣ   FW  ļ   
 ..\..\fw_add.exe -noenc -fw jl_isd.fw -add ..\..\script.ver -out jl_isd.fw
 
 ..\..\ufw_maker.exe -fw_to_ufw jl_isd.fw
@@ -60,10 +60,10 @@ copy jl_isd.bin %PROJ_DOWNLOAD_PATH%\jl_isd.bin
 copy jl_isd.fw %PROJ_DOWNLOAD_PATH%\jl_isd.fw
 
 
-@rem ��������˵��
-@rem -format vm        //����VM ����
-@rem -format cfg       //����BT CFG ����
-@rem -format 0x3f0-2   //��ʾ�ӵ� 0x3f0 �� sector ��ʼ�������� 2 �� sector(��һ������Ϊ16���ƻ�10���ƶ��ɣ��ڶ�������������10����)
+@rem         ˵  
+@rem -format vm        //    VM     
+@rem -format cfg       //    BT CFG     
+@rem -format 0x3f0-2   //  ʾ ӵ  0x3f0    sector   ʼ         2    sector(  һ      Ϊ16   ƻ 10   ƶ  ɣ  ڶ             10    )
 
 ping /n 2 127.1>null
 IF EXIST null del null

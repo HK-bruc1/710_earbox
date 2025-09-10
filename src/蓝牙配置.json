@@ -3382,7 +3382,7 @@
           "label": "广播",
           "tag": "el-switch",
           "tagIcon": "switch",
-          "defaultValue": 0,
+          "defaultValue": 1,
           "span": 4,
           "showLabel": true,
           "labelWidth": null,
@@ -3611,7 +3611,9 @@
        "label": "第三方协议选择",
        "tag": "el-checkbox-group",
        "tagIcon": "checkbox",
-       "defaultValue": [],
+       "defaultValue": [
+        "RCSP_MODE_EN"
+       ],
        "span": 24,
        "showLabel": true,
        "labelWidth": 150,
@@ -3715,7 +3717,7 @@
      }
     ],
     "eventField": [],
-    "disable": true,
+    "disable": false,
     "saveWay": "macro"
    },
    "type": "default",

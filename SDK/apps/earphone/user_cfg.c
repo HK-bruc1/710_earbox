@@ -351,8 +351,9 @@ void cfg_file_parse(u8 idx)
 
     log_info("mac:");
     put_buf(mac_buf, sizeof(mac_buf));
-    u8 tmp_buf[6] = {0x66,0x55,0x44,0x33,0x22,0x11};
-    memcpy(bt_cfg.mac_addr, tmp_buf, 6);
+    //u8 tmp_buf[6] = {0x66,0x55,0x44,0x33,0x22,0x11};
+    //memcpy(bt_cfg.mac_addr, tmp_buf, 6);
+    memcpy(bt_cfg.mac_addr, mac_buf, 6);
 
 #if (CONFIG_BT_MODE != BT_NORMAL)
     const u8 dut_name[]  = "AC693x_DUT";
@@ -397,6 +398,24 @@ int bt_modify_name(u8 *new_name)
         return 1;
     }
     return 0;
+}
+
+u8* printf_mac(void)
+{
+    printf(" 经典蓝牙地址： ");
+    put_buf(bt_cfg.mac_addr,6);
+    printf(" 对耳地址： ");
+    put_buf(bt_cfg.tws_local_addr,6);
+    printf(" ------- ???  ");
+    put_buf(bt_mac_addr_for_testbox,6);
+
+    u8 tmp_ble_addr[6];
+    extern void lib_make_ble_address(u8 *ble_address, u8 *edr_address);
+    lib_make_ble_address(tmp_ble_addr, (void *)bt_get_mac_addr());
+
+    G_log(" 耳机ble公共地址:   %02x %02x %02x %02x %02x %02x   ",tmp_ble_addr[0],tmp_ble_addr[1],tmp_ble_addr[2],tmp_ble_addr[3],tmp_ble_addr[4],tmp_ble_addr[5]);
+
+    return tmp_ble_addr;
 }
 
 

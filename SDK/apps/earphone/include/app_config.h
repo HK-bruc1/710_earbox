@@ -72,7 +72,7 @@
 #define    CUSTOM_DEMO_EN           (1 << 15)   // 第三方协议的demo，用于示例客户开发自定义协议
 #define    XIMALAYA_EN              (1 << 16)
 #define    AURACAST_APP_EN          (1 << 17)
-#define    JL_SBOX_EN             (1 << 31)
+#define    JL_SBOX_EN               (1 << 31)
 
 
 #if TCFG_THIRD_PARTY_PROTOCOLS_ENABLE
