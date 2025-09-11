@@ -290,7 +290,7 @@ void check_power_on_key(void)
         if (get_power_on_status()) {
             putchar('+');
             delay_10ms_cnt++;
-            if (delay_10ms_cnt > 70) {
+            if (delay_10ms_cnt > 300) {
                 app_var.poweron_reason = SYS_POWERON_BY_KEY;
                 return;
             }
