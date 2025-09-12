@@ -19,6 +19,7 @@
 #include "imu_sensor/icm_42670p/icm_42670p.h"
 #endif /*TCFG_ICM42670P_ENABLE*/
 
+//从板级文件中读取引脚等信息，此处配置软件IIC
 const struct iic_master_config soft_iic_cfg_const[MAX_SOFT_IIC_NUM] = {
     //soft iic0
     {
