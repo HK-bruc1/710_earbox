@@ -196,9 +196,11 @@ INCLUDES := \
 	-Iapps/common/power_manage \
 	-Iapps/common/device \
 	-Iapps/common/device/sensor \
+	-Iapps/common/device/sensor/gSensor \
 	-Iapps/common/device/sensor/ntc \
 	-Iapps/common/device/key \
 	-Iapps/common/device/eartouch \
+	-Iapps/common/device/hr_sensor \
 	-Iapps/common/include \
 	-Iapps/common/ui \
 	-Iapps/common/config/include \
@@ -361,6 +363,14 @@ c_SRC_FILES := \
 	apps/common/device/sensor/ntc/ntc_det.c \
 	apps/common/device/storage_device/norflash/norflash.c \
 	apps/common/device/storage_device/norflash/norflash_sfc.c \
+	apps/common/device/sensor/gSensor/gSensor_manage.c \
+	apps/common/device/hr_sensor/hx3011.c \
+	apps/common/device/hr_sensor/hx3011_check_touch.c \
+	apps/common/device/hr_sensor/hx3011_factory_test.c \
+	apps/common/device/hr_sensor/hx3011_hrs_agc.c \
+	apps/common/device/hr_sensor/hx3011_hrv_agc.c \
+	apps/common/device/hr_sensor/hx3011_prox.c \
+	apps/common/device/hr_sensor/hx3011_spo2_agc.c \
 	apps/common/device/usb/demo/host/udisk_block_test.c \
 	apps/common/device/usb/device/cdc.c \
 	apps/common/device/usb/device/custom_hid.c \
@@ -1174,6 +1184,7 @@ LFLAGS := \
 	cpu/br56/liba/vm.a  \
 	cpu/br56/liba/fs.a  \
 	cpu/br56/liba/cfg_tool.a  \
+	cpu/br56/liba/CodeBlocks_3011_hrs_spo2_hrv_20250320_v2.2.a  \
 	--end-group \
 	-Tcpu/br56/sdk.ld \
 	-M=cpu/br56/tools/sdk.map \
