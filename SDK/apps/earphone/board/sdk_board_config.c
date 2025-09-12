@@ -103,6 +103,12 @@ IMU_SENSOR_PLATFORM_DATA_BEGIN(imu_sensor_data)
 IMU_SENSOR_PLATFORM_DATA_END();
 #endif
 
+GSENSOR_PLATFORM_DATA_BEGIN(motion_sensor_data)
+    .iic = 0,
+    .gSensor_name = "hx3011",
+    .gSensor_int_io = NO_CONFIG_PORT,
+GSENSOR_PLATFORM_DATA_END();
+
 void board_imu_sensor_init()
 {
 #if (TCFG_AUDIO_SPATIAL_EFFECT_ENABLE || TCFG_AUDIO_SOMATOSENSORY_ENABLE)
@@ -254,6 +260,7 @@ void board_init()
 #if ((TCFG_AUDIO_SPATIAL_EFFECT_ENABLE && TCFG_SPATIAL_AUDIO_SENSOR_ENABLE) || TCFG_AUDIO_SOMATOSENSORY_ENABLE)
     board_imu_sensor_init();
 #endif
+gravity_sensor_init(&motion_sensor_data);
 }
 
 #if TCFG_LP_TOUCH_KEY_ENABLE

@@ -40,8 +40,8 @@
 //                                 IIC配置                                        //
 //*********************************************************************************//
 /*软件IIC设置*/
-#define TCFG_SW_I2C0_CLK_PORT               IO_PORTD_07                             //软件IIC  CLK脚选择
-#define TCFG_SW_I2C0_DAT_PORT               IO_PORTD_08                             //软件IIC  DAT脚选择
+#define TCFG_SW_I2C0_CLK_PORT               IO_PORTC_01                             //软件IIC  CLK脚选择
+#define TCFG_SW_I2C0_DAT_PORT               IO_PORTC_02                             //软件IIC  DAT脚选择
 #define TCFG_SW_I2C0_DELAY_CNT              50                                      //IIC延时参数，影响通讯时钟频率
 /*硬件IIC设置*/
 #define TCFG_HW_I2C0_CLK_PORT               IO_PORTC_04                             //硬件IIC  CLK脚选择
@@ -512,7 +512,7 @@
 //*********************************************************************************//
 //                                  g-sensor配置                                   //
 //*********************************************************************************//
-#define TCFG_GSENSOR_ENABLE                       0     //gSensor使能
+#define TCFG_GSENSOR_ENABLE                       1//0     //gSensor使能
 #define TCFG_DA230_EN                             0
 #define TCFG_SC7A20_EN                            0
 #define TCFG_STK8321_EN                           0

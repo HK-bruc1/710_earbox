@@ -60,6 +60,15 @@ const struct iic_master_config hw_iic_cfg_const[MAX_HW_IIC_NUM] = {
     },
 };
 
+/************************* HR sensor *******************************/
+// #if TCFG_HEART_SENSOR
+GSENSOR_PLATFORM_DATA_BEGIN(motion_sensor_data)
+    .iic = 0,
+    .gSensor_name = "hx3011",
+    .gSensor_int_io = NO_CONFIG_PORT,\
+GSENSOR_PLATFORM_DATA_END();
+// #endif/*TCFG_AUDIO_SPATIAL_EFFECT_ENABLE*/
+
 /************************** imu sensor ****************************/
 #if TCFG_IMUSENSOR_ENABLE
 IMU_SENSOR_PLATFORM_DATA_BEGIN(imu_sensor_data)

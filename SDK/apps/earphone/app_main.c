@@ -55,6 +55,8 @@
 #define LOG_CLI_ENABLE
 #include "debug.h"
 
+#include "hr_sensor/hx3011.h"
+
 
 /*任务列表 */
 const struct task_info task_info_table[] = {
@@ -636,6 +638,8 @@ static void app_task_loop(void *p)
     struct app_mode *mode;
 
     mode = app_task_init();
+    r_printf("----------->读心率IC的id");
+    hx3011_chip_check();
     //sys_timer_add(NULL, test_printf, 2000);  //定时调试打印
 #if CONFIG_FINDMY_INFO_ENABLE || (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)
 #if (VFS_ENABLE == 1)

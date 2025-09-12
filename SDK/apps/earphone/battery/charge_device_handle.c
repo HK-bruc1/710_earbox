@@ -48,7 +48,7 @@ static int app_device_msg_ldo5v_online(u8 is_5v)
 
 #if TCFG_GSENSOR_ENABLE
     //在舱关闭gSensor
-    gSensor_wkupup_disable();
+    //gSensor_wkupup_disable();
 #endif
 
 #if TCFG_GX8002_NPU_ENABLE
@@ -65,7 +65,7 @@ static int app_device_msg_ldo5v_offline(int type)
 
 #if TCFG_GSENSOR_ENABLE
         //出舱使能gSensor
-        gSensor_wkupup_enable();
+        //gSensor_wkupup_enable();
 #endif
 
 #if TCFG_GX8002_NPU_ENABLE
