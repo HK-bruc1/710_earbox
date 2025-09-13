@@ -60,7 +60,7 @@
 
 /*任务列表 */
 const struct task_info task_info_table[] = {
-    {"app_core",            1,     0,    1024,   512 },
+    {"app_core",            1,     0,   2048,  512 },
     {"btctrler",            4,     0,   512,   512 },
     {"btencry",             1,     0,   512,   128 },
 #if (BT_FOR_APP_EN)
@@ -638,7 +638,6 @@ static void app_task_loop(void *p)
     struct app_mode *mode;
 
     mode = app_task_init();
-    r_printf("----------->读心率IC的id");
     hx3011_chip_check();
     //sys_timer_add(NULL, test_printf, 2000);  //定时调试打印
 #if CONFIG_FINDMY_INFO_ENABLE || (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)

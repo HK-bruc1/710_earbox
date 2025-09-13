@@ -278,10 +278,10 @@ bool hx3011_chip_check(void)
         hx3011_write_reg(0x01, 0x00);
         hx3011_delay(5);
         hx3011_chip_id = hx3011_read_reg(0x00);
-        printf("chip id  = 0x%x	check ok \r\n",hx3011_chip_id);
+        printf("chip id == 0x27 check ok? \r\n");
         if (hx3011_chip_id == 0x27)             
         {
-            r_printf("chip id  = 0x%x	check ok \r\n",hx3011_chip_id);
+            r_printf("chip id = 0x%x check ok \r\n",hx3011_chip_id);
             return true;
         }
     }

@@ -312,6 +312,7 @@ void hx3011_hrs_ppg_init(void);
 void hx3011_hrs_ppg_Int_handle(void);
 void hx3011_hrv_ppg_Int_handle(void);
 void hx3011_living_Int_handle(void);
+bool hx3011_chip_check(void);
 //void hx3011_gesensor_Int_handle(void);
 void hx3011_ppg_Int_handle(void);
 uint32_t hx3011_timers_start(void);
