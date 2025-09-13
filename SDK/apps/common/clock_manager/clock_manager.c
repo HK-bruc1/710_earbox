@@ -25,7 +25,7 @@
 #define CLOCK_DETECT_PERIOD      (4 * 1000)         //4s
 #define CLOCK_DETECT_COUNTER     (7)                //7 times
 
-#define CLOCK_MINIMUM_FREQ       (24  * 1000000)    //24MHz
+#define CLOCK_MINIMUM_FREQ       (60  * 1000000)    //24MHz
 #define CLOCK_MAXIMUM_FREQ       clk_get_max_frequency()
 
 
@@ -35,6 +35,7 @@ typedef struct clock_manager_st {
     u32 freq;
     u32 name;
 } clock_manager_item;
+
 
 
 static u8 ref_cnt;

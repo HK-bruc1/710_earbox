@@ -45,6 +45,9 @@
 #endif
 #include "hx3011_factory_test.h"
 
+#include "log.h"
+#include "gpio.h"
+
 
 
 #ifdef SPO2_VECTOR
@@ -148,6 +151,15 @@ void display_refresh(void)
 {
 
 }
+void ido_start(void)
+{
+    //gpio_set_mode(IO_PORT_SPILT(IO_PORTB_08), PORT_OUTPUT_LOW);
+    //gpio_set_mode(IO_PORT_SPILT(IO_PORTB_09), PORT_OUTPUT_LOW);
+
+    //拉低，但是不知道这个脚位是干嘛的。
+    gpio_set_mode(PORTC,PORT_PIN_3, PORT_OUTPUT_LOW);
+    printf("ido_start\r\n");
+}
 
 
 void hx3011_delay(uint32_t ms)
@@ -218,17 +230,34 @@ bool hx3011_brust_read_reg(uint8_t addr, uint8_t *buf, uint8_t length)
     return true;
 }
 
+static uint16_t hrs3011_timer_id = 0;
+static uint16_t hrs3011_agc_timer_id = 0;
+
 /*320ms void hx3011_ppg_Int_handle(void)*/
 void hx3011_ppg_timer_cfg(bool en)    //320ms
 {
     if(en)
     {
+        if(hrs3011_timer_id)
+		{
+			sys_timer_del(hrs3011_timer_id);
+			hrs3011_timer_id = 0;
+		}
+		if(!hrs3011_timer_id)
+		{
+			hrs3011_timer_id = sys_timer_add(NULL,hx3011_ppg_Int_handle,320);
+		}
 #ifdef  TYHX_DEMO
         hx3011_320ms_timers_start();
 #endif
     }
     else
     {
+        if(hrs3011_timer_id)
+		{
+			sys_timer_del(hrs3011_timer_id);
+			hrs3011_timer_id = 0;
+		}
 #ifdef  TYHX_DEMO
         hx3011_320ms_timers_stop();
 #endif
@@ -241,12 +270,26 @@ void hx3011_agc_timer_cfg(bool en)
 {
     if(en)
     {
+        if(hrs3011_agc_timer_id)
+		{
+			sys_timer_del(hrs3011_agc_timer_id);
+			hrs3011_agc_timer_id = 0;
+		}
+		if(!hrs3011_agc_timer_id)
+		{
+			hrs3011_agc_timer_id = sys_timer_add(NULL,agc_timeout_handler,100);
+		}
 #ifdef  TYHX_DEMO
         gsen_read_timers_start();
 #endif
     }
     else
     {
+        if(hrs3011_agc_timer_id)
+		{
+			sys_timer_del(hrs3011_agc_timer_id);
+			hrs3011_agc_timer_id = 0;
+		}
 #ifdef  TYHX_DEMO
         gsen_read_timers_stop();
 #endif
@@ -485,13 +528,14 @@ bool hx3011_init(WORK_MODE_T mode)
 {
     work_mode_flag = mode;
     hx3011_data_reset();
-    hx3011_vin_check(3800);
+    hx3011_vin_check(3800);//在自检一次
     hx3011_ppg_on();
     Efuse_Mode_Check();
     switch (work_mode_flag)
     {
     case HRS_MODE:
         tyhx_hrs_set_living(0,0,0); //  qu=15  std=30
+        r_printf("HRS_MODE----tyhx_hrs_set_living\n");
         if(hx3011_hrs_enable()== SENSOR_OP_FAILED)
         {
             return false;
@@ -838,15 +882,18 @@ void hx3011_hrs_ppg_Int_handle(void)
 	hrsresult.wearstatus = hrs_wear_status;
     if(hrs_wear_status == MSG_HRS_WEAR)
     {
-        tyhx_hrs_alg_send_data(PPG_buf, *count, gsen_fifo_x_send, gsen_fifo_y_send, gsen_fifo_z_send);
+        tyhx_hrs_alg_send_data(PPG_buf,PPG_buf,*count, gsen_fifo_x_send, gsen_fifo_y_send, gsen_fifo_z_send);
     }
 #endif
     alg_results = tyhx_hrs_alg_get_results();
     hrsresult.lastesthrs = alg_results.hr_result;
-
-
-
-//            //TYHX_LOG("living=%d",hrsresult.hr_living);
+    r_printf("hrsresult.lastesthrs == %d",hrsresult.lastesthrs);//心率结果
+    extern void hx3011_hrs_mode_stop(void);
+    if(hrsresult.lastesthrs != 0)
+    {
+        hx3011_hrs_mode_stop();
+    }
+//TYHX_LOG("living=%d",hrsresult.hr_living);
 #ifdef HRS_BLE_APP
     {
         rawdata_vector_t rawdata;
@@ -1119,4 +1166,53 @@ void hx3011_lab_test_Int_handle(void)
 #endif
 }
 #endif //CHIP_HX3918
+
+void hx3011_hrs_mode_stop(void)//心率关闭
+{ 
+    hx3011_hrs_disable();
+}
+
+void hx3011_hrs_mode_start(uint8_t delay_start)//形参区别是否延迟开启
+{
+    y_printf("--->hx3011_hrv_mode_start,delay_start====%d",delay_start);
+	if(hx3011_init(HRS_MODE)==true)
+	{
+		// ppg_init = true;
+	}
+}
+
+static void callback_func_1_param(int mode)
+{
+    // printf("/////////////////////////////%s %d\n", __func__, mode);
+    switch(mode)
+    {
+        case HEART_AUTO_NOW:
+            hx3011_hrs_mode_start(false);
+            break;
+        default:
+            break;
+    }
+}
+
+
+
+void func_callback_in_task(u8 mode)
+{
+    int err;
+    int msg[5];    
+   
+    //推送带1个参数的函数到app_core任务
+    msg[0] = (int) callback_func_1_param;
+    msg[1] = 1;//函数需要1个参数
+    msg[2] = mode;//对应参数 mode
+   
+    err = os_taskq_post_type("app_core", Q_CALLBACK, 3, msg);  
+
+    // printf("%s %d\n", __func__, err);
+}
+
+void aaaa(void)
+{
+    func_callback_in_task(HEART_AUTO_NOW);
+}
 

@@ -535,14 +535,18 @@ void hx3011_hrs_set_mode(uint8_t mode_cmd)
     switch (mode_cmd)
     {
     case PPG_INIT:
+        g_printf("hx3011_hrs_set_mode-->PPG_INIT1");
         hx3011_hrs_ppg_init();
         #if defined(TIMMER_MODE)
+        g_printf("hx3011_hrs_set_mode-->PPG_INIT2");
         hx3011_ppg_timer_cfg(true);
         #else
         hx3011_gpioint_cfg(true);
         #endif
         s_ppg_state = 1;
+        g_printf("hx3011_hrs_set_mode-->PPG_INIT3");
         AGC_LOG("ppg init mode\r\n");
+        g_printf("hx3011_hrs_set_mode-->PPG_INIT4");
         break;
 
     case PPG_OFF:
@@ -616,6 +620,7 @@ SENSOR_ERROR_T hx3011_hrs_enable(void)
 
     hrs_wear_status = MSG_HRS_INIT;
     hrs_wear_status_pre = MSG_HRS_INIT;
+    r_printf("hx3011_hrs_set_mode--->");
     hx3011_hrs_set_mode(PPG_INIT);
     //TYHX_LOG("hx3918 enable!\r\n");
 

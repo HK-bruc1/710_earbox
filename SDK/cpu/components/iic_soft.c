@@ -16,7 +16,7 @@
 #include "debug.h"
 static u8 soft_iic_state[MAX_SOFT_IIC_NUM] = {0, 0, 0};
 static struct iic_master_config soft_iic_cfg_cache[MAX_SOFT_IIC_NUM];
-
+#define iic_get_id(iic)     (iic)
 //input pull up
 #define IIC_SCL_H(scl)    \
     gpio_set_mode(scl/16, BIT(scl%16), soft_iic_cfg_cache[iic].io_mode)
@@ -47,12 +47,33 @@ static struct iic_master_config soft_iic_cfg_cache[MAX_SOFT_IIC_NUM];
     while (delay_cnt--) { \
         asm("nop"); \
     }
+
+extern const struct iic_master_config soft_iic_cfg_const[MAX_SOFT_IIC_NUM];
 static inline u32 iic_get_delay(soft_iic_dev iic)
 {
     /* u32 hsb_clk = clk_get("sys"); */
-    u32 delay_num = 0;
-    return delay_num;
+    u8 id = iic_get_id(iic);
+    return soft_iic_cfg_const[id].master_frequency;
 }
+
+static inline u32 iic_get_scl(soft_iic_dev iic)
+{
+    u8 id = iic_get_id(iic);
+    return soft_iic_cfg_const[id].scl_io;
+}
+
+static inline u32 iic_get_sda(soft_iic_dev iic)
+{
+    u8 id = iic_get_id(iic);
+    return soft_iic_cfg_const[id].sda_io;
+}
+
+static inline u32 iic_get_io_pu(soft_iic_dev iic)
+{
+    u8 id = iic_get_id(iic);
+    return soft_iic_cfg_const[id].io_mode;
+}
+
 
 extern const struct iic_master_config soft_iic_cfg_const[MAX_SOFT_IIC_NUM];
 struct iic_master_config *get_soft_iic_config(soft_iic_dev iic)
@@ -149,35 +170,41 @@ void soft_iic_idle(soft_iic_dev iic)
 
 enum iic_state_enum soft_iic_start(soft_iic_dev iic)
 {
-    u32 delay_cnt;
+    u32 delay_cnt,scl, sda;
     u32 dly_t = iic_get_delay(iic);
     /* printf("soft_iic_init hsb clock:%d, delay cnt:%d\n",clk_get("sys"),dly_t); */
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
 
-    IIC_SDA_H(soft_iic_cfg_cache[iic].sda_io);
+    IIC_SDA_H(sda);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_H(scl);
     soft_iic_delay(dly_t * 2);
 
-    IIC_SDA_L(soft_iic_cfg_cache[iic].sda_io);
+    IIC_SDA_L(sda);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_L(scl);
     soft_iic_delay(dly_t);
     return IIC_OK;//ok
 }
 
 void soft_iic_stop(soft_iic_dev iic)
 {
-    u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
-    IIC_SDA_L(soft_iic_cfg_cache[iic].sda_io);
+    u32 delay_cnt, scl, sda, dly_t;
+
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
+
+    IIC_SDA_L(sda);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_H(scl);
     soft_iic_delay(dly_t * 2);
 
-    IIC_SDA_H(soft_iic_cfg_cache[iic].sda_io);
+    IIC_SDA_H(sda);
     soft_iic_delay(dly_t);
     soft_iic_idle(iic);
 }
@@ -193,26 +220,30 @@ static u8 soft_iic_check_ack(soft_iic_dev iic)
 {
     u8 ack;
     u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
+    u32 scl, sda, dly_t;
 
-    IIC_SDA_DIR(soft_iic_cfg_cache[iic].sda_io, 1);
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
+
+    IIC_SDA_DIR(sda, 1);
+    IIC_SCL_L(scl);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_H(scl);
     soft_iic_delay(dly_t);
 
-    if (IIC_SDA_READ(soft_iic_cfg_cache[iic].sda_io) == 0) {
+    if (IIC_SDA_READ(sda) == 0) {
         ack = 1;
     } else {
         ack = 0;
     }
     soft_iic_delay(dly_t);
 
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_L(scl);
     soft_iic_delay(dly_t);
-    IIC_SDA_DIR(soft_iic_cfg_cache[iic].sda_io, 0);
-    IIC_SDA_L(soft_iic_cfg_cache[iic].sda_io);
+    IIC_SDA_DIR(sda, 0);
+    IIC_SDA_L(sda);
 
     return ack;//1:有应答, 0:无
 }
@@ -220,90 +251,103 @@ static u8 soft_iic_check_ack(soft_iic_dev iic)
 static void soft_iic_rx_ack(soft_iic_dev iic)
 {
     u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
-    IIC_SDA_L(soft_iic_cfg_cache[iic].sda_io);
+    u32 scl, sda, dly_t;
+
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
+
+    IIC_SDA_L(sda);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_H(scl);
     soft_iic_delay(dly_t * 2);
 
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_L(scl);
     soft_iic_delay(dly_t);
 }
 
 static void soft_iic_rx_nack(soft_iic_dev iic)
 {
+    u32 scl, sda, dly_t;
     u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
-    IIC_SDA_H(soft_iic_cfg_cache[iic].sda_io);
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
+
+    IIC_SDA_H(sda);
     soft_iic_delay(dly_t);
 
-    IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_H(scl);
     soft_iic_delay(dly_t * 2);
 
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+    IIC_SCL_L(scl);
     soft_iic_delay(dly_t);
 }
 
 u8 soft_iic_tx_byte(soft_iic_dev iic, u8 byte)
 {
     u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
+    u8 i, ret;
+    u32 scl, sda, dly_t;
 
-    local_irq_disable();
-    IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
-    for (u32 i = 0; i < 8; i++) {  //MSB FIRST
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
+
+    IIC_SCL_L(scl);
+    for (i = 0; i < 8; i++) {  //MSB FIRST
         if ((byte << i) & 0x80) {
-            IIC_SDA_H(soft_iic_cfg_cache[iic].sda_io);
+            IIC_SDA_H(sda);
         } else {
-            IIC_SDA_L(soft_iic_cfg_cache[iic].sda_io);
+            IIC_SDA_L(sda);
         }
         soft_iic_delay(dly_t);
 
-        IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+        IIC_SCL_H(scl);
         soft_iic_delay(dly_t * 2);
 
-        IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+        IIC_SCL_L(scl);
         soft_iic_delay(dly_t);
     }
-    u8 ack = soft_iic_check_ack(iic);//1:有应答, 0:无
-    local_irq_enable();
-    return ack;
+    return soft_iic_check_ack(iic);
 }
 
 u8 soft_iic_rx_byte(soft_iic_dev iic, u8 ack)
 {
     u32 delay_cnt;
-    u32 dly_t = iic_get_delay(iic);
-    u8 byte = 0;
+    u8 byte = 0, i;
+    u32 scl, sda, dly_t;
 
-    local_irq_disable();
-    IIC_SDA_DIR(soft_iic_cfg_cache[iic].sda_io, 1);
+    scl = iic_get_scl(iic);
+    sda = iic_get_sda(iic);
+    dly_t = iic_get_delay(iic);
 
-    for (u32 i = 0; i < 8; i++) {
+    IIC_SDA_DIR(sda, 1);
+
+    for (i = 0; i < 8; i++) {
         soft_iic_delay(dly_t);
 
-        IIC_SCL_H(soft_iic_cfg_cache[iic].scl_io);
+        IIC_SCL_H(scl);
         soft_iic_delay(dly_t);
 
         byte = byte << 1;
-        if (IIC_SDA_READ(soft_iic_cfg_cache[iic].sda_io)) {
+        if (IIC_SDA_READ(sda)) {
             byte |= 1;
         }
         soft_iic_delay(dly_t);
 
-        IIC_SCL_L(soft_iic_cfg_cache[iic].scl_io);
+        IIC_SCL_L(scl);
         soft_iic_delay(dly_t);
     }
 
-    IIC_SDA_DIR(soft_iic_cfg_cache[iic].sda_io, 0);
+    IIC_SDA_DIR(sda, 0);
     if (ack) {
         soft_iic_rx_ack(iic);
     } else {
         soft_iic_rx_nack(iic);
     }
 
-    local_irq_enable();
     return byte;
 }
 

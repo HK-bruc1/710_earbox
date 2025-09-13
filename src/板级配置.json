@@ -273,7 +273,7 @@
        "label": "异常自动复位",
        "tag": "el-switch",
        "tagIcon": "switch",
-       "defaultValue": 1,
+       "defaultValue": 0,
        "span": 4,
        "showLabel": true,
        "labelWidth": null,

@@ -112,7 +112,7 @@ bp_results_t tyhx_alg_get_bp_results(void);
 bool tyhx_hrs_alg_open(void);
 bool tyhx_hrs_alg_open_deep(void);
 void tyhx_hrs_alg_close(void);
-bool tyhx_hrs_alg_send_data(int32_t *new_raw_data,uint8_t dat_len, int16_t *gsen_data_x, int16_t *gsen_data_y, int16_t *gsen_data_z);
+bool tyhx_hrs_alg_send_data(int32_t *ppg_raw_data1, int32_t *ppg_raw_data2,uint8_t dat_len, int16_t *gsen_data_x, int16_t *gsen_data_y, int16_t *gsen_data_z);
 bool tyhx_hrs_alg(int32_t new_raw_data, int16_t gsen_data_x, int16_t gsen_data_y, int16_t gsen_data_z);
 hrs_results_t tyhx_hrs_alg_get_results(void);
 void tyhx_hrs_set_alg_para(hrs_sports_mode_t sports_mode, uint16_t static_thre_val, uint8_t gsen_fun_lv_val);

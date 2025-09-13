@@ -525,9 +525,13 @@ int bt_key_power_msg_remap(int *msg)
                     if ((channel == 'L' && msg[1] != APP_KEY_MSG_FROM_TWS) ||
                         (channel == 'R' && msg[1] == APP_KEY_MSG_FROM_TWS)) {
                         //app_msg = _TWS_STA_PHONE_DISCONNECTED_SIBLING_DISCONNECTED_KEY_ACTION_CLICK_L;
+                        r_printf("LLLLLLLLLLLLLLL\n");
+                        app_msg = APP_MSG_MUSIC_PP;
                         break;
                     }else {
                         //app_msg = _TWS_STA_PHONE_DISCONNECTED_SIBLING_DISCONNECTED_KEY_ACTION_CLICK_R;
+                        r_printf("RRRRRRRRRRRRRRRR\n");
+                        app_msg = APP_MSG_MUSIC_PP;
                         break;
                     }
                 }

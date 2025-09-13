@@ -75,13 +75,13 @@ NEW_GSEN_SCHME     DEMO����ʹ�ã� �ͻ��ر�
 // #endif
 
 #ifdef AGC_DEBUG
-#define  AGC_LOG(...)     printf(0,__VA_ARGS__)
+#define  AGC_LOG(...)     printf
 #else
 #define	 AGC_LOG(...)
 #endif
 
 #ifdef HRS_DEBUG
-#define  DEBUG_PRINTF(...)     printf(0,__VA_ARGS__)
+#define  DEBUG_PRINTF(...)     printf
 #else
 #define	 DEBUG_PRINTF(...)
 #endif
@@ -277,6 +277,99 @@ typedef struct {
 	int32_t p4_noise;
 }NOISE_PS_T;
 
+//*************************************************************************************************************//
+//            通讯部分----最后根据需要移到需手机通信的.h文件中（类似于7006的rcsp_adv_customer_user.h）              //
+//*************************************************************************************************************//
+
+enum{
+    HEART_AUTO_START,
+    HEART_AUTO_STOP,
+    HEART_AUTO_NOW,
+    SPO2_AUTO_START,
+    SPO2_AUTO_STOP,
+    SPO2_AUTO_NOW,
+    WEAR_MODE_START,
+    WEAR_MODE_STOP,
+    DELAY_SEND_HEART_OFFLINE,
+    DELAY_SEND_OXYGEN_OFFLINE,
+    HEART_HRV_NOW,
+};
+
+enum{
+    HEART_3011_START = 1,                  
+    HEART_3011_STOP,                   
+    HEART_3011_VALUE,
+    SPO2_3011_START,
+    SPO2_3011_STOP,
+    SPO2_3011_VALUE,
+};
+enum{
+    START_GET_HEART_TIME = 1,                  
+    START_GET_SPO2_TIME,   
+    START_GET_NULL     //已经保存成功
+};
+
+enum{
+    HEART_AUTO_TIMER_CLOSE,
+    HEART_AUTO_TIMER_OPEN,
+    SPO2_AUTO_TIMER_CLOSE,
+    SPO2_AUTO_TIMER_OPEN,
+};
+
+//总开始符
+#define COMMON_BEGIN  0XAA
+//总结束符
+#define COMMON_END    0X55
+//上报符
+#define COMMON_READ   0XF1
+//下发
+#define COMMON_CTRL   0XF0
+
+//耳机发送当前时间 开始符号-----心率
+#define COMMON_CURR_TIME_BEGIN     0XE0
+//耳机发送当前时间 结束符号
+#define COMMON_CURR_TIME_END       0XE1 
+enum{
+    COMMON_YEAR_HEART = 0x01,     // 耳机发送给仓心率 年
+    COMMON_MONTH_HEART,           // 耳机发送给仓心率 月
+    COMMON_DAY_HEART,             // 耳机发送给仓心率 日
+    COMMON_HOUR_HEART,            // 耳机发送给仓心率 时
+    COMMON_MIN_HEART,             // 耳机发送给仓心率 分
+    COMMON_SEC_HEART,             // 耳机发送给仓心率 秒
+
+    COMMON_YEAR_SPO2,             // 耳机发送给仓血氧 年
+    COMMON_MONTH_SPO2,            // 耳机发送给仓血氧 月
+    COMMON_DAY_SPO2,              // 耳机发送给仓血氧 日
+    COMMON_HOUR_SPO2,             // 耳机发送给仓血氧 时
+    COMMON_MIN_SPO2,              // 耳机发送给仓血氧 分
+    COMMON_SEC_SPO2,              // 耳机发送给仓血氧 秒
+};
+
+//心率控制指令
+#define  COMMON_HEART_CTRL                  0xC3//控制类型
+#define  COMMON_SPO2_NOW_VALUE              0xC1//发送当前血氧
+#define  HEART_3011_AUTO_VALUE              0xC5//持续上报心率
+#define  HEART_3011_VM_VALUE_HEART          0xC6//连接APP，获取上次离线心率数值
+#define  HEART_3011_STATUS                  0xC8//心率定时器的状态
+#define  HEART_3011_WEAR_STATUS             0xC4//耳机佩戴状态
+#define  HEART_3011_WORK_STATUS             0xC7//开关连续测量
+#define  HEART_3011_HEART_INTERVAl_GET      0xCC//获取定时器频率
+#define  HEART_3011_HEART_INTERVAl_SET      0xCD//设置心率定时器频率
+#define  HEART_3011_SPO2_INTERVAl_SET       0xCE//设置血氧定时器频率
+#define  HEART_3011_VM_VALUE_SPO2           0xCB//连接APP，获取上次离线血氧数值
+#define  HEART_3011_AUTO_VALUE_SPO2         0xCA//持续上报心率
+#define  HEART_3011_VALUE_FACTORY           0xCF//上报漏光检测数值
+#define  HEART_3011_VALUE_WARNING           0xD2//设置心率报警值
+#define  HEART_3011_GET_VALUE_WARNING       0xD3//获取心率报警值
+#define  HEART_3011_WEARING_DETECTION       0xD4//入耳测试
+#define  SC7A20E_DAILY_MOTION               0xD5//步数，距离，卡路里
+#define  HEART_3011_HRV_DATA                0xD6//压力测试数值
+#define  HEART_3011_SET_SPO2_WARNING        0xD9//设置血氧报警值
+#define  HEART_3011_GET_SPO2_WARNING        0xDA//获取血氧报警值
+
+//*************************************************************************************************************//
+//*************************************************************************************************************//
+
 
 
 extern uint8_t alg_ram[6*1024+512];
@@ -313,6 +406,8 @@ void hx3011_hrs_ppg_Int_handle(void);
 void hx3011_hrv_ppg_Int_handle(void);
 void hx3011_living_Int_handle(void);
 bool hx3011_chip_check(void);
+//测试
+void aaaa(void);
 //void hx3011_gesensor_Int_handle(void);
 void hx3011_ppg_Int_handle(void);
 uint32_t hx3011_timers_start(void);

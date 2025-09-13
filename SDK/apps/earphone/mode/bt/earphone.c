@@ -90,6 +90,8 @@
 #include "audio_config.h"
 #include "clock_manager/clock_manager.h"
 
+#include "hr_sensor\hx3011.h"
+
 #if TCFG_APP_BT_EN
 
 #if ((THIRD_PARTY_PROTOCOLS_SEL & (RCSP_MODE_EN | GFPS_EN | MMA_EN | FMNA_EN | REALME_EN | SWIFT_PAIR_EN | DMA_EN | ONLINE_DEBUG_EN | CUSTOM_DEMO_EN | XIMALAYA_EN | AURACAST_APP_EN|JL_SBOX_EN)) || \
@@ -1153,6 +1155,9 @@ int bt_app_msg_handler(int *msg)
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
         bt_send_jl_cis_cmd(msg[0]);
 #endif
+        r_printf("进入心率测试\n");
+        extern void aaaa(void);
+        aaaa();
         break;
     case APP_MSG_CALL_ANSWER:
         u8 temp_call_btaddr[6];

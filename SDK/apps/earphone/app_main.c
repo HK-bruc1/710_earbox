@@ -638,6 +638,8 @@ static void app_task_loop(void *p)
     struct app_mode *mode;
 
     mode = app_task_init();
+    extern void ido_start(void);
+    ido_start();
     hx3011_chip_check();
     //sys_timer_add(NULL, test_printf, 2000);  //定时调试打印
 #if CONFIG_FINDMY_INFO_ENABLE || (THIRD_PARTY_PROTOCOLS_SEL & REALME_EN)

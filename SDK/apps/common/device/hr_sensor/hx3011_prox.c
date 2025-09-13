@@ -130,9 +130,10 @@ void hx3011_power_up(void)
 #ifdef HRS_VDD_ALWAYS_ON
     nrf_gpio_pin_set(4);		//оƬ�ĵ�Դ��
 #else
-    nrf_gpio_pin_set(4); //io ���� ����VDD��
+    //nrf_gpio_pin_set(4); //io ���� ����VDD��
 #endif
-    nrf_delay_ms(50);
+    //nrf_delay_ms(50);
+    hx3011_delay(50);
 }
 
 /**
@@ -145,10 +146,10 @@ void hx3011_power_down(void)
 #ifdef HRS_VDD_ALWAYS_ON
     nrf_gpio_pin_set(4);		//оƬ��Դ��
 #else
-    nrf_gpio_pin_clear(4); //io ���� ����VDD�ر�
+    //nrf_gpio_pin_clear(4); //io ���� ����VDD�ر�
 #endif
-
-    nrf_delay_ms(50);
+    //nrf_delay_ms(50);
+    hx3011_delay(50);
 }
 
 /**
@@ -562,7 +563,7 @@ bool hx3011_prox_init(void)
     {
         hx3011_power_restart();
         //i2c_hrs_init();
-				twi_master_init();
+		//twi_master_init();
         hx3011_read_nv();
         hx3011_ppg_on();
         
