@@ -194,7 +194,7 @@ void write_gsensor_data_handle(void)
 }
 u8 gravity_sensor_command(u8 w_chip_id, u8 register_address, u8 function_command)
 {
-    spin_lock(&sensor_iic);
+    //spin_lock(&sensor_iic);
     /* os_mutex_pend(&SENSOR_IIC_MUTEX,0); */
     u8 ret = 1;
     iic_start(gSensor_info->iic_hdl);
@@ -222,7 +222,7 @@ u8 gravity_sensor_command(u8 w_chip_id, u8 register_address, u8 function_command
 
 __gcend:
     iic_stop(gSensor_info->iic_hdl);
-    spin_unlock(&sensor_iic);
+    //spin_unlock(&sensor_iic);
     /* os_mutex_post(&SENSOR_IIC_MUTEX); */
     return ret;
 }
@@ -230,7 +230,7 @@ __gcend:
 u8 _gravity_sensor_get_ndata(u8 r_chip_id, u8 register_address, u8 *buf, u8 data_len)
 {
 //	printf("%s",__func__);
-    spin_lock(&sensor_iic);
+    //spin_lock(&sensor_iic);
     /* os_mutex_pend(&SENSOR_IIC_MUTEX,0); */
     u8 read_len = 0;
 
@@ -270,7 +270,7 @@ __gdend:
 
     iic_stop(gSensor_info->iic_hdl);
     udelay(gSensor_info->iic_delay);
-    spin_unlock(&sensor_iic);
+    //spin_unlock(&sensor_iic);
 
     /* os_mutex_post(&SENSOR_IIC_MUTEX); */
     return read_len;

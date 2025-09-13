@@ -54,6 +54,23 @@ struct tone_files {
     const char *share_conn_slave;
     const char *share_disconnect;
     const char *find_ear;
+    const char *factory;
+    const char *du;
+    const char *heart_high;
+    const char *heart_low;
+    const char *hearting;
+    const char *heart_start;
+    const char *heart_is;
+    const char *heart_autos;
+    const char *heart_autoe;
+    const char *heart_dodo;
+    const char *nowear;
+    const char *spo2_autos;
+    const char *spo2_autoe;
+    const char *spo2_is;
+    const char *spo2_start;
+    const char *spo2_dodo;
+    const char *spo2_warn;
 };
 
 

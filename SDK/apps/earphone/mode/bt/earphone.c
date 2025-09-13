@@ -1155,9 +1155,6 @@ int bt_app_msg_handler(int *msg)
 #if ((TCFG_LE_AUDIO_APP_CONFIG & (LE_AUDIO_UNICAST_SINK_EN | LE_AUDIO_JL_UNICAST_SINK_EN)))
         bt_send_jl_cis_cmd(msg[0]);
 #endif
-        r_printf("进入心率测试\n");
-        extern void aaaa(void);
-        aaaa();
         break;
     case APP_MSG_CALL_ANSWER:
         u8 temp_call_btaddr[6];
@@ -1251,6 +1248,13 @@ int bt_app_msg_handler(int *msg)
         sys_enter_soft_poweroff(POWEROFF_NORMAL);
         break;
 #endif
+    case KEY_HEART_ONCE:
+        y_printf("HEART_3011_VALUE");
+#if TCFG_HEART_SENSOR
+        set_once_heart_flag(1);
+        func_callback_in_task(HEART_AUTO_NOW);
+#endif
+        break;
     default:
         break;
     }

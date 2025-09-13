@@ -68,6 +68,23 @@
 
 #define     TUYA_SYNC_KEY_INFO          55
 
+//心率部分相关
+#define 	CFG_USER_DEFINE_LOCAL_TIME_HEART_DATA	56//心率离线数据的时间-data
+#define 	CFG_USER_DEFINE_LOCAL_TIME_HEART_OLD	57//心率离线数据的时间-oldest
+#define 	CFG_USER_DEFINE_LOCAL_TIME_HEART_CURR	58//心率离线数据的时间-curr
+#define 	CFG_USER_DEFINE_HEART_3011		        59//心率离线数据
+#define 	CFG_USER_HEART_3011_AUTO_INTERVAL		60//心率定时器频率
+#define 	CFG_USER_SPO2_3011_AUTO_INTERVAL		61//血氧定时器频率
+#define 	CFG_USER_DEFINE_SPO2_3011		        62//血氧离线数据
+#define 	CFG_USER_DEFINE_LOCAL_TIME_SPO2_DATA	63//血氧离线数据的时间-data
+#define 	CFG_USER_DEFINE_LOCAL_TIME_SPO2_OLD		64//血氧离线数据的时间-oldest
+#define 	CFG_USER_DEFINE_LOCAL_TIME_SPO2_CURR	65//血氧离线数据的时间-curr
+#define 	CFG_USER_DEFINE_HEART_WARNING		    66//心率报警值
+#define 	CFG_USER_DEFINE_HEART_DETECTION		    67//入耳检测
+#define 	CFG_USER_DAILY_MOTION		            68//日常数据 步数距离卡路里
+#define     CFG_USER_VBAT_PERCENT                   69
+#define     CFG_USER_DEFINE_SPO2_WARNING            70
+
 
 // ll sync
 #define     CFG_LLSYNC_RECORD_ID        170

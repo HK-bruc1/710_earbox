@@ -111,6 +111,15 @@ typedef struct
 	uint8_t       living_status;                //living_status
 } tyhx_hrsresult_t;
 
+typedef struct {
+    u16 year;
+    u8 month;
+    u8 day;
+    u8 hour;
+    u8 min;
+    u8 sec;
+}sys_time_w;
+
 #if defined(DEMO_COMMON)
     #define HRS4100_IIC_CLK  30
     #define HRS4100_IIC_SDA  0   
@@ -277,6 +286,15 @@ typedef struct {
 	int32_t p4_noise;
 }NOISE_PS_T;
 
+typedef struct {
+    u16 year;
+    u8 month;
+    u8 day;
+    u8 hour;
+    u8 min;
+    u8 sec;
+}sys_time;
+
 //*************************************************************************************************************//
 //            通讯部分----最后根据需要移到需手机通信的.h文件中（类似于7006的rcsp_adv_customer_user.h）              //
 //*************************************************************************************************************//
@@ -372,7 +390,7 @@ enum{
 
 
 
-extern uint8_t alg_ram[6*1024+512];
+extern uint8_t alg_ram[5 * 1024];
 extern uint8_t hx3011_chip_id;
 
 extern WORK_MODE_T work_mode_flag;
@@ -441,4 +459,9 @@ void heart_rate_meas_timeout_handler(void * p_context);
 
 int16_t hx3918xxx_read_two_reg_low_triple(uint8_t addh, uint8_t addl);
 void display_refresh(void);
+void hx3011_hrs_mode_start(uint8_t delay_start);
+void hx3011_hrv_mode_stop(void);
+void set_once_heart_flag(uint8_t temp);
+void func_callback_in_task(u8 mode);
+static void callback_func_1_param(int mode);
 #endif

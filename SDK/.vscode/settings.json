@@ -14,6 +14,7 @@
         "clock_manager.h": "c",
         "board_config.h": "c",
         "includes.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "hx3011.h": "c"
     }
 }
