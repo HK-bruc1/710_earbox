@@ -1184,7 +1184,9 @@ LFLAGS := \
 	cpu/br56/liba/vm.a  \
 	cpu/br56/liba/fs.a  \
 	cpu/br56/liba/cfg_tool.a  \
-	cpu/br56/liba/CodeBlocks_3011_hrs_spo2_hrv_20250320_v2.2.a  \
+	cpu/br56/liba/Codeblocks_3011_hrs_0804_v01.a \
+	cpu/br56/liba/Codeblocks_3011_hrv_0804_v01.a \
+	cpu/br56/liba/Codeblocks_3011_spo_0808_v02.a \
 	--end-group \
 	-Tcpu/br56/sdk.ld \
 	-M=cpu/br56/tools/sdk.map \
